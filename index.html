@@ -3,61 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salman Faris</title>
+    <title>Salman Faris | The Gold Standard</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Fonts: Cinzel (Royal Serif) & Inter (Clean Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        royal: ['"Cinzel"', 'serif'],
-                        sans: ['"Inter"', 'sans-serif'],
+                        'fr': ['"Cinzel"', 'serif'],
+                        'fs': ['"Inter"', 'sans-serif'],
                     },
                     colors: {
-                        gold: {
+                        'c1': {
                             100: '#faeec7',
                             200: '#f5e3a3',
                             300: '#efd373',
                             400: '#e9c141',
-                            500: '#d4af37', /* Classic Gold */
+                            500: '#d4af37',
                             600: '#aa8c2c',
                             700: '#806921',
                         },
-                        pureblack: '#000000',
+                        'c2': '#000000',
                     },
                     animation: {
-                        'shine-slow': 'shine 6s linear infinite', /* Slow shine for main name */
-                        'shine-fast': 'shine 3s linear infinite', /* Fast shine for headers */
-                        'float': 'float 6s ease-in-out infinite',
-                        'fade-up': 'fadeUp 1s ease-out forwards',
-                        'scroll-down': 'scroll 1.5s ease-in-out infinite', /* Vertical movement for scroll indicator */
+                        'as': 'k1 6s linear infinite',
+                        'af': 'k1 3s linear infinite',
+                        'fl': 'k2 6s ease-in-out infinite',
+                        'fu': 'k3 1s ease-out forwards',
+                        'sd': 'k4 1.5s ease-in-out infinite',
                     },
                     keyframes: {
-                        shine: {
+                        'k1': {
                             '0%': { backgroundPosition: '0% 50%' },
                             '100%': { backgroundPosition: '200% 50%' },
                         },
-                        float: {
+                        'k2': {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' },
                         },
-                        fadeUp: {
+                        'k3': {
                             '0%': { opacity: '0', transform: 'translateY(20px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
                         },
-                        scroll: {
+                        'k4': {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(8px)' },
                         }
@@ -68,48 +64,14 @@
     </script>
 
     <style>
-        /* --- CORE STYLES --- */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'fs', sans-serif;
+            background-color: #ffffff;
+            color: #111111;
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        /* --- THE LIQUID GOLD GRADIENT (Shared) --- */
-        .gradient-gold {
-            background: linear-gradient(
-                to right, 
-                #BF953F, 
-                #FCF6BA, 
-                #B38728, 
-                #FBF5B7, 
-                #AA771C,
-                #BF953F
-            );
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* Dark Mode Specifics - PURE BLACK */
-        .dark body {
-            background-color: #000000;
-            color: #d4af37; /* Fallback Gold */
-        }
-        
-        /* Thin gold lines for sections in dark mode */
-        .dark .luxury-border {
-            border: 1px solid rgba(191, 149, 63, 0.3);
-        }
-        
-        /* Light Mode Specifics - High Fashion White */
-        .light body {
-            background-color: #ffffff;
-            color: #111111;
-        }
-
-        /* Light mode gradient adjustment for better contrast */
-        .light .gradient-gold {
+        .gld {
             background: linear-gradient(
                 to right, 
                 #8a6e2f, 
@@ -124,11 +86,15 @@
             color: transparent;
         }
 
-        .light .luxury-border {
+        .lxb {
             border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
 
-        /* Hide Scrollbar for ultra-clean look */
+        .hvr {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -140,147 +106,131 @@
         }
     </style>
 </head>
-<body class="dark antialiased selection:bg-gold-500 selection:text-black">
-
-    <!-- DIRECT DARK MODE TOGGLE BUTTON (Icon now updates dynamically) -->
-    <button id="dark-mode-button" class="fixed top-6 right-6 z-50 p-3 rounded-full border border-gold-500/50 dark:border-gold-500/30 text-gold-500/90 hover:text-gold-300 hover:bg-gold-500/5 transition-all duration-300 backdrop-blur-sm shadow-lg" aria-label="Toggle Dark Mode">
-        <!-- Added id="theme-icon" here. The JS will control the icon name and rendering. -->
-        <i id="theme-icon" data-lucide="sun-moon" class="w-5 h-5"></i>
-    </button>
+<body class="lt antialiased selection:bg-c1-500 selection:text-white">
 
     <main class="relative z-10">
         
-        <!-- HERO SECTION: THE GOLDEN REVEAL -->
         <section class="h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
             
-            <!-- Subtle background radial for depth in pure black -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold-500/5 blur-[150px] rounded-full pointer-events-none opacity-50"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-c1-500/10 blur-[150px] rounded-full pointer-events-none opacity-50"></div>
 
-            <div class="relative z-10 animate-fade-up">
-                <p class="text-[10px] md:text-xs uppercase tracking-[0.5em] mb-6 opacity-60 font-sans">
-                    Digital Portfolio
+            <div class="relative z-10 animate-fu">
+                <p class="text-lg md:text-xl tracking-widest mb-4 opacity-80 font-fs font-light">
+                    Hello, I'm
                 </p>
 
-                <!-- THE NAME with LIQUID GOLD EFFECT (Single line, Semibold, Slower Shine) -->
-                <h1 class="font-royal text-6xl md:text-8xl lg:text-9xl font-semibold tracking-tight leading-none mb-6 gradient-gold animate-shine-slow animate-float">
+                <h1 class="font-fr text-6xl md:text-8xl lg:text-9xl font-semibold tracking-tight leading-none mb-6 gld animate-as animate-fl">
                     Salman Faris
                 </h1>
 
-                <div class="h-px w-24 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mb-8 opacity-50"></div>
+                <div class="h-px w-24 bg-gradient-to-r from-transparent via-c1-500 to-transparent mx-auto mb-8 opacity-50"></div>
 
                 <p class="text-sm md:text-base font-light tracking-[0.2em] uppercase opacity-80 max-w-lg mx-auto">
                     Aspiring Web Developer
                 </p>
             </div>
 
-            <!-- Scroll Indicator (New: Animated Arrow) -->
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-60 text-gold-500">
-                <!-- Using chevrons-down for a smoother, elegant scroll representation -->
-                <i data-lucide="chevrons-down" class="w-6 h-6 animate-scroll-down"></i>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-60 text-c1-500">
+                <i data-lucide="chevrons-down" class="w-6 h-6 animate-sd"></i>
             </div>
         </section>
 
-        <!-- ABOUT: MINIMALISM -->
         <section class="py-32 px-6 md:px-12 max-w-5xl mx-auto">
-            <!-- Header with faster shine -->
-            <h2 class="font-royal text-3xl md:text-4xl mb-16 text-center gradient-gold animate-shine-fast">The Philosophy</h2>
+            <h2 class="font-fr text-3xl md:text-4xl mb-16 text-center gld animate-af">The Philosophy</h2>
             
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div class="text-lg md:text-xl font-light leading-relaxed text-justify opacity-80">
-                    <!-- Updated Text 1 -->
                     <p class="mb-8">
                         I perceive digital craftsmanship as the ultimate pursuit of elegance. Every line of code is an intentional stroke towards a flawless, enduring structure.
                     </p>
-                    <!-- Updated Text 2 -->
                     <p>
-                        My journey is focused on the <span class="text-gold-500 border-b border-gold-500/30 pb-0.5">MERN Stack</span>. I am focused on the relentless refinement of foundational technologies, ensuring that scale is met with unwavering performance.
+                        My journey is focused on the <span class="text-c1-500 border-b border-c1-500/30 pb-0.5">MERN Stack</span>. I am focused on the relentless refinement of foundational technologies, ensuring that scale is met with unwavering performance.
                     </p>
                 </div>
-                <!-- Updated Quote Block (No Attribution) -->
-                <div class="luxury-border p-8 md:p-12 text-center rotate-1 hover:rotate-0 transition-transform duration-700">
-                    <span class="block text-6xl mb-4 opacity-20 font-royal">"</span>
-                    <p class="font-royal text-2xl md:text-3xl italic leading-snug">
-                        Excellence is not an act, but a habit.
+                <!-- REMOVED: rotate-1 class to make the box straight -->
+                <div class="lxb p-8 md:p-12 text-center hover:rotate-0 transition-transform duration-700 shadow-md">
+                    <span class="block text-6xl mb-4 opacity-20 font-fr text-black/50">"</span>
+                    <p class="font-fr text-2xl md:text-3xl italic leading-snug text-gray-700">
+                        Simplicity is the ultimate sophistication.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- BENTO GRID: PURE BLACK & GOLD -->
         <section class="py-20 px-6 max-w-6xl mx-auto">
             <div class="flex items-center justify-between mb-12">
-                <!-- Header with faster shine -->
-                <h3 class="font-royal text-2xl md:text-3xl gradient-gold animate-shine-fast">Core Focus</h3>
-                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-gold-500/30 to-transparent ml-8"></div>
+                <h3 class="font-fr text-2xl md:text-3xl gld animate-af">Core Focus</h3>
+                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-c1-500/30 to-transparent ml-8"></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]">
                 
-                <!-- React -->
-                <div class="md:col-span-2 luxury-border p-8 flex flex-col justify-between hover:bg-white/5 transition-colors duration-500 group">
+                <div class="md:col-span-2 lxb p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-500 group">
                     <div class="flex justify-between items-start">
-                        <i data-lucide="atom" class="w-8 h-8 text-gold-400 group-hover:scale-110 transition-transform duration-500"></i>
+                        <i data-lucide="atom" class="w-8 h-8 text-c1-500 group-hover:scale-110 transition-transform duration-500"></i>
                         <span class="text-[10px] font-mono opacity-30">01</span>
                     </div>
                     <div>
-                        <h4 class="font-royal text-2xl mb-1 group-hover:text-gold-400 transition-colors">React.js</h4>
-                        <p class="text-xs opacity-50 tracking-wide uppercase">Component Architecture</p>
+                        <h4 class="font-fr text-2xl mb-1 group-hover:text-c1-700 transition-colors">React.js</h4>
+                        <p class="text-sm font-light mt-2 opacity-70 text-gray-600">
+                            Expertise in hooks, functional components, and performance-driven state management (Context/Redux).
+                        </p>
                     </div>
                 </div>
 
-                <!-- Node -->
-                <div class="md:col-span-1 luxury-border p-8 flex flex-col justify-between hover:bg-white/5 transition-colors duration-500 group">
-                    <i data-lucide="server" class="w-6 h-6 opacity-60 group-hover:text-gold-400 transition-colors"></i>
+                <div class="md:col-span-1 lxb p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-500 group">
+                    <i data-lucide="server" class="w-6 h-6 opacity-60 text-gray-600 group-hover:text-c1-700 transition-colors"></i>
                     <div>
-                        <h4 class="font-royal text-lg mb-1">Node</h4>
-                        <p class="text-[10px] opacity-50 uppercase">Backend Logic</p>
+                        <h4 class="font-fr text-lg mb-1">Node.js / Express</h4>
+                        <p class="text-xs font-light mt-2 opacity-70 text-gray-600">
+                            Building scalable RESTful APIs and secure, efficient middleware layers.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Mongo -->
-                <div class="md:col-span-1 luxury-border p-8 flex flex-col justify-between hover:bg-white/5 transition-colors duration-500 group">
-                    <i data-lucide="database" class="w-6 h-6 opacity-60 group-hover:text-gold-400 transition-colors"></i>
+                <div class="md:col-span-1 lxb p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-500 group">
+                    <i data-lucide="database" class="w-6 h-6 opacity-60 text-gray-600 group-hover:text-c1-700 transition-colors"></i>
                     <div>
-                        <h4 class="font-royal text-lg mb-1">MongoDB</h4>
-                        <p class="text-[10px] opacity-50 uppercase">Data Structures</p>
+                        <h4 class="font-fr text-lg mb-1">MongoDB</h4>
+                        <p class="text-xs font-light mt-2 opacity-70 text-gray-600">
+                            Flexible document modeling, indexing, and complex data querying via Aggregation Pipeline.
+                        </p>
                     </div>
                 </div>
 
-                <!-- JS -->
-                <div class="md:col-span-4 luxury-border p-8 flex items-center justify-between hover:bg-white/5 transition-colors duration-500 group">
+                <div class="md:col-span-4 lxb p-8 flex items-center justify-between hover:shadow-lg transition-all duration-500 group">
                     <div class="flex items-center gap-6">
-                        <i data-lucide="code-2" class="w-10 h-10 text-gold-500 opacity-80"></i>
+                        <i data-lucide="code-2" class="w-10 h-10 text-c1-500 opacity-80"></i>
                         <div>
-                            <h4 class="font-royal text-3xl group-hover:text-gold-400 transition-colors">JavaScript</h4>
-                            <p class="text-xs opacity-50 tracking-[0.2em] uppercase mt-1">The Foundation of Everything</p>
+                            <h4 class="font-fr text-3xl group-hover:text-c1-700 transition-colors">JavaScript (ES6+)</h4>
+                            <p class="text-sm opacity-70 tracking-wide mt-1 text-gray-600">
+                                Mastery of asynchronous programming, functional patterns, and advanced language features.
+                            </p>
                         </div>
                     </div>
-                    <i data-lucide="arrow-right" class="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500 text-gold-400"></i>
+                    <i data-lucide="arrow-right" class="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500 text-c1-500"></i>
                 </div>
             </div>
         </section>
 
-        <!-- STATUS: COMING SOON -->
-        <footer class="min-h-[60vh] flex flex-col justify-center items-center text-center px-6 border-t border-white/5 dark:border-gold-500/10 mt-20 relative">
+        <footer class="min-h-[60vh] flex flex-col justify-center items-center text-center px-6 border-t border-black/10 mt-20 relative">
             
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold-500/5 via-transparent to-transparent opacity-50 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-c1-500/10 via-transparent to-transparent opacity-50 pointer-events-none"></div>
 
             <span class="inline-block py-1 px-3 rounded border border-current text-[9px] uppercase tracking-[0.3em] mb-10 opacity-50">
                 Status Update
             </span>
 
-            <h2 class="font-royal text-5xl md:text-7xl lg:text-8xl mb-6 gradient-gold animate-shine-slow opacity-90">
+            <h2 class="font-fr text-5xl md:text-7xl lg:text-8xl mb-6 gld animate-as opacity-90">
                 Coming Soon
             </h2>
 
             <p class="font-light text-sm md:text-base opacity-60 tracking-widest uppercase max-w-md mx-auto leading-loose mb-12">
                 The masterpiece is under construction. <br> 
-                <span class="text-gold-500">Expect Greatness.</span>
+                <span class="text-c1-600">Expect Greatness.</span>
             </p>
 
-            <!-- Social Links Removed -->
-
-            <div class="absolute bottom-8 text-[9px] uppercase tracking-[0.2em] opacity-20">
+            <div class="absolute bottom-8 text-[9px] uppercase tracking-[0.2em] opacity-20 text-black/50">
                 © 2025 Salman Faris
             </div>
         </footer>
@@ -288,74 +238,9 @@
     </main>
 
     <script>
-        // --- Theme Logic ---
-        const body = document.body;
-        const darkModeButton = document.getElementById('dark-mode-button');
-
-        /**
-         * Renders the correct Lucide icon based on the current theme state.
-         * @param {boolean} isDark - True if the theme is currently dark.
-         */
-        function updateIcon(isDark) {
-            // Icon logic: Show 'sun' when currently dark (to switch to light), 'moon' when currently light (to switch to dark)
-            const iconName = isDark ? 'sun' : 'moon'; 
-            
-            // Find the current icon element (must look it up because it's replaced on every toggle)
-            let themeIcon = document.getElementById('theme-icon'); 
-            
-            // 1. Store the classes of the existing icon element
-            const classes = Array.from(themeIcon ? themeIcon.classList : ['w-5', 'h-5']);
-
-            // 2. Clear the button and recreate the icon element to ensure Lucide renders correctly
-            darkModeButton.innerHTML = '';
-            const newIcon = document.createElement('i');
-            newIcon.id = 'theme-icon';
-            newIcon.setAttribute('data-lucide', iconName);
-            newIcon.classList.add(...classes);
-            darkModeButton.appendChild(newIcon);
-
-            // 3. Re-render the icon inside the new container
-            lucide.createIcons({
-                elements: [newIcon]
-            });
-        }
-
-        function initTheme() {
-            // Default to dark mode for luxury feel if no theme is saved
-            const savedTheme = localStorage.getItem('theme');
-            
-            if (savedTheme === 'light') {
-                body.classList.remove('dark');
-                body.classList.add('light');
-            } else {
-                body.classList.remove('light');
-                body.classList.add('dark');
-            }
-            
-            // Initial icon setup
-            updateIcon(body.classList.contains('dark'));
-        }
-
-        function toggleTheme() {
-            const isDark = body.classList.contains('dark');
-            if (isDark) {
-                // Switch to light mode
-                body.classList.replace('dark', 'light');
-                localStorage.setItem('theme', 'light');
-                updateIcon(false); // Update icon to moon (suggesting switch to dark)
-            } else {
-                // Switch to dark mode
-                body.classList.replace('light', 'dark');
-                localStorage.setItem('theme', 'dark');
-                updateIcon(true); // Update icon to sun (suggesting switch to light)
-            }
-        }
-
-        // Theme Toggle handler
-        darkModeButton.addEventListener('click', toggleTheme);
-
-        // Initialize theme and icons on load
-        initTheme(); 
+        window.onload = function() {
+            lucide.createIcons();
+        };
     </script>
 </body>
 </html>
