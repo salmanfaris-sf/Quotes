@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1K1TKBQFFK');
+    </script>
+    
     <!-- Sets the status bar color for mobile browsers -->
     <meta name="theme-color" content="#050505">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,7 +48,7 @@
         /* Auto-hide header logic */
         nav {
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-            background-color: #050505; /* Ensures the bar itself is black */
+            background-color: #050505; 
         }
         nav.nav-hidden {
             transform: translateY(-100%);
@@ -200,7 +209,7 @@
                 list.push({
                     title: n1,
                     meta: `PROTOCOL ${String(dayNum).padStart(3, '0')}: ${t1.toUpperCase()}`,
-                    sub: `Step ${dayNum} of 365. The transformation continues.`,
+                    sub: `The transformation continues.`, // Removed "Step X of 365"
                     p1: `This year is a blank canvas, but most will smudge it with the fingerprints of others. True ${t1} is the refusal to let the digital noise dictate your internal tempo. You are the conductor.`,
                     p2: `Delete the apps that drain you. Silence the voices that don't build you. The scroll is a drug, and attention is the currency you are throwing away. Reclaim it today. Stay in the shadows until you are ready to shine.`,
                     p3: `The path of the ${n1} is forged in the hours nobody sees. It is the workout at 5 AM. It is the reading at midnight. It is the choice to say 'no' to temporary pleasure for the sake of permanent growth.`,
@@ -256,7 +265,6 @@
 
         loadDailyContent();
 
-        // 4. REVEAL OBSERVER
         const observerOptions = { threshold: 0.05, rootMargin: '0px 0px -100px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
