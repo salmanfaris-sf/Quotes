@@ -1,71 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salman Faris | Portfolio</title>
-    
+    <title>THE MANIFESTO | THE UNSEEN LIFE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        'fr': ['"Cinzel"', 'serif'],
-                        'fs': ['"Inter"', 'sans-serif'],
+                        'display': ['"Cormorant Garamond"', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        // Custom gold palette
-                        'c1': {
-                            100: '#faeec7',
-                            200: '#f5e3a3',
-                            300: '#efd373',
-                            400: '#e9c141',
-                            500: '#d4af37', // Primary gold
-                            600: '#aa8c2c',
-                            700: '#806921',
-                        },
-                        'c2': '#000000',
-                    },
-                    animation: {
-                        // Shimmering animation (retained)
-                        'as': 'k1 6s linear infinite', 
-                        'af': 'k1 3s linear infinite', // Faster shimmer for small titles
-                        // Vertical float (k2) removed from Salman Faris text
-                        'fl': 'k2 6s ease-in-out infinite', 
-                        // Fade up on load (retained)
-                        'fu': 'k3 1s ease-out forwards', 
-                        // Scroll down pointer (retained)
-                        'sd': 'k4 1.5s ease-in-out infinite', 
-                    },
-                    keyframes: {
-                        // k1: Gradient background movement for shimmer
-                        'k1': {
-                            '0%': { backgroundPosition: '0% 50%' },
-                            '100%': { backgroundPosition: '200% 50%' },
-                        },
-                        // k2: Vertical movement (removed from H1 in HTML)
-                        'k2': {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        // k3: Fade up
-                        'k3': {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        // k4: Bounce for scroll indicator
-                        'k4': {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(8px)' },
-                        }
+                        'obsidian': '#050505',
+                        'gold-dust': '#C5A059',
                     }
                 }
             }
@@ -74,197 +28,223 @@
 
     <style>
         body {
-            font-family: 'fs', sans-serif;
-            background-color: #ffffff;
-            color: #111111;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            background-color: #050505;
+            color: #ffffff;
+            scroll-behavior: smooth;
         }
 
-        /* Gold Gradient Text Effect */
-        .gld {
-            background: linear-gradient(
-                to right, 
-                #8a6e2f, 
-                #d4af37, 
-                #6b541f, 
-                #d4af37, 
-                #8a6e2f
-            );
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        /* Auto-hide header logic */
+        nav {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
+        nav.nav-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
         }
 
-        /* Light box shadow for content boxes */
-        .lxb {
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+        /* Smooth Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            filter: blur(15px);
+            transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 4px;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0px);
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
+
+        /* Subtle Gradient Glow */
+        .glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vw;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #BF953F; /* Gold color */
+
+        .text-indent {
+            text-indent: 10rem;
+        }
+
+        @media (max-width: 768px) {
+            .text-indent {
+                text-indent: 0rem;
+            }
+        }
+
+        .high-contrast {
+            text-shadow: 0 0 40px rgba(255,255,255,0.1);
         }
     </style>
 </head>
-<body class="lt antialiased selection:bg-c1-500 selection:text-white">
+<body class="antialiased overflow-x-hidden">
 
-    <main class="relative z-10">
-        
-        <!-- 1. Hero Section -->
-        <section class="h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
-            
-            <!-- Subtle background glow -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-c1-500/10 blur-[150px] rounded-full pointer-events-none opacity-50"></div>
+    <div class="glow"></div>
 
-            <div class="relative z-10 animate-fu">
-                <p class="text-lg md:text-xl tracking-widest mb-4 opacity-80 font-fs font-light">
-                    Hello, I'm
-                </p>
+    <!-- Header (Self-hiding) -->
+    <nav id="main-nav" class="fixed top-0 w-full z-50 p-8 flex justify-between items-center mix-blend-difference">
+        <span class="font-display italic text-xl tracking-tighter">SF</span>
+        <div class="text-right">
+            <div id="live-time" class="text-[11px] font-sans tracking-[0.2em] font-medium uppercase">00:00 PM</div>
+            <div id="live-date" class="text-[9px] uppercase tracking-[0.4em] opacity-40">DEC 31 / 2025</div>
+        </div>
+    </nav>
 
-                <!-- 
-                    Removed animate-fl (the vertical floating animation) from this line.
-                    animate-as (the horizontal shimmer) is retained. 
-                -->
-                <h1 class="font-fr text-6xl md:text-8xl lg:text-9xl font-semibold tracking-tight leading-none mb-6 gld animate-as">
-                    Salman Faris
-                </h1>
-
-                <div class="h-px w-24 bg-gradient-to-r from-transparent via-c1-500 to-transparent mx-auto mb-8 opacity-50"></div>
-
-                <p class="text-sm md:text-base font-light tracking-[0.2em] uppercase opacity-80 max-w-lg mx-auto">
-                    Aspiring Web Developer
-                </p>
-            </div>
-
-        
-            <!-- Scroll Indicator -->
-            <div class="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-60 text-c1-500">
-                <i data-lucide="chevrons-down" class="w-6 h-6 animate-sd"></i>
-            </div>
-        </section>
-
-        <!-- 2. Philosophy Section -->
-        <section class="py-32 px-6 md:px-12 max-w-5xl mx-auto">
-            <h2 class="font-fr text-3xl md:text-4xl mb-16 text-center gld animate-af">The Philosophy</h2>
-            
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="text-lg md:text-xl font-light leading-relaxed text-justify opacity-80">
-                    <p class="mb-8">
-                        To me, coding is craftsmanship—every line a deliberate step toward an elegant, lasting product.
-                    </p>
-                    <p>
-                        My journey is focused on the <span class="text-c1-500 border-b border-c1-500/30 pb-0.5">MERN Stack</span>. I build with intention—prioritizing clarity, performance, and long-term scalability in every project.</p>
-                </div>
-                <!-- Quote Box -->
-                <div class="lxb p-8 md:p-12 text-center hover:rotate-0 transition-transform duration-700 shadow-md">
-                    <span class="block text-6xl mb-4 opacity-20 font-fr text-black/50">"</span>
-                    <p class="font-fr text-2xl md:text-3xl italic leading-snug text-gray-700">
-                        The simpler you make things, the richer the result.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Core Focus / Skills Section -->
-        <section class="py-20 px-6 max-w-6xl mx-auto">
-            <div class="flex items-center justify-between mb-12">
-                <h3 class="font-fr text-2xl md:text-3xl gld animate-af">Core Focus</h3>
-                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-c1-500/30 to-transparent ml-8"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]">
-                
-                <!-- React Card -->
-                <div class="md:col-span-2 lxb p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-500 group">
-                    <div class="flex justify-between items-start">
-                        <i data-lucide="atom" class="w-8 h-8 text-c1-500 group-hover:scale-110 transition-transform duration-500"></i>
-                        <!-- Removed: <span class="text-[10px] font-mono opacity-30">01</span> -->
-                    </div>
-                    <div>
-                        <h4 class="font-fr text-2xl mb-1 group-hover:text-c1-700 transition-colors">React.js</h4>
-                        <p class="text-sm font-light mt-2 text-gray-800">
-                            Expertise in hooks, functional components, and performance-driven state management (Context/Redux).
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Node/Express Card -->
-                <div class="md:col-span-1 lxb p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-500 group">
-                    <i data-lucide="server" class="w-6 h-6 opacity-60 text-gray-600 group-hover:text-c1-700 transition-colors"></i>
-                    <div>
-                        <h4 class="font-fr text-lg mb-1">Node.js / Express</h4>
-                        <p class="text-xs font-light mt-2 text-gray-800">
-                            Building scalable RESTful APIs and secure, efficient middleware layers.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- MongoDB Card -->
-                <div class="md:col-span-1 lxb p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-500 group">
-                    <i data-lucide="database" class="w-6 h-6 opacity-60 text-gray-600 group-hover:text-c1-700 transition-colors"></i>
-                    <div>
-                        <h4 class="font-fr text-lg mb-1">MongoDB</h4>
-                        <p class="text-xs font-light mt-2 text-gray-800">
-                            Flexible document modeling, indexing, and complex data querying via Aggregation Pipeline.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- JavaScript Card (Wide) -->
-                <div class="md:col-span-4 lxb p-8 flex items-center justify-between hover:shadow-lg transition-all duration-500 group">
-                    <div class="flex items-center gap-6">
-                        <i data-lucide="code-2" class="w-10 h-10 text-c1-500 opacity-80"></i>
-                        <div>
-                            <h4 class="font-fr text-3xl group-hover:text-c1-700 transition-colors">JavaScript (ES6+)</h4>
-                            <p class="text-sm tracking-wide mt-1 text-gray-800">
-                                Mastery of asynchronous programming, functional patterns, and advanced language features.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- The right arrow icon was removed here -->
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. Footer / Call to Action -->
-        <footer class="min-h-[60vh] flex flex-col justify-center items-center text-center px-6 border-t border-black/10 mt-20 relative">
-            
-            <!-- Subtle background radial gradient -->
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-c1-500/10 via-transparent to-transparent opacity-50 pointer-events-none"></div>
-
-            <span class="inline-block py-1 px-3 rounded border border-current text-[9px] uppercase tracking-[0.3em] mb-10 opacity-50">
-                Status Update
-            </span>
-
-            <h2 class="font-fr text-5xl md:text-7xl lg:text-8xl mb-6 gld animate-as opacity-90">
-                Coming Soon
-            </h2>
-
-            <p class="font-light text-sm md:text-base tracking-widest uppercase max-w-md mx-auto leading-loose mb-12">
-                The masterpiece is under construction. <br> 
-                <span class="text-c1-600">Expect Greatness.</span>
+    <!-- Intro -->
+    <section class="min-h-screen flex items-center justify-center px-6 relative z-10">
+        <div class="text-center">
+            <span id="topic-meta" class="text-[10px] uppercase tracking-[0.6em] text-gold-dust mb-8 block reveal">PROTOCOL 01</span>
+            <h1 id="hero-title" class="font-display text-8xl md:text-[14rem] italic tracking-tighter leading-none reveal" style="transition-delay: 0.2s;">
+                The <span class="text-white not-italic">Ghost</span>
+            </h1>
+            <p id="hero-sub" class="font-sans text-[10px] uppercase tracking-[0.4em] mt-8 opacity-30 reveal" style="transition-delay: 0.4s;">
+                Living for no one but the mirror.
             </p>
+        </div>
+    </section>
 
-            <div class="absolute bottom-8 text-[9px] uppercase tracking-[0.2em] opacity-20 text-black/50">
-                © 2025 Salman Faris
-            </div>
-        </footer>
+    <!-- The Manifesto -->
+    <article id="content-area" class="max-w-screen-xl mx-auto px-6 py-40 relative z-10 space-y-60">
+        <!-- Content injected via JS -->
+    </article>
 
-    </main>
+    <!-- Final Call -->
+    <footer class="min-h-screen flex flex-col items-center justify-center text-center px-6 reveal">
+        <h3 class="font-display text-6xl md:text-8xl italic mb-12 high-contrast">New Wisdom Daily.</h3>
+        <div class="w-24 h-px bg-gold-dust mb-12"></div>
+        <div class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-4">
+            Topics Update Automatically Every 24 Hours
+        </div>
+        <div class="text-[10px] uppercase tracking-[0.3em] text-gray-800">
+            Salman Faris • Sovereign Year
+        </div>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mt-20 text-gold-dust hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+        </button>
+    </footer>
 
     <script>
-        // Initialize Lucide icons after the window loads
-        window.onload = function() {
-            lucide.createIcons();
-        };
+        // 1. LIVE TIME ENGINE (12-hour format, no seconds)
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const timeStr = now.toLocaleTimeString('en-US', options).toLowerCase();
+            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase().replace(',', ' /');
+            
+            document.getElementById('live-time').textContent = timeStr;
+            document.getElementById('live-date').textContent = dateStr;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // 2. SELF-HIDING HEADER
+        let lastScroll = 0;
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll <= 0) {
+                nav.classList.remove('nav-hidden');
+                return;
+            }
+            if (currentScroll > lastScroll && !nav.classList.contains('nav-hidden')) {
+                nav.classList.add('nav-hidden');
+            } else if (currentScroll < lastScroll && nav.classList.contains('nav-hidden')) {
+                nav.classList.remove('nav-hidden');
+            }
+            lastScroll = currentScroll;
+        });
+
+        // 3. DAILY CONTENT ENGINE (Expanded to demonstrate cycling)
+        const protocols = [
+            {
+                title: "Ghost",
+                meta: "PROTOCOL 01: INVISIBILITY",
+                sub: "Living for no one but the mirror.",
+                p1: "The world wants you distracted. It feeds on your attention and leaves you with hollow echoes. To truly live, you must first disappear.",
+                p2: "Delete the feed. Burn the digital validation. True power is found in the silence of the early morning and the weight of a heavy task.",
+                p3: "Hard work is not a chore; it is worship. It is the only honest way to pay for the space you occupy. Take the stairs of discipline.",
+                p4: "Your potential is strangled by comfort. Wake up. Sweat. Build. Suffer if you must, but do not waste your only currency: Time."
+            },
+            {
+                title: "Obsidian",
+                meta: "PROTOCOL 02: HARDNESS",
+                sub: "Forged in the pressure of silence.",
+                p1: "Comfort is a slow poison. It numbs the mind and softens the spirit. Seek the friction, for only friction creates the heat of growth.",
+                p2: "Stop seeking applause for things you haven't finished. The loudest man in the room is often the weakest. Let your results scream.",
+                p3: "Social media is a curated lie. Your reality is the only thing that matters. Build a life you don't need to post about to feel alive.",
+                p4: "Every minute you spend scrolling is a minute you donate to another person's dream. Reclaim your focus. Reclaim your life."
+            },
+            {
+                title: "Sovereign",
+                meta: "PROTOCOL 03: AUTONOMY",
+                sub: "You are the master of your clock.",
+                p1: "Dependency is the ultimate cage. Whether it's the dependency on a scroll, a like, or an easy path—break the bars today.",
+                p2: "Focus is the new IQ. In an age of infinite distraction, the ability to do deep work is a superpower that few will ever possess.",
+                p3: "Discipline is the highest form of self-love. It is the promise you make to your future self that you will not fail them.",
+                p4: "The clock does not care about your feelings. It only records your actions. Make every second count towards your evolution."
+            }
+            // Add up to 30 objects here for 30 days.
+        ];
+
+        function loadDailyContent() {
+            const dayOfMonth = new Date().getDate();
+            const index = (dayOfMonth - 1) % protocols.length;
+            const data = protocols[index];
+
+            document.getElementById('topic-meta').textContent = data.meta;
+            document.getElementById('hero-title').innerHTML = `The <span class="text-white not-italic">${data.title}</span>`;
+            document.getElementById('hero-sub').textContent = data.sub;
+
+            const contentHTML = `
+                <div class="reveal">
+                    <p class="font-display text-5xl md:text-7xl leading-[1.1] text-gray-400 text-indent">
+                        ${data.p1.split(' ').slice(0, -2).join(' ')} <span class="text-white italic">${data.p1.split(' ').slice(-2).join(' ')}</span>.
+                    </p>
+                </div>
+                <div class="reveal">
+                    <p class="font-display text-5xl md:text-7xl leading-[1.1] text-gray-100">
+                        ${data.p2}
+                    </p>
+                </div>
+                <div class="py-20 text-center reveal">
+                    <h2 class="font-display text-7xl md:text-[12rem] italic text-gold-dust opacity-20">NO WITNESSES.</h2>
+                </div>
+                <div class="reveal">
+                    <p class="font-display text-5xl md:text-7xl leading-[1.1] text-gray-400 text-indent">
+                        ${data.p3}
+                    </p>
+                </div>
+                <div class="reveal">
+                    <p class="font-display text-5xl md:text-7xl leading-[1.1] text-gray-100">
+                        ${data.p4}
+                    </p>
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = contentHTML;
+        }
+
+        loadDailyContent();
+
+        // 4. REVEAL OBSERVER
+        const observerOptions = { threshold: 0.05, rootMargin: '0px 0px -100px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        setTimeout(() => {
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }, 100);
     </script>
 </body>
 </html>
