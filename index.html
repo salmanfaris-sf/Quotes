@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Stay Motivated.</title>
-<meta name="description" content="A minimal,black background motivations. Featuring auto-play, shuffle, and fullscreen mode to keep you driven." />
+<title>Relentless Motivation | Daily Discipline Quotes</title>
+<meta name="description" content="A minimal, immersive space for relentless motivation, discipline, and focus. Featuring auto-play, shuffle, and fullscreen mode to keep you driven." />
+
+<!-- Status Bar Styling -->
+<meta name="theme-color" content="#000000" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="msapplication-navbutton-color" content="#000000" />
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -22,6 +28,7 @@ gtag('config', 'G-1K1TKBQFFK');
   --v4: #d1d5db;
   --v5: #A0A0A0;
   --v6: #60a5fa;
+  --v7: rgba(160, 160, 160, 0.15);
 }
 body {
   font-family: 'Inter', sans-serif;
@@ -64,7 +71,7 @@ body {
   color: var(--v5);
   padding: 8px;
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.2s ease, opacity 0.2s ease;
+  transition: color 0.3s ease, transform 0.2s ease, opacity 0.2s ease, background-color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,6 +91,13 @@ body {
   width: 0;
   padding: 0;
   margin: 0;
+}
+#b06 {
+  background-color: var(--v7);
+  border-radius: 9999px;
+}
+.is-fs #b06 {
+  background-color: transparent;
 }
 #y01 {
   transition: opacity 0.5s ease;
@@ -151,6 +165,7 @@ body {
 <script>
 const _q = [
   {text:"You have 86,400 seconds each day — make sure not a single one goes to waste."},
+  {text:"If you can study 12 hours a day with discipline and focus, you will become unrecognisable."},
   {text:"Be better than you were yesterday."},
   {text:"فَاسْتَبِقُوا الْخَيْرَاتِ\n\"So race one another in good deeds.\"\n(Qur'an 2:148)"},
   {text:"Don't waste time. You don't get it back."},
@@ -295,6 +310,11 @@ _b03.onclick = () => {
 };
 
 document.onfullscreenchange = () => {
+  if (document.fullscreenElement) {
+    document.body.classList.add('is-fs');
+  } else {
+    document.body.classList.remove('is-fs');
+  }
   _u1(_vis ? 'visible' : 'hidden');
   if (!document.fullscreenElement) {
     _ort = 'portrait-primary';
