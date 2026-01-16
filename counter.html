@@ -1,2 +1,702 @@
-<!DOCTYPE html><html lang="en"><head><script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-1K1TKBQFFK')</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#000"><title>Dhikr Counter</title><style>:root{--b:#000;--t:#fff;--s:#fff;--m:#1c1c1e;--instruction-bg:rgba(255,255,255,0.1)}*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body,html{overscroll-behavior-y:contain;height:100vh;width:100vw;overflow:hidden;background:var(--b);color:var(--t);font-family:-apple-system,system-ui,sans-serif;cursor:pointer;user-select:none;touch-action:none;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center}.q4_z8{position:fixed;top:35px;left:25px;font-size:.75rem;letter-spacing:.15rem;text-transform:uppercase;font-weight:700;color:var(--s);z-index:5;transition:opacity .4s}.k9_w2{position:fixed;top:20px;right:20px;display:flex;gap:12px;z-index:10;transition:opacity .4s}.k9_w2 button{background:none;border:none;color:var(--s);padding:10px;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center}.j1_p0{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-grow:1;width:100%;pointer-events:none}.x5_v3{font-size:18vw;line-height:1;text-align:center;padding:0 10px;pointer-events:auto;outline:none;word-break:break-all;max-width:100%}.f7_r1{font-size:1rem;letter-spacing:.05rem;text-transform:uppercase;font-weight:400;color:var(--s);margin-top:25px;opacity:0;transition:opacity .8s ease-in-out}.f7_r1.v{opacity:1}.t2_y4{position:fixed;bottom:30px;left:0;width:100%;text-align:center;font-size:.75rem;letter-spacing:.01rem;text-transform:lowercase;color:var(--s);pointer-events:none;display:flex;justify-content:center;gap:10px;padding:0 20px;flex-wrap:wrap;font-weight:400;transition:opacity .4s}.t2_y4 span{background:var(--instruction-bg);padding:6px 12px;border-radius:8px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}.m3_k6{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0);display:none;justify-content:center;align-items:center;z-index:20;pointer-events:none}.m3_k6.a{display:flex;background:rgba(0,0,0,.6);pointer-events:auto}.n8_m9{background:var(--m);padding:24px;border-radius:12px;width:85%;max-width:320px;box-shadow:0 20px 40px rgba(0,0,0,.5);transform:scale(.85);opacity:0;transition:transform .3s,opacity .3s}.a .n8_m9{transform:scale(1);opacity:1}.n8_m9 h2{font-size:1.1rem;margin-bottom:20px;color:var(--t)}.g5_h3{display:flex;justify-content:flex-end;gap:8px}.g5_h3 button{background:none;border:none;color:var(--s);font-size:.85rem;font-weight:700;padding:8px 12px;text-transform:uppercase}.h2_q1{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.12);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);padding:12px 24px;border-radius:50px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .4s,top .4s;pointer-events:none;z-index:3000;color:var(--s);text-align:center;width:max-content;max-width:90vw}body.is-fullscreen .t2_y4,body.is-fullscreen .k9_w2,body.is-fullscreen .f7_r1,body.is-fullscreen .q4_z8{opacity:0!important;pointer-events:none}</style></head><body oncontextmenu="return!1"><div class="q4_z8" id="ub">Counter</div><div class="k9_w2" id="uh"><button id="fx"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button></div><div id="tn" class="h2_q1"></div><div class="j1_p0"><div id="dc" class="x5_v3" contenteditable="false" inputmode="numeric">0</div><div id="mt" class="f7_r1 v">Tap anywhere to count</div></div><div id="iv" class="t2_y4"><span>swipe up: edit</span><span>swipe down: minus one</span><span>swipe left: reset</span><span>swipe right: thickness</span><span>long press: sound on/off</span></div><div id="om" class="m3_k6"><div class="n8_m9"><h2>reset counter to 0?</h2><div class="g5_h3"><button onclick="cl('om')">Cancel</button><button style="color:#ff453a" onclick="rs()">Reset</button></div></div></div><script>(function(){document.onkeydown=function(e){if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67))||(e.ctrlKey&&e.keyCode==85))return!1};setInterval(function(){(function(a){return(function(a){return(function(a){return(function(a){return(function(a){return a})(a)})(a)})(a)})(a)})(0);debugger},200);(function(){const a=document,b=window,c='_n_c',d='_n_b',e='_m_s',f=a.getElementById('dc'),g=a.getElementById('fx'),h=a.getElementById('tn'),i=a.getElementById('mt'),j=a.getElementById('iv');let k=parseInt(localStorage.getItem(c))||0,l=localStorage.getItem(d)==='true',m=localStorage.getItem(e)!=='false',n=0,o=0,p=null,q=0,r=null,s=null;const t=new(b.AudioContext||b.webkitAudioContext)();function u(){if(s)clearTimeout(s);i.classList.remove('v');s=setTimeout(()=>{i.classList.add('v')},5e3)}function v(){if(m)return;if(t.state==='suspended')t.resume();const o=t.createOscillator(),g=t.createGain();o.type='square';o.frequency.setValueAtTime(2400,t.currentTime);g.gain.setValueAtTime(0.1,t.currentTime);g.gain.exponentialRampToValueAtTime(0.001,t.currentTime+0.02);o.connect(g);g.connect(t.destination);o.start();o.stop(t.currentTime+0.02)}function w(){f.textContent=k.toLocaleString('en-US');f.style.fontWeight=l?'700':'100'}function x(){localStorage.setItem(c,k);localStorage.setItem(d,l);localStorage.setItem(e,m)}b.addEventListener('visibilitychange',()=>{if(a.visibilityState==='hidden')x()});function y(z){z.contentEditable="true";z.focus();const r=a.createRange(),s=b.getSelection();r.selectNodeContents(z);r.collapse(!1);s.removeAllRanges();s.addRange(r)}b.cl=function(i){const x=a.getElementById(i);x.classList.remove('a');setTimeout(()=>x.style.display='none',300)};b.rs=function(){k=0;w();x();cl('om')};function z(m,d){if(r)clearTimeout(r);h.textContent=m;h.style.opacity=1;h.style.top='80px';r=setTimeout(()=>{h.style.opacity=0;h.style.top='60px';r=null},d)}a.body.addEventListener('touchstart',e=>{u();if(e.target.closest('.k9_w2')||e.target.closest('.n8_m9'))return;n=e.touches[0].clientX;o=e.touches[0].clientY;if(t.state==='suspended')t.resume();p=setTimeout(()=>{m=!m;q=1;if(navigator.vibrate)navigator.vibrate(50);z(m?"tap sound off.":"tap sound on, increase volume to hear.",m?2e3:5e3)},800)});a.body.addEventListener('touchend',e=>{if(e.target.closest('.k9_w2')||e.target.closest('.n8_m9'))return;if(p){clearTimeout(p);p=null}if(q){q=0;return}if(f.contentEditable==="true"){f.blur();return}if(a.querySelector('.m3_k6.a'))return;const dx=n-e.changedTouches[0].clientX,dy=o-e.changedTouches[0].clientY;if(Math.abs(dx)<10&&Math.abs(dy)<10){v();k++;w()}else if(Math.abs(dx)>Math.abs(dy)){if(dx>50){if(navigator.vibrate)navigator.vibrate(60);const x=a.getElementById('om');x.style.display='flex';setTimeout(()=>x.classList.add('a'),10)}else if(dx<-50){l=!l;w()}}else{if(dy>50){setTimeout(()=>y(f),50)}else if(dy<-50){if(k>0)k--;w()}}});g.onclick=e=>{e.stopPropagation();if(!a.fullscreenElement){a.documentElement.requestFullscreen().then(()=>a.body.classList.add('is-fullscreen'))}else{a.exitFullscreen().then(()=>a.body.classList.remove('is-fullscreen'))}};f.onblur=()=>{f.contentEditable="false";let v=f.textContent.replace(/[^\d]/g,'');k=v===''?0:parseInt(v);w();x();u()};w();s=setTimeout(()=>{i.classList.add('v')},0)})()})()</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="theme-color" content="#000">
+    <title>Counter</title>
+    <style>
+        :root {
+            --b: #000;
+            --t: #fff;
+            --s: #fff;
+            --m: rgba(15, 15, 15, 0.85); /* Darker, more "blacky" glass base */
+            --instruction-bg: rgba(255, 255, 255, 0.1);
+            --accent: #34c759;
+            --danger: #ff453a;
+            --warning: #ff9500;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        body,
+        html {
+            overscroll-behavior-y: contain;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--b);
+            color: var(--t);
+            font-family: -apple-system, system-ui, sans-serif;
+            cursor: pointer;
+            user-select: none;
+            touch-action: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center
+        }
+
+        .q4_z8 {
+            position: fixed;
+            top: 35px;
+            left: 25px;
+            font-size: .75rem;
+            letter-spacing: .15rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--s);
+            z-index: 15;
+            transition: opacity .4s;
+            padding: 10px;
+            margin: -10px;
+            pointer-events: auto;
+        }
+
+        .k9_w2 {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+            transition: opacity .4s
+        }
+
+        .k9_w2 button {
+            background: none;
+            border: none;
+            color: var(--s);
+            padding: 10px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .j1_p0 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: 100%;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .progress-container {
+            position: absolute;
+            width: 80vw;
+            height: 80vw;
+            max-width: 400px;
+            max-height: 400px;
+            pointer-events: none;
+            display: none;
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+            stroke: var(--accent);
+            opacity: 0.3;
+        }
+
+        #info-bar {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 15px;
+            z-index: 5;
+        }
+
+        .info-item {
+            display: none;
+        }
+
+        .info-item.visible {
+            display: inline-block;
+        }
+
+        .x5_v3 {
+            font-size: 18vw;
+            line-height: 1;
+            text-align: center;
+            padding: 0 10px;
+            pointer-events: auto;
+            outline: none;
+            word-break: break-all;
+            max-width: 100%;
+            z-index: 5;
+        }
+
+        .f7_r1 {
+            font-size: 1rem;
+            letter-spacing: .05rem;
+            text-transform: uppercase;
+            font-weight: 400;
+            color: var(--s);
+            margin-top: 25px;
+            opacity: 0;
+            transition: opacity .8s ease-in-out;
+            z-index: 5;
+        }
+
+        .f7_r1.v {
+            opacity: 1
+        }
+
+        .t2_y4 {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: .65rem;
+            letter-spacing: .01rem;
+            text-transform: lowercase;
+            color: var(--s);
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 20px;
+            flex-wrap: wrap;
+            font-weight: 400;
+            transition: opacity .4s;
+            z-index: 5;
+        }
+
+        .t2_y4 span {
+            background: var(--instruction-bg);
+            padding: 4px 10px;
+            border-radius: 6px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px)
+        }
+
+        .m3_k6 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            pointer-events: none;
+            transition: background 0.3s;
+        }
+
+        .m3_k6.a {
+            display: flex;
+            background: rgba(0, 0, 0, .6);
+            pointer-events: auto
+        }
+
+        .n8_m9 {
+            background: var(--m);
+            backdrop-filter: blur(35px); /* Increased blur for deep glass look */
+            -webkit-backdrop-filter: blur(35px);
+            padding: 24px;
+            border-radius: 6px;
+            width: 85%;
+            max-width: 320px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .8);
+            transform: scale(.85) translateY(0);
+            opacity: 0;
+            transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1), opacity .3s;
+            border: none; /* Removed all borders */
+        }
+
+        .keyboard-modal .n8_m9 {
+            margin-bottom: 25vh;
+        }
+
+        .centered-modal .n8_m9 {
+            margin-bottom: 0;
+        }
+
+        .a .n8_m9 {
+            transform: scale(1) translateY(0);
+            opacity: 1
+        }
+
+        .n8_m9 h2 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--t);
+            font-weight: 600;
+        }
+
+        .n8_m9 p.desc {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .n8_m9 input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 16px; 
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .g5_h3 {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .g5_h3 button {
+            background: none;
+            border: none;
+            color: var(--s);
+            font-size: .85rem;
+            font-weight: 700;
+            padding: 8px 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            opacity: 0.9;
+        }
+
+        .h2_q1 {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 0;
+            border-radius: 50px;
+            font-size: .8rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity .4s, top .4s;
+            pointer-events: none;
+            z-index: 3000;
+            color: var(--s);
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+            width: max-content;
+            max-width: 85vw;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .h2_q1.active {
+            pointer-events: auto;
+        }
+
+        .h2_q1 span {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px 8px 18px;
+            white-space: nowrap;
+        }
+
+        .h2_q1 button {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #fff;
+            padding: 0 16px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            transition: background 0.2s;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            display: none;
+        }
+
+        .h2_q1 button:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.is-fullscreen .t2_y4,
+        body.is-fullscreen .k9_w2,
+        body.is-fullscreen .f7_r1,
+        body.is-fullscreen .q4_z8 {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return!1">
+    <div class="q4_z8" id="ub">
+        <span>Counter</span>
+    </div>
+    <div class="k9_w2" id="uh">
+        <button id="fx"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+            </svg></button>
+    </div>
+    
+    <div id="tn" class="h2_q1">
+        <span id="tn-text"></span>
+        <button id="tn-btn" onclick="disableGoal()">turn off</button>
+    </div>
+    
+    <div class="j1_p0">
+        <div id="progress-container" class="progress-container">
+            <svg class="progress-ring" width="100%" height="100%" viewBox="0 0 100 100">
+                <circle class="progress-ring__circle" stroke-width="2" fill="transparent" r="48" cx="50" cy="50"/>
+            </svg>
+        </div>
+        <div id="info-bar">
+            <span id="step-display" class="info-item">Increment: 1</span>
+            <span id="goal-display" class="info-item">Goal: 0</span>
+        </div>
+        <div id="dc" class="x5_v3" contenteditable="false" inputmode="numeric">0</div>
+        <div id="mt" class="f7_r1 v">Tap anywhere to count</div>
+    </div>
+
+    <div id="iv" class="t2_y4">
+        <span>swipe up: edit</span>
+        <span>swipe left: reset</span>
+        <span>swipe down: minus</span>
+        <span>swipe right: increment</span>
+        <span>tap "counter" to set goal</span>
+        <span>long press for tap sound</span>
+    </div>
+
+    <div id="om" class="m3_k6 centered-modal">
+        <div class="n8_m9">
+            <h2>Reset counter to 0?</h2>
+            <div class="g5_h3">
+                <button onclick="cl('om')">Cancel</button>
+                <button style="color:var(--danger)" onclick="rs()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mm" class="m3_k6 centered-modal">
+        <div class="n8_m9">
+            <h2 id="minus-text">Subtract from counter?</h2>
+            <div class="g5_h3">
+                <button onclick="cl('mm')">Cancel</button>
+                <button style="color:var(--warning)" onclick="performMinus()">Subtract</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sm" class="m3_k6 keyboard-modal">
+        <div class="n8_m9">
+            <h2>Set Increment</h2>
+            <p class="desc">Enter the amount to add with every tap.</p>
+            <input type="number" id="step-input" placeholder="e.g. 2, 4, 5, 10, 100..." pattern="\d*">
+            <div class="g5_h3">
+                <button onclick="cl('sm')">Cancel</button>
+                <button id="reset-step-btn" style="color:#0a84ff" onclick="resetToDefaultStep()">Reset to 1</button>
+                <button style="color:var(--accent)" onclick="saveStep()">Set</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gm" class="m3_k6 keyboard-modal">
+        <div class="n8_m9">
+            <h2>Set Target Goal</h2>
+            <p class="desc">Reach a specific count to receive a long vibration alert.</p>
+            <input type="number" id="goal-input" placeholder="e.g. 33, 100, 1000..." pattern="\d*">
+            <div class="g5_h3">
+                <button onclick="cl('gm')">Cancel</button>
+                <button id="off-goal-btn" style="color:var(--danger)" onclick="disableGoal()">Remove Goal</button>
+                <button style="color:var(--accent)" onclick="saveGoal()">Set Goal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            document.onkeydown = function (e) {
+                if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return !1
+            };
+
+            const a = document, b = window;
+            const keys = { count: '_n_c', bold: '_n_b', sound: '_m_s', step: '_n_step', goal: '_n_goal' };
+            
+            const f = a.getElementById('dc'), g = a.getElementById('fx'), h = a.getElementById('tn'), i = a.getElementById('mt'), hText = a.getElementById('tn-text'), hBtn = a.getElementById('tn-btn');
+            const sd = a.getElementById('step-display'), gd = a.getElementById('goal-display'), si = a.getElementById('step-input'), mt_text = a.getElementById('minus-text'), rsb = a.getElementById('reset-step-btn');
+            const ub = a.getElementById('ub'), gi = a.getElementById('goal-input'), ogb = a.getElementById('off-goal-btn'), pc = a.getElementById('progress-container'), ring = a.querySelector('.progress-ring__circle');
+            
+            let k = parseInt(localStorage.getItem(keys.count)) || 0;
+            let step = parseInt(localStorage.getItem(keys.step)) || 1;
+            let goal = parseInt(localStorage.getItem(keys.goal)) || 0;
+            let l = localStorage.getItem(keys.bold) === 'true';
+            let m = localStorage.getItem(keys.sound) !== 'false';
+            let n = 0, o = 0, p = null, q = 0, r = null, s = null;
+
+            const t = new (b.AudioContext || b.webkitAudioContext)();
+            const radius = ring.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            ring.style.strokeDasharray = `${circumference} ${circumference}`;
+
+            function u() {
+                if (s) clearTimeout(s);
+                i.classList.remove('v');
+                s = setTimeout(() => { i.classList.add('v') }, 5000)
+            }
+
+            function v() {
+                if (m) return;
+                if (t.state === 'suspended') t.resume();
+                const o = t.createOscillator(), g = t.createGain();
+                o.type = 'square';
+                o.frequency.setValueAtTime(2400, t.currentTime);
+                g.gain.setValueAtTime(0.05, t.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, t.currentTime + 0.02);
+                o.connect(g);
+                g.connect(t.destination);
+                o.start();
+                o.stop(t.currentTime + 0.02)
+            }
+
+            function updateProgress() {
+                if (goal > 0) {
+                    pc.classList.add('active');
+                    const offset = circumference - (Math.min(k, goal) / goal) * circumference;
+                    ring.style.strokeDashoffset = offset;
+                    ring.style.opacity = k >= goal ? "1" : "0.3";
+                    ring.style.stroke = k >= goal ? "var(--accent)" : "#fff";
+                } else {
+                    pc.classList.remove('active');
+                }
+            }
+
+            function w() {
+                f.textContent = k.toLocaleString('en-US');
+                f.style.fontWeight = l ? '700' : '100';
+                
+                if (step > 1) {
+                    sd.textContent = 'Increment: ' + step;
+                    sd.classList.add('visible');
+                } else {
+                    sd.classList.remove('visible');
+                }
+
+                if (goal > 0) {
+                    gd.textContent = 'Goal: ' + goal.toLocaleString('en-US');
+                    gd.classList.add('visible');
+                } else {
+                    gd.classList.remove('visible');
+                }
+
+                updateProgress();
+            }
+
+            function x() {
+                localStorage.setItem(keys.count, k);
+                localStorage.setItem(keys.bold, l);
+                localStorage.setItem(keys.sound, m);
+                localStorage.setItem(keys.step, step);
+                localStorage.setItem(keys.goal, goal);
+            }
+
+            b.cl = function (id) {
+                const x = a.getElementById(id);
+                x.classList.remove('a');
+                setTimeout(() => x.style.display = 'none', 300)
+            };
+
+            b.rs = function () {
+                k = 0; w(); x(); cl('om');
+                z("counter reset", 2000);
+            };
+
+            b.performMinus = function() {
+                if (k >= step) k -= step; else k = 0;
+                w(); x(); cl('mm');
+                z("number subtracted", 2000);
+            };
+
+            b.saveStep = function() {
+                const newVal = parseInt(si.value);
+                step = (!isNaN(newVal) && newVal > 0) ? newVal : 1;
+                z(`increment set to ${step}`, 2000);
+                w(); x(); cl('sm');
+            };
+
+            b.resetToDefaultStep = function() {
+                step = 1; 
+                z("increment reset to 1", 2000);
+                w(); x(); cl('sm');
+            };
+
+            b.saveGoal = function() {
+                const newVal = parseInt(gi.value);
+                if (!isNaN(newVal) && newVal > 0) {
+                    goal = newVal;
+                    z(`goal set to ${goal}`, 2000);
+                }
+                w(); x(); cl('gm');
+            };
+
+            b.disableGoal = function() {
+                goal = 0;
+                z("goal removed", 2000);
+                w(); x(); 
+                if (a.getElementById('gm').classList.contains('a')) cl('gm');
+            };
+
+            function z(msg, d, showBtn = false) {
+                if (r) clearTimeout(r);
+                hText.textContent = msg;
+                hBtn.style.display = showBtn ? 'inline-block' : 'none';
+                
+                h.classList.add('active');
+                h.style.opacity = 1;
+                h.style.top = '80px';
+                
+                if (showBtn) d = 8000;
+
+                r = setTimeout(() => { 
+                    h.style.opacity = 0; 
+                    h.style.top = '60px'; 
+                    setTimeout(() => h.classList.remove('active'), 400);
+                    r = null;
+                }, d)
+            }
+
+            ub.onclick = e => {
+                e.stopPropagation();
+                gi.value = goal || '';
+                ogb.style.display = goal > 0 ? 'inline-block' : 'none';
+                const x = a.getElementById('gm');
+                x.style.display = 'flex';
+                setTimeout(() => { x.classList.add('a'); gi.focus(); }, 10);
+            };
+
+            a.body.addEventListener('touchstart', e => {
+                u();
+                if (e.target.closest('.k9_w2') || e.target.closest('.n8_m9') || e.target.closest('.q4_z8') || e.target.closest('.h2_q1')) return;
+                n = e.touches[0].clientX;
+                o = e.touches[0].clientY;
+                if (t.state === 'suspended') t.resume();
+                p = setTimeout(() => {
+                    m = !m;
+                    q = 1;
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    const msg = m ? "tap sound off" : "tap sound on (increase device volume to hear)";
+                    z(msg, m ? 2000 : 4000)
+                }, 800)
+            });
+
+            a.body.addEventListener('touchend', e => {
+                if (e.target.closest('.k9_w2') || e.target.closest('.n8_m9') || e.target.closest('.q4_z8') || e.target.closest('.h2_q1')) return;
+                if (p) { clearTimeout(p); p = null }
+                if (q) { q = 0; return }
+                if (f.contentEditable === "true") { f.blur(); return }
+                if (a.querySelector('.m3_k6.a')) return;
+
+                const dx = n - e.changedTouches[0].clientX, dy = o - e.changedTouches[0].clientY;
+                
+                if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                    v();
+                    const prevK = k;
+                    k += step;
+                    
+                    if (goal > 0 && prevK < goal && k >= goal) {
+                        if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+                        z("goal reached!", 6000, true);
+                    } else if (navigator.vibrate) {
+                        navigator.vibrate(20);
+                    }
+                    w()
+                } else if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 50) {
+                        if (navigator.vibrate) navigator.vibrate(60);
+                        const x = a.getElementById('om');
+                        x.style.display = 'flex';
+                        setTimeout(() => x.classList.add('a'), 10)
+                    } else if (dx < -50) {
+                        si.value = step === 1 ? '' : step;
+                        rsb.style.display = step === 1 ? 'none' : 'inline-block';
+                        const x = a.getElementById('sm');
+                        x.style.display = 'flex';
+                        setTimeout(() => { x.classList.add('a'); setTimeout(() => si.focus(), 100); }, 10)
+                    }
+                } else {
+                    if (dy > 50) {
+                        f.contentEditable = "true";
+                        f.focus();
+                        const r = a.createRange(), s = b.getSelection();
+                        r.selectNodeContents(f);
+                        r.collapse(!1);
+                        s.removeAllRanges();
+                        s.addRange(r)
+                    } else if (dy < -50) {
+                        if (k > 0) {
+                            if (navigator.vibrate) navigator.vibrate(40);
+                            mt_text.textContent = `Subtract ${step} from counter?`;
+                            const x = a.getElementById('mm');
+                            x.style.display = 'flex';
+                            setTimeout(() => x.classList.add('a'), 10);
+                        }
+                    }
+                }
+            });
+
+            g.onclick = e => {
+                e.stopPropagation();
+                if (!a.fullscreenElement) {
+                    a.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    a.exitFullscreen().catch(() => {});
+                }
+            };
+
+            a.addEventListener('fullscreenchange', () => {
+                if (a.fullscreenElement) {
+                    a.body.classList.add('is-fullscreen');
+                } else {
+                    a.body.classList.remove('is-fullscreen');
+                }
+            });
+
+            f.onblur = () => {
+                f.contentEditable = "false";
+                let val = f.textContent.replace(/[^\d]/g, '');
+                k = val === '' ? 0 : parseInt(val);
+                w(); x(); u()
+            };
+
+            w();
+            s = setTimeout(() => { i.classList.add('v') }, 0)
+        })()
+    </script>
+</body>
+</html>
 
