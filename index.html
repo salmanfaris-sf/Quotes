@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-1K1TKBQFFK');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>Quotes.</title>
@@ -60,12 +52,11 @@
             100% { transform: translateX(0); opacity: 1; }
         }
 
-        /* Updated Notification Style: Fade-in from Top */
+        /* Notification Pop-up: Moved further down from top: 15px to top: 40px */
         #g4x_pop {
             position: fixed;
-            top: 15px;
+            top: 40px;
             left: 50%;
-            /* Starts slightly higher with 0 opacity */
             transform: translateX(-50%) translateY(-10px);
             background: rgba(30, 30, 30, 0.85);
             backdrop-filter: blur(12px);
@@ -84,13 +75,11 @@
         
         #g4x_pop.show {
             opacity: 1;
-            /* Fades and slides down to rest */
             transform: translateX(-50%) translateY(0);
         }
 
         #g4x_pop.hide {
             opacity: 0;
-            /* Fades and slides slightly back up */
             transform: translateX(-50%) translateY(-10px);
         }
 
@@ -115,11 +104,10 @@
 (function(){
     const quotes = [
         { t: "Be better than you were yesterday." },
-        { t:"So race one another in good deeds.(Qur'an 2:148)" },
-        { t: "Don't waste time.You don't get it back." },
+        { t: "So race one another in good deeds. (Qur'an 2:148)" },
+        { t: "Don't waste time.\nYou don't get it back." },
         { t: "Focus." },
-        { t: "The problem is,
-you think you have a lot of time to live." },
+        { t: "The problem is, you think you have a lot of time to live." },
         { t: "Live everyday like it's your last day." },
         { t: "Consistency." },
         { t: "Big dreams need big sacrifices." },
@@ -130,7 +118,7 @@ you think you have a lot of time to live." },
         { t: "You have 86,400 seconds each day — make sure not a single one goes to waste." },
         { t: "You can't have a million-dollar dream with a minimum-wage work ethic." },
         { t: "A real man protects and provides." },
-        { t: "Don't follow the crowd.Follow the truth." },
+        { t: "Don't follow the crowd.\nFollow the truth." },
         { t: "Never build your happiness on someone else's tears." },
         { t: "Eliminate the 'tomorrow' mindset today." },
         { t: "The strongest man is he who controls his anger." },
@@ -162,7 +150,7 @@ you think you have a lot of time to live." },
         { t: "Every day counts." },
         { t: "Habits decide outcomes." },
         { t: "Growth requires discomfort." },
-        { t: "Sweat more in practice.Bleed less in war." },
+        { t: "Sweat more in practice.\nBleed less in war." },
         { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it—it was the result of all the hits that happened before it." },
         { t: "It always seems impossible until it's done." }
     ];
@@ -176,8 +164,9 @@ you think you have a lot of time to live." },
     let autoPlayInterval = null;
     let historyStack = [];
     
-    let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
+    let touchStartX = 0, touchStartY = 0;
     let longPressTimer;
+    let isLongPress = false;
 
     function notify(text) {
         popText.innerText = text;
@@ -241,12 +230,12 @@ you think you have a lot of time to live." },
     }
 
     function toggleAutoPlay() {
+        isLongPress = true;
         if(autoPlayInterval) {
             clearInterval(autoPlayInterval);
             autoPlayInterval = null;
             notify("auto play off");
         } else {
-            nextQuote();
             autoPlayInterval = setInterval(() => nextQuote(), 5000);
             notify("auto play on");
         }
@@ -265,13 +254,14 @@ you think you have a lot of time to live." },
     document.addEventListener('touchstart', e => {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
+        isLongPress = false; 
         longPressTimer = setTimeout(toggleAutoPlay, 600);
     }, {passive: false});
 
     document.addEventListener('touchend', e => {
         clearTimeout(longPressTimer);
-        touchEndX = e.changedTouches[0].clientX;
-        touchEndY = e.changedTouches[0].clientY;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
         
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
@@ -279,7 +269,9 @@ you think you have a lot of time to live." },
         const absY = Math.abs(diffY);
         const threshold = 60;
 
-        if (Math.max(absX, absY) < 30) {
+        if (isLongPress) return;
+
+        if (Math.max(absX, absY) < 15) {
             nextQuote();
             if (autoPlayInterval) { 
                 clearInterval(autoPlayInterval);
@@ -289,11 +281,8 @@ you think you have a lot of time to live." },
         }
 
         if (absX > absY) {
-            if (diffX > threshold) {
-                prevQuote();
-            } else if (diffX < -threshold) {
-                nextQuote();
-            }
+            if (diffX > threshold) prevQuote();
+            else if (diffX < -threshold) nextQuote();
         } else {
             if (diffY < -threshold) toggleFullscreen();
             if (diffY > threshold) toggleShuffle();
