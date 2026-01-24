@@ -14,16 +14,21 @@
             --text: #e5e7eb;
         }
 
+        /* FIXED: Ensure body takes full height and uses flexbox for absolute centering */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
             color: var(--text);
             user-select: none;
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0;
             padding: 0 20px;
             overflow: hidden;
             touch-action: none;
@@ -35,6 +40,8 @@
             text-align: center;
             position: relative;
             z-index: 10;
+            /* Added margin-top adjustment to account for the top notification bar spacing */
+            margin-top: -20px; 
         }
 
         #g4x_txt {
@@ -52,7 +59,6 @@
             100% { transform: translateX(0); opacity: 1; }
         }
 
-        /* Notification Pop-up: Moved further down from top: 15px to top: 40px */
         #g4x_pop {
             position: fixed;
             top: 40px;
@@ -105,9 +111,9 @@
     const quotes = [
         { t: "Be better than you were yesterday." },
         { t: "So race one another in good deeds. (Qur'an 2:148)" },
-        { t: "Don't waste time.\nYou don't get it back." },
+        { t: "Don't waste time. You don't get it back." },
         { t: "Focus." },
-        { t: "The problem is, you think you have a lot of time to live." },
+        { t: "The problem is,\nyou think you have a lot of time to live." },
         { t: "Live everyday like it's your last day." },
         { t: "Consistency." },
         { t: "Big dreams need big sacrifices." },
@@ -118,7 +124,7 @@
         { t: "You have 86,400 seconds each day — make sure not a single one goes to waste." },
         { t: "You can't have a million-dollar dream with a minimum-wage work ethic." },
         { t: "A real man protects and provides." },
-        { t: "Don't follow the crowd.\nFollow the truth." },
+        { t: "Don't follow the crowd. Follow the truth." },
         { t: "Never build your happiness on someone else's tears." },
         { t: "Eliminate the 'tomorrow' mindset today." },
         { t: "The strongest man is he who controls his anger." },
@@ -150,7 +156,7 @@
         { t: "Every day counts." },
         { t: "Habits decide outcomes." },
         { t: "Growth requires discomfort." },
-        { t: "Sweat more in practice.\nBleed less in war." },
+        { t: "Sweat more in practice. Bleed less in war." },
         { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it—it was the result of all the hits that happened before it." },
         { t: "It always seems impossible until it's done." }
     ];
