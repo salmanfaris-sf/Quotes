@@ -14,12 +14,13 @@
             --text: #e5e7eb;
         }
 
-        /* FIXED: Ensure body takes full height and uses flexbox for absolute centering */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
             background-color: var(--bg);
+            overflow: hidden;
+            touch-action: none;
         }
 
         body {
@@ -30,8 +31,7 @@
             align-items: center;
             justify-content: center;
             padding: 0 20px;
-            overflow: hidden;
-            touch-action: none;
+            cursor: pointer;
         }
 
         .container {
@@ -39,72 +39,41 @@
             width: 100%;
             text-align: center;
             position: relative;
-            z-index: 10;
-            /* Added margin-top adjustment to account for the top notification bar spacing */
-            margin-top: -20px; 
+            z-index: 5;
+            margin-top: -40px;
         }
 
         #g4x_txt {
             transition: opacity 0.3s ease;
             white-space: pre-wrap;
-            opacity: 1;
         }
 
-        .slide-prev {
-            animation: slideInLeft 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        }
-
-        @keyframes slideInLeft {
-            0% { transform: translateX(-40px); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        #g4x_pop {
+        /* Normal grey text as a single sentence */
+        .tap-hint {
             position: fixed;
-            top: 40px;
+            bottom: 40px;
             left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            background: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 6px 16px;
-            border-radius: 100px;
-            z-index: 1000;
-            transition: transform 0.5s ease-out, opacity 0.4s ease-out;
+            transform: translateX(-50%);
+            font-size: 13px;
+            color: #666; /* Grey color */
             pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-        
-        #g4x_pop.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        #g4x_pop.hide {
-            opacity: 0;
-            transform: translateX(-50%) translateY(-10px);
-        }
-
-        #g4x_pop_d {
-            font-size: 12px;
-            font-weight: 400;
-            color: #ccc;
+            transition: opacity 0.5s ease;
             white-space: nowrap;
-            letter-spacing: 0.02em;
-            text-transform: lowercase;
+            letter-spacing: 0.05em; /* Slight spacing for all-caps readability */
+        }
+
+        .tap-hint.hidden {
+            opacity: 0;
         }
     </style>
 </head>
 <body>
-    <div id="g4x_pop"><div id="g4x_pop_d"></div></div>
 
     <div class="container">
         <h1 id="g4x_txt" class="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed"></h1>
     </div>
+
+    <div id="hint" class="tap-hint">TAP ANYWHERE TO VIEW THE NEXT QUOTE.</div>
 
 <script>
 (function(){
@@ -162,140 +131,44 @@
     ];
 
     const display = document.getElementById('g4x_txt');
-    const pop = document.getElementById('g4x_pop');
-    const popText = document.getElementById('g4x_pop_d');
-
-    let currentIndex = 0;
-    let shuffleMode = false;
-    let autoPlayInterval = null;
-    let historyStack = [];
+    const hint = document.getElementById('hint');
     
-    let touchStartX = 0, touchStartY = 0;
-    let longPressTimer;
-    let isLongPress = false;
+    let currentIndex = Math.floor(Math.random() * quotes.length);
+    let firstInteraction = true;
 
-    function notify(text) {
-        popText.innerText = text;
-        pop.classList.remove('show', 'hide');
-        void pop.offsetWidth; 
-        pop.classList.add('show');
-        
-        if (window.popTimer) clearTimeout(window.popTimer);
-        window.popTimer = setTimeout(() => {
-            pop.classList.add('hide');
-            pop.classList.remove('show');
-        }, 1200);
-    }
-
-    function updateDisplay(type = 'fade') {
-        if (type === 'fade') {
-            display.style.opacity = '0';
-            setTimeout(() => {
-                display.innerText = quotes[currentIndex].t;
-                display.classList.remove('slide-prev');
-                display.style.opacity = '1';
-            }, 300);
-        } else if (type === 'prev') {
-            display.style.opacity = '0';
-            display.classList.remove('slide-prev');
-            void display.offsetWidth;
+    function updateDisplay() {
+        display.style.opacity = '0';
+        setTimeout(() => {
             display.innerText = quotes[currentIndex].t;
-            display.classList.add('slide-prev');
             display.style.opacity = '1';
-        }
+        }, 300);
     }
 
-    function nextQuote() {
-        historyStack.push(currentIndex);
-        if(historyStack.length > 50) historyStack.shift();
+    function handleInteraction() {
+        if (firstInteraction) {
+            hint.classList.add('hidden');
+            firstInteraction = false;
+        }
+
+        let next;
+        do { 
+            next = Math.floor(Math.random() * quotes.length); 
+        } while (next === currentIndex && quotes.length > 1);
         
-        if(shuffleMode) {
-            let next;
-            do { next = Math.floor(Math.random() * quotes.length); } while (next === currentIndex);
-            currentIndex = next;
-        } else {
-            currentIndex = (currentIndex + 1) % quotes.length;
-        }
-        updateDisplay('fade');
+        currentIndex = next;
+        updateDisplay();
     }
 
-    function prevQuote() {
-        if(historyStack.length > 0) {
-            currentIndex = historyStack.pop();
-            updateDisplay('prev');
-        } else {
-            currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
-            updateDisplay('prev');
-        }
-        notify("previous");
-    }
+    document.addEventListener('touchend', (e) => {
+        handleInteraction();
+    });
 
-    function toggleShuffle() {
-        shuffleMode = !shuffleMode;
-        notify(shuffleMode ? "shuffle on" : "shuffle off");
-    }
+    document.addEventListener('click', (e) => {
+        if (e.pointerType === 'touch') return;
+        handleInteraction();
+    });
 
-    function toggleAutoPlay() {
-        isLongPress = true;
-        if(autoPlayInterval) {
-            clearInterval(autoPlayInterval);
-            autoPlayInterval = null;
-            notify("auto play off");
-        } else {
-            autoPlayInterval = setInterval(() => nextQuote(), 5000);
-            notify("auto play on");
-        }
-    }
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
-            notify("fullscreen");
-        } else {
-            document.exitFullscreen();
-            notify("exit fullscreen");
-        }
-    }
-
-    document.addEventListener('touchstart', e => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isLongPress = false; 
-        longPressTimer = setTimeout(toggleAutoPlay, 600);
-    }, {passive: false});
-
-    document.addEventListener('touchend', e => {
-        clearTimeout(longPressTimer);
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-        
-        const diffX = touchEndX - touchStartX;
-        const diffY = touchEndY - touchStartY;
-        const absX = Math.abs(diffX);
-        const absY = Math.abs(diffY);
-        const threshold = 60;
-
-        if (isLongPress) return;
-
-        if (Math.max(absX, absY) < 15) {
-            nextQuote();
-            if (autoPlayInterval) { 
-                clearInterval(autoPlayInterval);
-                autoPlayInterval = setInterval(() => nextQuote(), 5000);
-            }
-            return;
-        }
-
-        if (absX > absY) {
-            if (diffX > threshold) prevQuote();
-            else if (diffX < -threshold) nextQuote();
-        } else {
-            if (diffY < -threshold) toggleFullscreen();
-            if (diffY > threshold) toggleShuffle();
-        }
-    }, {passive: false});
-
-    display.innerText = quotes[0].t;
+    display.innerText = quotes[currentIndex].t;
 })();
 </script>
 </body>
