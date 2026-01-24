@@ -1,54 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-1K1TKBQFFK');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>Quotes.</title>
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <style>
-        :root{--v1:#000;--v2:#e5e7eb;--v6:#60a5fa}
-        body{font-family:'Inter',sans-serif;background-color:var(--v1);color:var(--v2);user-select:none;min-height:100vh;display:flex;align-items:center;justify-content:center;margin:0;padding:0 20px;overflow:hidden;touch-action:none}
-        .g4x_m{max-width:800px;width:100%;text-align:center;position:relative;z-index:10}
-        #g4x_txt{transition:opacity .3s;white-space:pre-wrap}
-        #g4x_pop{position:fixed;top:10px;left:50%;transform:translateX(-50%) translateY(-80px);background:#2a2a2a;padding:6px 20px;border-radius:100px;z-index:1000;transition:transform .5s cubic-bezier(0.18,0.89,0.32,1.28),opacity .3s;pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-        #g4x_pop.show{opacity:1;transform:translateX(-50%) translateY(15px)}
-        #g4x_pop_d{font-size:13px;font-weight:500;color:#fff;white-space:nowrap}
-        .g4x_g{position:fixed;bottom:40px;left:0;right:0;text-align:center;pointer-events:none;z-index:5;opacity:1;transition:opacity 0.5s ease}
-        #g4x_tap_hint{margin-top:24px;opacity:1;transition:opacity 0.5s ease}
-        .hidden-ui{opacity:0 !important;pointer-events:none}
+        :root {
+            --bg: #000000;
+            --menu-bg: rgba(20, 20, 20, 0.85);
+            --text-primary: #f5f5f7;
+            --text-secondary: #636366;
+            --tile-bg: rgba(255, 255, 255, 0.04);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            user-select: none;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0 30px;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 28rem;
+            pointer-events: none; 
+        }
+
+        #g4x_txt {
+            transition: opacity 0.5s ease;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+
+        .tap-instruction {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: opacity 0.5s ease;
+        }
+
+        #g4x_pop {
+            position: fixed;
+            bottom: 60px; 
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--menu-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding: 10px 24px;
+            border-radius: 100px;
+            border: none; 
+            z-index: 2000;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s, bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        #g4x_pop.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        #g4x_pop.menu-active {
+            bottom: 310px;
+        }
+        #g4x_pop_d {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        #g4x_menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--menu-bg);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: none; 
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            padding: 12px 20px 44px 20px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+        #g4x_menu.active {
+            transform: translateY(0);
+        }
+
+        .menu-handle-container {
+            width: 100%;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+        }
+        .menu-handle {
+            width: 36px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .menu-item {
+            background: var(--tile-bg);
+            padding: 22px 16px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: background 0.2s ease;
+            cursor: pointer;
+            border: none; /* Ensure no borders on items */
+        }
+
+        .menu-item:active {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(0.97);
+        }
+
+        .menu-item .label {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        .menu-item .status {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .menu-item.active-state {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .menu-item.active-state .status {
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .swipe-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 900;
+        }
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body>
     <div id="g4x_pop"><div id="g4x_pop_d"></div></div>
-    
-    <div id="g4x_guide" class="g4x_g">
-        <div class="flex flex-col gap-2 text-[10px] tracking-wide text-white/30 font-medium">
-            <span>Swipe left: Previous &nbsp;&nbsp;&nbsp;&nbsp; Swipe up: Fullscreen</span>
-            <span>Swipe down: Shuffle &nbsp;&nbsp;&nbsp;&nbsp; Long press: Auto play</span>
-        </div>
+    <div id="g4x_overlay" class="overlay"></div>
+
+    <div class="content-wrapper">
+        <h1 id="g4x_txt" class="text-xl md:text-2xl lg:text-3xl opacity-0"></h1>
+        <div id="tap_hint" class="tap-instruction">Tap anywhere to view next quote</div>
     </div>
 
-    <div class="g4x_m">
-        <div id="g4x_disp">
-            <h1 id="g4x_txt" class="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed"></h1>
-            <div id="g4x_tap_hint" class="text-[11px] font-bold tracking-[0.15em] text-white/40">TAP ANYWHERE TO VIEW NEXT QUOTE</div>
+    <div id="swipe_hint" class="swipe-hint">Swipe up for menu</div>
+
+    <div id="g4x_menu">
+        <div class="menu-handle-container" id="handle_trigger">
+            <div class="menu-handle"></div>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-item" id="btn_prev">
+                <span class="label">Previous Quote</span>
+                <span class="status">Back</span>
+            </div>
+            <div class="menu-item" id="btn_auto">
+                <span class="label">Auto Play</span>
+                <span class="status" id="auto_status">Off</span>
+            </div>
+            <div class="menu-item" id="btn_shuffle">
+                <span class="label">Shuffle</span>
+                <span class="status" id="shuffle_status">Off</span>
+            </div>
+            <div class="menu-item" id="btn_fs">
+                <span class="label">Full Screen</span>
+                <span class="status">Display</span>
+            </div>
         </div>
     </div>
 
 <script>
 (function(){
-    const _0x=[
+    const quotes = [
         {t:"Be better than you were yesterday."},
         {t:"\"So race one another in good deeds.\"\n(Qur'an 2:148)"},
         {t:"Don't waste time. You don't get it back."},
@@ -57,137 +253,213 @@
         {t:"Live everyday like it's your last day."},
         {t:"Consistency."},
         {t:"Big dreams need big sacrifices."},
-        {t:"Practice makes perfect."},
-        {t:"Do it even when you don't feel like it."},
         {t:"Nothing changes if nothing changes."},
         {t:"Stay different."},
-        {t:"You have 86,400 seconds each day — make sure not a single one goes to waste."},
-        {t:"A real man protects and provides."},
-        {t:"The strongest man is he who controls his anger."},
         {t:"Your habits define your future self."},
         {t:"Knowledge without action is useless."},
         {t:"Success is earned, not given."},
         {t:"Stay Disciplined."}
     ];
 
-    const _1x=document;
-    const _2x=_1x.getElementById('g4x_txt');
-    const _3x=_1x.getElementById('g4x_pop');
-    const _4x=_1x.getElementById('g4x_pop_d');
-    const _guide=_1x.getElementById('g4x_guide');
-    const _hint=_1x.getElementById('g4x_tap_hint');
+    const display = document.getElementById('g4x_txt');
+    const pop = document.getElementById('g4x_pop');
+    const popText = document.getElementById('g4x_pop_d');
+    const menu = document.getElementById('g4x_menu');
+    const overlay = document.getElementById('g4x_overlay');
+    const tapHint = document.getElementById('tap_hint');
+    const swipeHint = document.getElementById('swipe_hint');
 
-    let _5x=-1, _6x=0, _7x=0, _8x=null, _9x=[];
-    let uiHidden = false;
+    let currentIndex = 0;
+    let shuffleMode = false;
+    let autoPlayInterval = null;
+    let historyStack = [];
+    let firstInteractionHappened = false;
 
-    function hideUI() {
-        if (!uiHidden) {
-            _guide.classList.add('hidden-ui');
-            _hint.classList.add('hidden-ui');
-            uiHidden = true;
+    let isDragging = false;
+    let startY = 0;
+    let currentY = 0;
+    let menuHeight = 0;
+
+    window.notify = function(text) {
+        popText.innerText = text;
+        pop.classList.remove('show');
+        void pop.offsetWidth; 
+        pop.classList.add('show');
+        setTimeout(() => pop.classList.remove('show'), 1800);
+    };
+
+    function removeHints() {
+        if (!firstInteractionHappened) {
+            firstInteractionHappened = true;
+            tapHint.style.display = "none";
+            swipeHint.style.display = "none";
         }
     }
 
-    function _1y(d){
-        _3x.classList.remove('show');
-        _4x.innerText=d.charAt(0).toUpperCase()+d.slice(1).toLowerCase();
-        setTimeout(()=>{_3x.classList.add('show')},20);
-        setTimeout(()=>{_3x.classList.remove('show')},2000);
+    function updateDisplay() {
+        display.style.opacity = "0";
+        setTimeout(() => {
+            display.innerText = quotes[currentIndex].t;
+            display.style.opacity = "1";
+        }, 300);
     }
 
-    function _2y(){
-        _2x.style.opacity="0";
-        setTimeout(()=>{
-            _2x.innerText=_0x[_5x].t;
-            _2x.style.opacity="1";
-        },300);
-    }
-
-    function _3y(m=true){
-        hideUI();
-        if(_5x!==-1&&m)_9x.push(_5x);
-        if(_9x.length>50)_9x.shift();
-        if(_6x){
-            let n;
-            do{n=Math.floor(Math.random()*_0x.length)}while(n===_5x&&_0x.length>1);
-            _5x=n;
-        }else{
-            _5x=(_5x+1)%_0x.length;
+    window.nextQuote = function() {
+        removeHints();
+        historyStack.push(currentIndex);
+        if(historyStack.length > 50) historyStack.shift();
+        
+        if(shuffleMode) {
+            let next;
+            do { next = Math.floor(Math.random() * quotes.length); } while (next === currentIndex);
+            currentIndex = next;
+        } else {
+            currentIndex = (currentIndex + 1) % quotes.length;
         }
-        _2y();
-    }
+        updateDisplay();
+    };
 
-    function _4y(){
-        hideUI();
-        if(_9x.length>0){
-            _5x=_9x.pop();
-        }else{
-            _5x=(_5x-1+_0x.length)%_0x.length;
+    window.prevQuote = function() {
+        if(historyStack.length > 0) {
+            currentIndex = historyStack.pop();
+            updateDisplay();
+        } else {
+            notify("History Empty");
         }
-        _2y();
-    }
+        closeMenu();
+    };
 
-    function _5y(){
-        hideUI();
-        _7x=!_7x;
-        if(_7x){
-            _3y(false);
-            _8x=setInterval(()=>_3y(false),5000);
-            _1y("Auto play on");
-        }else{
-            clearInterval(_8x);
-            _1y("Auto play off");
+    window.toggleShuffle = function() {
+        shuffleMode = !shuffleMode;
+        document.getElementById('shuffle_status').innerText = shuffleMode ? "On" : "Off";
+        const btn = document.getElementById('btn_shuffle');
+        if(shuffleMode) btn.classList.add('active-state');
+        else btn.classList.remove('active-state');
+        notify(shuffleMode ? "Shuffle Enabled" : "Shuffle Disabled");
+    };
+
+    window.toggleAutoPlay = function() {
+        const status = document.getElementById('auto_status');
+        const btn = document.getElementById('btn_auto');
+        if(autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+            status.innerText = "Off";
+            btn.classList.remove('active-state');
+            notify("Auto-play Stopped");
+        } else {
+            autoPlayInterval = setInterval(nextQuote, 5000);
+            status.innerText = "On";
+            btn.classList.add('active-state');
+            notify("Auto-play Started");
+            nextQuote();
         }
+    };
+
+    window.toggleFullscreen = function() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+            notify("Fullscreen Enabled");
+        } else {
+            document.exitFullscreen();
+            notify("Fullscreen Disabled");
+        }
+        closeMenu();
+    };
+
+    function openMenu() {
+        removeHints();
+        menu.style.transition = "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+        menu.style.transform = "translateY(0)";
+        menu.classList.add('active');
+        overlay.classList.add('active');
+        pop.classList.add('menu-active');
     }
 
-    let _sx, _sy, _st, _lt;
-    const _th=60;
+    function closeMenu() {
+        menu.style.transition = "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+        menu.style.transform = "translateY(100%)";
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+        pop.classList.remove('menu-active');
+    }
 
-    _1x.addEventListener('touchstart',(e)=>{
-        _sx=e.touches[0].clientX;
-        _sy=e.touches[0].clientY;
-        _st=Date.now();
-        _lt=setTimeout(_5y,600);
-    },{passive:false});
+    document.addEventListener('touchstart', e => {
+        startY = e.touches[0].clientY;
+        currentY = startY;
+        menuHeight = menu.offsetHeight;
+        
+        
+        if (menu.contains(e.target)) {
+            isDragging = true;
+            menu.style.transition = "none";
+        }
+    }, {passive: false});
 
-    _1x.addEventListener('touchend',(e)=>{
-        clearTimeout(_lt);
-        const tX=e.changedTouches[0].clientX;
-        const tY=e.changedTouches[0].clientY;
-        const dX=tX-_sx;
-        const dY=tY-_sy;
-        const dT=Date.now()-_st;
+    document.addEventListener('touchmove', e => {
+        if (!isDragging && !menu.classList.contains('active')) {
+            const moveY = e.touches[0].clientY;
+            
+            if (startY - moveY > 15) {
+                isDragging = true;
+            }
+            return;
+        }
+        if (!isDragging) return;
+        
+        currentY = e.touches[0].clientY;
+        const deltaY = currentY - startY;
+        const isMenuOpen = menu.classList.contains('active');
 
-        if(dT<600){
-            if(Math.abs(dX)>_th||Math.abs(dY)>_th){
-                if(Math.abs(dX)>Math.abs(dY)){
-                    if(dX>_th){ _4y(); _1y("Previous"); }
-                    else if(dX<-_th){ _3y(); }
-                }else{
-                    if(dY>_th){ _6x=!_6x; _1y(_6x?"Shuffle on":"Shuffle off"); }
-                    else if(dY<-_th){
-                        if(!_1x.fullscreenElement) _1x.body.requestFullscreen().catch(()=>{});
-                        else if(_1x.exitFullscreen) _1x.exitFullscreen();
-                        _1y("Fullscreen");
-                    }
-                }
-            }else{
-                _3y();
+        if (isMenuOpen) {
+            if (deltaY > 0) {
+                menu.style.transform = `translateY(${deltaY}px)`;
+                overlay.style.opacity = Math.max(0, 1 - (deltaY / menuHeight));
+            }
+        } else {
+            if (deltaY < 0) {
+                const move = Math.max(deltaY, -menuHeight);
+                menu.style.transform = `translateY(${menuHeight + move}px)`;
+                overlay.style.opacity = Math.min(1, Math.abs(deltaY) / menuHeight);
             }
         }
-        if(_7x&&dT<600){
-            clearInterval(_8x);
-            _8x=setInterval(()=>_3y(false),5000);
+        e.preventDefault();
+    }, {passive: false});
+
+    document.addEventListener('touchend', e => {
+        const deltaY = currentY - startY;
+        const isMenuOpen = menu.classList.contains('active');
+
+        if (isDragging) {
+            isDragging = false;
+            if (isMenuOpen) {
+                if (deltaY > 80) closeMenu();
+                else openMenu();
+            } else {
+                if (deltaY < -80) openMenu();
+                else closeMenu();
+            }
+        } else {
+        
+            if (Math.abs(deltaY) < 10) {
+                if (isMenuOpen && !menu.contains(e.target)) {
+                    closeMenu();
+                } else if (!isMenuOpen) {
+                    nextQuote();
+                }
+            }
         }
+        overlay.style.opacity = "";
     });
 
-    _1x.addEventListener('touchmove',(e)=>{
-        if(Math.abs(e.touches[0].clientX-_sx)>10||Math.abs(e.touches[0].clientY-_sy)>10) clearTimeout(_lt);
-    });
-
-    _5x = 0;
-    _2x.innerText = _0x[_5x].t;
-    _2x.style.opacity = "1";
+    document.getElementById('btn_prev').onclick = (e) => { e.stopPropagation(); prevQuote(); };
+    document.getElementById('btn_auto').onclick = (e) => { e.stopPropagation(); toggleAutoPlay(); };
+    document.getElementById('btn_shuffle').onclick = (e) => { e.stopPropagation(); toggleShuffle(); };
+    document.getElementById('btn_fs').onclick = (e) => { e.stopPropagation(); toggleFullscreen(); };
+    overlay.onclick = closeMenu;
+    
+    display.innerText = quotes[0].t;
+    display.style.opacity = "1";
 })();
 </script>
 </body>
