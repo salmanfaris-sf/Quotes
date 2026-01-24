@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1K1TKBQFFK');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>Quotes.</title>
@@ -36,7 +45,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
             width: 100%;
             max-width: 28rem;
             pointer-events: none; 
@@ -52,11 +61,10 @@
         }
 
         .tap-instruction {
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.02em;
             transition: opacity 0.5s ease;
         }
 
@@ -70,7 +78,7 @@
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             padding: 10px 24px;
             border-radius: 100px;
-            border: none; 
+            border: none;
             z-index: 2000;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s, bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             pointer-events: none;
@@ -100,7 +108,7 @@
             background: var(--menu-bg);
             backdrop-filter: blur(40px) saturate(200%);
             -webkit-backdrop-filter: blur(40px) saturate(200%);
-            border: none; 
+            border: none;
             border-top-left-radius: 32px;
             border-top-right-radius: 32px;
             padding: 12px 20px 44px 20px;
@@ -146,7 +154,7 @@
             gap: 4px;
             transition: background 0.2s ease;
             cursor: pointer;
-            border: none; /* Ensure no borders on items */
+            border: none;
         }
 
         .menu-item:active {
@@ -179,15 +187,14 @@
 
         .swipe-hint {
             position: fixed;
-            bottom: 30px;
+            bottom: 35px;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.2em;
-            color: rgba(255, 255, 255, 0.2);
-            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.3);
             transition: opacity 0.5s ease;
             pointer-events: none;
         }
@@ -219,7 +226,7 @@
     <div id="swipe_hint" class="swipe-hint">Swipe up for menu</div>
 
     <div id="g4x_menu">
-        <div class="menu-handle-container" id="handle_trigger">
+        <div class="menu-handle-container">
             <div class="menu-handle"></div>
         </div>
         <div class="menu-grid">
@@ -245,25 +252,41 @@
 <script>
 (function(){
     const quotes = [
-        {t:"Be better than you were yesterday."},
-        {t:"\"So race one another in good deeds.\"\n(Qur'an 2:148)"},
-        {t:"Don't waste time. You don't get it back."},
-        {t:"Focus."},
-        {t:"The problem is, you think you have a lot of time to live."},
-        {t:"Live everyday like it's your last day."},
-        {t:"Consistency."},
-        {t:"Big dreams need big sacrifices."},
-        {t:"Practice makes perfect."},
-        {t:"Do it even when you don't feel like it."},
-        {t:"Nothing changes if nothing changes."},
-        {t:"Stay different."},
-        {t:"You have 86,400 seconds each day — make sure not a single one goes to waste."},
-        {t:"A real man protects and provides."},
-        {t:"The strongest man is he who controls his anger."},
-        {t:"Your habits define your future self."},
-        {t:"Knowledge without action is useless."},
-        {t:"Success is earned, not given."},
-        {t:"Stay Disciplined."}
+        { t: "Be better than you were yesterday." },
+        { t: "\"So race one another in good deeds.\"\n(Qur'an 2:148)" },
+        { t: "Don't waste time. You don't get it back." },
+        { t: "Focus." },
+        { t: "The problem is, you think you have a lot of time to live." },
+        { t: "Live everyday like it's your last day." },
+        { t: "Consistency." },
+        { t: "Big dreams need big sacrifices." },
+        { t: "Practice makes perfect." },
+        { t: "Do it even when you don't feel like it." },
+        { t: "Nothing changes if nothing changes." },
+        { t: "Stay different." },
+        { t: "You have 86,400 seconds each day — make sure not a single one goes to waste." },
+        { t: "You can't have a million-dollar dream with a minimum-wage work ethic." },
+        { t: "A real man protects and provides." },
+        { t: "Don't follow the crowd. Follow the truth." },
+        { t: "Never build your happiness on someone else's tears." },
+        { t: "Eliminate the 'tomorrow' mindset today." },
+        { t: "The strongest man is he who controls his anger." },
+        { t: "Be a man of your word." },
+        { t: "Your habits define your future self." },
+        { t: "Hate Laziness." },
+        { t: "Always speak the truth." },
+        { t: "Time waits for no one." },
+        { t: "Quality over quantity in everything." },
+        { t: "Knowledge without action is useless." },
+        { t: "Fear Allah. Not people." },
+        { t: "Live with purpose." },
+        { t: "Be a man of honor." },
+        { t: "A real man protects those who are vulnerable." },
+        { t: "Every day is a second chance." },
+        { t: "Now is the time." },
+        { t: "Success is earned, not given." },
+        { t: "Focus on your growth." },
+        { t: "Stay Disciplined." }
     ];
 
     const display = document.getElementById('g4x_txt');
@@ -393,8 +416,6 @@
         startY = e.touches[0].clientY;
         currentY = startY;
         menuHeight = menu.offsetHeight;
-        
-        
         if (menu.contains(e.target)) {
             isDragging = true;
             menu.style.transition = "none";
@@ -404,10 +425,7 @@
     document.addEventListener('touchmove', e => {
         if (!isDragging && !menu.classList.contains('active')) {
             const moveY = e.touches[0].clientY;
-            
-            if (startY - moveY > 15) {
-                isDragging = true;
-            }
+            if (startY - moveY > 15) isDragging = true;
             return;
         }
         if (!isDragging) return;
@@ -445,7 +463,6 @@
                 else closeMenu();
             }
         } else {
-        
             if (Math.abs(deltaY) < 10) {
                 if (isMenuOpen && !menu.contains(e.target)) {
                     closeMenu();
