@@ -15,108 +15,100 @@
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000;
-            --text-primary: #f5f5f7;
-            --text-secondary: #86868b;
-            --accent: #ffffff;
+            --bg: #000;
+            --text: #e5e7eb;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
-            color: var(--text-primary);
+            color: var(--text);
             user-select: none;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
-            padding: 0;
+            padding: 0 20px;
             overflow: hidden;
             touch-action: none;
         }
 
-        .quote-container {
+        .container {
+            max-width: 800px;
             width: 100%;
-            max-width: 28rem;
-            padding: 0 40px;
             text-align: center;
             position: relative;
-            overflow: hidden;
+            z-index: 10;
         }
 
         #g4x_txt {
-            display: block;
             transition: opacity 0.3s ease;
             white-space: pre-wrap;
-            line-height: 1.6;
-            font-weight: 300;
-            letter-spacing: -0.01em;
-            font-size: 1.5rem; 
+            opacity: 1;
         }
 
-        @media (min-width: 768px) {
-            #g4x_txt {
-                font-size: 1.875rem; 
-            }
-        }
-
-        /* Fade-in for Next Quotes */
-        .slide-next {
-            animation: fadeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* Slide-in for Previous Quotes */
         .slide-prev {
-            animation: slidePrev 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            animation: slideInLeft 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes slidePrev {
+        @keyframes slideInLeft {
             0% { transform: translateX(-40px); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
         }
 
+        /* Updated Notification Style: Fade-in from Top */
         #g4x_pop {
             position: fixed;
-            top: 40px; 
+            top: 15px;
             left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 8px 20px;
+            /* Starts slightly higher with 0 opacity */
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 6px 16px;
             border-radius: 100px;
-            z-index: 2000;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+            z-index: 1000;
+            transition: transform 0.5s ease-out, opacity 0.4s ease-out;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
+        
         #g4x_pop.show {
             opacity: 1;
+            /* Fades and slides down to rest */
             transform: translateX(-50%) translateY(0);
         }
+
+        #g4x_pop.hide {
+            opacity: 0;
+            /* Fades and slides slightly back up */
+            transform: translateX(-50%) translateY(-10px);
+        }
+
         #g4x_pop_d {
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 400;
+            color: #ccc;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+            text-transform: lowercase;
         }
     </style>
 </head>
 <body>
     <div id="g4x_pop"><div id="g4x_pop_d"></div></div>
 
-    <div class="quote-container">
-        <h1 id="g4x_txt"></h1>
+    <div class="container">
+        <h1 id="g4x_txt" class="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed"></h1>
     </div>
 
 <script>
@@ -183,25 +175,38 @@
     let autoPlayInterval = null;
     let historyStack = [];
     
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+    let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
     let longPressTimer;
 
-    window.notify = function(text) {
+    function notify(text) {
         popText.innerText = text;
-        pop.classList.remove('show');
+        pop.classList.remove('show', 'hide');
         void pop.offsetWidth; 
         pop.classList.add('show');
-        setTimeout(() => pop.classList.remove('show'), 2000);
-    };
+        
+        if (window.popTimer) clearTimeout(window.popTimer);
+        window.popTimer = setTimeout(() => {
+            pop.classList.add('hide');
+            pop.classList.remove('show');
+        }, 1200);
+    }
 
-    function updateDisplay(dir = 'next') {
-        display.classList.remove('slide-next', 'slide-prev');
-        void display.offsetWidth; 
-        display.innerText = quotes[currentIndex].t;
-        display.classList.add(dir === 'next' ? 'slide-next' : 'slide-prev');
+    function updateDisplay(type = 'fade') {
+        if (type === 'fade') {
+            display.style.opacity = '0';
+            setTimeout(() => {
+                display.innerText = quotes[currentIndex].t;
+                display.classList.remove('slide-prev');
+                display.style.opacity = '1';
+            }, 300);
+        } else if (type === 'prev') {
+            display.style.opacity = '0';
+            display.classList.remove('slide-prev');
+            void display.offsetWidth;
+            display.innerText = quotes[currentIndex].t;
+            display.classList.add('slide-prev');
+            display.style.opacity = '1';
+        }
     }
 
     function nextQuote() {
@@ -215,7 +220,7 @@
         } else {
             currentIndex = (currentIndex + 1) % quotes.length;
         }
-        updateDisplay('next');
+        updateDisplay('fade');
     }
 
     function prevQuote() {
@@ -223,81 +228,78 @@
             currentIndex = historyStack.pop();
             updateDisplay('prev');
         } else {
-            notify("Start of journey");
+            currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
+            updateDisplay('prev');
         }
+        notify("previous");
     }
 
     function toggleShuffle() {
         shuffleMode = !shuffleMode;
-        notify(shuffleMode ? "Shuffle: On" : "Shuffle: Off");
+        notify(shuffleMode ? "shuffle on" : "shuffle off");
     }
 
     function toggleAutoPlay() {
         if(autoPlayInterval) {
             clearInterval(autoPlayInterval);
             autoPlayInterval = null;
-            notify("Auto Play: Off");
+            notify("auto play off");
         } else {
-            autoPlayInterval = setInterval(nextQuote, 5000);
-            notify("Auto Play: On");
             nextQuote();
+            autoPlayInterval = setInterval(() => nextQuote(), 5000);
+            notify("auto play on");
         }
     }
 
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(() => {});
-            notify("Fullscreen: On");
+            notify("fullscreen");
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-                notify("Fullscreen: Off");
-            }
+            document.exitFullscreen();
+            notify("exit fullscreen");
         }
     }
 
     document.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-        
-        longPressTimer = setTimeout(() => {
-            toggleAutoPlay();
-            longPressTimer = null;
-        }, 700);
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        longPressTimer = setTimeout(toggleAutoPlay, 600);
     }, {passive: false});
 
     document.addEventListener('touchend', e => {
-        if (longPressTimer) {
-            clearTimeout(longPressTimer);
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            handleGesture();
-        }
-    }, {passive: false});
-
-    function handleGesture() {
+        clearTimeout(longPressTimer);
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+        
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
         const absX = Math.abs(diffX);
         const absY = Math.abs(diffY);
+        const threshold = 60;
 
         if (Math.max(absX, absY) < 30) {
             nextQuote();
+            if (autoPlayInterval) { 
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(() => nextQuote(), 5000);
+            }
             return;
         }
 
         if (absX > absY) {
-            if (diffX > 50) prevQuote(); 
-            else nextQuote(); 
+            if (diffX > threshold) {
+                prevQuote();
+            } else if (diffX < -threshold) {
+                nextQuote();
+            }
         } else {
-            if (diffY < -50) toggleFullscreen(); 
-            if (diffY > 50) toggleShuffle(); 
+            if (diffY < -threshold) toggleFullscreen();
+            if (diffY > threshold) toggleShuffle();
         }
-    }
+    }, {passive: false});
 
     display.innerText = quotes[0].t;
-    display.classList.add('slide-next');
-
 })();
 </script>
 </body>
