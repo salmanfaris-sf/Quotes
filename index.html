@@ -17,7 +17,7 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Mea+Culpa&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000;
@@ -42,6 +42,24 @@
             justify-content: center;
             padding: 0 20px;
             cursor: pointer;
+        }
+
+        /* Top left container for name as heading */
+        .user-header {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            text-align: left;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .user-name {
+            font-family: 'Mea Culpa', cursive;
+            font-size: 26px;
+            color: #555;
+            letter-spacing: 0.02em;
+            line-height: 1;
         }
 
         .container {
@@ -70,15 +88,15 @@
 
         .tap-hint {
             position: fixed;
-            bottom: 40px;
+            bottom: 40px; 
             left: 50%;
             transform: translateX(-50%);
-            font-size: 11px;
-            color: #444;
+            font-size: 10px;
+            color: #444; /* Slightly more visible than before */
             pointer-events: none;
             transition: opacity 0.5s ease;
             white-space: nowrap;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
         }
 
         .tap-hint.hidden {
@@ -88,18 +106,22 @@
 </head>
 <body>
 
+    <div class="user-header">
+        <div class="user-name">Salmanfaris</div>
+    </div>
+
     <div class="container">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
         <div id="live_info" class="opacity-0"></div>
     </div>
 
-    <div id="hint" class="tap-hint">TAP ANYWHERE TO VIEW THE NEXT QUOTE.</div>
+    <div id="hint" class="tap-hint">TAP TO VIEW NEXT QUOTE</div>
 
 <script>
 (function(){
     const quotes = [
         { t: "Be better than you were yesterday." },
-        { t: "So race one another in good deeds. (Qur'an 2:148)" },
+        { t: "So race one another in good deeds.\n(Qur'an 2:148)" },
         { t: "Don't waste time. You don't get it back." },
         { t: "Focus." },
         { t: "The problem is,\nyou think you have a lot of time to live." },
@@ -162,15 +184,13 @@
     function getLiveStats() {
         const now = new Date();
         
-        // 12-hour format time
         let hours = now.getHours();
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12;
         const timeStr = `${hours}:${minutes} ${ampm}`;
 
-        // Minutes left in day
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
         const diff = endOfDay - now;
         const minsLeft = Math.floor(diff / 1000 / 60);
@@ -208,7 +228,7 @@
                 };
                 updateUI();
                 infoDisplay.classList.remove('opacity-0');
-                liveInterval = setInterval(updateUI, 10000); // Update every 10s
+                liveInterval = setInterval(updateUI, 10000);
             }
         }, 300);
     }
@@ -222,6 +242,7 @@
     }
 
     refreshPool();
+    // Set initial quote
     const initial = quotePool.pop();
     display.innerText = initial.t;
     if (initial.id === "time_quote") {
@@ -230,9 +251,14 @@
         infoDisplay.classList.remove('opacity-0');
     }
 
-    document.addEventListener('touchend', (e) => handleInteraction());
-    document.addEventListener('click', (e) => {
-        if (e.pointerType === 'touch') return;
+    // Combined touch and click listeners for better responsiveness
+    document.addEventListener('touchend', (e) => {
+        handleInteraction();
+    });
+    
+    document.addEventListener('mousedown', (e) => {
+        // Prevent triggering twice on mobile (touch emits mousedown)
+        if (e.detail === 0) return; 
         handleInteraction();
     });
 })();
