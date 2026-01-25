@@ -6,6 +6,16 @@
     <title>Quotes.</title>
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1K1TKBQFFK');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -48,18 +58,17 @@
             white-space: pre-wrap;
         }
 
-        /* Normal grey text as a single sentence */
         .tap-hint {
             position: fixed;
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 13px;
-            color: #666; /* Grey color */
+            color: #666;
             pointer-events: none;
             transition: opacity 0.5s ease;
             white-space: nowrap;
-            letter-spacing: 0.05em; /* Slight spacing for all-caps readability */
+            letter-spacing: 0.05em;
         }
 
         .tap-hint.hidden {
@@ -77,6 +86,7 @@
 
 <script>
 (function(){
+    // Add or remove quotes here as you like
     const quotes = [
         { t: "Be better than you were yesterday." },
         { t: "So race one another in good deeds. (Qur'an 2:148)" },
@@ -134,15 +144,30 @@
     const display = document.getElementById('g4x_txt');
     const hint = document.getElementById('hint');
     
-    let currentIndex = Math.floor(Math.random() * quotes.length);
     let firstInteraction = true;
+    let quotePool = [];
+
+    function refreshPool() {
+        // Create a shuffled copy of the quotes array
+        quotePool = [...quotes].sort(() => Math.random() - 0.5);
+    }
 
     function updateDisplay() {
+        if (quotePool.length === 0) {
+            refreshPool();
+        }
+
+        const nextQuote = quotePool.pop();
+        
         display.style.opacity = '0';
         setTimeout(() => {
-            display.innerText = quotes[currentIndex].t;
+            display.innerText = nextQuote.t;
             display.style.opacity = '1';
         }, 300);
+
+        if (typeof gtag === 'function') {
+            gtag('event', 'view_quote', { 'quote_preview': nextQuote.t.substring(0, 25) });
+        }
     }
 
     function handleInteraction() {
@@ -150,26 +175,18 @@
             hint.classList.add('hidden');
             firstInteraction = false;
         }
-
-        let next;
-        do { 
-            next = Math.floor(Math.random() * quotes.length); 
-        } while (next === currentIndex && quotes.length > 1);
-        
-        currentIndex = next;
         updateDisplay();
     }
 
-    document.addEventListener('touchend', (e) => {
-        handleInteraction();
-    });
+    // Initialize with a random starting quote
+    refreshPool();
+    display.innerText = quotePool.pop().t;
 
+    document.addEventListener('touchend', (e) => handleInteraction());
     document.addEventListener('click', (e) => {
         if (e.pointerType === 'touch') return;
         handleInteraction();
     });
-
-    display.innerText = quotes[currentIndex].t;
 })();
 </script>
 </body>
