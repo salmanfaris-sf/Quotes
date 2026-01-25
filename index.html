@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -57,6 +58,16 @@
             white-space: pre-wrap;
         }
 
+        #live_info {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #777;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            transition: opacity 0.3s ease;
+            line-height: 1.8;
+        }
+
         .tap-hint {
             position: fixed;
             bottom: 40px;
@@ -78,8 +89,8 @@
 <body>
 
     <div class="container">
-        <!-- Reduced text size here: text-base for mobile, text-lg for desktop -->
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
+        <div id="live_info" class="opacity-0"></div>
     </div>
 
     <div id="hint" class="tap-hint">TAP ANYWHERE TO VIEW THE NEXT QUOTE.</div>
@@ -88,7 +99,7 @@
 (function(){
     const quotes = [
         { t: "Be better than you were yesterday." },
-        { t: "So race one another in good deeds.\n(Qur'an 2:148)" },
+        { t: "So race one another in good deeds. (Qur'an 2:148)" },
         { t: "Don't waste time. You don't get it back." },
         { t: "Focus." },
         { t: "The problem is,\nyou think you have a lot of time to live." },
@@ -99,7 +110,7 @@
         { t: "Do it even when you don't feel like it." },
         { t: "Nothing changes if nothing changes." },
         { t: "Stay different." },
-        { t: "You have 86,400 seconds each day — make sure not a single one goes to waste." },
+        { t: "You have 1,440 minutes each day — make sure not a single one goes to waste.", id: "time_quote" },
         { t: "You can't have a million-dollar dream with a minimum-wage work ethic." },
         { t: "A real man protects and provides." },
         { t: "Don't follow the crowd. Follow the truth." },
@@ -142,9 +153,30 @@
 
     const display = document.getElementById('g4x_txt');
     const hint = document.getElementById('hint');
+    const infoDisplay = document.getElementById('live_info');
     
     let firstInteraction = true;
     let quotePool = [];
+    let liveInterval = null;
+
+    function getLiveStats() {
+        const now = new Date();
+        
+        // 12-hour format time
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        const timeStr = `${hours}:${minutes} ${ampm}`;
+
+        // Minutes left in day
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        const diff = endOfDay - now;
+        const minsLeft = Math.floor(diff / 1000 / 60);
+
+        return { time: timeStr, left: minsLeft };
+    }
 
     function refreshPool() {
         quotePool = [...quotes].sort(() => Math.random() - 0.5);
@@ -158,14 +190,27 @@
         const nextQuote = quotePool.pop();
         
         display.style.opacity = '0';
+        infoDisplay.classList.add('opacity-0');
+        
+        if (liveInterval) {
+            clearInterval(liveInterval);
+            liveInterval = null;
+        }
+
         setTimeout(() => {
             display.innerText = nextQuote.t;
             display.style.opacity = '1';
-        }, 300);
 
-        if (typeof gtag === 'function') {
-            gtag('event', 'view_quote', { 'quote_preview': nextQuote.t.substring(0, 25) });
-        }
+            if (nextQuote.id === "time_quote") {
+                const updateUI = () => {
+                    const stats = getLiveStats();
+                    infoDisplay.innerHTML = `Current Time: ${stats.time}<br>${stats.left} minutes left today.`;
+                };
+                updateUI();
+                infoDisplay.classList.remove('opacity-0');
+                liveInterval = setInterval(updateUI, 10000); // Update every 10s
+            }
+        }, 300);
     }
 
     function handleInteraction() {
@@ -177,7 +222,13 @@
     }
 
     refreshPool();
-    display.innerText = quotePool.pop().t;
+    const initial = quotePool.pop();
+    display.innerText = initial.t;
+    if (initial.id === "time_quote") {
+        const stats = getLiveStats();
+        infoDisplay.innerHTML = `Current Time: ${stats.time}<br>${stats.left} minutes left today.`;
+        infoDisplay.classList.remove('opacity-0');
+    }
 
     document.addEventListener('touchend', (e) => handleInteraction());
     document.addEventListener('click', (e) => {
