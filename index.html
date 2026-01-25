@@ -38,27 +38,11 @@
             color: var(--text);
             user-select: none;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 0 20px;
             cursor: pointer;
-        }
-
-        .user-header {
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            text-align: left;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .user-name {
-            font-family: 'Mea Culpa', cursive;
-            font-size: 26px;
-            color: #555;
-            letter-spacing: 0.02em;
-            line-height: 1;
         }
 
         .container {
@@ -67,7 +51,10 @@
             text-align: center;
             position: relative;
             z-index: 5;
-            margin-top: -40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -40px; 
         }
 
         #g4x_txt {
@@ -83,39 +70,77 @@
             letter-spacing: 0.05em;
             transition: opacity 0.3s ease;
             line-height: 1.8;
-            height: 40px;
         }
 
         .tap-hint {
-            position: fixed;
-            bottom: 40px; 
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
+            margin-top: 40px;
+            font-size: 11px;
             color: #444;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
             white-space: nowrap;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            pointer-events: none;
+            display: flex;
+            gap: 8px;
         }
 
-        .tap-hint.hidden {
+        .word {
+            display: inline-block;
             opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.4s ease;
+        }
+
+        .word.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .invisible-custom {
+            opacity: 0 !important;
+        }
+
+        .hidden-hint {
+            display: none !important;
+        }
+
+        .bottom-signature {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .user-name {
+            font-family: 'Mea Culpa', cursive;
+            font-size: 28px;
+            color: #666;
+            letter-spacing: 0.02em;
+            line-height: 1;
         }
     </style>
 </head>
 <body>
 
-    <div class="user-header">
-        <div class="user-name">Salmanfaris</div>
-    </div>
-
     <div class="container">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
         <div id="live_info" class="opacity-0"></div>
+        <div id="hint" class="tap-hint">
+            <span class="word">TAP</span>
+            <span class="word">TO</span>
+            <span class="word">VIEW</span>
+            <span class="word">NEXT</span>
+            <span class="word">QUOTE</span>
+        </div>
     </div>
 
-    <div id="hint" class="tap-hint">TAP TO VIEW NEXT QUOTE</div>
+    <div class="bottom-signature">
+        <div class="user-name">Salmanfaris</div>
+    </div>
 
 <script>
 (function(){
@@ -176,10 +201,19 @@
     const display = document.getElementById('g4x_txt');
     const hint = document.getElementById('hint');
     const infoDisplay = document.getElementById('live_info');
+    const words = document.querySelectorAll('.word');
     
     let firstInteraction = true;
     let quotePool = [];
     let liveInterval = null;
+
+    function animateWords() {
+        words.forEach((word, index) => {
+            setTimeout(() => {
+                word.classList.add('show');
+            }, index * 150);
+        });
+    }
 
     function getLiveStats() {
         const now = new Date();
@@ -189,15 +223,12 @@
         hours = hours % 12;
         hours = hours ? hours : 12;
         const timeStr = `${hours}:${minutes} ${ampm}`;
-
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
         const diff = endOfDay - now;
         const minsLeft = Math.floor(diff / 1000 / 60);
-
         return { time: timeStr, left: minsLeft };
     }
 
-    // New logic: Shuffle the entire set and only reshuffle when empty
     function refreshPool() {
         quotePool = [...quotes].sort(() => Math.random() - 0.5);
     }
@@ -208,9 +239,12 @@
         }
 
         const nextQuote = quotePool.pop();
-        
         display.style.opacity = '0';
         infoDisplay.classList.add('opacity-0');
+        
+        if (firstInteraction) {
+            hint.classList.add('invisible-custom');
+        }
         
         if (liveInterval) {
             clearInterval(liveInterval);
@@ -220,6 +254,11 @@
         setTimeout(() => {
             display.innerText = nextQuote.t;
             display.style.opacity = '1';
+
+            if (firstInteraction) {
+                hint.classList.add('hidden-hint');
+                firstInteraction = false;
+            }
 
             if (nextQuote.id === "time_quote") {
                 const updateUI = () => {
@@ -231,32 +270,29 @@
                 liveInterval = setInterval(updateUI, 30000);
             } else {
                 infoDisplay.innerHTML = "";
+                infoDisplay.classList.add('opacity-0');
             }
         }, 300);
     }
 
-    function handleInteraction() {
-        if (firstInteraction) {
-            hint.classList.add('hidden');
-            firstInteraction = false;
-        }
+    function handleInteraction(e) {
+        if (e && e.type === 'touchend') e.preventDefault();
         updateDisplay();
     }
 
-    // Initialize the first quote from a fresh pool
-    refreshPool();
-    const initial = quotePool.pop();
-    display.innerText = initial.t;
-    if (initial.id === "time_quote") {
-        const stats = getLiveStats();
-        infoDisplay.innerHTML = `Current Time: ${stats.time}<br>${stats.left} minutes left today.`;
-        infoDisplay.classList.remove('opacity-0');
-    }
+    window.onload = () => {
+        refreshPool();
+        const initial = quotePool.pop();
+        display.innerText = initial.t;
+        if (initial.id === "time_quote") {
+            const stats = getLiveStats();
+            infoDisplay.innerHTML = `Current Time: ${stats.time}<br>${stats.left} minutes left today.`;
+            infoDisplay.classList.remove('opacity-0');
+        }
+        animateWords();
+    };
 
-    document.addEventListener('touchend', (e) => {
-        handleInteraction();
-    });
-    
+    document.addEventListener('touchend', handleInteraction, { passive: false });
     document.addEventListener('mousedown', (e) => {
         if (e.detail === 0) return; 
         handleInteraction();
