@@ -45,7 +45,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             width: 100%;
             text-align: center;
             position: relative;
@@ -63,12 +63,12 @@
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 13px;
-            color: #666;
+            font-size: 11px;
+            color: #444;
             pointer-events: none;
             transition: opacity 0.5s ease;
             white-space: nowrap;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
 
         .tap-hint.hidden {
@@ -79,14 +79,14 @@
 <body>
 
     <div class="container">
-        <h1 id="g4x_txt" class="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed"></h1>
+        <!-- Reduced text size here: text-base for mobile, text-lg for desktop -->
+        <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
     </div>
 
     <div id="hint" class="tap-hint">TAP ANYWHERE TO VIEW THE NEXT QUOTE.</div>
 
 <script>
 (function(){
-    // Add or remove quotes here as you like
     const quotes = [
         { t: "Be better than you were yesterday." },
         { t: "So race one another in good deeds. (Qur'an 2:148)" },
@@ -148,7 +148,6 @@
     let quotePool = [];
 
     function refreshPool() {
-        // Create a shuffled copy of the quotes array
         quotePool = [...quotes].sort(() => Math.random() - 0.5);
     }
 
@@ -178,7 +177,6 @@
         updateDisplay();
     }
 
-    // Initialize with a random starting quote
     refreshPool();
     display.innerText = quotePool.pop().t;
 
