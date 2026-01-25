@@ -63,7 +63,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform: translateY(-40px);
+            transform: translateY(-20px);
         }
 
         #g4x_txt {
@@ -120,7 +120,7 @@
 
         .bottom-signature {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 0;
             right: 0;
             text-align: center;
@@ -222,6 +222,17 @@
     let liveInterval = null;
     const hintText = "TAP TO VIEW NEXT QUOTE";
 
+    // Swipe tracking
+    let touchStartY = 0;
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+            });
+        }
+    }
+
     function typeWriterEffect() {
         setTimeout(() => {
             if (!firstInteraction) return; 
@@ -303,7 +314,14 @@
     }
 
     function handleInteraction(e) {
-        if (e && e.type === 'touchend') e.preventDefault();
+        if (e && e.type === 'touchend') {
+            const touchEndY = e.changedTouches[0].screenY;
+            // Detect swipe up (start Y higher than end Y)
+            if (touchStartY - touchEndY > 50) {
+                toggleFullScreen();
+                return;
+            }
+        }
         updateDisplay();
     }
 
@@ -324,6 +342,10 @@
             typeWriterEffect();
         });
     };
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].screenY;
+    }, { passive: true });
 
     document.addEventListener('touchend', handleInteraction, { passive: false });
     document.addEventListener('mousedown', (e) => {
