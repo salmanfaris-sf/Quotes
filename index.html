@@ -44,7 +44,6 @@
             cursor: pointer;
         }
 
-        /* Top left container for name as heading */
         .user-header {
             position: fixed;
             top: 25px;
@@ -84,6 +83,7 @@
             letter-spacing: 0.05em;
             transition: opacity 0.3s ease;
             line-height: 1.8;
+            height: 40px;
         }
 
         .tap-hint {
@@ -92,7 +92,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 10px;
-            color: #444; /* Slightly more visible than before */
+            color: #444;
             pointer-events: none;
             transition: opacity 0.5s ease;
             white-space: nowrap;
@@ -183,7 +183,6 @@
 
     function getLiveStats() {
         const now = new Date();
-        
         let hours = now.getHours();
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -198,6 +197,7 @@
         return { time: timeStr, left: minsLeft };
     }
 
+    // New logic: Shuffle the entire set and only reshuffle when empty
     function refreshPool() {
         quotePool = [...quotes].sort(() => Math.random() - 0.5);
     }
@@ -228,7 +228,9 @@
                 };
                 updateUI();
                 infoDisplay.classList.remove('opacity-0');
-                liveInterval = setInterval(updateUI, 10000);
+                liveInterval = setInterval(updateUI, 30000);
+            } else {
+                infoDisplay.innerHTML = "";
             }
         }, 300);
     }
@@ -241,8 +243,8 @@
         updateDisplay();
     }
 
+    // Initialize the first quote from a fresh pool
     refreshPool();
-    // Set initial quote
     const initial = quotePool.pop();
     display.innerText = initial.t;
     if (initial.id === "time_quote") {
@@ -251,13 +253,11 @@
         infoDisplay.classList.remove('opacity-0');
     }
 
-    // Combined touch and click listeners for better responsiveness
     document.addEventListener('touchend', (e) => {
         handleInteraction();
     });
     
     document.addEventListener('mousedown', (e) => {
-        // Prevent triggering twice on mobile (touch emits mousedown)
         if (e.detail === 0) return; 
         handleInteraction();
     });
