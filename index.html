@@ -63,7 +63,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform: translateY(-40px); /* Adjusted to keep central focus */
+            transform: translateY(-40px);
         }
 
         #g4x_txt {
@@ -120,7 +120,7 @@
 
         .bottom-signature {
             position: fixed;
-            bottom: 20px; /* Lowered the signature slightly */
+            bottom: 20px;
             left: 0;
             right: 0;
             text-align: center;
@@ -130,8 +130,8 @@
 
         .user-name {
             font-family: 'Mea Culpa', cursive;
-            font-size: 26px; /* Slightly refined size */
-            color: #555; /* Muted it a bit more to keep focus on quote */
+            font-size: 26px;
+            color: #555;
             letter-spacing: 0.02em;
             line-height: 1;
         }
@@ -290,7 +290,7 @@
             if (nextQuote.id === "time_quote") {
                 const updateUI = () => {
                     const stats = getLiveStats();
-                    infoDisplay.innerHTML = `${stats.time} • ${stats.left}m remaining`;
+                    infoDisplay.innerHTML = `Time: ${stats.time} • ${stats.left} minutes remaining today`;
                 };
                 updateUI();
                 infoDisplay.classList.remove('opacity-0');
@@ -314,7 +314,7 @@
         
         if (initial.id === "time_quote") {
             const stats = getLiveStats();
-            infoDisplay.innerHTML = `${stats.time} • ${stats.left}m remaining`;
+            infoDisplay.innerHTML = `Time: ${stats.time} • ${stats.left} minutes remaining today`;
             infoDisplay.classList.remove('opacity-0');
         }
 
