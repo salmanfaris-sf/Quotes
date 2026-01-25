@@ -45,6 +45,15 @@
             cursor: pointer;
         }
 
+        .fade-entrance {
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-entrance.visible {
+            opacity: 1;
+        }
+
         .container {
             max-width: 600px;
             width: 100%;
@@ -54,47 +63,51 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: -40px; 
+            transform: translateY(-40px); /* Adjusted to keep central focus */
         }
 
         #g4x_txt {
             transition: opacity 0.3s ease;
             white-space: pre-wrap;
+            margin-bottom: 8px; 
         }
 
         #live_info {
-            margin-top: 24px;
             font-size: 13px;
             color: #777;
             font-weight: 300;
             letter-spacing: 0.05em;
             transition: opacity 0.3s ease;
-            line-height: 1.8;
+            line-height: 1.6;
+            margin-bottom: 4px;
         }
 
         .tap-hint {
-            margin-top: 40px;
-            font-size: 11px;
+            font-size: 10px;
             color: #444;
             transition: opacity 0.3s ease;
             white-space: nowrap;
-            letter-spacing: 0.25em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             pointer-events: none;
+            min-height: 1.2em;
             display: flex;
-            gap: 8px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .word {
+        .cursor {
             display: inline-block;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: all 0.4s ease;
+            width: 1.5px;
+            height: 10px;
+            background-color: #444;
+            margin-left: 3px;
+            animation: blink 0.8s infinite;
         }
 
-        .word.show {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         .invisible-custom {
@@ -107,7 +120,7 @@
 
         .bottom-signature {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px; /* Lowered the signature slightly */
             left: 0;
             right: 0;
             text-align: center;
@@ -117,8 +130,8 @@
 
         .user-name {
             font-family: 'Mea Culpa', cursive;
-            font-size: 28px;
-            color: #666;
+            font-size: 26px; /* Slightly refined size */
+            color: #555; /* Muted it a bit more to keep focus on quote */
             letter-spacing: 0.02em;
             line-height: 1;
         }
@@ -126,19 +139,17 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="container fade-entrance" id="main_content">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
+        
         <div id="live_info" class="opacity-0"></div>
+        
         <div id="hint" class="tap-hint">
-            <span class="word">TAP</span>
-            <span class="word">TO</span>
-            <span class="word">VIEW</span>
-            <span class="word">NEXT</span>
-            <span class="word">QUOTE</span>
+            <span id="typewriter_text"></span><span id="cursor" class="cursor hidden"></span>
         </div>
     </div>
 
-    <div class="bottom-signature">
+    <div class="bottom-signature fade-entrance" id="sig_content">
         <div class="user-name">Salmanfaris</div>
     </div>
 
@@ -199,20 +210,36 @@
     ];
 
     const display = document.getElementById('g4x_txt');
-    const hint = document.getElementById('hint');
+    const hintArea = document.getElementById('hint');
+    const typewriterElement = document.getElementById('typewriter_text');
+    const cursorElement = document.getElementById('cursor');
     const infoDisplay = document.getElementById('live_info');
-    const words = document.querySelectorAll('.word');
+    const mainContent = document.getElementById('main_content');
+    const sigContent = document.getElementById('sig_content');
     
     let firstInteraction = true;
     let quotePool = [];
     let liveInterval = null;
+    const hintText = "TAP TO VIEW NEXT QUOTE";
 
-    function animateWords() {
-        words.forEach((word, index) => {
-            setTimeout(() => {
-                word.classList.add('show');
-            }, index * 150);
-        });
+    function typeWriterEffect() {
+        setTimeout(() => {
+            if (!firstInteraction) return; 
+            cursorElement.classList.remove('hidden');
+            let i = 0;
+            const speed = 60; 
+
+            function type() {
+                if (i < hintText.length && firstInteraction) {
+                    typewriterElement.textContent += hintText.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (i === hintText.length) {
+                    setTimeout(() => cursorElement.classList.add('hidden'), 1500);
+                }
+            }
+            type();
+        }, 1200);
     }
 
     function getLiveStats() {
@@ -243,7 +270,7 @@
         infoDisplay.classList.add('opacity-0');
         
         if (firstInteraction) {
-            hint.classList.add('invisible-custom');
+            hintArea.classList.add('invisible-custom');
         }
         
         if (liveInterval) {
@@ -256,14 +283,14 @@
             display.style.opacity = '1';
 
             if (firstInteraction) {
-                hint.classList.add('hidden-hint');
+                hintArea.classList.add('hidden-hint');
                 firstInteraction = false;
             }
 
             if (nextQuote.id === "time_quote") {
                 const updateUI = () => {
                     const stats = getLiveStats();
-                    infoDisplay.innerHTML = `Current Time: ${stats.time}<br>${stats.left} minutes left today.`;
+                    infoDisplay.innerHTML = `${stats.time} • ${stats.left}m remaining`;
                 };
                 updateUI();
                 infoDisplay.classList.remove('opacity-0');
@@ -284,12 +311,18 @@
         refreshPool();
         const initial = quotePool.pop();
         display.innerText = initial.t;
+        
         if (initial.id === "time_quote") {
             const stats = getLiveStats();
-            infoDisplay.innerHTML = `Current Time: ${stats.time}<br>${stats.left} minutes left today.`;
+            infoDisplay.innerHTML = `${stats.time} • ${stats.left}m remaining`;
             infoDisplay.classList.remove('opacity-0');
         }
-        animateWords();
+
+        requestAnimationFrame(() => {
+            mainContent.classList.add('visible');
+            sigContent.classList.add('visible');
+            typeWriterEffect();
+        });
     };
 
     document.addEventListener('touchend', handleInteraction, { passive: false });
