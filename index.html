@@ -212,14 +212,6 @@
     let quotePool = [];
     let liveInterval = null;
 
-    let touchStartY = 0;
-
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
-        }
-    }
-
     function getLiveStats() {
         const now = new Date();
         let hours = now.getHours();
@@ -252,7 +244,6 @@
         display.style.opacity = '0';
         infoDisplay.classList.add('opacity-0');
         
-        // Handle hint disappearance
         if (firstInteraction) {
             hintArea.classList.add('hidden-hint');
         }
@@ -283,13 +274,7 @@
     }
 
     function handleInteraction(e) {
-        if (e && e.type === 'touchend') {
-            const touchEndY = e.changedTouches[0].screenY;
-            if (touchStartY - touchEndY > 50) {
-                toggleFullScreen();
-                return;
-            }
-        }
+        // Just trigger the update without fullscreen logic
         updateDisplay();
     }
 
@@ -307,7 +292,6 @@
         requestAnimationFrame(() => {
             mainContent.classList.add('visible');
             sigContent.classList.add('visible');
-            // Show the hint with a slight delay using the same logic as the main text
             setTimeout(() => {
                 if (firstInteraction) {
                     hintArea.classList.remove('opacity-0');
@@ -316,10 +300,7 @@
         });
     };
 
-    document.addEventListener('touchstart', (e) => {
-        touchStartY = e.touches[0].screenY;
-    }, { passive: true });
-
+    // simplified event listeners
     document.addEventListener('touchend', handleInteraction, { passive: false });
     document.addEventListener('mousedown', (e) => {
         if (e.detail === 0) return; 
