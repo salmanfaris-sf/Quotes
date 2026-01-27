@@ -120,7 +120,7 @@
 
         .bottom-signature {
             position: fixed;
-            bottom: 30px;
+            bottom: 15px; /* Moved down from 30px */
             left: 0;
             right: 0;
             text-align: center;
@@ -277,7 +277,16 @@
     }
 
     function refreshPool() {
+        // To fix repetition: we shuffle and refill only when empty.
+        // We also ensure the first quote doesn't repeat the last one if possible.
+        const lastQuoteText = display.innerText;
         quotePool = [...quotes].sort(() => Math.random() - 0.5);
+        
+        // If the shuffled pool's first quote is the same as the one currently on screen, move it to the end
+        if (quotePool.length > 1 && quotePool[quotePool.length - 1].t === lastQuoteText) {
+             const sameOne = quotePool.pop();
+             quotePool.unshift(sameOne);
+        }
     }
 
     function updateDisplay() {
@@ -325,7 +334,6 @@
     function handleInteraction(e) {
         if (e && e.type === 'touchend') {
             const touchEndY = e.changedTouches[0].screenY;
-            // Detect swipe up (start Y higher than end Y)
             if (touchStartY - touchEndY > 50) {
                 toggleFullScreen();
                 return;
