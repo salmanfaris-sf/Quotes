@@ -67,7 +67,7 @@
         }
 
         #g4x_txt {
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
             white-space: pre-wrap;
             margin-bottom: 8px; 
         }
@@ -77,7 +77,7 @@
             color: #777;
             font-weight: 300;
             letter-spacing: 0.05em;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
             line-height: 1.6;
             margin-bottom: 4px;
         }
@@ -85,7 +85,7 @@
         .tap-hint {
             font-size: 10px;
             color: #444;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.8s ease;
             white-space: nowrap;
             letter-spacing: 0.2em;
             text-transform: uppercase;
@@ -94,33 +94,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 1.5px;
-            height: 10px;
-            background-color: #444;
-            margin-left: 3px;
-            animation: blink 0.8s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .invisible-custom {
-            opacity: 0 !important;
+            margin-top: 10px;
         }
 
         .hidden-hint {
-            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none;
         }
 
         .bottom-signature {
             position: fixed;
-            bottom: 15px; /* Moved down from 30px */
+            bottom: 15px; 
             left: 0;
             right: 0;
             text-align: center;
@@ -144,8 +128,8 @@
         
         <div id="live_info" class="opacity-0"></div>
         
-        <div id="hint" class="tap-hint">
-            <span id="typewriter_text"></span><span id="cursor" class="cursor hidden"></span>
+        <div id="hint" class="tap-hint opacity-0">
+            TAP TO VIEW NEXT QUOTE
         </div>
     </div>
 
@@ -220,8 +204,6 @@
 
     const display = document.getElementById('g4x_txt');
     const hintArea = document.getElementById('hint');
-    const typewriterElement = document.getElementById('typewriter_text');
-    const cursorElement = document.getElementById('cursor');
     const infoDisplay = document.getElementById('live_info');
     const mainContent = document.getElementById('main_content');
     const sigContent = document.getElementById('sig_content');
@@ -229,37 +211,13 @@
     let firstInteraction = true;
     let quotePool = [];
     let liveInterval = null;
-    const hintText = "TAP TO VIEW NEXT QUOTE";
 
-    // Swipe tracking
     let touchStartY = 0;
 
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.log(`Error attempting to enable full-screen mode: ${err.message}`);
-            });
+            document.documentElement.requestFullscreen().catch(() => {});
         }
-    }
-
-    function typeWriterEffect() {
-        setTimeout(() => {
-            if (!firstInteraction) return; 
-            cursorElement.classList.remove('hidden');
-            let i = 0;
-            const speed = 60; 
-
-            function type() {
-                if (i < hintText.length && firstInteraction) {
-                    typewriterElement.textContent += hintText.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                } else if (i === hintText.length) {
-                    setTimeout(() => cursorElement.classList.add('hidden'), 1500);
-                }
-            }
-            type();
-        }, 1200);
     }
 
     function getLiveStats() {
@@ -277,12 +235,8 @@
     }
 
     function refreshPool() {
-        // To fix repetition: we shuffle and refill only when empty.
-        // We also ensure the first quote doesn't repeat the last one if possible.
         const lastQuoteText = display.innerText;
         quotePool = [...quotes].sort(() => Math.random() - 0.5);
-        
-        // If the shuffled pool's first quote is the same as the one currently on screen, move it to the end
         if (quotePool.length > 1 && quotePool[quotePool.length - 1].t === lastQuoteText) {
              const sameOne = quotePool.pop();
              quotePool.unshift(sameOne);
@@ -298,8 +252,9 @@
         display.style.opacity = '0';
         infoDisplay.classList.add('opacity-0');
         
+        // Handle hint disappearance
         if (firstInteraction) {
-            hintArea.classList.add('invisible-custom');
+            hintArea.classList.add('hidden-hint');
         }
         
         if (liveInterval) {
@@ -310,11 +265,7 @@
         setTimeout(() => {
             display.innerText = nextQuote.t;
             display.style.opacity = '1';
-
-            if (firstInteraction) {
-                hintArea.classList.add('hidden-hint');
-                firstInteraction = false;
-            }
+            firstInteraction = false;
 
             if (nextQuote.id === "time_quote") {
                 const updateUI = () => {
@@ -356,7 +307,12 @@
         requestAnimationFrame(() => {
             mainContent.classList.add('visible');
             sigContent.classList.add('visible');
-            typeWriterEffect();
+            // Show the hint with a slight delay using the same logic as the main text
+            setTimeout(() => {
+                if (firstInteraction) {
+                    hintArea.classList.remove('opacity-0');
+                }
+            }, 1000);
         });
     };
 
