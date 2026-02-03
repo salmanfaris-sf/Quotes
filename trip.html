@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Trip</title>
+    <title>Trip Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
@@ -16,17 +16,19 @@
             --accent-color: #ffffff;
             --secondary-text: #71717a;
             --drawer-bg: #0a0a0a;
+            --status-text: rgba(255, 255, 255, 0.5);
         }
 
         @media (prefers-color-scheme: light) {
             :root {
                 --bg-color: #ffffff;
                 --text-color: #000000;
-                --panel-bg: rgba(244, 244, 245, 0.9);
-                --panel-border: rgba(0, 0, 0, 0.05);
+                --panel-bg: rgba(240, 240, 240, 0.9);
+                --panel-border: rgba(0, 0, 0, 0.1);
                 --accent-color: #000000;
-                --secondary-text: #a1a1aa;
+                --secondary-text: #52525b;
                 --drawer-bg: #ffffff;
+                --status-text: rgba(0, 0, 0, 0.7);
             }
         }
 
@@ -38,11 +40,9 @@
             touch-action: none;
             transition: background-color 0.5s ease;
             height: 100vh;
-            height: -webkit-fill-available; 
-        }
-
-        html {
             height: -webkit-fill-available;
+            display: flex;
+            flex-direction: column;
         }
 
         .premium-card {
@@ -59,14 +59,7 @@
             line-height: 0.85;
         }
 
-        .btn-press {
-            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, opacity 0.3s ease;
-            border-radius: 9999px;
-        }
-
-        .btn-press:active {
-            transform: scale(0.95);
-        }
+        .btn-press:active { transform: scale(0.95); }
 
         .tracking-dot {
             width: 8px;
@@ -78,8 +71,8 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.6); }
-            50% { opacity: 0.4; transform: scale(1.2); box-shadow: 0 0 25px rgba(16, 185, 129, 0.8); }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.4; }
         }
 
         #historyDrawer {
@@ -89,39 +82,62 @@
             width: 100%;
             height: 100%;
             background: var(--drawer-bg);
-            z-index: 50;
+            z-index: 100;
             transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             padding: 1.5rem;
         }
 
-        #historyDrawer.open {
-            top: 0;
+        #historyDrawer.open { top: 0; }
+
+        /* Lock Mechanism Styles */
+        .slider-track {
+            width: 100%;
+            height: 64px;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--panel-border);
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .history-item {
-            border-bottom: 1px solid var(--panel-border);
-            padding: 1rem 0;
+        .slider-handle {
+            width: 56px;
+            height: 56px;
+            background: var(--text-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 10;
         }
 
-        #tripName::placeholder {
-            color: var(--secondary-text);
-            opacity: 0.4;
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 64px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-color);
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         .bg-accent { background-color: var(--text-color); color: var(--bg-color); }
-        
         .hidden-action { display: none !important; }
-
-        @media (max-height: 700px) {
-            #trip { font-size: 90px; }
-            .premium-card { padding: 0.75rem !important; }
-            body { padding: 1rem !important; }
-        }
     </style>
 </head>
-<body class="flex flex-col p-6 overflow-hidden" id="mainBody">
+<body class="p-6">
 
     <!-- History Drawer -->
     <div id="historyDrawer">
@@ -129,27 +145,25 @@
             <h2 class="text-xl font-black uppercase tracking-widest">History</h2>
             <button onclick="toggleHistory(false)" class="p-2 opacity-50 font-bold text-sm">CLOSE</button>
         </div>
-        <div id="historyList" class="flex-grow overflow-y-auto space-y-2">
-            <p class="text-center opacity-30 mt-10 font-bold uppercase tracking-widest text-[10px]">No saved trips yet</p>
-        </div>
+        <div id="historyList" class="flex-grow overflow-y-auto space-y-2"></div>
         <button onclick="clearHistory()" class="mt-4 text-[9px] font-black uppercase tracking-widest text-red-500 opacity-50 text-center w-full">Clear All Records</button>
     </div>
 
     <!-- Top Bar -->
-    <div class="flex justify-between items-start mb-2">
-        <div class="flex flex-col">
-            <div id="clock" class="text-3xl font-extrabold tracking-tighter">--:--</div>
+    <div class="flex justify-between items-center w-full mb-4">
+        <div class="flex flex-col items-start">
+            <div id="clock" class="text-3xl font-extrabold tracking-tighter leading-none">--:--</div>
             <div id="ampm" class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 ml-1">--</div>
         </div>
         <div class="flex flex-col items-end">
             <span class="text-[9px] font-black uppercase tracking-widest opacity-30">Battery</span>
-            <span id="batteryText" class="text-xl font-bold tracking-tight">--%</span>
+            <span id="batteryText" class="text-xl font-bold tracking-tight leading-none">--%</span>
         </div>
     </div>
 
-    <!-- Main Distance Display -->
-    <div class="flex-grow flex flex-col items-center justify-center py-2" id="swipeZone">
-        <div class="text-center w-full pointer-events-none">
+    <!-- Distance Display -->
+    <div class="flex-grow flex flex-col items-center justify-center w-full text-center">
+        <div class="w-full">
             <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mb-2 block">Distance</span>
             <div class="flex items-baseline justify-center">
                 <span id="trip" class="text-[110px] stat-value">0.0</span>
@@ -157,45 +171,70 @@
             </div>
         </div>
         <input type="text" id="tripName" placeholder="Trip Name" 
-                class="bg-transparent text-center text-[11px] font-bold uppercase tracking-widest py-1 focus:outline-none w-full max-w-[180px] border-b border-transparent focus:border-white/20 transition-all mt-2 pointer-events-auto">
+                class="bg-transparent text-center text-[11px] font-bold uppercase tracking-widest py-1 focus:outline-none w-full max-w-[200px] border-b border-transparent focus:border-white/20 transition-all mt-4">
     </div>
 
-    <!-- Stats Section -->
-    <div class="mb-6">
+    <!-- Duration Card -->
+    <div class="mb-6 w-full px-2">
         <div class="premium-card p-4 flex flex-col items-center justify-center border-white/5">
-            <span class="text-[8px] font-black uppercase tracking-widest opacity-30 mb-1">Duration</span>
+            <span class="text-[8px] font-black uppercase tracking-widest opacity-40 mb-1">Duration</span>
             <span id="tripTime" class="text-3xl font-bold tracking-tight">00:00:00</span>
         </div>
     </div>
 
-    <!-- Controls Area -->
-    <div class="flex flex-col space-y-4">
-        <div class="w-full flex">
-            <!-- Start State -->
-            <button id="startBtn" onclick="toggleTracking()" class="w-full py-4 bg-accent font-black text-[11px] uppercase tracking-[0.2em] shadow-lg btn-press">
-                Start Trip
+    <!-- Footer Controls -->
+    <div class="flex flex-col space-y-4 w-full">
+        
+        <!-- Utility Buttons Row (FS and Lock) -->
+        <div class="flex justify-center space-x-8 items-center" id="utilityRow">
+            <button onclick="toggleFS()" class="opacity-20 hover:opacity-100 transition-opacity p-3">
+                <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             </button>
+            <button id="lockBtn" onclick="toggleLock(true)" class="opacity-20 hover:opacity-100 transition-opacity p-3 hidden-action">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </button>
+        </div>
 
-            <!-- Active State -->
-            <div id="activeActions" class="w-full flex space-x-3 hidden-action">
-                <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-4 premium-card btn-press font-black text-[10px] uppercase tracking-widest">
-                    Pause
+        <!-- Main Action Area -->
+        <div class="w-full relative min-h-[64px]">
+            <!-- Standard Buttons -->
+            <div id="standardActions" class="w-full flex">
+                <button id="startBtn" onclick="toggleTracking()" class="w-full py-5 bg-accent font-black text-[11px] uppercase tracking-[0.2em] shadow-lg btn-press rounded-full">
+                    Start Trip
                 </button>
-                <button onclick="toggleTracking()" class="flex-[1.5] py-4 bg-red-600 text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-lg btn-press">
-                    Finish Trip
-                </button>
+
+                <div id="activeActions" class="w-full flex space-x-3 hidden-action">
+                    <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-5 premium-card font-black text-[10px] uppercase tracking-widest btn-press">
+                        Pause
+                    </button>
+                    <button onclick="toggleTracking()" class="flex-[1.5] py-5 bg-red-600 text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-lg btn-press rounded-full">
+                        Finish Trip
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lock Slider -->
+            <div id="lockAction" class="w-full hidden-action">
+                <div class="slider-track" id="sliderTrack">
+                    <div class="slider-text">Swipe to unlock</div>
+                    <div class="slider-handle" id="sliderHandle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div id="statusContainer" class="flex items-center justify-center space-x-2 opacity-100 transition-opacity duration-500 pb-2 h-4">
+        <!-- Bottom Status -->
+        <div id="statusContainer" class="flex items-center justify-center space-x-2 pb-6 h-6">
             <div class="tracking-dot" id="dotElement" style="display: none;"></div>
-            <p id="status" class="text-[9px] font-bold uppercase tracking-widest opacity-40"></p>
+            <p id="status" class="text-[10px] font-bold uppercase tracking-widest"></p>
         </div>
     </div>
 
     <script>
         let isTracking = false;
         let isPaused = false;
+        let isLocked = false;
         let watchId = null;
         let tripDistance = 0;
         let lastCoords = null;
@@ -203,101 +242,17 @@
         let pausedTimeTotal = 0;
         let pauseStartTime = null;
         let timerInterval = null;
+        let gpsRetryInterval = null;
         let wakeLock = null;
 
         const startBtn = document.getElementById('startBtn');
         const activeActions = document.getElementById('activeActions');
-        const pauseBtn = document.getElementById('pauseBtn');
+        const lockBtn = document.getElementById('lockBtn');
         const statusText = document.getElementById('status');
         const dotElement = document.getElementById('dotElement');
-
-        // Gesture Control: Swipe Up for Fullscreen, Swipe Down for History/Exit Fullscreen
-        let touchStartY = 0;
-        document.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY);
-        document.addEventListener('touchend', e => {
-            const touchEndY = e.changedTouches[0].clientY;
-            const deltaY = touchStartY - touchEndY;
-
-            if (Math.abs(deltaY) > 80) {
-                if (deltaY > 80) {
-                    // Swipe Up
-                    if (!document.fullscreenElement) enterFullscreen();
-                } else {
-                    // Swipe Down
-                    if (document.fullscreenElement) {
-                        exitFullscreen();
-                    } else {
-                        toggleHistory(true);
-                    }
-                }
-            }
-        });
-
-        async function enterFullscreen() {
-            try {
-                const elem = document.documentElement;
-                if (elem.requestFullscreen) await elem.requestFullscreen();
-                else if (elem.webkitRequestFullscreen) await elem.webkitRequestFullscreen();
-            } catch (err) {}
-        }
-
-        async function exitFullscreen() {
-            try {
-                if (document.exitFullscreen) await document.exitFullscreen();
-                else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-            } catch (err) {}
-        }
-
-        function toggleHistory(open) {
-            const drawer = document.getElementById('historyDrawer');
-            if (open) {
-                renderHistory();
-                drawer.classList.add('open');
-            } else {
-                drawer.classList.remove('open');
-            }
-        }
-
-        function saveTrip() {
-            if (tripDistance < 0.01) return;
-            const history = JSON.parse(localStorage.getItem('activa_history') || '[]');
-            const newTrip = {
-                name: document.getElementById('tripName').value || 'Trip ' + (history.length + 1),
-                dist: tripDistance.toFixed(1),
-                time: document.getElementById('tripTime').innerText,
-                date: new Date().toLocaleDateString()
-            };
-            history.unshift(newTrip);
-            localStorage.setItem('activa_history', JSON.stringify(history.slice(0, 50)));
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            const history = JSON.parse(localStorage.getItem('activa_history') || '[]');
-            if (history.length === 0) {
-                list.innerHTML = '<p class="text-center opacity-30 mt-10 font-bold uppercase tracking-widest text-[10px]">No saved trips yet</p>';
-                return;
-            }
-
-            list.innerHTML = history.map(item => `
-                <div class="history-item flex justify-between items-center">
-                    <div>
-                        <div class="text-[9px] font-black uppercase tracking-widest opacity-30">${item.date}</div>
-                        <div class="font-bold text-base">${item.name}</div>
-                        <div class="text-[9px] opacity-50 uppercase font-bold tracking-tighter">${item.time}</div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-xl font-black">${item.dist}</span>
-                        <span class="text-[9px] font-bold opacity-30 ml-1">KM</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function clearHistory() {
-            localStorage.removeItem('activa_history');
-            renderHistory();
-        }
+        const standardActions = document.getElementById('standardActions');
+        const lockAction = document.getElementById('lockAction');
+        const utilityRow = document.getElementById('utilityRow');
 
         function updateClock() {
             const now = new Date();
@@ -310,133 +265,208 @@
         }
 
         async function initBattery() {
-            try {
-                if ('getBattery' in navigator) {
-                    const battery = await navigator.getBattery();
-                    const updateUI = () => document.getElementById('batteryText').innerText = Math.round(battery.level * 100) + '%';
-                    battery.addEventListener('levelchange', updateUI);
-                    updateUI();
-                } else { document.getElementById('batteryText').innerText = "100%"; }
-            } catch (e) { document.getElementById('batteryText').innerText = "100%"; }
+            if ('getBattery' in navigator) {
+                const b = await navigator.getBattery();
+                const u = () => document.getElementById('batteryText').innerText = Math.round(b.level * 100) + '%';
+                b.addEventListener('levelchange', u); u();
+            }
         }
 
+        async function toggleFS() {
+            if (!document.fullscreenElement) {
+                await document.documentElement.requestFullscreen().catch(()=>{});
+            } else {
+                await document.exitFullscreen().catch(()=>{});
+            }
+        }
+
+        // Lock/Unlock Mechanism
+        function toggleLock(locked) {
+            isLocked = locked;
+            if (locked) {
+                standardActions.classList.add('hidden-action');
+                utilityRow.classList.add('opacity-0', 'pointer-events-none');
+                lockAction.classList.remove('hidden-action');
+            } else {
+                standardActions.classList.remove('hidden-action');
+                utilityRow.classList.remove('opacity-0', 'pointer-events-none');
+                lockAction.classList.add('hidden-action');
+            }
+        }
+
+        const handle = document.getElementById('sliderHandle');
+        const track = document.getElementById('sliderTrack');
+        let isDragging = false;
+        let startX = 0;
+
+        const onStart = (e) => { isDragging = true; startX = (e.touches ? e.touches[0].clientX : e.clientX); };
+        const onMove = (e) => {
+            if (!isDragging) return;
+            const currentX = (e.touches ? e.touches[0].clientX : e.clientX);
+            let delta = currentX - startX;
+            const max = track.offsetWidth - handle.offsetWidth - 8;
+            if (delta < 0) delta = 0;
+            if (delta > max) delta = max;
+            handle.style.transform = `translateX(${delta}px)`;
+            
+            if (delta >= max) {
+                isDragging = false;
+                toggleLock(false);
+                handle.style.transform = `translateX(0px)`;
+            }
+        };
+        const onEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            handle.style.transition = 'transform 0.3s ease';
+            handle.style.transform = `translateX(0px)`;
+            setTimeout(() => handle.style.transition = '', 300);
+        };
+
+        handle.addEventListener('touchstart', onStart);
+        window.addEventListener('touchmove', onMove);
+        window.addEventListener('touchend', onEnd);
+
+        // Core Tracking Logic
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2)**2;
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         }
 
-        function handlePositionUpdate(position) {
+        function handlePositionUpdate(pos) {
             if (!isTracking || isPaused) return;
-            statusText.innerText = "";
-            statusText.classList.remove('text-red-500');
+            statusText.innerText = "GPS ACTIVE";
+            statusText.style.color = "var(--status-text)";
             dotElement.style.display = "block";
+            clearInterval(gpsRetryInterval); gpsRetryInterval = null;
 
-            const speedKMH = (position.coords.speed || 0) * 3.6;
             if (lastCoords) {
-                const dist = calculateDistance(lastCoords.latitude, lastCoords.longitude, position.coords.latitude, position.coords.longitude);
-                if (speedKMH > 1.2 || dist > 0.003) { 
-                    tripDistance += dist;
+                const d = calculateDistance(lastCoords.latitude, lastCoords.longitude, pos.coords.latitude, pos.coords.longitude);
+                if (pos.coords.speed * 3.6 > 1.2 || d > 0.003) {
+                    tripDistance += d;
                     document.getElementById('trip').innerText = tripDistance.toFixed(1);
                 }
             }
-            lastCoords = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+            lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
         }
 
         function handleGPSError(err) {
             dotElement.style.display = "none";
-            statusText.classList.add('text-red-500');
-            if (err.code === 1) statusText.innerText = "Location Permission Denied";
-            else if (err.code === 2 || err.code === 3) statusText.innerText = "GPS Signal Lost";
+            statusText.style.color = "#ef4444";
+            if (err.code === 1) statusText.innerText = "LOCATION BLOCKED";
+            else statusText.innerText = "SEARCHING FOR GPS...";
+            
+            if (!gpsRetryInterval && isTracking) {
+                gpsRetryInterval = setInterval(() => { if(isTracking) startGPSService(); }, 5000);
+            }
+        }
+
+        function startGPSService() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            watchId = navigator.geolocation.watchPosition(handlePositionUpdate, handleGPSError, { 
+                enableHighAccuracy: true, timeout: 5000, maximumAge: 0 
+            });
         }
 
         async function toggleTracking() {
             if (!isTracking) {
-                if ("geolocation" in navigator) {
-                    watchId = navigator.geolocation.watchPosition(handlePositionUpdate, handleGPSError, { 
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    });
-                    isTracking = true;
-                    isPaused = false;
-                    startTime = Date.now();
-                    pausedTimeTotal = 0;
-                    startTimer();
-                    startBtn.classList.add('hidden-action');
-                    activeActions.classList.remove('hidden-action');
-                    dotElement.style.display = "block";
-                    requestWakeLock();
-                } else {
-                    statusText.innerText = "GPS not supported";
-                }
+                isTracking = true; isPaused = false;
+                startTime = Date.now(); pausedTimeTotal = 0;
+                startTimer();
+                startBtn.classList.add('hidden-action');
+                activeActions.classList.remove('hidden-action');
+                lockBtn.classList.remove('hidden-action');
+                statusText.innerText = "CONNECTING...";
+                startGPSService();
+                if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen').catch(()=>{});
             } else {
                 saveTrip();
                 if (watchId) navigator.geolocation.clearWatch(watchId);
-                isTracking = false;
-                stopTimer();
+                clearInterval(gpsRetryInterval);
+                isTracking = false; stopTimer();
+                toggleLock(false);
                 startBtn.classList.remove('hidden-action');
                 activeActions.classList.add('hidden-action');
+                lockBtn.classList.add('hidden-action');
                 dotElement.style.display = "none";
                 statusText.innerText = "";
-                tripDistance = 0;
-                lastCoords = null;
+                tripDistance = 0; lastCoords = null;
                 document.getElementById('trip').innerText = "0.0";
                 document.getElementById('tripTime').innerText = "00:00:00";
-                document.getElementById('tripName').value = "";
-                releaseWakeLock();
+                if (wakeLock) { wakeLock.release(); wakeLock = null; }
             }
         }
 
         function togglePause() {
-            if (!isTracking) return;
             isPaused = !isPaused;
             if (isPaused) {
                 pauseStartTime = Date.now();
                 pauseBtn.innerText = "Resume";
-                statusText.innerText = "Paused";
+                statusText.innerText = "PAUSED";
                 dotElement.style.animation = "none";
-                dotElement.style.background = "#fbbf24";
             } else {
                 pausedTimeTotal += (Date.now() - pauseStartTime);
                 pauseBtn.innerText = "Pause";
-                statusText.innerText = "";
+                statusText.innerText = "GPS ACTIVE";
                 dotElement.style.animation = "pulse 2s infinite ease-in-out";
-                dotElement.style.background = "#10b981";
             }
         }
 
         function startTimer() {
             timerInterval = setInterval(() => {
                 if (isPaused) return;
-                const currentElapsed = Date.now() - startTime - pausedTimeTotal;
-                const hours = Math.floor(currentElapsed / 3600000);
-                const minutes = Math.floor((currentElapsed % 3600000) / 60000);
-                const seconds = Math.floor((currentElapsed % 60000) / 1000);
-                document.getElementById('tripTime').innerText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                const ms = Date.now() - startTime - pausedTimeTotal;
+                const h = Math.floor(ms / 3600000);
+                const m = Math.floor((ms % 3600000) / 60000);
+                const s = Math.floor((ms % 60000) / 1000);
+                document.getElementById('tripTime').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             }, 1000);
         }
 
         function stopTimer() { clearInterval(timerInterval); }
 
-        async function requestWakeLock() {
-            if ('wakeLock' in navigator) try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+        function saveTrip() {
+            if (tripDistance < 0.05) return;
+            const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
+            h.unshift({
+                name: document.getElementById('tripName').value || 'Trip ' + (h.length + 1),
+                dist: tripDistance.toFixed(1),
+                time: document.getElementById('tripTime').innerText,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('activa_history', JSON.stringify(h.slice(0, 50)));
         }
 
-        function releaseWakeLock() { if (wakeLock) { wakeLock.release(); wakeLock = null; } }
+        function toggleHistory(open) {
+            const d = document.getElementById('historyDrawer');
+            if (open) {
+                const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
+                const list = document.getElementById('historyList');
+                list.innerHTML = h.length ? h.map(item => `
+                    <div class="history-item flex justify-between items-center py-4 border-b border-black/5">
+                        <div>
+                            <div class="text-[8px] font-black uppercase tracking-widest opacity-30">${item.date}</div>
+                            <div class="font-bold">${item.name}</div>
+                            <div class="text-[9px] opacity-50">${item.time}</div>
+                        </div>
+                        <div class="text-right"><span class="text-xl font-black">${item.dist}</span><span class="text-[8px] ml-1 opacity-40">KM</span></div>
+                    </div>
+                `).join('') : '<p class="text-center opacity-30 mt-10 text-[10px] font-bold">NO HISTORY</p>';
+                d.classList.add('open');
+            } else d.classList.remove('open');
+        }
 
-        window.onload = () => {
-            updateClock();
-            setInterval(updateClock, 1000);
-            initBattery();
-        };
+        function clearHistory() { localStorage.removeItem('activa_history'); toggleHistory(true); }
 
-        document.addEventListener('visibilitychange', () => {
-            if (isTracking && !isPaused && document.visibilityState === 'visible') requestWakeLock();
+        window.onload = () => { updateClock(); setInterval(updateClock, 1000); initBattery(); };
+        
+        let tY = 0;
+        document.addEventListener('touchstart', e => tY = e.touches[0].clientY);
+        document.addEventListener('touchend', e => {
+            if (tY - e.changedTouches[0].clientY < -80 && !isLocked) toggleHistory(true);
         });
     </script>
 </body>
