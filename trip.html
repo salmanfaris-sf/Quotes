@@ -333,10 +333,14 @@
                 gpsActive = true;
                 clearTimeout(gpsTimeout);
                 statusText.innerText = "";
+                // Only start the visual timer and signal tracking once GPS is active
+                startTime = Date.now();
+                startTimer();
             }
 
             if (lastCoords) {
                 const d = calculateDistance(lastCoords.latitude, lastCoords.longitude, pos.coords.latitude, pos.coords.longitude);
+                // Threshold to avoid GPS drift noise (approx > 1.2km/h or 3m movement)
                 if (pos.coords.speed * 3.6 > 1.2 || d > 0.003) {
                     tripDistance += d;
                     document.getElementById('trip').innerText = tripDistance.toFixed(1);
@@ -346,8 +350,7 @@
         }
 
         function handleGPSError(err) {
-            if (!isTracking) return;
-            statusText.innerText = "SEARCHING FOR GPS...";
+            // Silently handling errors; reload logic takes care of connection failure
         }
 
         function startGPSService() {
@@ -356,7 +359,6 @@
                 enableHighAccuracy: true, timeout: 5000, maximumAge: 0 
             });
             
-            // Set 5-second watchdog for reload if GPS not active
             gpsActive = false;
             gpsTimeout = setTimeout(() => {
                 if (!gpsActive && isTracking) {
@@ -367,24 +369,30 @@
 
         async function toggleTracking() {
             if (!isTracking) {
-                isTracking = true; isPaused = false;
-                startTime = Date.now(); pausedTimeTotal = 0;
-                startTimer();
+                isTracking = true; 
+                isPaused = false;
+                pausedTimeTotal = 0;
+                
+                // Switch UI immediately
                 startBtn.classList.add('hidden-action');
                 activeActions.classList.remove('hidden-action');
-                statusText.innerText = "CONNECTING...";
+                
+                // Start searching
                 startGPSService();
                 if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen').catch(()=>{});
             } else {
                 saveTrip();
                 if (watchId) navigator.geolocation.clearWatch(watchId);
                 clearTimeout(gpsTimeout);
-                isTracking = false; stopTimer();
+                isTracking = false; 
+                stopTimer();
                 toggleLock(false);
                 startBtn.classList.remove('hidden-action');
                 activeActions.classList.add('hidden-action');
                 statusText.innerText = "";
-                tripDistance = 0; lastCoords = null;
+                tripDistance = 0; 
+                lastCoords = null;
+                gpsActive = false;
                 document.getElementById('trip').innerText = "0.0";
                 document.getElementById('tripTime').innerText = "00:00:00";
                 if (wakeLock) { wakeLock.release(); wakeLock = null; }
@@ -400,13 +408,14 @@
             } else {
                 pausedTimeTotal += (Date.now() - pauseStartTime);
                 document.getElementById('pauseBtn').innerText = "Pause";
-                statusText.innerText = gpsActive ? "" : "SEARCHING...";
+                statusText.innerText = "";
             }
         }
 
         function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                if (isPaused) return;
+                if (isPaused || !gpsActive) return;
                 const ms = Date.now() - startTime - pausedTimeTotal;
                 const h = Math.floor(ms / 3600000);
                 const m = Math.floor((ms % 3600000) / 60000);
@@ -415,7 +424,7 @@
             }, 1000);
         }
 
-        function stopTimer() { clearInterval(timerInterval); }
+        function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
         function saveTrip() {
             if (tripDistance < 0.05) return;
