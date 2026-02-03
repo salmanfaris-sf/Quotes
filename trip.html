@@ -17,6 +17,7 @@
             --secondary-text: #71717a;
             --drawer-bg: #0a0a0a;
             --status-text: rgba(255, 255, 255, 0.5);
+            --gps-glow: #22c55e;
         }
 
         @media (prefers-color-scheme: light) {
@@ -29,6 +30,7 @@
                 --secondary-text: #52525b;
                 --drawer-bg: #ffffff;
                 --status-text: rgba(0, 0, 0, 0.7);
+                --gps-glow: #16a34a;
             }
         }
 
@@ -130,6 +132,16 @@
 
         .bg-accent { background-color: var(--text-color); color: var(--bg-color); }
         .hidden-action { display: none !important; }
+        
+        .gps-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--gps-glow);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--gps-glow);
+            display: inline-block;
+            margin-right: 6px;
+        }
     </style>
 </head>
 <body>
@@ -218,7 +230,7 @@
                 
                 <!-- Status Bar -->
                 <div id="statusContainer" class="flex items-center justify-center h-4 pb-4">
-                    <p id="status" class="text-[10px] font-black uppercase tracking-[0.2em] text-red-500"></p>
+                    <p id="status" class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center"></p>
                 </div>
             </div>
         </div>
@@ -328,19 +340,20 @@
         function handlePositionUpdate(pos) {
             if (!isTracking || isPaused) return;
             
-            // GPS signal received
             if (!gpsActive) {
                 gpsActive = true;
                 clearTimeout(gpsTimeout);
-                statusText.innerText = "";
-                // Only start the visual timer and signal tracking once GPS is active
+                // Show "GPS ACTIVE" text at the bottom
+                statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
+                statusText.classList.remove('text-red-500');
+                statusText.classList.add('text-green-500');
+                
                 startTime = Date.now();
                 startTimer();
             }
 
             if (lastCoords) {
                 const d = calculateDistance(lastCoords.latitude, lastCoords.longitude, pos.coords.latitude, pos.coords.longitude);
-                // Threshold to avoid GPS drift noise (approx > 1.2km/h or 3m movement)
                 if (pos.coords.speed * 3.6 > 1.2 || d > 0.003) {
                     tripDistance += d;
                     document.getElementById('trip').innerText = tripDistance.toFixed(1);
@@ -349,9 +362,7 @@
             lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
         }
 
-        function handleGPSError(err) {
-            // Silently handling errors; reload logic takes care of connection failure
-        }
+        function handleGPSError(err) {}
 
         function startGPSService() {
             if (watchId) navigator.geolocation.clearWatch(watchId);
@@ -373,11 +384,9 @@
                 isPaused = false;
                 pausedTimeTotal = 0;
                 
-                // Switch UI immediately
                 startBtn.classList.add('hidden-action');
                 activeActions.classList.remove('hidden-action');
                 
-                // Start searching
                 startGPSService();
                 if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen').catch(()=>{});
             } else {
@@ -404,11 +413,15 @@
             if (isPaused) {
                 pauseStartTime = Date.now();
                 document.getElementById('pauseBtn').innerText = "Resume";
-                statusText.innerText = "PAUSED";
+                statusText.innerHTML = "PAUSED";
+                statusText.classList.remove('text-green-500');
+                statusText.classList.add('text-yellow-500');
             } else {
                 pausedTimeTotal += (Date.now() - pauseStartTime);
                 document.getElementById('pauseBtn').innerText = "Pause";
-                statusText.innerText = "";
+                statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
+                statusText.classList.remove('text-yellow-500');
+                statusText.classList.add('text-green-500');
             }
         }
 
