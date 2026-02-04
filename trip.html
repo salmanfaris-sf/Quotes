@@ -159,8 +159,7 @@
         <!-- Header -->
         <div class="flex justify-between items-start w-full mb-4 shrink-0">
             <div class="flex flex-col items-start">
-                <div id="clock" class="text-4xl font-extrabold tracking-tighter leading-none">--:--</div>
-                <div id="ampm" class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 ml-1">--</div>
+                <div id="clock" class="text-5xl font-extrabold tracking-tighter leading-none">--:--</div>
             </div>
             <div class="flex flex-col items-end pt-1">
                 <span class="text-[9px] font-black uppercase tracking-widest opacity-30">Battery</span>
@@ -252,14 +251,71 @@
         const lockAction = document.getElementById('lockAction');
         const utilityRow = document.getElementById('utilityRow');
 
+        // Persistence Logic
+        function saveState() {
+            const state = {
+                isTracking,
+                isPaused,
+                tripDistance,
+                startTime,
+                pausedTimeTotal,
+                pauseStartTime,
+                lastCoords
+            };
+            localStorage.setItem('trip_tracker_state', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('trip_tracker_state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                isTracking = state.isTracking;
+                isPaused = state.isPaused;
+                tripDistance = state.tripDistance || 0;
+                startTime = state.startTime;
+                pausedTimeTotal = state.pausedTimeTotal || 0;
+                pauseStartTime = state.pauseStartTime;
+                lastCoords = state.lastCoords;
+
+                if (isTracking) {
+                    restoreTrackingUI();
+                }
+            }
+        }
+
+        function restoreTrackingUI() {
+            startBtn.classList.add('hidden-action');
+            activeActions.classList.remove('hidden-action');
+            document.getElementById('trip').innerText = tripDistance.toFixed(1);
+            
+            if (isPaused) {
+                document.getElementById('pauseBtn').innerText = "Resume";
+                statusText.innerHTML = "PAUSED";
+                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-yellow-500";
+            } else {
+                statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
+                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-green-500";
+            }
+            
+            startGPSService();
+            startTimer();
+            requestWakeLock();
+        }
+
+        function clearPersistentState() {
+            localStorage.removeItem('trip_tracker_state');
+        }
+
         function updateClock() {
             const now = new Date();
             let hours = now.getHours();
+            // 12-hour format conversion
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            // Removed leading zero for hours as requested
+            const formattedHours = String(hours);
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; 
-            document.getElementById('clock').innerText = `${String(hours).padStart(2, '0')}:${minutes}`;
-            document.getElementById('ampm').innerText = ampm;
+            document.getElementById('clock').innerText = `${formattedHours}:${minutes}`;
         }
 
         async function initBattery() {
@@ -338,7 +394,7 @@
                 gpsActive = true;
                 statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
                 statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-green-500";
-                startTime = Date.now();
+                if (!startTime) startTime = Date.now();
                 startTimer();
             }
 
@@ -347,6 +403,7 @@
                 if (pos.coords.speed * 3.6 > 1.2 || d > 0.003) {
                     tripDistance += d;
                     document.getElementById('trip').innerText = tripDistance.toFixed(1);
+                    saveState(); 
                 }
             }
             lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
@@ -362,15 +419,23 @@
             gpsActive = false;
         }
 
+        async function requestWakeLock() {
+            if ('wakeLock' in navigator) {
+                try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+            }
+        }
+
         async function toggleTracking() {
             if (!isTracking) {
                 isTracking = true; 
                 isPaused = false;
                 pausedTimeTotal = 0;
+                startTime = Date.now();
                 startBtn.classList.add('hidden-action');
                 activeActions.classList.remove('hidden-action');
                 startGPSService();
-                if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen').catch(()=>{});
+                requestWakeLock();
+                saveState();
             } else {
                 saveTrip();
                 if (watchId) navigator.geolocation.clearWatch(watchId);
@@ -386,6 +451,7 @@
                 document.getElementById('trip').innerText = "0.0";
                 document.getElementById('tripTime').innerText = "00:00:00";
                 if (wakeLock) { wakeLock.release(); wakeLock = null; }
+                clearPersistentState();
             }
         }
 
@@ -402,16 +468,26 @@
                 statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
                 statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-green-500";
             }
+            saveState();
         }
 
         function startTimer() {
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                if (isPaused || !gpsActive) return;
-                const ms = Date.now() - startTime - pausedTimeTotal;
-                const h = Math.floor(ms / 3600000);
-                const m = Math.floor((ms % 3600000) / 60000);
-                const s = Math.floor((ms % 60000) / 1000);
+                if (!startTime) return;
+                
+                let elapsedMs = 0;
+                if (isPaused) {
+                    elapsedMs = pauseStartTime - startTime - pausedTimeTotal;
+                } else {
+                    elapsedMs = Date.now() - startTime - pausedTimeTotal;
+                }
+
+                if (elapsedMs < 0) elapsedMs = 0;
+
+                const h = Math.floor(elapsedMs / 3600000);
+                const m = Math.floor((elapsedMs % 3600000) / 60000);
+                const s = Math.floor((elapsedMs % 60000) / 1000);
                 document.getElementById('tripTime').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             }, 1000);
         }
@@ -451,7 +527,12 @@
 
         function clearHistory() { localStorage.removeItem('activa_history'); toggleHistory(true); }
 
-        window.onload = () => { updateClock(); setInterval(updateClock, 1000); initBattery(); };
+        window.onload = () => { 
+            updateClock(); 
+            setInterval(updateClock, 1000); 
+            initBattery(); 
+            loadState(); 
+        };
         
         let tY = 0;
         document.addEventListener('touchstart', e => tY = e.touches[0].clientY);
