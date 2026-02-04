@@ -190,13 +190,6 @@
 
         <!-- Controls -->
         <div class="w-full shrink-0">
-            <div class="mb-10 w-full">
-                <div class="premium-card p-6 flex flex-col items-center justify-center border-white/5">
-                    <span class="text-[9px] font-black uppercase tracking-widest opacity-40 mb-1">Duration</span>
-                    <span id="tripTime" class="text-4xl font-bold tracking-tight">00:00:00</span>
-                </div>
-            </div>
-
             <div class="flex flex-col space-y-8 w-full">
                 <div class="flex justify-center space-x-12 items-center" id="utilityRow">
                     <button onclick="toggleFS()" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
@@ -244,9 +237,6 @@
         let tripDistance = 0;
         let lastCoords = null;
         let startTime = null;
-        let pausedTimeTotal = 0;
-        let pauseStartTime = null;
-        let timerInterval = null;
         let wakeLock = null;
         let isHistoryOpen = false;
         let isGpsCalibrated = false;
@@ -258,7 +248,7 @@
         const utilityRow = document.getElementById('utilityRow');
 
         function saveState() {
-            const state = { isTracking, isPaused, tripDistance, startTime, pausedTimeTotal, pauseStartTime, lastCoords };
+            const state = { isTracking, isPaused, tripDistance, startTime, lastCoords };
             localStorage.setItem('trip_tracker_state', JSON.stringify(state));
         }
 
@@ -270,8 +260,6 @@
                 isPaused = state.isPaused;
                 tripDistance = state.tripDistance || 0;
                 startTime = state.startTime;
-                pausedTimeTotal = state.pausedTimeTotal || 0;
-                pauseStartTime = state.pauseStartTime;
                 lastCoords = state.lastCoords;
 
                 if (isTracking) {
@@ -287,17 +275,14 @@
             document.getElementById('trip').innerText = tripDistance.toFixed(1);
             if(isPaused) document.getElementById('pauseBtn').innerText = "Resume";
             startGPSService();
-            startTimer();
             requestWakeLock();
         }
 
-        // --- NEW: Permission Warmup ---
-        // Forces the phone to show the "Allow Location" popup immediately on site entry
         function triggerPermissionWarmup() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
                     () => console.log("GPS warm-up successful"),
-                    (err) => console.log("GPS warm-up denied or error:", err.message),
+                    (err) => console.log("GPS warm-up error:", err.message),
                     { enableHighAccuracy: false, timeout: 5000 }
                 );
             }
@@ -315,14 +300,13 @@
 
             setTimeout(() => {
                 window.location.reload();
-            }, 2000);
+            }, 1000);
         }
 
         function stopTracking() {
             saveTrip();
             if (watchId) navigator.geolocation.clearWatch(watchId);
             isTracking = false; 
-            stopTimer();
             toggleLock(false);
             startBtn.classList.remove('hidden-action', 'opacity-50');
             startBtn.innerText = "Start Trip";
@@ -330,7 +314,6 @@
             tripDistance = 0; 
             lastCoords = null;
             document.getElementById('trip').innerText = "0.0";
-            document.getElementById('tripTime').innerText = "00:00:00";
             if (wakeLock) { wakeLock.release(); wakeLock = null; }
             localStorage.removeItem('trip_tracker_state');
         }
@@ -368,6 +351,7 @@
             lockAction.classList.toggle('hidden-action', !locked);
         }
 
+        // Slider logic
         const handle = document.getElementById('sliderHandle');
         const track = document.getElementById('sliderTrack');
         let isDragging = false;
@@ -434,34 +418,18 @@
 
         function togglePause() {
             isPaused = !isPaused;
-            if (isPaused) {
-                pauseStartTime = Date.now();
-                document.getElementById('pauseBtn').innerText = "Resume";
-            } else {
-                pausedTimeTotal += (Date.now() - pauseStartTime);
-                document.getElementById('pauseBtn').innerText = "Pause";
-            }
+            document.getElementById('pauseBtn').innerText = isPaused ? "Resume" : "Pause";
             saveState();
         }
-
-        function startTimer() {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (!startTime) return;
-                let elapsedMs = isPaused ? (pauseStartTime - startTime - pausedTimeTotal) : (Date.now() - startTime - pausedTimeTotal);
-                const h = Math.floor(elapsedMs / 3600000);
-                const m = Math.floor((elapsedMs % 3600000) / 60000);
-                const s = Math.floor((elapsedMs % 60000) / 1000);
-                document.getElementById('tripTime').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            }, 1000);
-        }
-
-        function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
         function saveTrip() {
             if (tripDistance < 0.05) return;
             const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
-            h.unshift({ name: 'Trip ' + (h.length + 1), dist: tripDistance.toFixed(1), time: document.getElementById('tripTime').innerText, date: new Date().toLocaleDateString() });
+            h.unshift({ 
+                name: 'Trip ' + (h.length + 1), 
+                dist: tripDistance.toFixed(1), 
+                date: new Date().toLocaleDateString() 
+            });
             localStorage.setItem('activa_history', JSON.stringify(h.slice(0, 50)));
         }
 
@@ -476,7 +444,6 @@
                         <div>
                             <div class="text-[8px] font-black uppercase tracking-widest opacity-30">${item.date}</div>
                             <div class="font-bold">${item.name}</div>
-                            <div class="text-[9px] opacity-50">${item.time}</div>
                         </div>
                         <div class="text-right"><span class="text-xl font-black">${item.dist}</span><span class="text-[8px] ml-1 opacity-40">KM</span></div>
                     </div>
@@ -492,7 +459,6 @@
             setInterval(updateClock, 1000); 
             initBattery(); 
             loadState(); 
-            // Only trigger warmup if not already tracking
             if (!isTracking) triggerPermissionWarmup();
         };
         
