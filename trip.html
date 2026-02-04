@@ -73,6 +73,23 @@
 
         .btn-press:active { transform: scale(0.95); }
 
+        .circle-btn {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--panel-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .circle-btn:active {
+            background: rgba(128, 128, 128, 0.2);
+            transform: scale(0.9);
+        }
+
         #historyDrawer {
             position: fixed;
             top: -100%;
@@ -81,7 +98,7 @@
             height: 100%;
             background: var(--drawer-bg);
             z-index: 100;
-            transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             padding: 1.5rem;
@@ -152,7 +169,10 @@
             <button onclick="toggleHistory(false)" class="p-2 opacity-50 font-bold text-sm">CLOSE</button>
         </div>
         <div id="historyList" class="flex-grow overflow-y-auto space-y-2"></div>
-        <button onclick="clearHistory()" class="mt-4 text-[9px] font-black uppercase tracking-widest text-red-500 opacity-50 text-center w-full">Clear All Records</button>
+        <div class="py-4 flex flex-col items-center">
+             <div class="w-12 h-1 bg-white/20 rounded-full mb-4"></div>
+             <button onclick="clearHistory()" class="text-[9px] font-black uppercase tracking-widest text-red-500 opacity-50 text-center w-full">Clear All Records</button>
+        </div>
     </div>
 
     <div class="main-container">
@@ -188,12 +208,13 @@
             </div>
 
             <div class="flex flex-col space-y-8 w-full">
+                <!-- Utility Row with Circle Buttons -->
                 <div class="flex justify-center space-x-12 items-center" id="utilityRow">
-                    <button onclick="toggleFS()" class="opacity-20 hover:opacity-100 transition-opacity p-2">
-                        <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    <button onclick="toggleFS()" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
+                        <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                     </button>
-                    <button id="lockBtn" onclick="toggleLock(true)" class="opacity-20 hover:opacity-100 transition-opacity p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <button id="lockBtn" onclick="toggleLock(true)" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </button>
                 </div>
 
@@ -243,6 +264,7 @@
         let timerInterval = null;
         let gpsActive = false;
         let wakeLock = null;
+        let isHistoryOpen = false;
 
         const startBtn = document.getElementById('startBtn');
         const activeActions = document.getElementById('activeActions');
@@ -309,10 +331,8 @@
         function updateClock() {
             const now = new Date();
             let hours = now.getHours();
-            // 12-hour format conversion
             hours = hours % 12;
             hours = hours ? hours : 12; 
-            // Removed leading zero for hours as requested
             const formattedHours = String(hours);
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('clock').innerText = `${formattedHours}:${minutes}`;
@@ -508,6 +528,7 @@
 
         function toggleHistory(open) {
             const d = document.getElementById('historyDrawer');
+            isHistoryOpen = open;
             if (open) {
                 const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
                 const list = document.getElementById('historyList');
@@ -537,7 +558,16 @@
         let tY = 0;
         document.addEventListener('touchstart', e => tY = e.touches[0].clientY);
         document.addEventListener('touchend', e => {
-            if (tY - e.changedTouches[0].clientY < -80 && !isLocked) toggleHistory(true);
+            const diffY = tY - e.changedTouches[0].clientY;
+            
+            // Swipe Down (Positive diffY means swiping up, Negative means swiping down)
+            if (diffY < -80 && !isLocked && !isHistoryOpen) {
+                toggleHistory(true);
+            } 
+            // Swipe Up to close history
+            else if (diffY > 80 && isHistoryOpen) {
+                toggleHistory(false);
+            }
         });
     </script>
 </body>
