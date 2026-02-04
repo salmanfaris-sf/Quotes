@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Kilometre Track</title>
+    <title>Kilometre Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
@@ -50,16 +50,6 @@
             height: 100%;
             padding: 1.5rem;
             padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .fs-only {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        body.is-fullscreen .fs-only {
-            opacity: 1;
-            pointer-events: auto;
         }
 
         .premium-card {
@@ -166,17 +156,8 @@
     </div>
 
     <div class="main-container">
-        <!-- Unified Header: Clock and Battery Sized Equally -->
-        <div class="flex justify-between items-start w-full mb-4 shrink-0 fs-only">
-            <div class="flex flex-col items-start">
-                <span class="text-[9px] font-black uppercase tracking-widest opacity-30">Time</span>
-                <div id="clock" class="text-4xl font-extrabold tracking-tighter leading-none">--:--</div>
-            </div>
-            <div class="flex flex-col items-end">
-                <span class="text-[9px] font-black uppercase tracking-widest opacity-30">Battery</span>
-                <span id="batteryText" class="text-4xl font-extrabold tracking-tighter leading-none">--%</span>
-            </div>
-        </div>
+        <!-- Spacer for top area -->
+        <div class="h-8 shrink-0"></div>
 
         <!-- Distance Display -->
         <div class="flex-grow flex flex-col items-center justify-center w-full text-center">
@@ -237,7 +218,6 @@
         let watchId = null;
         let tripDistance = 0;
         let lastCoords = null;
-        let startTime = null;
         let wakeLock = null;
         let isHistoryOpen = false;
         let isGpsCalibrated = false;
@@ -249,7 +229,7 @@
         const utilityRow = document.getElementById('utilityRow');
 
         function saveState() {
-            const state = { isTracking, isPaused, tripDistance, startTime, lastCoords };
+            const state = { isTracking, isPaused, tripDistance, lastCoords };
             localStorage.setItem('trip_tracker_state', JSON.stringify(state));
         }
 
@@ -260,7 +240,6 @@
                 isTracking = state.isTracking;
                 isPaused = state.isPaused;
                 tripDistance = state.tripDistance || 0;
-                startTime = state.startTime;
                 lastCoords = state.lastCoords;
 
                 if (isTracking) {
@@ -282,7 +261,7 @@
         function triggerPermissionWarmup() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
-                    () => console.log("GPS ready"),
+                    () => {},
                     (err) => console.log("GPS error:", err.message),
                     { enableHighAccuracy: false, timeout: 5000 }
                 );
@@ -294,7 +273,6 @@
             startBtn.classList.add('opacity-50');
             isTracking = true;
             isPaused = false;
-            startTime = Date.now();
             tripDistance = 0;
             saveState();
             setTimeout(() => { window.location.reload(); }, 1000);
@@ -314,26 +292,6 @@
             if (wakeLock) { wakeLock.release(); wakeLock = null; }
             localStorage.removeItem('trip_tracker_state');
         }
-
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours() % 12 || 12;
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').innerText = `${hours}:${minutes}`;
-        }
-
-        async function initBattery() {
-            if ('getBattery' in navigator) {
-                const b = await navigator.getBattery();
-                const u = () => document.getElementById('batteryText').innerText = Math.round(b.level * 100) + '%';
-                b.addEventListener('levelchange', u); u();
-            }
-        }
-
-        function handleFsChange() {
-            document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
-        }
-        document.addEventListener('fullscreenchange', handleFsChange);
 
         async function toggleFS() {
             if (!document.fullscreenElement) await document.documentElement.requestFullscreen().catch(()=>{});
@@ -451,9 +409,6 @@
         function clearHistory() { localStorage.removeItem('activa_history'); toggleHistory(true); }
 
         window.onload = () => { 
-            updateClock(); 
-            setInterval(updateClock, 1000); 
-            initBattery(); 
             loadState(); 
             if (!isTracking) triggerPermissionWarmup();
         };
