@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kilometre Track</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+        
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --panel-bg: rgba(20, 20, 20, 0.8);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #ffffff;
+            --secondary-text: #71717a;
+            --drawer-bg: #0a0a0a;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-color: #ffffff;
+                --text-color: #000000;
+                --panel-bg: rgba(240, 240, 240, 0.9);
+                --panel-border: rgba(0, 0, 0, 0.1);
+                --accent-color: #000000;
+                --drawer-bg: #ffffff;
+            }
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            transition: background-color 0.5s ease;
+            height: 100vh;
+            height: 100dvh; 
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 1.5rem;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .fs-only {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        body.is-fullscreen .fs-only {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .premium-card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 9999px;
+        }
+
+        .stat-value {
+            font-weight: 900;
+            letter-spacing: -0.06em;
+            line-height: 0.85;
+        }
+
+        .btn-press:active { transform: scale(0.95); }
+
+        .circle-btn {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--panel-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        #historyDrawer {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--drawer-bg);
+            z-index: 100;
+            transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        #historyDrawer.open { top: 0; }
+
+        .slider-track {
+            width: 100%;
+            height: 64px;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--panel-border);
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-handle {
+            width: 56px;
+            height: 56px;
+            background: var(--text-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 64px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-color);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .bg-accent { background-color: var(--text-color); color: var(--bg-color); }
+        .hidden-action { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="historyDrawer">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase tracking-widest">History</h2>
+            <button onclick="toggleHistory(false)" class="p-2 opacity-50 font-bold text-sm">CLOSE</button>
+        </div>
+        <div id="historyList" class="flex-grow overflow-y-auto space-y-2"></div>
+        <div class="py-4 flex flex-col items-center">
+             <div class="w-12 h-1 bg-white/20 rounded-full mb-4"></div>
+             <button onclick="clearHistory()" class="text-[9px] font-black uppercase tracking-widest text-red-500 opacity-50 text-center w-full">Clear All Records</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Unified Header: Clock and Battery Sized Equally -->
+        <div class="flex justify-between items-start w-full mb-4 shrink-0 fs-only">
+            <div class="flex flex-col items-start">
+                <span class="text-[9px] font-black uppercase tracking-widest opacity-30">Time</span>
+                <div id="clock" class="text-4xl font-extrabold tracking-tighter leading-none">--:--</div>
+            </div>
+            <div class="flex flex-col items-end">
+                <span class="text-[9px] font-black uppercase tracking-widest opacity-30">Battery</span>
+                <span id="batteryText" class="text-4xl font-extrabold tracking-tighter leading-none">--%</span>
+            </div>
+        </div>
+
+        <!-- Distance Display -->
+        <div class="flex-grow flex flex-col items-center justify-center w-full text-center">
+            <div class="w-full">
+                <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mb-2 block">Distance</span>
+                <div class="flex items-baseline justify-center">
+                    <span id="trip" class="text-[120px] stat-value">0.0</span>
+                    <span class="text-xl font-black ml-2">KM</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="w-full shrink-0">
+            <div class="flex flex-col space-y-8 w-full">
+                <div class="flex justify-center space-x-12 items-center" id="utilityRow">
+                    <button onclick="toggleFS()" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
+                        <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    </button>
+                    <button id="lockBtn" onclick="toggleLock(true)" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </button>
+                </div>
+
+                <div class="w-full relative min-h-[72px] pb-6">
+                    <div id="standardActions" class="w-full">
+                        <button id="startBtn" onclick="initiateStart()" class="w-full py-6 bg-accent font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl btn-press rounded-full">
+                            Start Trip
+                        </button>
+
+                        <div id="activeActions" class="w-full flex space-x-4 hidden-action">
+                            <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-6 premium-card font-black text-[11px] uppercase tracking-widest btn-press">
+                                Pause
+                            </button>
+                            <button onclick="stopTracking()" class="flex-[1.5] py-6 bg-red-600 text-white font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
+                                Finish Trip
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="lockAction" class="w-full hidden-action">
+                        <div class="slider-track" id="sliderTrack">
+                            <div class="slider-text">Swipe to unlock</div>
+                            <div class="slider-handle" id="sliderHandle">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isTracking = false;
+        let isPaused = false;
+        let isLocked = false;
+        let watchId = null;
+        let tripDistance = 0;
+        let lastCoords = null;
+        let startTime = null;
+        let wakeLock = null;
+        let isHistoryOpen = false;
+        let isGpsCalibrated = false;
+
+        const startBtn = document.getElementById('startBtn');
+        const activeActions = document.getElementById('activeActions');
+        const standardActions = document.getElementById('standardActions');
+        const lockAction = document.getElementById('lockAction');
+        const utilityRow = document.getElementById('utilityRow');
+
+        function saveState() {
+            const state = { isTracking, isPaused, tripDistance, startTime, lastCoords };
+            localStorage.setItem('trip_tracker_state', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('trip_tracker_state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                isTracking = state.isTracking;
+                isPaused = state.isPaused;
+                tripDistance = state.tripDistance || 0;
+                startTime = state.startTime;
+                lastCoords = state.lastCoords;
+
+                if (isTracking) {
+                    isGpsCalibrated = true;
+                    restoreTrackingUI();
+                }
+            }
+        }
+
+        function restoreTrackingUI() {
+            startBtn.classList.add('hidden-action');
+            activeActions.classList.remove('hidden-action');
+            document.getElementById('trip').innerText = tripDistance.toFixed(1);
+            if(isPaused) document.getElementById('pauseBtn').innerText = "Resume";
+            startGPSService();
+            requestWakeLock();
+        }
+
+        function triggerPermissionWarmup() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    () => console.log("GPS ready"),
+                    (err) => console.log("GPS error:", err.message),
+                    { enableHighAccuracy: false, timeout: 5000 }
+                );
+            }
+        }
+
+        function initiateStart() {
+            startBtn.innerText = "Starting...";
+            startBtn.classList.add('opacity-50');
+            isTracking = true;
+            isPaused = false;
+            startTime = Date.now();
+            tripDistance = 0;
+            saveState();
+            setTimeout(() => { window.location.reload(); }, 1000);
+        }
+
+        function stopTracking() {
+            saveTrip();
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            isTracking = false; 
+            toggleLock(false);
+            startBtn.classList.remove('hidden-action', 'opacity-50');
+            startBtn.innerText = "Start Trip";
+            activeActions.classList.add('hidden-action');
+            tripDistance = 0; 
+            lastCoords = null;
+            document.getElementById('trip').innerText = "0.0";
+            if (wakeLock) { wakeLock.release(); wakeLock = null; }
+            localStorage.removeItem('trip_tracker_state');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours() % 12 || 12;
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${hours}:${minutes}`;
+        }
+
+        async function initBattery() {
+            if ('getBattery' in navigator) {
+                const b = await navigator.getBattery();
+                const u = () => document.getElementById('batteryText').innerText = Math.round(b.level * 100) + '%';
+                b.addEventListener('levelchange', u); u();
+            }
+        }
+
+        function handleFsChange() {
+            document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+        }
+        document.addEventListener('fullscreenchange', handleFsChange);
+
+        async function toggleFS() {
+            if (!document.fullscreenElement) await document.documentElement.requestFullscreen().catch(()=>{});
+            else await document.exitFullscreen().catch(()=>{});
+        }
+
+        function toggleLock(locked) {
+            isLocked = locked;
+            standardActions.classList.toggle('hidden-action', locked);
+            utilityRow.classList.toggle('opacity-0', locked);
+            utilityRow.classList.toggle('pointer-events-none', locked);
+            lockAction.classList.toggle('hidden-action', !locked);
+        }
+
+        const handle = document.getElementById('sliderHandle');
+        const track = document.getElementById('sliderTrack');
+        let isDragging = false;
+        let startX = 0;
+
+        handle.addEventListener('touchstart', e => { isDragging = true; startX = e.touches[0].clientX; });
+        window.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            let delta = Math.max(0, Math.min(e.touches[0].clientX - startX, track.offsetWidth - handle.offsetWidth - 8));
+            handle.style.transform = `translateX(${delta}px)`;
+            if (delta >= track.offsetWidth - handle.offsetWidth - 8) {
+                isDragging = false;
+                toggleLock(false);
+                handle.style.transform = `translateX(0px)`;
+            }
+        });
+        window.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            handle.style.transition = 'transform 0.3s ease';
+            handle.style.transform = `translateX(0px)`;
+            setTimeout(() => handle.style.transition = '', 300);
+        });
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2)**2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        function handlePositionUpdate(pos) {
+            if (!isTracking || isPaused) return;
+            if (!isGpsCalibrated) {
+                lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+                isGpsCalibrated = true;
+                return;
+            }
+            if (lastCoords) {
+                const dist = calculateDistance(lastCoords.latitude, lastCoords.longitude, pos.coords.latitude, pos.coords.longitude);
+                const speedKmh = pos.coords.speed ? pos.coords.speed * 3.6 : 0;
+                if (pos.coords.accuracy < 30 && (speedKmh > 1.5 || dist > 0.01)) {
+                    tripDistance += dist;
+                    document.getElementById('trip').innerText = tripDistance.toFixed(1);
+                    saveState(); 
+                }
+            }
+            lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+        }
+
+        function startGPSService() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            watchId = navigator.geolocation.watchPosition(handlePositionUpdate, (e) => {}, { 
+                enableHighAccuracy: true, timeout: 10000, maximumAge: 0 
+            });
+        }
+
+        async function requestWakeLock() {
+            if ('wakeLock' in navigator && !wakeLock) {
+                try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('pauseBtn').innerText = isPaused ? "Resume" : "Pause";
+            saveState();
+        }
+
+        function saveTrip() {
+            if (tripDistance < 0.05) return;
+            const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
+            h.unshift({ 
+                name: 'Trip ' + (h.length + 1), 
+                dist: tripDistance.toFixed(1), 
+                date: new Date().toLocaleDateString() 
+            });
+            localStorage.setItem('activa_history', JSON.stringify(h.slice(0, 50)));
+        }
+
+        function toggleHistory(open) {
+            const d = document.getElementById('historyDrawer');
+            isHistoryOpen = open;
+            if (open) {
+                const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
+                const list = document.getElementById('historyList');
+                list.innerHTML = h.length ? h.map(item => `
+                    <div class="flex justify-between items-center py-4 border-b border-black/5">
+                        <div>
+                            <div class="text-[8px] font-black uppercase tracking-widest opacity-30">${item.date}</div>
+                            <div class="font-bold">${item.name}</div>
+                        </div>
+                        <div class="text-right"><span class="text-xl font-black">${item.dist}</span><span class="text-[8px] ml-1 opacity-40">KM</span></div>
+                    </div>
+                `).join('') : '<p class="text-center opacity-30 mt-10 text-[10px] font-bold">NO HISTORY</p>';
+                d.classList.add('open');
+            } else d.classList.remove('open');
+        }
+
+        function clearHistory() { localStorage.removeItem('activa_history'); toggleHistory(true); }
+
+        window.onload = () => { 
+            updateClock(); 
+            setInterval(updateClock, 1000); 
+            initBattery(); 
+            loadState(); 
+            if (!isTracking) triggerPermissionWarmup();
+        };
+        
+        let tY = 0;
+        document.addEventListener('touchstart', e => tY = e.touches[0].clientY);
+        document.addEventListener('touchend', e => {
+            const diffY = tY - e.changedTouches[0].clientY;
+            if (diffY < -80 && !isLocked && !isHistoryOpen) toggleHistory(true);
+            else if (diffY > 80 && isHistoryOpen) toggleHistory(false);
+        });
+    </script>
+</body>
+</html>
+
