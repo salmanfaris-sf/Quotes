@@ -16,8 +16,6 @@
             --accent-color: #ffffff;
             --secondary-text: #71717a;
             --drawer-bg: #0a0a0a;
-            --status-text: rgba(255, 255, 255, 0.5);
-            --gps-glow: #22c55e;
         }
 
         @media (prefers-color-scheme: light) {
@@ -27,10 +25,7 @@
                 --panel-bg: rgba(240, 240, 240, 0.9);
                 --panel-border: rgba(0, 0, 0, 0.1);
                 --accent-color: #000000;
-                --secondary-text: #52525b;
                 --drawer-bg: #ffffff;
-                --status-text: rgba(0, 0, 0, 0.7);
-                --gps-glow: #16a34a;
             }
         }
 
@@ -55,6 +50,16 @@
             height: 100%;
             padding: 1.5rem;
             padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .fs-only {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        body.is-fullscreen .fs-only {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .premium-card {
@@ -83,11 +88,6 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-        }
-
-        .circle-btn:active {
-            background: rgba(128, 128, 128, 0.2);
-            transform: scale(0.9);
         }
 
         #historyDrawer {
@@ -149,16 +149,6 @@
 
         .bg-accent { background-color: var(--text-color); color: var(--bg-color); }
         .hidden-action { display: none !important; }
-        
-        .gps-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--gps-glow);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--gps-glow);
-            display: inline-block;
-            margin-right: 6px;
-        }
     </style>
 </head>
 <body>
@@ -176,8 +166,8 @@
     </div>
 
     <div class="main-container">
-        <!-- Header -->
-        <div class="flex justify-between items-start w-full mb-4 shrink-0">
+        <!-- Fullscreen Header -->
+        <div class="flex justify-between items-start w-full mb-4 shrink-0 fs-only">
             <div class="flex flex-col items-start">
                 <div id="clock" class="text-5xl font-extrabold tracking-tighter leading-none">--:--</div>
             </div>
@@ -187,7 +177,7 @@
             </div>
         </div>
 
-        <!-- Middle -->
+        <!-- Distance Display -->
         <div class="flex-grow flex flex-col items-center justify-center w-full text-center">
             <div class="w-full">
                 <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mb-2 block">Distance</span>
@@ -198,7 +188,7 @@
             </div>
         </div>
 
-        <!-- Bottom -->
+        <!-- Controls -->
         <div class="w-full shrink-0">
             <div class="mb-10 w-full">
                 <div class="premium-card p-6 flex flex-col items-center justify-center border-white/5">
@@ -208,7 +198,6 @@
             </div>
 
             <div class="flex flex-col space-y-8 w-full">
-                <!-- Utility Row with Circle Buttons -->
                 <div class="flex justify-center space-x-12 items-center" id="utilityRow">
                     <button onclick="toggleFS()" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
                         <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
@@ -218,9 +207,9 @@
                     </button>
                 </div>
 
-                <div class="w-full relative min-h-[72px]">
+                <div class="w-full relative min-h-[72px] pb-6">
                     <div id="standardActions" class="w-full">
-                        <button id="startBtn" onclick="toggleTracking()" class="w-full py-6 bg-accent font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl btn-press rounded-full">
+                        <button id="startBtn" onclick="initiateStart()" class="w-full py-6 bg-accent font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl btn-press rounded-full">
                             Start Trip
                         </button>
 
@@ -228,7 +217,7 @@
                             <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-6 premium-card font-black text-[11px] uppercase tracking-widest btn-press">
                                 Pause
                             </button>
-                            <button onclick="toggleTracking()" class="flex-[1.5] py-6 bg-red-600 text-white font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
+                            <button onclick="stopTracking()" class="flex-[1.5] py-6 bg-red-600 text-white font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
                                 Finish Trip
                             </button>
                         </div>
@@ -242,10 +231,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div id="statusContainer" class="flex items-center justify-center h-4 pb-4">
-                    <p id="status" class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center"></p>
                 </div>
             </div>
         </div>
@@ -262,28 +247,18 @@
         let pausedTimeTotal = 0;
         let pauseStartTime = null;
         let timerInterval = null;
-        let gpsActive = false;
         let wakeLock = null;
         let isHistoryOpen = false;
+        let isGpsCalibrated = false;
 
         const startBtn = document.getElementById('startBtn');
         const activeActions = document.getElementById('activeActions');
-        const statusText = document.getElementById('status');
         const standardActions = document.getElementById('standardActions');
         const lockAction = document.getElementById('lockAction');
         const utilityRow = document.getElementById('utilityRow');
 
-        // Persistence Logic
         function saveState() {
-            const state = {
-                isTracking,
-                isPaused,
-                tripDistance,
-                startTime,
-                pausedTimeTotal,
-                pauseStartTime,
-                lastCoords
-            };
+            const state = { isTracking, isPaused, tripDistance, startTime, pausedTimeTotal, pauseStartTime, lastCoords };
             localStorage.setItem('trip_tracker_state', JSON.stringify(state));
         }
 
@@ -300,6 +275,7 @@
                 lastCoords = state.lastCoords;
 
                 if (isTracking) {
+                    isGpsCalibrated = true;
                     restoreTrackingUI();
                 }
             }
@@ -309,33 +285,61 @@
             startBtn.classList.add('hidden-action');
             activeActions.classList.remove('hidden-action');
             document.getElementById('trip').innerText = tripDistance.toFixed(1);
-            
-            if (isPaused) {
-                document.getElementById('pauseBtn').innerText = "Resume";
-                statusText.innerHTML = "PAUSED";
-                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-yellow-500";
-            } else {
-                statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
-                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-green-500";
-            }
-            
+            if(isPaused) document.getElementById('pauseBtn').innerText = "Resume";
             startGPSService();
             startTimer();
             requestWakeLock();
         }
 
-        function clearPersistentState() {
+        // --- NEW: Permission Warmup ---
+        // Forces the phone to show the "Allow Location" popup immediately on site entry
+        function triggerPermissionWarmup() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    () => console.log("GPS warm-up successful"),
+                    (err) => console.log("GPS warm-up denied or error:", err.message),
+                    { enableHighAccuracy: false, timeout: 5000 }
+                );
+            }
+        }
+
+        function initiateStart() {
+            startBtn.innerText = "Starting...";
+            startBtn.classList.add('opacity-50');
+            
+            isTracking = true;
+            isPaused = false;
+            startTime = Date.now();
+            tripDistance = 0;
+            saveState();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
+
+        function stopTracking() {
+            saveTrip();
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            isTracking = false; 
+            stopTimer();
+            toggleLock(false);
+            startBtn.classList.remove('hidden-action', 'opacity-50');
+            startBtn.innerText = "Start Trip";
+            activeActions.classList.add('hidden-action');
+            tripDistance = 0; 
+            lastCoords = null;
+            document.getElementById('trip').innerText = "0.0";
+            document.getElementById('tripTime').innerText = "00:00:00";
+            if (wakeLock) { wakeLock.release(); wakeLock = null; }
             localStorage.removeItem('trip_tracker_state');
         }
 
         function updateClock() {
             const now = new Date();
-            let hours = now.getHours();
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
-            const formattedHours = String(hours);
+            let hours = now.getHours() % 12 || 12;
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').innerText = `${formattedHours}:${minutes}`;
+            document.getElementById('clock').innerText = `${hours}:${minutes}`;
         }
 
         async function initBattery() {
@@ -346,25 +350,22 @@
             }
         }
 
+        function handleFsChange() {
+            document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+        }
+        document.addEventListener('fullscreenchange', handleFsChange);
+
         async function toggleFS() {
-            if (!document.fullscreenElement) {
-                await document.documentElement.requestFullscreen().catch(()=>{});
-            } else {
-                await document.exitFullscreen().catch(()=>{});
-            }
+            if (!document.fullscreenElement) await document.documentElement.requestFullscreen().catch(()=>{});
+            else await document.exitFullscreen().catch(()=>{});
         }
 
         function toggleLock(locked) {
             isLocked = locked;
-            if (locked) {
-                standardActions.classList.add('hidden-action');
-                utilityRow.classList.add('opacity-0', 'pointer-events-none');
-                lockAction.classList.remove('hidden-action');
-            } else {
-                standardActions.classList.remove('hidden-action');
-                utilityRow.classList.remove('opacity-0', 'pointer-events-none');
-                lockAction.classList.add('hidden-action');
-            }
+            standardActions.classList.toggle('hidden-action', locked);
+            utilityRow.classList.toggle('opacity-0', locked);
+            utilityRow.classList.toggle('pointer-events-none', locked);
+            lockAction.classList.toggle('hidden-action', !locked);
         }
 
         const handle = document.getElementById('sliderHandle');
@@ -372,32 +373,24 @@
         let isDragging = false;
         let startX = 0;
 
-        const onStart = (e) => { isDragging = true; startX = (e.touches ? e.touches[0].clientX : e.clientX); };
-        const onMove = (e) => {
+        handle.addEventListener('touchstart', e => { isDragging = true; startX = e.touches[0].clientX; });
+        window.addEventListener('touchmove', e => {
             if (!isDragging) return;
-            const currentX = (e.touches ? e.touches[0].clientX : e.clientX);
-            let delta = currentX - startX;
-            const max = track.offsetWidth - handle.offsetWidth - 8;
-            if (delta < 0) delta = 0;
-            if (delta > max) delta = max;
+            let delta = Math.max(0, Math.min(e.touches[0].clientX - startX, track.offsetWidth - handle.offsetWidth - 8));
             handle.style.transform = `translateX(${delta}px)`;
-            if (delta >= max) {
+            if (delta >= track.offsetWidth - handle.offsetWidth - 8) {
                 isDragging = false;
                 toggleLock(false);
                 handle.style.transform = `translateX(0px)`;
             }
-        };
-        const onEnd = () => {
+        });
+        window.addEventListener('touchend', () => {
             if (!isDragging) return;
             isDragging = false;
             handle.style.transition = 'transform 0.3s ease';
             handle.style.transform = `translateX(0px)`;
             setTimeout(() => handle.style.transition = '', 300);
-        };
-
-        handle.addEventListener('touchstart', onStart);
-        window.addEventListener('touchmove', onMove);
-        window.addEventListener('touchend', onEnd);
+        });
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
@@ -409,19 +402,16 @@
 
         function handlePositionUpdate(pos) {
             if (!isTracking || isPaused) return;
-            
-            if (!gpsActive) {
-                gpsActive = true;
-                statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
-                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-green-500";
-                if (!startTime) startTime = Date.now();
-                startTimer();
+            if (!isGpsCalibrated) {
+                lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+                isGpsCalibrated = true;
+                return;
             }
-
             if (lastCoords) {
-                const d = calculateDistance(lastCoords.latitude, lastCoords.longitude, pos.coords.latitude, pos.coords.longitude);
-                if (pos.coords.speed * 3.6 > 1.2 || d > 0.003) {
-                    tripDistance += d;
+                const dist = calculateDistance(lastCoords.latitude, lastCoords.longitude, pos.coords.latitude, pos.coords.longitude);
+                const speedKmh = pos.coords.speed ? pos.coords.speed * 3.6 : 0;
+                if (pos.coords.accuracy < 30 && (speedKmh > 1.5 || dist > 0.01)) {
+                    tripDistance += dist;
                     document.getElementById('trip').innerText = tripDistance.toFixed(1);
                     saveState(); 
                 }
@@ -429,49 +419,16 @@
             lastCoords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
         }
 
-        function handleGPSError(err) {}
-
         function startGPSService() {
             if (watchId) navigator.geolocation.clearWatch(watchId);
-            watchId = navigator.geolocation.watchPosition(handlePositionUpdate, handleGPSError, { 
-                enableHighAccuracy: true, timeout: Infinity, maximumAge: 0 
+            watchId = navigator.geolocation.watchPosition(handlePositionUpdate, (e) => {}, { 
+                enableHighAccuracy: true, timeout: 10000, maximumAge: 0 
             });
-            gpsActive = false;
         }
 
         async function requestWakeLock() {
-            if ('wakeLock' in navigator) {
+            if ('wakeLock' in navigator && !wakeLock) {
                 try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
-            }
-        }
-
-        async function toggleTracking() {
-            if (!isTracking) {
-                isTracking = true; 
-                isPaused = false;
-                pausedTimeTotal = 0;
-                startTime = Date.now();
-                startBtn.classList.add('hidden-action');
-                activeActions.classList.remove('hidden-action');
-                startGPSService();
-                requestWakeLock();
-                saveState();
-            } else {
-                saveTrip();
-                if (watchId) navigator.geolocation.clearWatch(watchId);
-                isTracking = false; 
-                stopTimer();
-                toggleLock(false);
-                startBtn.classList.remove('hidden-action');
-                activeActions.classList.add('hidden-action');
-                statusText.innerText = "";
-                tripDistance = 0; 
-                lastCoords = null;
-                gpsActive = false;
-                document.getElementById('trip').innerText = "0.0";
-                document.getElementById('tripTime').innerText = "00:00:00";
-                if (wakeLock) { wakeLock.release(); wakeLock = null; }
-                clearPersistentState();
             }
         }
 
@@ -480,13 +437,9 @@
             if (isPaused) {
                 pauseStartTime = Date.now();
                 document.getElementById('pauseBtn').innerText = "Resume";
-                statusText.innerHTML = "PAUSED";
-                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-yellow-500";
             } else {
                 pausedTimeTotal += (Date.now() - pauseStartTime);
                 document.getElementById('pauseBtn').innerText = "Pause";
-                statusText.innerHTML = '<span class="gps-dot"></span> GPS ACTIVE';
-                statusText.className = "text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-green-500";
             }
             saveState();
         }
@@ -495,16 +448,7 @@
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (!startTime) return;
-                
-                let elapsedMs = 0;
-                if (isPaused) {
-                    elapsedMs = pauseStartTime - startTime - pausedTimeTotal;
-                } else {
-                    elapsedMs = Date.now() - startTime - pausedTimeTotal;
-                }
-
-                if (elapsedMs < 0) elapsedMs = 0;
-
+                let elapsedMs = isPaused ? (pauseStartTime - startTime - pausedTimeTotal) : (Date.now() - startTime - pausedTimeTotal);
                 const h = Math.floor(elapsedMs / 3600000);
                 const m = Math.floor((elapsedMs % 3600000) / 60000);
                 const s = Math.floor((elapsedMs % 60000) / 1000);
@@ -517,12 +461,7 @@
         function saveTrip() {
             if (tripDistance < 0.05) return;
             const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
-            h.unshift({
-                name: 'Trip ' + (h.length + 1),
-                dist: tripDistance.toFixed(1),
-                time: document.getElementById('tripTime').innerText,
-                date: new Date().toLocaleDateString()
-            });
+            h.unshift({ name: 'Trip ' + (h.length + 1), dist: tripDistance.toFixed(1), time: document.getElementById('tripTime').innerText, date: new Date().toLocaleDateString() });
             localStorage.setItem('activa_history', JSON.stringify(h.slice(0, 50)));
         }
 
@@ -533,7 +472,7 @@
                 const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
                 const list = document.getElementById('historyList');
                 list.innerHTML = h.length ? h.map(item => `
-                    <div class="history-item flex justify-between items-center py-4 border-b border-black/5">
+                    <div class="flex justify-between items-center py-4 border-b border-black/5">
                         <div>
                             <div class="text-[8px] font-black uppercase tracking-widest opacity-30">${item.date}</div>
                             <div class="font-bold">${item.name}</div>
@@ -553,21 +492,16 @@
             setInterval(updateClock, 1000); 
             initBattery(); 
             loadState(); 
+            // Only trigger warmup if not already tracking
+            if (!isTracking) triggerPermissionWarmup();
         };
         
         let tY = 0;
         document.addEventListener('touchstart', e => tY = e.touches[0].clientY);
         document.addEventListener('touchend', e => {
             const diffY = tY - e.changedTouches[0].clientY;
-            
-            // Swipe Down (Positive diffY means swiping up, Negative means swiping down)
-            if (diffY < -80 && !isLocked && !isHistoryOpen) {
-                toggleHistory(true);
-            } 
-            // Swipe Up to close history
-            else if (diffY > 80 && isHistoryOpen) {
-                toggleHistory(false);
-            }
+            if (diffY < -80 && !isLocked && !isHistoryOpen) toggleHistory(true);
+            else if (diffY > 80 && isHistoryOpen) toggleHistory(false);
         });
     </script>
 </body>
