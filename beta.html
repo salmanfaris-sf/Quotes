@@ -164,48 +164,6 @@
         .gps-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
         .gps-searching { background: rgba(234, 179, 8, 0.2); color: #eab308; }
         
-        #permissionModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .permission-card {
-            background: var(--panel-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--panel-border);
-            border-radius: 24px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 100%;
-        }
-        
-        #gpsHelpModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            text-align: center;
-        }
-        
         .retry-btn {
             animation: pulse 2s infinite;
         }
@@ -229,97 +187,6 @@
     </style>
 </head>
 <body>
-
-    <div id="permissionModal" class="hidden-action">
-        <div class="permission-card">
-            <div class="mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 opacity-60">
-                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                    <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
-                    <path d="M12 8v4"/>
-                    <path d="M12 16h.01"/>
-                </svg>
-                <h2 class="text-2xl font-black mb-2">Location Access Required</h2>
-                <p class="opacity-70 text-sm mb-4">Please allow location access to track your distance.</p>
-                
-                <div class="text-left text-sm opacity-80 space-y-2 p-4 bg-black/20 rounded-lg mb-6">
-                    <div class="flex items-center">
-                        <div class="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        </div>
-                        <span>Tap "Allow" or "Yes" when prompted</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        </div>
-                        <span>Enable "Precise Location" if asked</span>
-                    </div>
-                </div>
-            </div>
-            
-            <button id="requestPermissionBtn" class="w-full py-4 bg-accent font-black text-[13px] uppercase tracking-widest shadow-2xl btn-press rounded-full mb-3 retry-btn">
-                Grant Permission
-            </button>
-            <button onclick="showGPSHelp()" class="w-full py-3 opacity-50 text-sm font-bold">
-                Having issues?
-            </button>
-        </div>
-    </div>
-
-    <div id="gpsHelpModal" class="hidden-action">
-        <div class="permission-card">
-            <div class="mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 opacity-60">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 16v-4"/>
-                    <path d="M12 8h.01"/>
-                </svg>
-                <h2 class="text-2xl font-black mb-4">GPS Not Working?</h2>
-                
-                <div class="text-left space-y-4">
-                    <div class="p-3 bg-black/20 rounded-lg">
-                        <h3 class="font-bold mb-1">For iPhone/iOS:</h3>
-                        <ol class="text-sm opacity-80 space-y-1 ml-1">
-                            <li>1. Go to <strong>Settings → Privacy & Security → Location Services</strong></li>
-                            <li>2. Turn ON "Location Services"</li>
-                            <li>3. Find "Safari" in the list</li>
-                            <li>4. Select <strong>"Allow While Using App"</strong></li>
-                            <li>5. Also enable <strong>"Precise Location"</strong></li>
-                        </ol>
-                    </div>
-                    
-                    <div class="p-3 bg-black/20 rounded-lg">
-                        <h3 class="font-bold mb-1">For Android/Chrome:</h3>
-                        <ol class="text-sm opacity-80 space-y-1 ml-1">
-                            <li>1. Go to <strong>Settings → Location</strong></li>
-                            <li>2. Turn ON location services</li>
-                            <li>3. Open Chrome browser settings</li>
-                            <li>4. Go to <strong>Site settings → Location</strong></li>
-                            <li>5. Allow location access for this site</li>
-                        </ol>
-                    </div>
-                    
-                    <div class="p-3 bg-black/20 rounded-lg">
-                        <h3 class="font-bold mb-1">Quick Tips:</h3>
-                        <ul class="text-sm opacity-80 space-y-1 ml-1">
-                            <li>• Go outside for better GPS signal</li>
-                            <li>• Disable battery saver mode</li>
-                            <li>• Make sure mobile data/WiFi is ON</li>
-                            <li>• Restart your phone if issues persist</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <button onclick="hideGPSHelp()" class="w-full py-4 bg-accent font-black text-[13px] uppercase tracking-widest shadow-2xl btn-press rounded-full mb-3">
-                Got It, Try Again
-            </button>
-            <button onclick="testGPSWithTimeout()" class="w-full py-3 opacity-70 text-sm font-bold">
-                Try with longer timeout (30 seconds)
-            </button>
-        </div>
-    </div>
 
     <div id="historyDrawer">
         <div class="flex justify-between items-center mb-6">
@@ -429,9 +296,6 @@
         const accuracyValue = document.getElementById('accuracyValue');
         const gpsStatus = document.getElementById('gpsStatus');
         const gpsLoading = document.getElementById('gpsLoading');
-        const permissionModal = document.getElementById('permissionModal');
-        const requestPermissionBtn = document.getElementById('requestPermissionBtn');
-        const gpsHelpModal = document.getElementById('gpsHelpModal');
 
         function updateGPSStatus(status, isActive = false) {
             gpsStatus.textContent = `GPS: ${status}`;
@@ -442,16 +306,6 @@
             } else {
                 gpsLoading.classList.add('hidden-action');
             }
-        }
-
-        function showGPSHelp() {
-            permissionModal.classList.add('hidden-action');
-            gpsHelpModal.classList.remove('hidden-action');
-        }
-
-        function hideGPSHelp() {
-            gpsHelpModal.classList.add('hidden-action');
-            requestLocationPermission();
         }
 
         function forceRetryGPS() {
@@ -490,55 +344,20 @@
                         updateGPSStatus(hasLocationPermission ? 'READY' : 'DENIED', hasLocationPermission);
                         
                         if (hasLocationPermission) {
-                            permissionModal.classList.add('hidden-action');
                             testGPSConnection();
-                        } else {
-                            permissionModal.classList.remove('hidden-action');
                         }
                     };
                     
                     hasLocationPermission = permissionStatus.state === 'granted';
                     
                     if (hasLocationPermission) {
-                        permissionModal.classList.add('hidden-action');
                         testGPSConnection();
                         return true;
-                    } else {
-                        permissionModal.classList.remove('hidden-action');
                     }
                 } else {
-                    // Fallback for browsers without Permission API
-                    permissionModal.classList.remove('hidden-action');
+                    // Fallback for browsers without Permission API - just try to get location
+                    testGPSConnection();
                 }
-                
-                // Set up permission button
-                requestPermissionBtn.onclick = async () => {
-                    requestPermissionBtn.innerHTML = 'Requesting...';
-                    requestPermissionBtn.disabled = true;
-                    
-                    try {
-                        // Try with shorter timeout first
-                        const position = await getPositionWithTimeout(10000);
-                        
-                        hasLocationPermission = true;
-                        permissionModal.classList.add('hidden-action');
-                        updateGPSStatus('READY', true);
-                        testGPSConnection();
-                        return true;
-                    } catch (error) {
-                        console.error("Permission request failed:", error);
-                        gpsRetryCount++;
-                        
-                        if (gpsRetryCount >= MAX_RETRIES) {
-                            showGPSHelp();
-                        } else {
-                            alert("Could not get location. Please make sure:\n1. Location is enabled on your device\n2. You're outdoors or near a window\n3. Try moving to a different spot");
-                            requestPermissionBtn.innerHTML = 'Try Again (' + gpsRetryCount + '/3)';
-                            requestPermissionBtn.disabled = false;
-                        }
-                        return false;
-                    }
-                };
                 
             } catch (error) {
                 console.error("Permission check failed:", error);
@@ -574,27 +393,9 @@
             });
         }
 
-        // Test GPS with 30-second timeout
-        function testGPSWithTimeout() {
-            gpsHelpModal.classList.add('hidden-action');
-            updateGPSStatus('SEARCHING');
-            
-            getPositionWithTimeout(30000)
-                .then((position) => {
-                    hasLocationPermission = true;
-                    isLocationEnabled = true;
-                    updateGPSStatus('READY', true);
-                    console.log("GPS found with 30s timeout");
-                })
-                .catch((error) => {
-                    updateGPSStatus('ERROR');
-                    alert("Still can't get GPS signal. Please:\n1. Go outside\n2. Check location settings\n3. Restart phone\n4. Try a different browser");
-                });
-        }
-
         // Test GPS connection with better error messages
         function testGPSConnection() {
-            if (!hasLocationPermission) return;
+            if (!checkGeolocationSupport()) return;
             
             updateGPSStatus('SEARCHING');
             
@@ -625,8 +426,7 @@
                     switch(error.code || error.message) {
                         case 1:
                         case 'PERMISSION_DENIED':
-                            errorMsg += "Location permission denied. Please check your settings.";
-                            permissionModal.classList.remove('hidden-action');
+                            errorMsg += "Location permission denied. Please enable location in browser settings.";
                             break;
                         case 2:
                         case 'POSITION_UNAVAILABLE':
@@ -640,8 +440,6 @@
                                     gpsRetryCount++;
                                     testGPSConnection();
                                 }, 2000);
-                            } else {
-                                showGPSHelp();
                             }
                             break;
                         default:
