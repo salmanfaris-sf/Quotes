@@ -30,14 +30,13 @@
             height: 100dvh; 
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s;
         }
 
         .main-container {
             display: flex;
             flex-direction: column;
             height: 100%;
-            padding: 1.5rem;
+            padding: 1rem;
             padding-bottom: env(safe-area-inset-bottom);
         }
 
@@ -50,11 +49,11 @@
         .btn-press:active { transform: scale(0.95); }
 
         .gps-status {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 999px;
             display: inline-block;
         }
@@ -62,27 +61,9 @@
         .gps-on { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
         .gps-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
         .gps-searching { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .gps-tracking { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
         
         .hidden-action { display: none !important; }
-        
-        .swipe-indicator {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.3;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 0.1; }
-        }
         
         .fullscreen-mode {
             display: flex;
@@ -99,17 +80,22 @@
             height: 100%;
         }
         
-        .tap-hint {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+        .accuracy-badge {
             font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.2;
-            text-align: center;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: rgba(128, 128, 128, 0.1);
+            opacity: 0.7;
+        }
+        
+        /* Hide scrollbar but allow scrolling */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
@@ -117,53 +103,52 @@
 
     <div id="normalView" class="normal-mode">
         <!-- GPS Status -->
-        <div class="text-center mt-4">
+        <div class="text-center mt-2">
             <span id="gpsStatus" class="gps-status gps-off">GPS: OFF</span>
+            <span id="accuracyBadge" class="accuracy-badge hidden-action ml-2">±0m</span>
         </div>
 
         <!-- Distance Display -->
         <div class="flex-grow flex flex-col items-center justify-center w-full text-center">
             <div class="w-full">
-                <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mb-2 block">Distance</span>
+                <span class="text-[9px] font-black uppercase tracking-[0.4em] opacity-30 mb-1 block">Distance</span>
                 <div class="flex items-baseline justify-center">
-                    <span id="trip" class="text-[140px] stat-value">0.0</span>
-                    <span class="text-xl font-black ml-2">KM</span>
+                    <span id="trip" class="text-[100px] stat-value">0.0</span>
+                    <span class="text-lg font-black ml-2">KM</span>
                 </div>
             </div>
         </div>
 
         <!-- Controls -->
-        <div class="w-full pb-4">
+        <div class="w-full pb-2">
             <div id="standardActions" class="w-full">
-                <button id="startBtn" onclick="initiateStart()" class="w-full py-6 bg-accent font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl btn-press rounded-full" style="background-color: var(--text-color); color: var(--bg-color);">
+                <button id="startBtn" onclick="initiateStart()" class="w-full py-4 bg-accent font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full" style="background-color: var(--text-color); color: var(--bg-color);">
                     Start Trip
                 </button>
 
-                <div id="activeActions" class="w-full flex space-x-4 hidden-action mt-4">
-                    <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-6 font-black text-[11px] uppercase tracking-widest btn-press rounded-full" style="background: rgba(128, 128, 128, 0.1); border: 1px solid rgba(255,255,255,0.1);">
+                <div id="activeActions" class="w-full flex space-x-3 hidden-action mt-3">
+                    <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-4 font-black text-[10px] uppercase tracking-widest btn-press rounded-full" style="background: rgba(128, 128, 128, 0.1); border: 1px solid rgba(255,255,255,0.1);">
                         Pause
                     </button>
-                    <button onclick="stopTracking()" class="flex-[1.5] py-6 bg-red-600 text-white font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
+                    <button onclick="stopTracking()" class="flex-[1.5] py-4 bg-red-600 text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
                         Finish Trip
                     </button>
                 </div>
             </div>
-            
-            <div class="swipe-indicator hidden-action" id="swipeUpHint">Swipe up for fullscreen</div>
         </div>
     </div>
 
     <div id="fullscreenView" class="fullscreen-mode hidden-action">
         <div class="text-center">
             <div class="flex items-baseline justify-center">
-                <span id="tripFull" class="text-[180px] stat-value">0.0</span>
+                <span id="tripFull" class="text-[140px] stat-value">0.0</span>
                 <span class="text-2xl font-black ml-2">KM</span>
             </div>
-            <div class="mt-8">
+            <div class="mt-6">
                 <span id="gpsStatusFull" class="gps-status gps-off">GPS: OFF</span>
+                <span id="accuracyBadgeFull" class="accuracy-badge hidden-action ml-2">±0m</span>
             </div>
         </div>
-        <div class="tap-hint">Tap to exit fullscreen</div>
     </div>
 
     <script>
@@ -177,8 +162,13 @@
         let positionBuffer = [];
         let hasLocationPermission = false;
         let isFullscreen = false;
-        const MIN_UPDATE_INTERVAL = 1000;
-        const BUFFER_SIZE = 3;
+        let gpsPositions = [];
+        let totalDistance = 0;
+        let accuracyThreshold = 20; // Start with 20m accuracy
+        const MIN_UPDATE_INTERVAL = 500; // More frequent updates for accuracy
+        const POSITION_BUFFER_SIZE = 10; // Keep more positions for smoothing
+        const MIN_DISTANCE_THRESHOLD = 0.0001; // 0.1 meters in km (more sensitive)
+        const MAX_ACCURACY = 50; // Maximum acceptable accuracy in meters
 
         const startBtn = document.getElementById('startBtn');
         const activeActions = document.getElementById('activeActions');
@@ -188,24 +178,56 @@
         const tripDisplayFull = document.getElementById('tripFull');
         const gpsStatus = document.getElementById('gpsStatus');
         const gpsStatusFull = document.getElementById('gpsStatusFull');
-        const swipeUpHint = document.getElementById('swipeUpHint');
+        const accuracyBadge = document.getElementById('accuracyBadge');
+        const accuracyBadgeFull = document.getElementById('accuracyBadgeFull');
 
         function updateGPSStatus(status, isActive = false) {
+            let statusClass = 'gps-off';
+            if (status === 'SEARCHING') statusClass = 'gps-searching';
+            if (status === 'READY') statusClass = 'gps-on';
+            if (status === 'TRACKING') statusClass = 'gps-tracking';
+            if (status === 'PAUSED') statusClass = 'gps-off';
+            
             gpsStatus.textContent = `GPS: ${status}`;
-            gpsStatus.className = `gps-status ${isActive ? 'gps-on' : (status === 'SEARCHING' ? 'gps-searching' : 'gps-off')}`;
+            gpsStatus.className = `gps-status ${statusClass}`;
             
             gpsStatusFull.textContent = `GPS: ${status}`;
-            gpsStatusFull.className = `gps-status ${isActive ? 'gps-on' : (status === 'SEARCHING' ? 'gps-searching' : 'gps-off')}`;
+            gpsStatusFull.className = `gps-status ${statusClass}`;
+        }
+
+        function updateAccuracyDisplay(accuracy) {
+            if (accuracy > 0 && accuracy < 1000) {
+                accuracyBadge.textContent = `±${Math.round(accuracy)}m`;
+                accuracyBadge.classList.remove('hidden-action');
+                accuracyBadgeFull.textContent = `±${Math.round(accuracy)}m`;
+                accuracyBadgeFull.classList.remove('hidden-action');
+                
+                // Change color based on accuracy
+                const opacity = Math.max(0.3, 1 - (accuracy / 100));
+                if (accuracy < 10) {
+                    accuracyBadge.style.background = 'rgba(34, 197, 94, 0.3)';
+                    accuracyBadgeFull.style.background = 'rgba(34, 197, 94, 0.3)';
+                } else if (accuracy < 20) {
+                    accuracyBadge.style.background = 'rgba(234, 179, 8, 0.3)';
+                    accuracyBadgeFull.style.background = 'rgba(234, 179, 8, 0.3)';
+                } else {
+                    accuracyBadge.style.background = 'rgba(239, 68, 68, 0.3)';
+                    accuracyBadgeFull.style.background = 'rgba(239, 68, 68, 0.3)';
+                }
+            } else {
+                accuracyBadge.classList.add('hidden-action');
+                accuracyBadgeFull.classList.add('hidden-action');
+            }
         }
 
         function updateDistanceDisplay() {
-            const distance = tripDistance.toFixed(1);
+            const distance = tripDistance.toFixed(2); // Show 2 decimal places for accuracy
             tripDisplay.textContent = distance;
             tripDisplayFull.textContent = distance;
         }
 
-        // Check GPS support and start searching
-        function checkAndStartGPS() {
+        // Improved GPS initialization
+        function initializeGPS() {
             if (!("geolocation" in navigator)) {
                 updateGPSStatus("NOT SUPPORTED");
                 return;
@@ -213,20 +235,40 @@
             
             updateGPSStatus("SEARCHING");
             
-            // Try to get position to check permission and start GPS
+            // Try with high accuracy first
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     hasLocationPermission = true;
                     updateGPSStatus("READY", true);
-                    console.log("GPS is ready");
+                    updateAccuracyDisplay(position.coords.accuracy);
+                    console.log("GPS ready with accuracy:", position.coords.accuracy, "m");
+                    
+                    // Start background monitoring
+                    startBackgroundGPS();
                 },
                 (error) => {
-                    // Just keep searching silently
-                    updateGPSStatus("SEARCHING");
-                    console.log("GPS searching...");
+                    console.log("Initial GPS error:", error.message);
                     
-                    // Keep trying every 5 seconds
-                    setTimeout(checkAndStartGPS, 5000);
+                    // Try with lower accuracy if high accuracy fails
+                    setTimeout(() => {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                hasLocationPermission = true;
+                                updateGPSStatus("READY", true);
+                                updateAccuracyDisplay(position.coords.accuracy);
+                            },
+                            (error2) => {
+                                updateGPSStatus("SEARCHING");
+                                // Keep trying every 3 seconds
+                                setTimeout(initializeGPS, 3000);
+                            },
+                            {
+                                enableHighAccuracy: false,
+                                timeout: 5000,
+                                maximumAge: 0
+                            }
+                        );
+                    }, 1000);
                 },
                 {
                     enableHighAccuracy: true,
@@ -234,6 +276,148 @@
                     maximumAge: 0
                 }
             );
+        }
+
+        // Background GPS monitoring
+        function startBackgroundGPS() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    updateAccuracyDisplay(position.coords.accuracy);
+                    
+                    if (!isTracking || isPaused) return;
+                    
+                    processGPSPosition(position);
+                },
+                (error) => {
+                    console.log("Background GPS error:", error.message);
+                    if (isTracking && !isPaused) {
+                        updateGPSStatus("SEARCHING");
+                        // Try to recover
+                        setTimeout(startBackgroundGPS, 1000);
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0,
+                    distanceFilter: 0 // Get all updates for maximum accuracy
+                }
+            );
+        }
+
+        // Scooter-like accurate distance calculation
+        function processGPSPosition(position) {
+            const currentTime = Date.now();
+            const accuracy = position.coords.accuracy || 100;
+            const speed = position.coords.speed || 0;
+            
+            // Skip if accuracy is too poor
+            if (accuracy > MAX_ACCURACY) {
+                console.log("Skipping position - poor accuracy:", accuracy, "m");
+                return;
+            }
+            
+            // Filter by time interval
+            if (currentTime - lastUpdateTime < MIN_UPDATE_INTERVAL) {
+                return;
+            }
+            
+            const newPosition = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                timestamp: currentTime,
+                accuracy: accuracy,
+                speed: speed
+            };
+            
+            // Add to buffer
+            positionBuffer.push(newPosition);
+            
+            // Keep buffer size limited
+            if (positionBuffer.length > POSITION_BUFFER_SIZE) {
+                positionBuffer.shift();
+            }
+            
+            // Need at least 2 positions to calculate distance
+            if (positionBuffer.length < 2) {
+                lastCoords = newPosition;
+                return;
+            }
+            
+            // Calculate distance using multiple points for smoothing
+            calculateAccurateDistance();
+            
+            lastUpdateTime = currentTime;
+            lastCoords = newPosition;
+            saveState();
+        }
+
+        function calculateAccurateDistance() {
+            if (positionBuffer.length < 2) return;
+            
+            // Use weighted average based on accuracy
+            let totalDistanceIncrement = 0;
+            let validPoints = 0;
+            
+            // Calculate distance between consecutive points with good accuracy
+            for (let i = 1; i < positionBuffer.length; i++) {
+                const prev = positionBuffer[i - 1];
+                const curr = positionBuffer[i];
+                
+                // Only use points with good accuracy
+                if (prev.accuracy > MAX_ACCURACY || curr.accuracy > MAX_ACCURACY) {
+                    continue;
+                }
+                
+                // Calculate distance
+                const dist = calculateHaversineDistance(
+                    prev.latitude,
+                    prev.longitude,
+                    curr.latitude,
+                    curr.longitude
+                );
+                
+                // Apply accuracy weighting (better accuracy = higher weight)
+                const avgAccuracy = (prev.accuracy + curr.accuracy) / 2;
+                const weight = Math.max(0, 1 - (avgAccuracy / 100));
+                
+                // Minimum distance threshold to filter noise
+                if (dist > MIN_DISTANCE_THRESHOLD) {
+                    totalDistanceIncrement += dist * weight;
+                    validPoints++;
+                }
+            }
+            
+            // Only update if we have valid points
+            if (validPoints > 0) {
+                // Average the distance increment
+                const avgIncrement = totalDistanceIncrement / validPoints;
+                
+                // Apply speed filter - only add distance if speed > 0.5 m/s (1.8 km/h)
+                const currentSpeed = positionBuffer[positionBuffer.length - 1].speed || 0;
+                if (currentSpeed > 0.5 || avgIncrement > 0.001) { // 1 meter
+                    tripDistance += avgIncrement;
+                    updateDistanceDisplay();
+                }
+            }
+        }
+
+        // High-precision Haversine formula
+        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371000; // Earth radius in meters
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return (R * c) / 1000; // Convert to kilometers
         }
 
         function saveState() {
@@ -261,13 +445,18 @@
             startBtn.classList.add('hidden-action');
             activeActions.classList.remove('hidden-action');
             updateDistanceDisplay();
-            if(isPaused) document.getElementById('pauseBtn').innerText = "Resume";
-            startGPSService();
+            if(isPaused) {
+                document.getElementById('pauseBtn').innerText = "Resume";
+                updateGPSStatus("PAUSED");
+            } else {
+                updateGPSStatus("TRACKING", true);
+            }
+            startBackgroundGPS();
         }
 
         function initiateStart() {
             if (!hasLocationPermission) {
-                alert("Please turn on location services on your phone first");
+                alert("Please turn on location services and allow GPS access");
                 return;
             }
             
@@ -280,6 +469,8 @@
             isGpsCalibrated = false;
             positionBuffer = [];
             lastUpdateTime = 0;
+            gpsPositions = [];
+            totalDistance = 0;
             saveState();
             
             setTimeout(() => { 
@@ -287,8 +478,8 @@
                 startBtn.innerText = "Start Trip";
                 startBtn.classList.remove('opacity-50');
                 
-                // Show swipe hint when tracking starts
-                swipeUpHint.classList.remove('hidden-action');
+                // Auto enter fullscreen when starting
+                setTimeout(enterFullscreen, 300);
             }, 500);
         }
 
@@ -305,15 +496,19 @@
             lastCoords = null;
             isGpsCalibrated = false;
             positionBuffer = [];
+            gpsPositions = [];
+            totalDistance = 0;
             
             // Update UI
             startBtn.classList.remove('hidden-action', 'opacity-50');
             startBtn.innerText = "Start Trip";
             activeActions.classList.add('hidden-action');
-            updateGPSStatus("READY", false);
-            swipeUpHint.classList.add('hidden-action');
+            updateGPSStatus("READY", true);
             
-            // Display final distance and then reset
+            // Exit fullscreen
+            exitFullscreen();
+            
+            // Display final distance
             updateDistanceDisplay();
             
             // Clear saved state
@@ -335,152 +530,87 @@
             saveState();
         }
 
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2)**2 + 
-                     Math.cos(lat1 * Math.PI/180) * 
-                     Math.cos(lat2 * Math.PI/180) * 
-                     Math.sin(dLon/2)**2;
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        }
-
-        function handlePositionUpdate(pos) {
-            const currentTime = Date.now();
-            const accuracy = pos.coords.accuracy || 50;
+        function enterFullscreen() {
+            if (!isTracking) return;
             
-            if (!isTracking || isPaused) return;
+            isFullscreen = true;
+            normalView.classList.add('hidden-action');
+            fullscreenView.classList.remove('hidden-action');
             
-            // Filter by time interval
-            if (currentTime - lastUpdateTime < MIN_UPDATE_INTERVAL) {
-                return;
-            }
-            
-            // Filter by accuracy
-            if (accuracy > 50) {
-                return;
-            }
-            
-            // Add position to buffer
-            positionBuffer.push({
-                latitude: pos.coords.latitude,
-                longitude: pos.coords.longitude,
-                timestamp: currentTime,
-                accuracy: accuracy
-            });
-            
-            // Keep buffer size limited
-            if (positionBuffer.length > BUFFER_SIZE) {
-                positionBuffer.shift();
-            }
-            
-            // Wait for buffer to fill initially
-            if (!isGpsCalibrated) {
-                if (positionBuffer.length >= BUFFER_SIZE) {
-                    lastCoords = positionBuffer[0];
-                    isGpsCalibrated = true;
-                }
-                return;
-            }
-            
-            // Calculate distance from last valid position
-            if (lastCoords && positionBuffer.length >= 2) {
-                const newestPos = positionBuffer[positionBuffer.length - 1];
-                
-                const dist = calculateDistance(
-                    lastCoords.latitude, 
-                    lastCoords.longitude, 
-                    newestPos.latitude, 
-                    newestPos.longitude
-                );
-                
-                // Minimum distance threshold to filter noise
-                const minDist = 0.001;
-                
-                if (dist > minDist && accuracy < 30) {
-                    tripDistance += dist;
-                    updateDistanceDisplay();
-                    lastCoords = newestPos;
-                    lastUpdateTime = currentTime;
-                    saveState();
-                }
-            } else if (positionBuffer.length >= BUFFER_SIZE) {
-                lastCoords = positionBuffer[positionBuffer.length - 1];
+            // Try to enter fullscreen (may not work on all devices)
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {
+                    console.log("Fullscreen not supported or denied");
+                });
             }
         }
 
-        function startGPSService() {
-            if (watchId) navigator.geolocation.clearWatch(watchId);
+        function exitFullscreen() {
+            if (!isFullscreen) return;
             
-            updateGPSStatus("TRACKING", true);
+            isFullscreen = false;
+            fullscreenView.classList.add('hidden-action');
+            normalView.classList.remove('hidden-action');
             
-            watchId = navigator.geolocation.watchPosition(
-                handlePositionUpdate, 
-                (err) => {
-                    console.log("GPS error:", err.message);
-                    updateGPSStatus("SEARCHING");
-                }, 
-                { 
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0,
-                    distanceFilter: 5
-                }
-            );
-        }
-
-        // Toggle fullscreen mode
-        function toggleFullscreen() {
-            if (!isTracking) return; // Only allow fullscreen when tracking
-            
-            isFullscreen = !isFullscreen;
-            
-            if (isFullscreen) {
-                normalView.classList.add('hidden-action');
-                fullscreenView.classList.remove('hidden-action');
-                document.documentElement.requestFullscreen().catch(()=>{});
-            } else {
-                fullscreenView.classList.add('hidden-action');
-                normalView.classList.remove('hidden-action');
-                document.exitFullscreen().catch(()=>{});
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
             }
         }
+
+        // Handle back button to exit fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && isFullscreen) {
+                exitFullscreen();
+            }
+        });
+
+        // Handle Android back button
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'Backspace') {
+                if (isFullscreen) {
+                    exitFullscreen();
+                }
+            }
+        });
+
+        // Handle visibility change (app goes to background)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isTracking && !isPaused) {
+                // Keep tracking in background
+                console.log("App in background, continuing tracking...");
+            }
+        });
 
         // Initialize on load
         window.onload = () => { 
             loadState();
-            
-            // Start searching for GPS immediately
-            checkAndStartGPS();
+            initializeGPS();
         };
         
-        // Swipe up for fullscreen, swipe down to exit
+        // Simple swipe up for fullscreen (only when tracking)
         let startY = 0;
+        let isSwiping = false;
+        
         document.addEventListener('touchstart', e => {
             startY = e.touches[0].clientY;
+            isSwiping = true;
         });
         
-        document.addEventListener('touchend', e => {
-            const endY = e.changedTouches[0].clientY;
-            const diffY = startY - endY;
+        document.addEventListener('touchmove', e => {
+            if (!isSwiping) return;
             
-            // Swipe up for fullscreen (only when tracking)
+            const currentY = e.touches[0].clientY;
+            const diffY = startY - currentY;
+            
+            // Swipe up > 100px to enter fullscreen
             if (diffY > 100 && isTracking && !isFullscreen) {
-                toggleFullscreen();
-            }
-            
-            // Swipe down to exit fullscreen OR tap to exit
-            if ((diffY < -50 || (isFullscreen && Math.abs(diffY) < 10)) && isFullscreen) {
-                toggleFullscreen();
+                enterFullscreen();
+                isSwiping = false;
             }
         });
         
-        // Also allow tap to exit fullscreen
-        fullscreenView.addEventListener('click', () => {
-            if (isFullscreen) {
-                toggleFullscreen();
-            }
+        document.addEventListener('touchend', () => {
+            isSwiping = false;
         });
     </script>
 </body>
