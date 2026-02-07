@@ -190,18 +190,41 @@
             width: 100%;
         }
         
-        #gpsDebug {
+        #gpsHelpModal {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-family: monospace;
-            z-index: 999;
-            display: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .retry-btn {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
     </style>
 </head>
@@ -216,30 +239,84 @@
                     <path d="M12 8v4"/>
                     <path d="M12 16h.01"/>
                 </svg>
-                <h2 class="text-2xl font-black mb-2">Location Permission Required</h2>
-                <p class="opacity-70 text-sm">This app needs location access to track your distance accurately.</p>
+                <h2 class="text-2xl font-black mb-2">Location Access Required</h2>
+                <p class="opacity-70 text-sm mb-4">Please allow location access to track your distance.</p>
+                
+                <div class="text-left text-sm opacity-80 space-y-2 p-4 bg-black/20 rounded-lg mb-6">
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <span>Tap "Allow" or "Yes" when prompted</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <span>Enable "Precise Location" if asked</span>
+                    </div>
+                </div>
             </div>
             
-            <div class="space-y-3 mb-6">
-                <div class="flex items-start">
-                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center mr-3 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <p class="text-sm opacity-80 text-left">Enable "Precise Location" in your phone settings for best accuracy</p>
-                </div>
-                <div class="flex items-start">
-                    <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center mr-3 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                    </div>
-                    <p class="text-sm opacity-80 text-left">Allow location access when prompted by your browser</p>
-                </div>
-            </div>
-            
-            <button id="requestPermissionBtn" class="w-full py-4 bg-accent font-black text-[13px] uppercase tracking-widest shadow-2xl btn-press rounded-full mb-3">
+            <button id="requestPermissionBtn" class="w-full py-4 bg-accent font-black text-[13px] uppercase tracking-widest shadow-2xl btn-press rounded-full mb-3 retry-btn">
                 Grant Permission
             </button>
-            <button onclick="location.reload()" class="w-full py-3 opacity-50 text-sm font-bold">
-                Already Granted? Reload
+            <button onclick="showGPSHelp()" class="w-full py-3 opacity-50 text-sm font-bold">
+                Having issues?
+            </button>
+        </div>
+    </div>
+
+    <div id="gpsHelpModal" class="hidden-action">
+        <div class="permission-card">
+            <div class="mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 opacity-60">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+                <h2 class="text-2xl font-black mb-4">GPS Not Working?</h2>
+                
+                <div class="text-left space-y-4">
+                    <div class="p-3 bg-black/20 rounded-lg">
+                        <h3 class="font-bold mb-1">For iPhone/iOS:</h3>
+                        <ol class="text-sm opacity-80 space-y-1 ml-1">
+                            <li>1. Go to <strong>Settings → Privacy & Security → Location Services</strong></li>
+                            <li>2. Turn ON "Location Services"</li>
+                            <li>3. Find "Safari" in the list</li>
+                            <li>4. Select <strong>"Allow While Using App"</strong></li>
+                            <li>5. Also enable <strong>"Precise Location"</strong></li>
+                        </ol>
+                    </div>
+                    
+                    <div class="p-3 bg-black/20 rounded-lg">
+                        <h3 class="font-bold mb-1">For Android/Chrome:</h3>
+                        <ol class="text-sm opacity-80 space-y-1 ml-1">
+                            <li>1. Go to <strong>Settings → Location</strong></li>
+                            <li>2. Turn ON location services</li>
+                            <li>3. Open Chrome browser settings</li>
+                            <li>4. Go to <strong>Site settings → Location</strong></li>
+                            <li>5. Allow location access for this site</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="p-3 bg-black/20 rounded-lg">
+                        <h3 class="font-bold mb-1">Quick Tips:</h3>
+                        <ul class="text-sm opacity-80 space-y-1 ml-1">
+                            <li>• Go outside for better GPS signal</li>
+                            <li>• Disable battery saver mode</li>
+                            <li>• Make sure mobile data/WiFi is ON</li>
+                            <li>• Restart your phone if issues persist</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="hideGPSHelp()" class="w-full py-4 bg-accent font-black text-[13px] uppercase tracking-widest shadow-2xl btn-press rounded-full mb-3">
+                Got It, Try Again
+            </button>
+            <button onclick="testGPSWithTimeout()" class="w-full py-3 opacity-70 text-sm font-bold">
+                Try with longer timeout (30 seconds)
             </button>
         </div>
     </div>
@@ -261,9 +338,12 @@
         <div class="flex justify-between items-start mb-4">
             <div class="text-left">
                 <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 block">Kilometre Tracker</span>
-                <span id="gpsStatus" class="gps-status gps-off">GPS: OFF</span>
+                <div class="flex items-center space-x-2">
+                    <span id="gpsStatus" class="gps-status gps-off">GPS: OFF</span>
+                    <span id="gpsLoading" class="hidden-action text-[8px] font-bold opacity-50 loading-dots">Searching</span>
+                </div>
             </div>
-            <button onclick="toggleDebug()" class="text-[8px] font-black uppercase tracking-widest opacity-20">DEBUG</button>
+            <button onclick="forceRetryGPS()" class="text-[8px] font-black uppercase tracking-widest opacity-50">RETRY GPS</button>
         </div>
 
         <!-- Distance Display -->
@@ -321,12 +401,6 @@
         </div>
     </div>
 
-    <div id="gpsDebug">
-        GPS Status: <span id="debugStatus">-</span><br>
-        Last Update: <span id="debugTime">-</span><br>
-        Accuracy: <span id="debugAccuracy">-</span>m
-    </div>
-
     <script>
         let isTracking = false;
         let isPaused = false;
@@ -341,6 +415,8 @@
         let positionBuffer = [];
         let hasLocationPermission = false;
         let isLocationEnabled = false;
+        let gpsRetryCount = 0;
+        const MAX_RETRIES = 3;
         const MIN_UPDATE_INTERVAL = 1000;
         const BUFFER_SIZE = 3;
 
@@ -352,119 +428,182 @@
         const accuracyDisplay = document.getElementById('accuracyDisplay');
         const accuracyValue = document.getElementById('accuracyValue');
         const gpsStatus = document.getElementById('gpsStatus');
+        const gpsLoading = document.getElementById('gpsLoading');
         const permissionModal = document.getElementById('permissionModal');
         const requestPermissionBtn = document.getElementById('requestPermissionBtn');
-        const gpsDebug = document.getElementById('gpsDebug');
-        const debugStatus = document.getElementById('debugStatus');
-        const debugTime = document.getElementById('debugTime');
-        const debugAccuracy = document.getElementById('debugAccuracy');
+        const gpsHelpModal = document.getElementById('gpsHelpModal');
 
         function updateGPSStatus(status, isActive = false) {
             gpsStatus.textContent = `GPS: ${status}`;
             gpsStatus.className = `gps-status ${isActive ? 'gps-on' : (status === 'SEARCHING' ? 'gps-searching' : 'gps-off')}`;
-        }
-
-        function updateDebugInfo(status, accuracy) {
-            if (gpsDebug.style.display === 'block') {
-                debugStatus.textContent = status;
-                debugTime.textContent = new Date().toLocaleTimeString();
-                debugAccuracy.textContent = accuracy || '-';
+            
+            if (status === 'SEARCHING') {
+                gpsLoading.classList.remove('hidden-action');
+            } else {
+                gpsLoading.classList.add('hidden-action');
             }
         }
 
-        function toggleDebug() {
-            gpsDebug.style.display = gpsDebug.style.display === 'block' ? 'none' : 'block';
+        function showGPSHelp() {
+            permissionModal.classList.add('hidden-action');
+            gpsHelpModal.classList.remove('hidden-action');
+        }
+
+        function hideGPSHelp() {
+            gpsHelpModal.classList.add('hidden-action');
+            requestLocationPermission();
+        }
+
+        function forceRetryGPS() {
+            gpsRetryCount = 0;
+            requestLocationPermission();
         }
 
         // Check if geolocation is available
         function checkGeolocationSupport() {
             if (!("geolocation" in navigator)) {
-                alert("Geolocation is not supported by your browser. Please use a modern browser.");
+                alert("Geolocation is not supported by your browser. Please use Chrome, Safari, or Firefox.");
                 return false;
             }
             return true;
         }
 
-        // Request location permission
+        // Request location permission with better error handling
         async function requestLocationPermission() {
             if (!checkGeolocationSupport()) return false;
             
             updateGPSStatus('SEARCHING');
             
+            // Clear any existing watch
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+            
             try {
-                // First check current permission state
-                const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
-                
-                permissionStatus.onchange = () => {
+                // Use modern permission API if available
+                if (navigator.permissions && navigator.permissions.query) {
+                    const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+                    
+                    permissionStatus.onchange = () => {
+                        hasLocationPermission = permissionStatus.state === 'granted';
+                        updateGPSStatus(hasLocationPermission ? 'READY' : 'DENIED', hasLocationPermission);
+                        
+                        if (hasLocationPermission) {
+                            permissionModal.classList.add('hidden-action');
+                            testGPSConnection();
+                        } else {
+                            permissionModal.classList.remove('hidden-action');
+                        }
+                    };
+                    
                     hasLocationPermission = permissionStatus.state === 'granted';
-                    updateGPSStatus(hasLocationPermission ? 'READY' : 'DENIED', hasLocationPermission);
                     
                     if (hasLocationPermission) {
                         permissionModal.classList.add('hidden-action');
                         testGPSConnection();
+                        return true;
+                    } else {
+                        permissionModal.classList.remove('hidden-action');
+                    }
+                } else {
+                    // Fallback for browsers without Permission API
+                    permissionModal.classList.remove('hidden-action');
+                }
+                
+                // Set up permission button
+                requestPermissionBtn.onclick = async () => {
+                    requestPermissionBtn.innerHTML = 'Requesting...';
+                    requestPermissionBtn.disabled = true;
+                    
+                    try {
+                        // Try with shorter timeout first
+                        const position = await getPositionWithTimeout(10000);
+                        
+                        hasLocationPermission = true;
+                        permissionModal.classList.add('hidden-action');
+                        updateGPSStatus('READY', true);
+                        testGPSConnection();
+                        return true;
+                    } catch (error) {
+                        console.error("Permission request failed:", error);
+                        gpsRetryCount++;
+                        
+                        if (gpsRetryCount >= MAX_RETRIES) {
+                            showGPSHelp();
+                        } else {
+                            alert("Could not get location. Please make sure:\n1. Location is enabled on your device\n2. You're outdoors or near a window\n3. Try moving to a different spot");
+                            requestPermissionBtn.innerHTML = 'Try Again (' + gpsRetryCount + '/3)';
+                            requestPermissionBtn.disabled = false;
+                        }
+                        return false;
                     }
                 };
                 
-                hasLocationPermission = permissionStatus.state === 'granted';
-                
-                if (hasLocationPermission) {
-                    permissionModal.classList.add('hidden-action');
-                    testGPSConnection();
-                    return true;
-                } else {
-                    // Show permission modal
-                    permissionModal.classList.remove('hidden-action');
-                    
-                    // Request permission when button is clicked
-                    requestPermissionBtn.onclick = async () => {
-                        requestPermissionBtn.innerHTML = 'Requesting...';
-                        requestPermissionBtn.disabled = true;
-                        
-                        try {
-                            const position = await new Promise((resolve, reject) => {
-                                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                    enableHighAccuracy: true,
-                                    timeout: 10000,
-                                    maximumAge: 0
-                                });
-                            });
-                            
-                            hasLocationPermission = true;
-                            permissionModal.classList.add('hidden-action');
-                            updateGPSStatus('READY', true);
-                            testGPSConnection();
-                            return true;
-                        } catch (error) {
-                            console.error("Permission request failed:", error);
-                            alert("Location permission denied. Please enable location access in your browser settings.");
-                            updateGPSStatus('DENIED');
-                            requestPermissionBtn.innerHTML = 'Try Again';
-                            requestPermissionBtn.disabled = false;
-                            return false;
-                        }
-                    };
-                }
             } catch (error) {
                 console.error("Permission check failed:", error);
-                // Fallback: try direct request
+                // Fallback to direct test
                 testGPSConnection();
             }
             
             return false;
         }
 
-        // Test GPS connection
+        // Get position with timeout
+        function getPositionWithTimeout(timeout) {
+            return new Promise((resolve, reject) => {
+                const timer = setTimeout(() => {
+                    reject(new Error('GPS timeout'));
+                }, timeout);
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        clearTimeout(timer);
+                        resolve(position);
+                    },
+                    (error) => {
+                        clearTimeout(timer);
+                        reject(error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: timeout - 1000, // Slightly less than our timer
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+
+        // Test GPS with 30-second timeout
+        function testGPSWithTimeout() {
+            gpsHelpModal.classList.add('hidden-action');
+            updateGPSStatus('SEARCHING');
+            
+            getPositionWithTimeout(30000)
+                .then((position) => {
+                    hasLocationPermission = true;
+                    isLocationEnabled = true;
+                    updateGPSStatus('READY', true);
+                    console.log("GPS found with 30s timeout");
+                })
+                .catch((error) => {
+                    updateGPSStatus('ERROR');
+                    alert("Still can't get GPS signal. Please:\n1. Go outside\n2. Check location settings\n3. Restart phone\n4. Try a different browser");
+                });
+        }
+
+        // Test GPS connection with better error messages
         function testGPSConnection() {
             if (!hasLocationPermission) return;
             
             updateGPSStatus('SEARCHING');
             
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
+            // Use shorter timeout for initial test
+            getPositionWithTimeout(15000)
+                .then((position) => {
                     isLocationEnabled = true;
                     hasLocationPermission = true;
                     updateGPSStatus('READY', true);
-                    updateDebugInfo('READY', Math.round(position.coords.accuracy));
                     
                     // Pre-warm GPS for better performance
                     if (!isTracking) {
@@ -474,32 +613,43 @@
                                 navigator.geolocation.clearWatch(watchId);
                                 watchId = null;
                             }
-                        }, 5000);
+                        }, 3000);
                     }
-                },
-                (error) => {
+                })
+                .catch((error) => {
                     isLocationEnabled = false;
                     updateGPSStatus('ERROR');
-                    updateDebugInfo('ERROR', null);
                     
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
+                    // More helpful error messages
+                    let errorMsg = "GPS Error: ";
+                    switch(error.code || error.message) {
+                        case 1:
+                        case 'PERMISSION_DENIED':
+                            errorMsg += "Location permission denied. Please check your settings.";
                             permissionModal.classList.remove('hidden-action');
                             break;
-                        case error.POSITION_UNAVAILABLE:
-                            alert("GPS signal not found. Please ensure:\n1. Location is enabled on your device\n2. You're outdoors or have clear sky view\n3. Try moving to a different location");
+                        case 2:
+                        case 'POSITION_UNAVAILABLE':
+                            errorMsg += "No GPS signal. Please go outdoors or near a window.";
                             break;
-                        case error.TIMEOUT:
-                            alert("GPS timeout. Please check your location settings and try again.");
+                        case 3:
+                        case 'TIMEOUT':
+                            errorMsg += "GPS timeout. Try:\n• Going outside\n• Disabling battery saver\n• Waiting 30 seconds";
+                            if (gpsRetryCount < MAX_RETRIES) {
+                                setTimeout(() => {
+                                    gpsRetryCount++;
+                                    testGPSConnection();
+                                }, 2000);
+                            } else {
+                                showGPSHelp();
+                            }
                             break;
+                        default:
+                            errorMsg += "Unknown error. Please check location settings.";
                     }
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
+                    
+                    console.log(errorMsg);
+                });
         }
 
         function saveState() {
@@ -686,9 +836,6 @@
             const accuracy = pos.coords.accuracy || 50;
             const speedKmh = pos.coords.speed ? pos.coords.speed * 3.6 : 0;
             
-            // Update debug info
-            updateDebugInfo('ACTIVE', Math.round(accuracy));
-            
             // Update accuracy display
             updateAccuracyDisplay(accuracy);
             
@@ -761,11 +908,18 @@
                     console.log("GPS error:", err.message);
                     accuracyDisplay.classList.add('hidden-action');
                     updateGPSStatus('ERROR');
-                    updateDebugInfo('ERROR', null);
+                    
+                    // Try to recover
+                    if (isTracking && gpsRetryCount < 3) {
+                        setTimeout(() => {
+                            gpsRetryCount++;
+                            startGPSService(tracking);
+                        }, 2000);
+                    }
                 }, 
                 { 
                     enableHighAccuracy: true,
-                    timeout: 10000,
+                    timeout: 15000, // Increased timeout
                     maximumAge: 0,
                     distanceFilter: tracking ? 5 : 0
                 }
@@ -873,7 +1027,7 @@
             // Request location permission immediately
             setTimeout(() => {
                 requestLocationPermission();
-            }, 500);
+            }, 1000);
         };
         
         let tY = 0;
