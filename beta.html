@@ -11,12 +11,21 @@
         :root {
             --bg-color: #000000;
             --text-color: #ffffff;
+            --panel-bg: rgba(20, 20, 20, 0.8);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #ffffff;
+            --secondary-text: #71717a;
+            --drawer-bg: #0a0a0a;
         }
 
         @media (prefers-color-scheme: light) {
             :root {
                 --bg-color: #ffffff;
                 --text-color: #000000;
+                --panel-bg: rgba(240, 240, 240, 0.9);
+                --panel-border: rgba(0, 0, 0, 0.1);
+                --accent-color: #000000;
+                --drawer-bg: #ffffff;
             }
         }
 
@@ -26,11 +35,13 @@
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             touch-action: none;
+            transition: background-color 0.5s ease;
             height: 100vh;
             height: 100dvh; 
+            display: flex;
+            flex-direction: column;
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s;
         }
 
         .main-container {
@@ -41,6 +52,14 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
+        .premium-card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 9999px;
+        }
+
         .stat-value {
             font-weight: 900;
             letter-spacing: -0.06em;
@@ -49,13 +68,95 @@
 
         .btn-press:active { transform: scale(0.95); }
 
+        .circle-btn {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--panel-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        #historyDrawer {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--drawer-bg);
+            z-index: 100;
+            transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        #historyDrawer.open { top: 0; }
+
+        .slider-track {
+            width: 100%;
+            height: 64px;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--panel-border);
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-handle {
+            width: 56px;
+            height: 56px;
+            background: var(--text-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 64px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-color);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .bg-accent { background-color: var(--text-color); color: var(--bg-color); }
+        .hidden-action { display: none !important; }
+        
+        .accuracy-indicator {
+            font-size: 10px;
+            font-weight: 800;
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+        
+        .accuracy-good { opacity: 0.6; }
+        
         .gps-status {
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
-            padding: 4px 12px;
+            padding: 2px 8px;
             border-radius: 999px;
+            margin-top: 4px;
             display: inline-block;
         }
         
@@ -63,62 +164,106 @@
         .gps-off { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
         .gps-searching { background: rgba(234, 179, 8, 0.2); color: #eab308; }
         
-        .hidden-action { display: none !important; }
-        
-        .swipe-indicator {
+        #permissionModal {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.3;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 0.1; }
-        }
-        
-        .fullscreen-mode {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100%;
-            padding: 0;
-        }
-        
-        .normal-mode {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .tap-hint {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.2;
+            padding: 2rem;
             text-align: center;
+        }
+        
+        .permission-card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        #gpsDebug {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-family: monospace;
+            z-index: 999;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="normalView" class="normal-mode">
+    <div id="permissionModal" class="hidden-action">
+        <div class="permission-card">
+            <div class="mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 opacity-60">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+                    <path d="M12 8v4"/>
+                    <path d="M12 16h.01"/>
+                </svg>
+                <h2 class="text-2xl font-black mb-2">Location Permission Required</h2>
+                <p class="opacity-70 text-sm">This app needs location access to track your distance accurately.</p>
+            </div>
+            
+            <div class="space-y-3 mb-6">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center mr-3 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <p class="text-sm opacity-80 text-left">Enable "Precise Location" in your phone settings for best accuracy</p>
+                </div>
+                <div class="flex items-start">
+                    <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center mr-3 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </div>
+                    <p class="text-sm opacity-80 text-left">Allow location access when prompted by your browser</p>
+                </div>
+            </div>
+            
+            <button id="requestPermissionBtn" class="w-full py-4 bg-accent font-black text-[13px] uppercase tracking-widest shadow-2xl btn-press rounded-full mb-3">
+                Grant Permission
+            </button>
+            <button onclick="location.reload()" class="w-full py-3 opacity-50 text-sm font-bold">
+                Already Granted? Reload
+            </button>
+        </div>
+    </div>
+
+    <div id="historyDrawer">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase tracking-widest">History</h2>
+            <button onclick="toggleHistory(false)" class="p-2 opacity-50 font-bold text-sm">CLOSE</button>
+        </div>
+        <div id="historyList" class="flex-grow overflow-y-auto space-y-2"></div>
+        <div class="py-4 flex flex-col items-center">
+             <div class="w-12 h-1 bg-white/20 rounded-full mb-4"></div>
+             <button onclick="clearHistory()" class="text-[9px] font-black uppercase tracking-widest text-red-500 opacity-50 text-center w-full">Clear All Records</button>
+        </div>
+    </div>
+
+    <div class="main-container">
         <!-- GPS Status -->
-        <div class="text-center mt-4">
-            <span id="gpsStatus" class="gps-status gps-off">GPS: OFF</span>
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-left">
+                <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 block">Kilometre Tracker</span>
+                <span id="gpsStatus" class="gps-status gps-off">GPS: OFF</span>
+            </div>
+            <button onclick="toggleDebug()" class="text-[8px] font-black uppercase tracking-widest opacity-20">DEBUG</button>
         </div>
 
         <!-- Distance Display -->
@@ -126,107 +271,228 @@
             <div class="w-full">
                 <span class="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mb-2 block">Distance</span>
                 <div class="flex items-baseline justify-center">
-                    <span id="trip" class="text-[140px] stat-value">0.0</span>
+                    <span id="trip" class="text-[120px] stat-value">0.0</span>
                     <span class="text-xl font-black ml-2">KM</span>
+                </div>
+                <div id="accuracyDisplay" class="accuracy-indicator mt-4 hidden-action">
+                    Accuracy: <span id="accuracyValue">0</span>m
                 </div>
             </div>
         </div>
 
         <!-- Controls -->
-        <div class="w-full pb-4">
-            <div id="standardActions" class="w-full">
-                <button id="startBtn" onclick="initiateStart()" class="w-full py-6 bg-accent font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl btn-press rounded-full" style="background-color: var(--text-color); color: var(--bg-color);">
-                    Start Trip
-                </button>
-
-                <div id="activeActions" class="w-full flex space-x-4 hidden-action mt-4">
-                    <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-6 font-black text-[11px] uppercase tracking-widest btn-press rounded-full" style="background: rgba(128, 128, 128, 0.1); border: 1px solid rgba(255,255,255,0.1);">
-                        Pause
+        <div class="w-full shrink-0">
+            <div class="flex flex-col space-y-8 w-full">
+                <div class="flex justify-center space-x-12 items-center" id="utilityRow">
+                    <button onclick="toggleFS()" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
+                        <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                     </button>
-                    <button onclick="stopTracking()" class="flex-[1.5] py-6 bg-red-600 text-white font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
-                        Finish Trip
+                    <button id="lockBtn" onclick="toggleLock(true)" class="circle-btn opacity-60 hover:opacity-100 transition-opacity">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </button>
                 </div>
+
+                <div class="w-full relative min-h-[72px] pb-6">
+                    <div id="standardActions" class="w-full">
+                        <button id="startBtn" onclick="initiateStart()" class="w-full py-6 bg-accent font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl btn-press rounded-full">
+                            Start Trip
+                        </button>
+
+                        <div id="activeActions" class="w-full flex space-x-4 hidden-action">
+                            <button id="pauseBtn" onclick="togglePause()" class="flex-1 py-6 premium-card font-black text-[11px] uppercase tracking-widest btn-press">
+                                Pause
+                            </button>
+                            <button onclick="stopTracking()" class="flex-[1.5] py-6 bg-red-600 text-white font-black text-[11px] uppercase tracking-[0.3em] shadow-lg btn-press rounded-full">
+                                Finish Trip
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="lockAction" class="w-full hidden-action">
+                        <div class="slider-track" id="sliderTrack">
+                            <div class="slider-text">Swipe to unlock</div>
+                            <div class="slider-handle" id="sliderHandle">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="swipe-indicator hidden-action" id="swipeUpHint">Swipe up for fullscreen</div>
         </div>
     </div>
 
-    <div id="fullscreenView" class="fullscreen-mode hidden-action">
-        <div class="text-center">
-            <div class="flex items-baseline justify-center">
-                <span id="tripFull" class="text-[180px] stat-value">0.0</span>
-                <span class="text-2xl font-black ml-2">KM</span>
-            </div>
-            <div class="mt-8">
-                <span id="gpsStatusFull" class="gps-status gps-off">GPS: OFF</span>
-            </div>
-        </div>
-        <div class="tap-hint">Tap to exit fullscreen</div>
+    <div id="gpsDebug">
+        GPS Status: <span id="debugStatus">-</span><br>
+        Last Update: <span id="debugTime">-</span><br>
+        Accuracy: <span id="debugAccuracy">-</span>m
     </div>
 
     <script>
         let isTracking = false;
         let isPaused = false;
+        let isLocked = false;
         let watchId = null;
         let tripDistance = 0;
         let lastCoords = null;
+        let wakeLock = null;
+        let isHistoryOpen = false;
         let isGpsCalibrated = false;
         let lastUpdateTime = 0;
         let positionBuffer = [];
         let hasLocationPermission = false;
-        let isFullscreen = false;
+        let isLocationEnabled = false;
         const MIN_UPDATE_INTERVAL = 1000;
         const BUFFER_SIZE = 3;
 
         const startBtn = document.getElementById('startBtn');
         const activeActions = document.getElementById('activeActions');
-        const normalView = document.getElementById('normalView');
-        const fullscreenView = document.getElementById('fullscreenView');
-        const tripDisplay = document.getElementById('trip');
-        const tripDisplayFull = document.getElementById('tripFull');
+        const standardActions = document.getElementById('standardActions');
+        const lockAction = document.getElementById('lockAction');
+        const utilityRow = document.getElementById('utilityRow');
+        const accuracyDisplay = document.getElementById('accuracyDisplay');
+        const accuracyValue = document.getElementById('accuracyValue');
         const gpsStatus = document.getElementById('gpsStatus');
-        const gpsStatusFull = document.getElementById('gpsStatusFull');
-        const swipeUpHint = document.getElementById('swipeUpHint');
+        const permissionModal = document.getElementById('permissionModal');
+        const requestPermissionBtn = document.getElementById('requestPermissionBtn');
+        const gpsDebug = document.getElementById('gpsDebug');
+        const debugStatus = document.getElementById('debugStatus');
+        const debugTime = document.getElementById('debugTime');
+        const debugAccuracy = document.getElementById('debugAccuracy');
 
         function updateGPSStatus(status, isActive = false) {
             gpsStatus.textContent = `GPS: ${status}`;
             gpsStatus.className = `gps-status ${isActive ? 'gps-on' : (status === 'SEARCHING' ? 'gps-searching' : 'gps-off')}`;
-            
-            gpsStatusFull.textContent = `GPS: ${status}`;
-            gpsStatusFull.className = `gps-status ${isActive ? 'gps-on' : (status === 'SEARCHING' ? 'gps-searching' : 'gps-off')}`;
         }
 
-        function updateDistanceDisplay() {
-            const distance = tripDistance.toFixed(1);
-            tripDisplay.textContent = distance;
-            tripDisplayFull.textContent = distance;
+        function updateDebugInfo(status, accuracy) {
+            if (gpsDebug.style.display === 'block') {
+                debugStatus.textContent = status;
+                debugTime.textContent = new Date().toLocaleTimeString();
+                debugAccuracy.textContent = accuracy || '-';
+            }
         }
 
-        // Check GPS support and start searching
-        function checkAndStartGPS() {
+        function toggleDebug() {
+            gpsDebug.style.display = gpsDebug.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Check if geolocation is available
+        function checkGeolocationSupport() {
             if (!("geolocation" in navigator)) {
-                updateGPSStatus("NOT SUPPORTED");
-                return;
+                alert("Geolocation is not supported by your browser. Please use a modern browser.");
+                return false;
+            }
+            return true;
+        }
+
+        // Request location permission
+        async function requestLocationPermission() {
+            if (!checkGeolocationSupport()) return false;
+            
+            updateGPSStatus('SEARCHING');
+            
+            try {
+                // First check current permission state
+                const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+                
+                permissionStatus.onchange = () => {
+                    hasLocationPermission = permissionStatus.state === 'granted';
+                    updateGPSStatus(hasLocationPermission ? 'READY' : 'DENIED', hasLocationPermission);
+                    
+                    if (hasLocationPermission) {
+                        permissionModal.classList.add('hidden-action');
+                        testGPSConnection();
+                    }
+                };
+                
+                hasLocationPermission = permissionStatus.state === 'granted';
+                
+                if (hasLocationPermission) {
+                    permissionModal.classList.add('hidden-action');
+                    testGPSConnection();
+                    return true;
+                } else {
+                    // Show permission modal
+                    permissionModal.classList.remove('hidden-action');
+                    
+                    // Request permission when button is clicked
+                    requestPermissionBtn.onclick = async () => {
+                        requestPermissionBtn.innerHTML = 'Requesting...';
+                        requestPermissionBtn.disabled = true;
+                        
+                        try {
+                            const position = await new Promise((resolve, reject) => {
+                                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                    enableHighAccuracy: true,
+                                    timeout: 10000,
+                                    maximumAge: 0
+                                });
+                            });
+                            
+                            hasLocationPermission = true;
+                            permissionModal.classList.add('hidden-action');
+                            updateGPSStatus('READY', true);
+                            testGPSConnection();
+                            return true;
+                        } catch (error) {
+                            console.error("Permission request failed:", error);
+                            alert("Location permission denied. Please enable location access in your browser settings.");
+                            updateGPSStatus('DENIED');
+                            requestPermissionBtn.innerHTML = 'Try Again';
+                            requestPermissionBtn.disabled = false;
+                            return false;
+                        }
+                    };
+                }
+            } catch (error) {
+                console.error("Permission check failed:", error);
+                // Fallback: try direct request
+                testGPSConnection();
             }
             
-            updateGPSStatus("SEARCHING");
+            return false;
+        }
+
+        // Test GPS connection
+        function testGPSConnection() {
+            if (!hasLocationPermission) return;
             
-            // Try to get position to check permission and start GPS
+            updateGPSStatus('SEARCHING');
+            
             navigator.geolocation.getCurrentPosition(
                 (position) => {
+                    isLocationEnabled = true;
                     hasLocationPermission = true;
-                    updateGPSStatus("READY", true);
-                    console.log("GPS is ready");
+                    updateGPSStatus('READY', true);
+                    updateDebugInfo('READY', Math.round(position.coords.accuracy));
+                    
+                    // Pre-warm GPS for better performance
+                    if (!isTracking) {
+                        startGPSService(false); // Test mode
+                        setTimeout(() => {
+                            if (watchId && !isTracking) {
+                                navigator.geolocation.clearWatch(watchId);
+                                watchId = null;
+                            }
+                        }, 5000);
+                    }
                 },
                 (error) => {
-                    // Just keep searching silently
-                    updateGPSStatus("SEARCHING");
-                    console.log("GPS searching...");
+                    isLocationEnabled = false;
+                    updateGPSStatus('ERROR');
+                    updateDebugInfo('ERROR', null);
                     
-                    // Keep trying every 5 seconds
-                    setTimeout(checkAndStartGPS, 5000);
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            permissionModal.classList.remove('hidden-action');
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            alert("GPS signal not found. Please ensure:\n1. Location is enabled on your device\n2. You're outdoors or have clear sky view\n3. Try moving to a different location");
+                            break;
+                        case error.TIMEOUT:
+                            alert("GPS timeout. Please check your location settings and try again.");
+                            break;
+                    }
                 },
                 {
                     enableHighAccuracy: true,
@@ -260,14 +526,26 @@
         function restoreTrackingUI() {
             startBtn.classList.add('hidden-action');
             activeActions.classList.remove('hidden-action');
-            updateDistanceDisplay();
+            document.getElementById('trip').innerText = tripDistance.toFixed(1);
             if(isPaused) document.getElementById('pauseBtn').innerText = "Resume";
-            startGPSService();
+            
+            if (hasLocationPermission) {
+                startGPSService();
+                requestWakeLock();
+            } else {
+                requestLocationPermission();
+            }
         }
 
         function initiateStart() {
             if (!hasLocationPermission) {
-                alert("Please turn on location services on your phone first");
+                requestLocationPermission();
+                return;
+            }
+            
+            if (!isLocationEnabled) {
+                testGPSConnection();
+                alert("Please wait for GPS signal before starting trip.");
                 return;
             }
             
@@ -286,18 +564,18 @@
                 restoreTrackingUI();
                 startBtn.innerText = "Start Trip";
                 startBtn.classList.remove('opacity-50');
-                
-                // Show swipe hint when tracking starts
-                swipeUpHint.classList.remove('hidden-action');
-            }, 500);
+            }, 1000);
         }
 
         function stopTracking() {
-            // Stop GPS immediately
+            // Stop GPS immediately first
             if (watchId) {
                 navigator.geolocation.clearWatch(watchId);
                 watchId = null;
             }
+            
+            // Save the trip
+            saveTrip();
             
             // Reset all tracking variables
             isTracking = false;
@@ -307,14 +585,22 @@
             positionBuffer = [];
             
             // Update UI
+            toggleLock(false);
             startBtn.classList.remove('hidden-action', 'opacity-50');
             startBtn.innerText = "Start Trip";
             activeActions.classList.add('hidden-action');
-            updateGPSStatus("READY", false);
-            swipeUpHint.classList.add('hidden-action');
+            accuracyDisplay.classList.add('hidden-action');
+            updateGPSStatus('READY', false);
             
             // Display final distance and then reset
-            updateDistanceDisplay();
+            const finalDistance = tripDistance;
+            document.getElementById('trip').innerText = finalDistance.toFixed(1);
+            
+            // Release wake lock
+            if (wakeLock) { 
+                wakeLock.release(); 
+                wakeLock = null; 
+            }
             
             // Clear saved state
             localStorage.removeItem('trip_tracker_state');
@@ -323,17 +609,53 @@
             setTimeout(() => {
                 if (!isTracking) {
                     tripDistance = 0;
-                    updateDistanceDisplay();
+                    document.getElementById('trip').innerText = "0.0";
                 }
             }, 2000);
         }
 
-        function togglePause() {
-            isPaused = !isPaused;
-            document.getElementById('pauseBtn').innerText = isPaused ? "Resume" : "Pause";
-            updateGPSStatus(isPaused ? "PAUSED" : "TRACKING", !isPaused);
-            saveState();
+        async function toggleFS() {
+            if (!document.fullscreenElement) await document.documentElement.requestFullscreen().catch(()=>{});
+            else await document.exitFullscreen().catch(()=>{});
         }
+
+        function toggleLock(locked) {
+            isLocked = locked;
+            standardActions.classList.toggle('hidden-action', locked);
+            utilityRow.classList.toggle('opacity-0', locked);
+            utilityRow.classList.toggle('pointer-events-none', locked);
+            lockAction.classList.toggle('hidden-action', !locked);
+        }
+
+        const handle = document.getElementById('sliderHandle');
+        const track = document.getElementById('sliderTrack');
+        let isDragging = false;
+        let startX = 0;
+
+        handle.addEventListener('touchstart', e => { 
+            isDragging = true; 
+            startX = e.touches[0].clientX; 
+            handle.style.transition = 'none';
+        });
+        
+        window.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            let delta = Math.max(0, Math.min(e.touches[0].clientX - startX, track.offsetWidth - handle.offsetWidth - 8));
+            handle.style.transform = `translateX(${delta}px)`;
+            if (delta >= track.offsetWidth - handle.offsetWidth - 8) {
+                isDragging = false;
+                toggleLock(false);
+                handle.style.transform = `translateX(0px)`;
+            }
+        });
+        
+        window.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            handle.style.transition = 'transform 0.3s ease';
+            handle.style.transform = `translateX(0px)`;
+            setTimeout(() => handle.style.transition = '', 300);
+        });
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
@@ -346,13 +668,33 @@
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         }
 
+        function updateAccuracyDisplay(accuracy) {
+            if (accuracy < 0) return;
+            
+            accuracyDisplay.classList.remove('hidden-action');
+            accuracyValue.textContent = Math.round(accuracy);
+            
+            if (accuracy < 15) {
+                accuracyDisplay.classList.add('accuracy-good');
+            } else {
+                accuracyDisplay.classList.remove('accuracy-good');
+            }
+        }
+
         function handlePositionUpdate(pos) {
             const currentTime = Date.now();
             const accuracy = pos.coords.accuracy || 50;
+            const speedKmh = pos.coords.speed ? pos.coords.speed * 3.6 : 0;
+            
+            // Update debug info
+            updateDebugInfo('ACTIVE', Math.round(accuracy));
+            
+            // Update accuracy display
+            updateAccuracyDisplay(accuracy);
             
             if (!isTracking || isPaused) return;
             
-            // Filter by time interval
+            // Filter by time interval to prevent rapid updates
             if (currentTime - lastUpdateTime < MIN_UPDATE_INTERVAL) {
                 return;
             }
@@ -400,7 +742,7 @@
                 
                 if (dist > minDist && accuracy < 30) {
                     tripDistance += dist;
-                    updateDistanceDisplay();
+                    document.getElementById('trip').innerText = tripDistance.toFixed(1);
                     lastCoords = newestPos;
                     lastUpdateTime = currentTime;
                     saveState();
@@ -410,77 +752,136 @@
             }
         }
 
-        function startGPSService() {
+        function startGPSService(tracking = true) {
             if (watchId) navigator.geolocation.clearWatch(watchId);
-            
-            updateGPSStatus("TRACKING", true);
             
             watchId = navigator.geolocation.watchPosition(
                 handlePositionUpdate, 
                 (err) => {
                     console.log("GPS error:", err.message);
-                    updateGPSStatus("SEARCHING");
+                    accuracyDisplay.classList.add('hidden-action');
+                    updateGPSStatus('ERROR');
+                    updateDebugInfo('ERROR', null);
                 }, 
                 { 
                     enableHighAccuracy: true,
                     timeout: 10000,
                     maximumAge: 0,
-                    distanceFilter: 5
+                    distanceFilter: tracking ? 5 : 0
                 }
             );
-        }
-
-        // Toggle fullscreen mode
-        function toggleFullscreen() {
-            if (!isTracking) return; // Only allow fullscreen when tracking
             
-            isFullscreen = !isFullscreen;
-            
-            if (isFullscreen) {
-                normalView.classList.add('hidden-action');
-                fullscreenView.classList.remove('hidden-action');
-                document.documentElement.requestFullscreen().catch(()=>{});
-            } else {
-                fullscreenView.classList.add('hidden-action');
-                normalView.classList.remove('hidden-action');
-                document.exitFullscreen().catch(()=>{});
+            if (tracking) {
+                updateGPSStatus('TRACKING', true);
             }
         }
+
+        async function requestWakeLock() {
+            if ('wakeLock' in navigator && !wakeLock) {
+                try { 
+                    wakeLock = await navigator.wakeLock.request('screen'); 
+                    wakeLock.addEventListener('release', () => {
+                        wakeLock = null;
+                    });
+                } catch(e) {
+                    console.log("Wake Lock error:", e);
+                }
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('pauseBtn').innerText = isPaused ? "Resume" : "Pause";
+            
+            if (isPaused) {
+                accuracyDisplay.classList.add('hidden-action');
+                updateGPSStatus('PAUSED', false);
+            } else {
+                accuracyDisplay.classList.remove('hidden-action');
+                updateGPSStatus('TRACKING', true);
+            }
+            
+            saveState();
+        }
+
+        function saveTrip() {
+            if (tripDistance < 0.05) return;
+            
+            const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
+            h.unshift({ 
+                name: 'Trip ' + (h.length + 1), 
+                dist: tripDistance.toFixed(1), 
+                date: new Date().toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                timestamp: Date.now()
+            });
+            
+            localStorage.setItem('activa_history', JSON.stringify(h.slice(0, 100)));
+        }
+
+        function toggleHistory(open) {
+            const d = document.getElementById('historyDrawer');
+            isHistoryOpen = open;
+            
+            if (open) {
+                const h = JSON.parse(localStorage.getItem('activa_history') || '[]');
+                const list = document.getElementById('historyList');
+                list.innerHTML = h.length ? h.map(item => `
+                    <div class="flex justify-between items-center py-4 border-b border-black/5">
+                        <div>
+                            <div class="text-[8px] font-black uppercase tracking-widest opacity-30">${item.date}</div>
+                            <div class="font-bold">${item.name}</div>
+                        </div>
+                        <div class="text-right"><span class="text-xl font-black">${item.dist}</span><span class="text-[8px] ml-1 opacity-40">KM</span></div>
+                    </div>
+                `).join('') : '<p class="text-center opacity-30 mt-10 text-[10px] font-bold">NO HISTORY</p>';
+                d.classList.add('open');
+            } else {
+                d.classList.remove('open');
+            }
+        }
+
+        function clearHistory() { 
+            localStorage.removeItem('activa_history'); 
+            toggleHistory(true); 
+        }
+
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && wakeLock) {
+                wakeLock.release();
+                wakeLock = null;
+            } else if (!document.hidden && isTracking && !wakeLock) {
+                requestWakeLock();
+            }
+        });
 
         // Initialize on load
         window.onload = () => { 
-            loadState();
+            // Check geolocation support
+            if (!checkGeolocationSupport()) {
+                alert("This browser doesn't support GPS tracking. Please use Chrome, Safari, or Firefox.");
+                return;
+            }
             
-            // Start searching for GPS immediately
-            checkAndStartGPS();
+            loadState(); 
+            
+            // Request location permission immediately
+            setTimeout(() => {
+                requestLocationPermission();
+            }, 500);
         };
         
-        // Swipe up for fullscreen, swipe down to exit
-        let startY = 0;
-        document.addEventListener('touchstart', e => {
-            startY = e.touches[0].clientY;
-        });
-        
+        let tY = 0;
+        document.addEventListener('touchstart', e => tY = e.touches[0].clientY);
         document.addEventListener('touchend', e => {
-            const endY = e.changedTouches[0].clientY;
-            const diffY = startY - endY;
-            
-            // Swipe up for fullscreen (only when tracking)
-            if (diffY > 100 && isTracking && !isFullscreen) {
-                toggleFullscreen();
-            }
-            
-            // Swipe down to exit fullscreen OR tap to exit
-            if ((diffY < -50 || (isFullscreen && Math.abs(diffY) < 10)) && isFullscreen) {
-                toggleFullscreen();
-            }
-        });
-        
-        // Also allow tap to exit fullscreen
-        fullscreenView.addEventListener('click', () => {
-            if (isFullscreen) {
-                toggleFullscreen();
-            }
+            const diffY = tY - e.changedTouches[0].clientY;
+            if (diffY < -80 && !isLocked && !isHistoryOpen) toggleHistory(true);
+            else if (diffY > 80 && isHistoryOpen) toggleHistory(false);
         });
     </script>
 </body>
