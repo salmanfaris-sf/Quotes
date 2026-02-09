@@ -23,6 +23,12 @@
             --text: #e5e7eb;
         }
 
+        /* Smoothing the fullscreen transition */
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.5s ease;
+        }
+
         html, body {
             height: 100%;
             margin: 0;
@@ -43,17 +49,11 @@
             padding: 0 20px;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            /* Ensure background is solid during transition */
+            background: #000 !important; 
         }
 
-        .fade-entrance {
-            opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .fade-entrance.visible {
-            opacity: 1;
-        }
-
+        /* Prevent layout jumps when browser UI bars disappear */
         .container {
             max-width: 600px;
             width: 100%;
@@ -64,6 +64,17 @@
             flex-direction: column;
             align-items: center;
             transform: translateY(-20px);
+            /* Smoothly animate height changes during fullscreen entry */
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-entrance {
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-entrance.visible {
+            opacity: 1;
         }
 
         #g4x_txt {
@@ -110,6 +121,12 @@
             text-align: center;
             pointer-events: none;
             z-index: 10;
+            transition: bottom 0.5s ease;
+        }
+
+        /* Fullscreen-specific tweak to keep signature safe */
+        :fullscreen .bottom-signature {
+            bottom: 30px;
         }
 
         .user-name {
@@ -329,19 +346,27 @@
         }
     }
 
-    function handleFullscreen(action) {
-        if (action === 'enter') {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
+    async function handleFullscreen(action) {
+        try {
+            if (action === 'enter') {
+                if (!document.fullscreenElement) {
+                    const rfs = document.documentElement.requestFullscreen || 
+                                document.documentElement.webkitRequestFullscreen || 
+                                document.documentElement.mozRequestFullScreen || 
+                                document.documentElement.msRequestFullscreen;
+                    if (rfs) await rfs.call(document.documentElement);
+                }
+            } else if (action === 'exit') {
+                if (document.fullscreenElement) {
+                    const efs = document.exitFullscreen || 
+                                document.webkitExitFullscreen || 
+                                document.mozCancelFullScreen || 
+                                document.msExitFullscreen;
+                    if (efs) await efs.call(document);
+                }
             }
-        } else if (action === 'exit') {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
+        } catch (err) {
+            console.warn("Fullscreen toggle error:", err);
         }
     }
 
@@ -349,13 +374,11 @@
         const distance = touchStartY - touchEndY;
         if (Math.abs(distance) > swipeThreshold) {
             if (distance > 0) {
-                // Swipe Up
                 handleFullscreen('enter');
             } else {
-                // Swipe Down
                 handleFullscreen('exit');
             }
-            return true; // Was a swipe
+            return true;
         }
         return false;
     }
