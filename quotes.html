@@ -42,6 +42,7 @@
             justify-content: center;
             padding: 0 20px;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .fade-entrance {
@@ -118,9 +119,35 @@
             letter-spacing: 0.02em;
             line-height: 1;
         }
+
+        /* Notification Styling */
+        #notification {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            color: #999;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
+
+    <div id="notification">Autoplay On</div>
 
     <div class="container fade-entrance" id="main_content">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
@@ -210,10 +237,16 @@
     const infoDisplay = document.getElementById('live_info');
     const mainContent = document.getElementById('main_content');
     const sigContent = document.getElementById('sig_content');
+    const notification = document.getElementById('notification');
     
     let firstInteraction = true;
     let quotePool = [];
     let liveInterval = null;
+    let autoplayActive = false;
+    let autoplayInterval = null;
+    let pressTimer = null;
+    let longPressed = false;
+    const AUTOPLAY_DURATION = 5000; 
 
     function getLiveStats() {
         const now = new Date();
@@ -236,6 +269,14 @@
              const sameOne = quotePool.pop();
              quotePool.unshift(sameOne);
         }
+    }
+
+    function showNotification(text) {
+        notification.innerText = text;
+        notification.classList.add('show');
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 1800);
     }
 
     function updateDisplay() {
@@ -276,9 +317,38 @@
         }, 300);
     }
 
-    function handleInteraction(e) {
-        // Just trigger the update without fullscreen logic
-        updateDisplay();
+    function toggleAutoplay() {
+        autoplayActive = !autoplayActive;
+        if (autoplayActive) {
+            showNotification("Autoplay On");
+            if (autoplayInterval) clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(updateDisplay, AUTOPLAY_DURATION);
+        } else {
+            showNotification("Autoplay Off");
+            if (autoplayInterval) clearInterval(autoplayInterval);
+        }
+    }
+
+    function startPressTimer() {
+        longPressed = false;
+        pressTimer = setTimeout(() => {
+            longPressed = true;
+            toggleAutoplay();
+            pressTimer = null;
+        }, 600); 
+    }
+
+    function clearPressTimer() {
+        if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+        }
+        
+        // Only change quote if it was a normal tap, not a long press
+        if (!longPressed && !autoplayActive) {
+            updateDisplay();
+        }
+        longPressed = false;
     }
 
     window.onload = () => {
@@ -303,12 +373,21 @@
         });
     };
 
-    // simplified event listeners
-    document.addEventListener('touchend', handleInteraction, { passive: false });
+    // Desktop Events
     document.addEventListener('mousedown', (e) => {
-        if (e.detail === 0) return; 
-        handleInteraction();
+        if (e.button !== 0) return;
+        startPressTimer();
     });
+    document.addEventListener('mouseup', clearPressTimer);
+
+    // Mobile Events
+    document.addEventListener('touchstart', (e) => {
+        startPressTimer();
+    }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+        clearPressTimer();
+    }, { passive: true });
+
 })();
 </script>
 </body>
