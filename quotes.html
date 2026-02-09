@@ -120,7 +120,6 @@
             line-height: 1;
         }
 
-        /* Notification Styling */
         #notification {
             position: fixed;
             top: 40px;
@@ -329,6 +328,18 @@
         }
     }
 
+    function handleFullscreen() {
+        if (window.innerWidth > window.innerHeight) {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        } else {
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+    }
+
     function startPressTimer() {
         longPressed = false;
         pressTimer = setTimeout(() => {
@@ -344,7 +355,6 @@
             pressTimer = null;
         }
         
-        // Only change quote if it was a normal tap, not a long press
         if (!longPressed && !autoplayActive) {
             updateDisplay();
         }
@@ -371,16 +381,17 @@
                 }
             }, 1000);
         });
+
+        // Initialize orientation listener
+        window.addEventListener('resize', handleFullscreen);
     };
 
-    // Desktop Events
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         startPressTimer();
     });
     document.addEventListener('mouseup', clearPressTimer);
 
-    // Mobile Events
     document.addEventListener('touchstart', (e) => {
         startPressTimer();
     }, { passive: true });
