@@ -120,17 +120,18 @@
             line-height: 1;
         }
 
+        /* Notification Styling - Smaller, No Border */
         #notification {
             position: fixed;
             top: 40px;
             left: 50%;
             transform: translateX(-50%) translateY(-10px);
-            background: rgba(255, 255, 255, 0.08);
-            color: #999;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 10px;
-            letter-spacing: 0.08em;
+            background: rgba(255, 255, 255, 0.1);
+            color: #bbb;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 9px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -328,14 +329,19 @@
         }
     }
 
-    function handleFullscreen() {
-        if (window.innerWidth > window.innerHeight) {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
+    // Function to trigger Fullscreen. Must be called inside a user gesture event.
+    function checkAndApplyFullscreen() {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        if (isLandscape && !document.fullscreenElement) {
+            const docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            } else if (docElm.webkitRequestFullscreen) {
+                docElm.webkitRequestFullscreen();
             }
-        } else {
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
+        } else if (!isLandscape && document.fullscreenElement) {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
             }
         }
     }
@@ -355,6 +361,9 @@
             pressTimer = null;
         }
         
+        // Check for fullscreen eligibility on every user tap
+        checkAndApplyFullscreen();
+
         if (!longPressed && !autoplayActive) {
             updateDisplay();
         }
@@ -381,11 +390,9 @@
                 }
             }, 1000);
         });
-
-        // Initialize orientation listener
-        window.addEventListener('resize', handleFullscreen);
     };
 
+    // User Interaction Listeners
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         startPressTimer();
