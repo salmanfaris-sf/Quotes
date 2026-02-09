@@ -120,7 +120,6 @@
             line-height: 1;
         }
 
-        /* Notification Styling */
         #notification {
             position: fixed;
             top: 40px;
@@ -151,12 +150,8 @@
 
     <div class="container fade-entrance" id="main_content">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
-        
         <div id="live_info" class="opacity-0"></div>
-        
-        <div id="hint" class="tap-hint opacity-0">
-            TAP TO VIEW NEXT QUOTE
-        </div>
+        <div id="hint" class="tap-hint opacity-0">TAP TO VIEW NEXT QUOTE</div>
     </div>
 
     <div class="bottom-signature fade-entrance" id="sig_content">
@@ -248,6 +243,11 @@
     let longPressed = false;
     const AUTOPLAY_DURATION = 5000; 
 
+    // Swipe handling state
+    let touchStartY = 0;
+    let touchEndY = 0;
+    const swipeThreshold = 50;
+
     function getLiveStats() {
         const now = new Date();
         let hours = now.getHours();
@@ -329,8 +329,41 @@
         }
     }
 
-    function startPressTimer() {
+    function handleFullscreen(action) {
+        if (action === 'enter') {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+        } else if (action === 'exit') {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    function checkSwipe() {
+        const distance = touchStartY - touchEndY;
+        if (Math.abs(distance) > swipeThreshold) {
+            if (distance > 0) {
+                // Swipe Up
+                handleFullscreen('enter');
+            } else {
+                // Swipe Down
+                handleFullscreen('exit');
+            }
+            return true; // Was a swipe
+        }
+        return false;
+    }
+
+    function startPressTimer(e) {
         longPressed = false;
+        touchStartY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+        
         pressTimer = setTimeout(() => {
             longPressed = true;
             toggleAutoplay();
@@ -338,14 +371,17 @@
         }, 600); 
     }
 
-    function clearPressTimer() {
+    function endPressTimer(e) {
+        touchEndY = e.type.startsWith('touch') ? e.changedTouches[0].clientY : e.clientY;
+        
         if (pressTimer) {
             clearTimeout(pressTimer);
             pressTimer = null;
         }
+
+        const wasSwipe = checkSwipe();
         
-        // Only change quote if it was a normal tap, not a long press
-        if (!longPressed && !autoplayActive) {
+        if (!wasSwipe && !longPressed && !autoplayActive) {
             updateDisplay();
         }
         longPressed = false;
@@ -376,16 +412,16 @@
     // Desktop Events
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
-        startPressTimer();
+        startPressTimer(e);
     });
-    document.addEventListener('mouseup', clearPressTimer);
+    document.addEventListener('mouseup', endPressTimer);
 
     // Mobile Events
     document.addEventListener('touchstart', (e) => {
-        startPressTimer();
+        startPressTimer(e);
     }, { passive: true });
     document.addEventListener('touchend', (e) => {
-        clearPressTimer();
+        endPressTimer(e);
     }, { passive: true });
 
 })();
