@@ -51,17 +51,19 @@
 <body class="antialiased overflow-x-hidden">
     <div class="_g1"></div>
     
-    <nav id="a1" class="_n1 fixed top-0 w-full z-50 px-8 py-4 flex justify-center items-center">
-        <!-- Increased date font size to text-[10px] -->
-        <div id="a2" class="text-[10px] uppercase tracking-[0.6em] text-white font-f2 opacity-90">...</div>
+    <!-- Navigation with date centered -->
+    <nav id="a1" class="_n1 fixed top-0 w-full z-50 py-6 px-8 flex justify-center items-center">
+        <div id="a2" class="text-[10px] uppercase tracking-[0.6em] text-white/70 font-f2">...</div>
     </nav>
 
     <main class="flex-grow">
         <section class="min-h-screen flex flex-col items-center justify-center px-6 relative z-10">
             <div class="h-10"></div>
-            <div class="text-center flex-grow flex flex-col justify-center">
-                <!-- Increased Day indicator font size to text-[12px] -->
-                <span id="a3" class="text-[12px] uppercase tracking-[1.2em] text-c2 mb-8 block _r1 font-f2"></span>
+            <div class="text-center flex-grow flex flex-col justify-center items-center">
+                <div class="_r1 mb-10">
+                    <span id="a3" class="text-[10px] uppercase tracking-[0.6em] text-c2 block font-f2 font-medium"></span>
+                </div>
+                
                 <h1 id="a4" class="font-f1 text-8xl md:text-[14rem] italic tracking-tighter leading-none _r1" style="transition-delay:.2s"></h1>
             </div>
             <div class="pb-32 _r1" style="transition-delay:.4s">
@@ -86,26 +88,26 @@
             
             const p1Pool = [
                 "Fear Allah and you will never fear any man. When you know that Allah is in control, people's words cannot hurt you. Do not trade what Allah thinks of you for what people think of you. Stand tall. Be who you are meant to be.",
-                "Shaitan is your real enemy. He never stops trying to trick you. He wants you to stay in bed. He wants you to be lazy. He wants you to waste your life. Fight back. Get up. Do your work. A strong Muslim is a hero in the eyes of Allah.",
+                "Shaitan is your real enemy. He never stops trying to trick you. He wants you to stay in bed. He wants you to be lazy. He wants you to waste your life. Fight back. Get up. Do your work. A strong believer is beloved to Allah.",
                 "Time is like money that you can only spend once. Do not waste it on your phone or on useless talk. Every minute you lose is a minute you could have used to get better. If you are not growing, you are failing. Take back your day.",
                 "The Quran is the best book. It is the word of God. If you keep it in your heart, you will never be lost. Try to learn even one line a day. Do not let your heart be empty. Fill it with the words that really matter.",
                 "Train your body so you can serve Allah better. Being strong is part of being a good Muslim. It helps you pray better and help others. Do not be weak. Eat well, sleep well, and work hard. Your body is a gift from Allah."
             ];
 
             const p2Pool = [
-                "Mental strength means saying 'no' to yourself. It means doing what is right even when it is hard. If you can control your own mind, you can do anything. Stop being lazy. Get to work. True power comes when you follow the rules of Allah.",
+                "Mental strength means saying 'no' to yourself. It means doing what is right even when it is hard. If you can control your own mind, you can do anything. Stop being lazy. Get to work. True power comes when you follow the commands of Allah.",
                 "Do good things when no one is looking. A good deed for show is a waste. A good deed for Allah is a treasure that lasts forever. Be a worker in the dark. Let your actions show who you really are. Be kind and be useful.",
                 "People in the past were great because they only feared Allah. They did not care what others said. Why are you so worried about what people think? They cannot help you or hurt you. Only Allah has that power. Stand firm.",
                 "Shaitan loves it when you say 'I will do it tomorrow.' Tomorrow is a lie. You only have today. If you need to fix your life, do it now. The door of mercy is open right now. Step through it. Do not wait for the end.",
-                "Keep the Quran close to your heart. It will make you strong when you feel weak. It will show you the way when you are lost. It is a book for the strong, not the lazy. Read it. Live it. Love it every single day."
+                "Keep the Quran close to your heart. It will make you strong when you feel weak. It will show you the way when you are lost. It is a book for those who seek truth, not the negligent. Read it. Live it. Love it every single day."
             ];
 
             const p3Pool = [
-                "To be strong in the mind is to trust Allah when things are hard. It is to say 'Thank You' even in the storm. You build this strength by praying every day and thinking deeply. Stop complaining. Start building yourself. You are capable of so much.",
-                "Fight Shaitan by being the first one awake. He likes it when you are sleepy and slow. Light up your day with the name of Allah. A heart that remembers Allah is a heart that Shaitan cannot touch. Be brave. Be ready.",
-                "This world is a test. Every hard thing you face is a way to make you stronger. Do not wish for an easy life. Work to have a strong heart. Fear Allah in a way that makes you move. Do not let fear stop you. Let it push you forward.",
-                "Your life is shorter than you think. What will you leave behind? Will it be a life of wasted time or a life of duty? Choose to be a man of action today. Good deeds are the only thing you will take to the grave. Do them now.",
-                "Allah sees everything you do. He sees your struggle. He sees your hard work. Do not be sad if you only make a little progress. Just keep moving. Stand up, wash yourself, and face your life with the strength of a true believer."
+                "To be strong in the mind is to trust Allah when things are hard. It is to say 'Alhamdulillah' even in the storm. You build this strength by praying every day and thinking deeply. Stop complaining. Start building yourself. You are capable of so much.",
+                "Fight Shaitan by being the first one awake. He likes it when you are sleepy and slow. Light up your day with the remembrance of Allah. A heart that remembers Allah is a heart that Shaitan cannot touch. Be brave. Be ready.",
+                "This world is a test. Every hard thing you face is a way to make you stronger. Do not wish for an easy life. Work to have a sound heart. Fear Allah in a way that makes you move. Do not let fear stop you. Let it push you forward.",
+                "Your life is shorter than you think. What will you leave behind? Will it be a life of wasted time or a life of duty? Choose to be a person of action today. Good deeds are the only thing you will take to the grave. Do them now.",
+                "Allah sees everything you do. He sees your struggle. He sees your hard work. Do not be sad if you only make a little progress. Just keep moving. Stand up, purify yourself, and face your life with the strength of a true believer."
             ];
 
             function getDayOfYear() {
