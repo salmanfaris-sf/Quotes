@@ -70,7 +70,7 @@
         <article id="a5" class="max-w-screen-xl mx-auto px-6 py-40 relative z-10 space-y-60"></article>
     </main>
     <footer class="w-full flex flex-col items-center justify-center text-center px-6 pt-60 pb-8 relative z-10 _r1">
-        <h3 class="font-f1 text-7xl md:text-9xl italic mb-10 _w1">Be Better Every Day.</h3>
+        <h3 class="font-f1 text-7xl md:text-9xl italic mb-10 _w1">Daily Wisdom.</h3>
         <div class="w-24 h-px bg-c2 mb-10 opacity-30"></div>
         <div class="space-y-4">
             <div class="text-[9px] uppercase tracking-[0.6em] font-f2 text-white font-medium">BY SALMAN FARIS</div>
@@ -78,7 +78,6 @@
     </footer>
     <script>
         (function () {
-            // Updated pools with simpler but powerful words
             const adjectives = ["Pure", "Real", "Hard", "True", "Deep", "Bold", "Firm", "Main", "Great", "Iron", "Smart", "Wise", "Fast", "Strong", "Open"];
             const nouns = ["Mind", "Heart", "Work", "Step", "Rule", "Goal", "Way", "Plan", "Life", "Soul", "Power", "Duty", "Path", "Fight", "Hope"];
             
@@ -132,7 +131,7 @@
                 const dIdx = getDayOfYear();
                 const d = getDailyContent(dIdx);
                 
-                document.getElementById("a3").textContent = `PROTOCOL ${String(d.idx).padStart(3, "0")}`;
+                document.getElementById("a3").textContent = `DAY ${String(d.idx).padStart(3, "0")}`;
                 document.getElementById("a4").innerHTML = `The <span class="text-white not-italic">${d.title}</span>`;
                 
                 const mainTag = d.title.toUpperCase() + ".";
