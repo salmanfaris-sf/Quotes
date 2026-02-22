@@ -114,7 +114,9 @@
             }
 
             function getDailyContent(d) {
-                const seed = d * 163; 
+                // Seed includes the current year to ensure variety across different years
+                const year = new Date().getFullYear();
+                const seed = (d * 163) + (year * 7); 
                 const adj = adjectives[seed % adjectives.length];
                 const noun = nouns[(seed + 11) % nouns.length];
                 
@@ -165,6 +167,7 @@
 
             function updateTime() {
                 const n = new Date();
+                // Dynamic year fetching
                 document.getElementById("a2").textContent = `${n.toLocaleDateString("en-US", { month: "long" }).toUpperCase()} ${n.toLocaleDateString("en-US", { day: "2-digit" })} / ${n.getFullYear()}`;
             }
 
@@ -182,7 +185,9 @@
                 updateTime();
                 render();
                 setInterval(() => {
-                    if (new Date().getHours() === 0 && new Date().getMinutes() === 0) location.reload();
+                    const now = new Date();
+                    if (now.getHours() === 0 && now.getMinutes() === 0) location.reload();
+                    updateTime(); // Keep the clock updated if needed
                 }, 60000);
             };
         })();
