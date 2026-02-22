@@ -50,15 +50,15 @@
 </head>
 <body class="antialiased overflow-x-hidden">
     <div class="_g1"></div>
-    <nav id="a1" class="_n1 fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center">
-        <span class="font-f1 italic text-xl tracking-tighter text-white">SF</span>
-        <div class="text-right">
-            <div id="a2" class="text-[9px] uppercase tracking-[0.4em] text-white">...</div>
-        </div>
+    
+    <!-- Reduced Top Bar Size: Reduced padding to py-3 and slightly smaller text -->
+    <nav id="a1" class="_n1 fixed top-0 w-full z-50 px-8 py-3 flex justify-center items-center">
+        <div id="a2" class="text-[8px] uppercase tracking-[0.6em] text-white font-f2 opacity-80">...</div>
     </nav>
+
     <main class="flex-grow">
         <section class="min-h-screen flex flex-col items-center justify-center px-6 relative z-10">
-            <div class="h-20"></div>
+            <div class="h-10"></div>
             <div class="text-center flex-grow flex flex-col justify-center">
                 <span id="a3" class="text-[10px] uppercase tracking-[1em] text-c2 mb-8 block _r1 font-f2"></span>
                 <h1 id="a4" class="font-f1 text-8xl md:text-[14rem] italic tracking-tighter leading-none _r1" style="transition-delay:.2s"></h1>
@@ -69,13 +69,15 @@
         </section>
         <article id="a5" class="max-w-screen-xl mx-auto px-6 py-40 relative z-10 space-y-60"></article>
     </main>
-    <footer class="w-full flex flex-col items-center justify-center text-center px-6 pt-60 pb-8 relative z-10 _r1">
+
+    <footer class="w-full flex flex-col items-center justify-center text-center px-6 pt-60 pb-16 relative z-10 _r1">
         <h3 class="font-f1 text-7xl md:text-9xl italic mb-10 _w1">Daily Wisdom.</h3>
         <div class="w-24 h-px bg-c2 mb-10 opacity-30"></div>
         <div class="space-y-4">
             <div class="text-[9px] uppercase tracking-[0.6em] font-f2 text-white font-medium">BY SALMAN FARIS</div>
         </div>
     </footer>
+
     <script>
         (function () {
             const adjectives = ["Pure", "Real", "Hard", "True", "Deep", "Bold", "Firm", "Main", "Great", "Iron", "Smart", "Wise", "Fast", "Strong", "Open"];
@@ -114,7 +116,6 @@
             }
 
             function getDailyContent(d) {
-                // Seed includes the current year to ensure variety across different years
                 const year = new Date().getFullYear();
                 const seed = (d * 163) + (year * 7); 
                 const adj = adjectives[seed % adjectives.length];
@@ -167,7 +168,6 @@
 
             function updateTime() {
                 const n = new Date();
-                // Dynamic year fetching
                 document.getElementById("a2").textContent = `${n.toLocaleDateString("en-US", { month: "long" }).toUpperCase()} ${n.toLocaleDateString("en-US", { day: "2-digit" })} / ${n.getFullYear()}`;
             }
 
@@ -175,8 +175,8 @@
             window.addEventListener("scroll", () => {
                 const nav = document.getElementById("a1");
                 const current = window.pageYOffset;
-                current > 20 ? nav.classList.add("_s1") : nav.classList.remove("_s1");
-                if (current > lastScroll && current > 100) nav.classList.add("_h1");
+                current > 10 ? nav.classList.add("_s1") : nav.classList.remove("_s1");
+                if (current > lastScroll && current > 80) nav.classList.add("_h1");
                 else nav.classList.remove("_h1");
                 lastScroll = current;
             });
@@ -187,7 +187,7 @@
                 setInterval(() => {
                     const now = new Date();
                     if (now.getHours() === 0 && now.getMinutes() === 0) location.reload();
-                    updateTime(); // Keep the clock updated if needed
+                    updateTime();
                 }, 60000);
             };
         })();
