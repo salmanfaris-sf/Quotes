@@ -36,7 +36,6 @@
     <style>
         html, body { height: 100%; margin: 0; background-color: #050505; color: #d1d1d1; scroll-behavior: smooth; display: flex; flex-direction: column; }
         ._n1 { transition: background-color .4s ease, backdrop-filter .4s ease, border-color .4s ease; }
-        /* Sticky style when scrolled */
         ._n1._s1 { background-color: rgba(5, 5, 5, .85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, .08); }
         ._r1 { opacity: 0; transform: translateY(40px); filter: blur(15px); transition: all 1.8s cubic-bezier(.16, 1, .3, 1); }
         ._r1._a1 { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -52,10 +51,10 @@
 <body class="antialiased overflow-x-hidden">
     <div class="_g1"></div>
     
-    <!-- Menu bar: always visible and fixed -->
+    <!-- Swapped positions: DAY on left, DATE on right -->
     <nav id="a1" class="_n1 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-        <div id="a2" class="text-[10px] uppercase tracking-[0.4em] text-white/40 font-f2">...</div>
         <div id="nav-day" class="_day-bright text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">...</div>
+        <div id="a2" class="text-[10px] uppercase tracking-[0.4em] text-white/40 font-f2">...</div>
     </nav>
 
     <main class="flex-grow">
@@ -71,12 +70,9 @@
         <article id="a5" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 space-y-72"></article>
     </main>
 
-    <footer class="w-full flex flex-col items-center justify-center text-center px-6 pt-60 pb-16 relative z-10 _r1">
-        <h3 class="font-f1 text-8xl md:text-[10rem] italic mb-10 _w1">Daily Wisdom.</h3>
-        <div class="w-24 h-px bg-c2 mb-10 opacity-30"></div>
-        <div class="space-y-4">
-            <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium">BY SALMAN FARIS</div>
-        </div>
+    <footer class="w-full flex flex-col items-center justify-center text-center px-6 pt-60 pb-12 relative z-10 _r1">
+        <h3 class="font-f1 text-7xl md:text-[10rem] italic mb-4 _w1">Daily Wisdom.</h3>
+        <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-60">BY SALMAN FARIS</div>
     </footer>
 
     <script>
@@ -176,7 +172,6 @@
             window.addEventListener("scroll", () => {
                 const nav = document.getElementById("a1");
                 const current = window.pageYOffset;
-                // Keep background styling but remove the translate/hide logic
                 current > 10 ? nav.classList.add("_s1") : nav.classList.remove("_s1");
             });
 
