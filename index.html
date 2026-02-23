@@ -46,6 +46,13 @@
         ._sl1 { font-size: 11px; letter-spacing: .8em; text-transform: uppercase; font-family: Inter, sans-serif; opacity: .4; color: #ffffff; }
         ._bg1 { color: #C5A059; opacity: .9; text-shadow: 0 0 30px rgba(197, 160, 89, .3); }
         ._day-bright { color: #C5A059; text-shadow: 0 0 15px rgba(197, 160, 89, 0.5); opacity: 1 !important; }
+        
+        /* Refined floating animation for the scroll indicator */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.35; }
+            50% { transform: translateY(-8px); opacity: 0.6; }
+        }
+        ._float { animation: float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
@@ -53,7 +60,6 @@
     
     <nav id="a1" class="_n1 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
         <div id="nav-day" class="_day-bright text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">...</div>
-        <!-- Date updated to white/80 for clearer presence -->
         <div id="a2" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">...</div>
     </nav>
 
@@ -63,8 +69,9 @@
             <div class="text-center flex-grow flex flex-col justify-center items-center">
                 <h1 id="a4" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-none _r1" style="transition-delay:.2s"></h1>
             </div>
-            <div class="pb-32 _r1" style="transition-delay:.4s">
-                <div class="_sl1">Scroll Down</div>
+            <!-- Refined entrance and motion for "Scroll Down" -->
+            <div class="pb-32 _r1" style="transition-delay:.8s">
+                <div class="_sl1 _float">Scroll Down</div>
             </div>
         </section>
         <article id="a5" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 space-y-72"></article>
