@@ -112,11 +112,11 @@
             -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            padding: 6px 14px; /* Reduced padding */
-            border-radius: 16px; /* Slightly tighter radius */
-            font-size: 10px; /* Reduced font size */
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 10px;
             font-weight: 400;
-            letter-spacing: 0.08em; /* Adjusted tracking */
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -228,11 +228,6 @@
     let longPressed = false;
     const AUTOPLAY_DURATION = 5000; 
 
-    // Swipe handling state
-    let touchStartY = 0;
-    let touchEndY = 0;
-    const swipeThreshold = 50;
-
     function getLiveStats() {
         const now = new Date();
         let hours = now.getHours();
@@ -314,41 +309,8 @@
         }
     }
 
-    function handleFullscreen(action) {
-        if (action === 'enter') {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            }
-        } else if (action === 'exit') {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
-        }
-    }
-
-    function checkSwipe() {
-        const distance = touchStartY - touchEndY;
-        if (Math.abs(distance) > swipeThreshold) {
-            if (distance > 0) {
-                // Swipe Up
-                handleFullscreen('enter');
-            } else {
-                // Swipe Down
-                handleFullscreen('exit');
-            }
-            return true; // Was a swipe
-        }
-        return false;
-    }
-
-    function startPressTimer(e) {
+    function startPressTimer() {
         longPressed = false;
-        touchStartY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
-        
         pressTimer = setTimeout(() => {
             longPressed = true;
             toggleAutoplay();
@@ -356,17 +318,13 @@
         }, 600); 
     }
 
-    function endPressTimer(e) {
-        touchEndY = e.type.startsWith('touch') ? e.changedTouches[0].clientY : e.clientY;
-        
+    function endPressTimer() {
         if (pressTimer) {
             clearTimeout(pressTimer);
             pressTimer = null;
         }
-
-        const wasSwipe = checkSwipe();
         
-        if (!wasSwipe && !longPressed && !autoplayActive) {
+        if (!longPressed && !autoplayActive) {
             updateDisplay();
         }
         longPressed = false;
@@ -396,16 +354,16 @@
     // Desktop Events
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
-        startPressTimer(e);
+        startPressTimer();
     });
     document.addEventListener('mouseup', endPressTimer);
 
     // Mobile Events
     document.addEventListener('touchstart', (e) => {
-        startPressTimer(e);
+        startPressTimer();
     }, { passive: true });
     document.addEventListener('touchend', (e) => {
-        endPressTimer(e);
+        endPressTimer();
     }, { passive: true });
 
 })();
