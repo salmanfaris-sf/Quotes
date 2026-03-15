@@ -129,42 +129,9 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
-        /* Fullscreen Button Styles - Balanced Size */
-        #fs_btn {
-            position: fixed;
-            top: 22px;
-            right: 22px;
-            z-index: 1000;
-            background: transparent;
-            border: none;
-            color: #4a4a4a;
-            padding: 10px;
-            cursor: pointer;
-            transition: color 0.3s ease, transform 0.2s ease;
-            outline: none;
-        }
-
-        #fs_btn:hover {
-            color: #999;
-        }
-
-        #fs_btn:active {
-            transform: scale(0.92);
-        }
-
-        #fs_btn.hidden-fs {
-            display: none;
-        }
     </style>
 </head>
 <body>
-
-    <button id="fs_btn" title="Toggle Fullscreen">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
 
     <div id="notification">Autoplay On</div>
 
@@ -258,7 +225,6 @@
     const infoDisplay = document.getElementById('live_info');
     const mainContent = document.getElementById('main_content');
     const notification = document.getElementById('notification');
-    const fsBtn = document.getElementById('fs_btn');
     
     let firstInteraction = true;
     let quotePool = [];
@@ -371,25 +337,6 @@
         longPressed = false;
     }
 
-    function toggleFullscreen(e) {
-        e.stopPropagation(); 
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Error attempting to enable fullscreen: ${err.message}`);
-            });
-        } else {
-            document.exitFullscreen();
-        }
-    }
-
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-            fsBtn.classList.add('hidden-fs');
-        } else {
-            fsBtn.classList.remove('hidden-fs');
-        }
-    });
-
     window.onload = () => {
         refreshPool();
         const initial = quotePool.pop();
@@ -411,24 +358,18 @@
         });
     };
 
-    fsBtn.addEventListener('click', toggleFullscreen);
-    fsBtn.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
-
+    // Desktop Events
     document.addEventListener('mousedown', (e) => {
-        if (e.button !== 0 || e.target.closest('#fs_btn')) return;
+        if (e.button !== 0) return;
         startPressTimer();
     });
-    document.addEventListener('mouseup', (e) => {
-        if (e.target.closest('#fs_btn')) return;
-        endPressTimer();
-    });
+    document.addEventListener('mouseup', endPressTimer);
 
+    // Mobile Events
     document.addEventListener('touchstart', (e) => {
-        if (e.target.closest('#fs_btn')) return;
         startPressTimer();
     }, { passive: true });
     document.addEventListener('touchend', (e) => {
-        if (e.target.closest('#fs_btn')) return;
         endPressTimer();
     }, { passive: true });
 
