@@ -16,10 +16,9 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* DARK MODE DEFAULTS */
             --bg: #000;
             --text: #e5e7eb;
             --quote-font: 'Inter', sans-serif;
@@ -31,31 +30,9 @@
             --hint-color: #444;
             --btn-color: #555;
             --menu-bg: rgba(20, 20, 20, 0.9);
-            --menu-border: transparent;
-            --menu-line-height: 1px; /* THIN BY DEFAULT */
-            
+            --menu-line-height: 1px;
             --quote-size: 1rem;
             --quote-size-md: 1.125rem;
-        }
-
-        body.light-mode {
-            /* LIGHT MODE */
-            --bg: #ffffff;
-            --text: #1a1a1a;
-            --quote-font: 'Cormorant Garamond', serif;
-            --ui-font: 'Montserrat', sans-serif;
-            --weight-main: 600;
-            --weight-bold: 700;
-            --letter-spacing: -0.01em;
-            --line-height: 1.3;
-            --hint-color: #888;
-            --btn-color: #000; /* BLACK COLOR FOR LIGHT MODE */
-            --menu-bg: rgba(255, 255, 255, 0.98);
-            --menu-border: rgba(0, 0, 0, 0.08);
-            --menu-line-height: 1px; /* EXACTLY THE SAME THIN SHAPE */
-
-            --quote-size: 1.15rem; 
-            --quote-size-md: 1.3rem; 
         }
 
         html, body {
@@ -65,7 +42,6 @@
             background-color: var(--bg);
             overflow: hidden;
             touch-action: none;
-            transition: background-color 0.5s ease;
         }
 
         body {
@@ -103,7 +79,7 @@
         }
 
         #g4x_txt {
-            transition: opacity 0.5s ease, font-size 0.5s ease, color 0.5s ease;
+            transition: opacity 0.5s ease;
             white-space: pre-wrap;
             margin-bottom: 8px; 
             font-family: var(--quote-font);
@@ -114,9 +90,7 @@
         }
 
         @media (min-width: 768px) {
-            #g4x_txt {
-                font-size: var(--quote-size-md);
-            }
+            #g4x_txt { font-size: var(--quote-size-md); }
         }
 
         #live_info {
@@ -150,7 +124,7 @@
             top: 40px;
             left: 50%;
             transform: translateX(-50%) translateY(-10px);
-            background: rgba(20, 20, 20, 0.9);
+            background: rgba(30, 30, 30, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
@@ -179,6 +153,13 @@
             align-items: flex-end;
             z-index: 110;
             pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Logic to hide menu in fullscreen */
+        .is-fullscreen .menu-wrapper {
+            opacity: 0;
+            pointer-events: none;
         }
 
         #menu_btn {
@@ -205,20 +186,15 @@
             transform-origin: center; 
         }
 
-        #menu_btn.open .line-1 {
-            transform: translateY(3px) rotate(45deg);
-        }
-
-        #menu_btn.open .line-2 {
-            transform: translateY(-3px) rotate(-45deg);
-        }
+        #menu_btn.open .line-1 { transform: translateY(3px) rotate(45deg); }
+        #menu_btn.open .line-2 { transform: translateY(-3px) rotate(-45deg); }
 
         #options_panel {
             pointer-events: auto;
             background: var(--menu-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 0.5px solid var(--menu-border);
+            border: none;
             border-radius: 16px;
             padding: 8px;
             display: flex;
@@ -249,10 +225,10 @@
             white-space: nowrap;
         }
 
-        .menu-item:hover { background: rgba(128,128,128,0.1); }
+        .menu-item:hover { background: rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="light-mode">
+<body>
 
     <div id="notification">Autoplay On</div>
 
@@ -264,7 +240,6 @@
         <div id="options_panel">
             <div class="menu-item" id="btn_fullscreen">Full Screen</div>
             <div class="menu-item" id="btn_autoplay">Autoplay</div>
-            <div class="menu-item" id="btn_mode">Dark mode</div>
         </div>
     </div>
 
@@ -326,14 +301,13 @@
         { t: "Habits decide outcomes." },
         { t: "Growth requires discomfort." },
         { t: "Sweat more in practice. Bleed less in war." },
-        { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it—it was the result of all the hits that happened before it." },
+        { t: "When you feel like nothing is going your way, look at a person breaking a stone. It's the 101st hit that breaks it—the result of all that happened before." },
         { t: "It always seems impossible until it's done." },
         { t: "Focus is a superpower in a distracted world." },
         { t: "Weakness leaves when discipline enters." },
         { t: "Strength is built through patience." },
         { t: "Be strict with yourself." },
         { t: "Zero Excuses." },
-        { t: "You already know what to do. You just don’t like the cost." },
         { t: "The brain will invent reasons to avoid pain, even when pain is the only path forward." },
         { t: "Every wasted year makes the next one heavier." },
         { t: "Do it the moment you remember it." },
@@ -345,9 +319,6 @@
         { t: "Leave a legacy. Let your life be a story of courage, action, and impact." },
         { t: "NOW.\nWaiting won’t help.\nOverthinking won’t help.\nAction will.\nDo it." },
         { t: "Lower your gaze, guard your tongue, and protect your heart." },
-        { t: "Your current life is the result of past actions. Your future will be the result of today's actions." },
-        { t: "The man who keeps walking will eventually leave the place he hates." },
-        { t: "A few years of sacrifice can create a lifetime of freedom." },
         { t: "Your future is built by what you do after a long tiring day." },
         { t: "Speak clearly. Stand straight. Fear none."},
         { t: "Its what's inside that matters." }
@@ -361,14 +332,12 @@
     const menuBtn = document.getElementById('menu_btn');
     const optionsPanel = document.getElementById('options_panel');
     const btnAutoplay = document.getElementById('btn_autoplay');
-    const btnMode = document.getElementById('btn_mode');
     const btnFullscreen = document.getElementById('btn_fullscreen');
     
     let firstInteraction = true;
     let quotePool = [];
     let liveInterval = null;
     let autoplayActive = false;
-    let isLightMode = true;
     let autoplayInterval = null;
     let pressTimer = null;
     let longPressed = false;
@@ -421,22 +390,24 @@
         else clearInterval(autoplayInterval);
     }
 
-    function toggleMode() {
-        isLightMode = !isLightMode;
-        document.body.classList.toggle('light-mode', isLightMode);
-        btnMode.innerText = isLightMode ? "Dark mode" : "Light mode";
-        showNotification(isLightMode ? "Light mode" : "Dark mode");
-    }
-
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                showNotification("Fullscreen not supported");
-            });
+            document.documentElement.requestFullscreen().catch(() => showNotification("Fullscreen error"));
         } else {
             if (document.exitFullscreen) document.exitFullscreen();
         }
     }
+
+    // Handle button hiding logic
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            document.body.classList.add('is-fullscreen');
+            optionsPanel.classList.remove('open');
+            menuBtn.classList.remove('open');
+        } else {
+            document.body.classList.remove('is-fullscreen');
+        }
+    });
 
     menuBtn.addEventListener('click', (e) => { 
         e.stopPropagation(); 
@@ -445,8 +416,7 @@
     });
 
     btnAutoplay.addEventListener('click', (e) => { e.stopPropagation(); toggleAutoplay(); optionsPanel.classList.remove('open'); menuBtn.classList.remove('open'); });
-    btnMode.addEventListener('click', (e) => { e.stopPropagation(); toggleMode(); optionsPanel.classList.remove('open'); menuBtn.classList.remove('open'); });
-    btnFullscreen.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); optionsPanel.classList.remove('open'); menuBtn.classList.remove('open'); });
+    btnFullscreen.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
 
     window.onload = () => {
         refreshPool();
@@ -458,9 +428,8 @@
     };
 
     document.addEventListener('mousedown', (e) => { 
-        if (e.button === 0 && !e.target.closest('.menu-wrapper')) {
-            pressTimer = setTimeout(() => { longPressed = true; toggleAutoplay(); }, 600);
-        }
+        if (e.target.closest('.menu-wrapper')) return;
+        pressTimer = setTimeout(() => { longPressed = true; toggleAutoplay(); }, 600);
     });
 
     document.addEventListener('mouseup', () => { 
@@ -470,9 +439,8 @@
     });
 
     document.addEventListener('touchstart', (e) => { 
-        if (!e.target.closest('.menu-wrapper')) {
-            pressTimer = setTimeout(() => { longPressed = true; toggleAutoplay(); }, 600);
-        }
+        if (e.target.closest('.menu-wrapper')) return;
+        pressTimer = setTimeout(() => { longPressed = true; toggleAutoplay(); }, 600);
     }, { passive: true });
 
     document.addEventListener('touchend', () => { 
