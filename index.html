@@ -16,11 +16,12 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000;
             --text: #e5e7eb;
+            --glass: rgba(25, 25, 25, 0.9);
         }
 
         html, body {
@@ -74,12 +75,12 @@
 
         #live_info {
             font-size: 13px;
-            color: #777;
+            color: #888;
             font-weight: 300;
             letter-spacing: 0.05em;
             transition: opacity 0.5s ease;
             line-height: 1.6;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .tap-hint {
@@ -94,7 +95,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 6px; /* Reduced distance */
         }
 
         .hidden-hint {
@@ -104,41 +105,149 @@
 
         #notification {
             position: fixed;
-            top: 40px;
+            bottom: 110px;
             left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            background: rgba(20, 20, 20, 0.9);
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            padding: 6px 14px;
-            border-radius: 16px;
+            padding: 8px 18px;
+            border-radius: 20px;
             font-size: 10px;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
-            z-index: 100;
-            border: none;
+            z-index: 3000;
         }
 
         #notification.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
+
+        #menu_panel {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%) translateY(180%);
+            width: fit-content;
+            min-width: 260px;
+            background: var(--glass);
+            backdrop-filter: blur(40px) saturate(1.8);
+            -webkit-backdrop-filter: blur(40px) saturate(1.8);
+            border: none;
+            z-index: 2000;
+            padding: 6px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9);
+        }
+
+        #menu_panel.open {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .menu-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 0 4px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 100px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .menu-item:active {
+            background: rgba(255, 255, 255, 0.06);
+            transform: scale(0.95);
+        }
+
+        .menu-label {
+            font-size: 8px;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .menu-action {
+            font-size: 11px;
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        #swipe_indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #333;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            opacity: 0;
+        }
+
+        /* Menu Overlay - No background dimming requested */
+        #menu_overlay {
+            position: fixed;
+            inset: 0;
+            background: transparent;
+            visibility: hidden;
+            z-index: 1500;
+        }
+        #menu_overlay.visible {
+            visibility: visible;
+        }
     </style>
 </head>
-<body>
+<body id="body">
 
-    <div id="notification">Autoplay On</div>
+    <div id="notification">Action Performed</div>
+    <div id="menu_overlay"></div>
 
     <div class="container fade-entrance" id="main_content">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
         <div id="live_info" class="opacity-0"></div>
         <div id="hint" class="tap-hint opacity-0">TAP TO VIEW NEXT QUOTE</div>
+    </div>
+
+    <div id="swipe_indicator">Swipe up for menu</div>
+
+    <div id="menu_panel">
+        <div class="menu-item" id="btn_autoplay">
+            <span class="menu-label">Autoplay</span>
+            <span class="menu-action" id="autoplay_status">OFF</span>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-item" id="btn_fullscreen">
+            <span class="menu-label">Display</span>
+            <span class="menu-action" id="fs_status">FULLSCREEN</span>
+        </div>
     </div>
 
 <script>
@@ -193,7 +302,7 @@
         { t: "Habits decide outcomes." },
         { t: "Growth requires discomfort." },
         { t: "Sweat more in practice. Bleed less in war." },
-        { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it—it was the result of all the hits that happened before it." },
+        { t: "Consistency is key." },
         { t: "It always seems impossible until it's done." },
         { t: "Focus is a superpower in a distracted world." },
         { t: "Weakness leaves when discipline enters." },
@@ -225,23 +334,28 @@
     const infoDisplay = document.getElementById('live_info');
     const mainContent = document.getElementById('main_content');
     const notification = document.getElementById('notification');
+    const menu = document.getElementById('menu_panel');
+    const overlay = document.getElementById('menu_overlay');
+    const apStatus = document.getElementById('autoplay_status');
+    const fsStatus = document.getElementById('fs_status');
+    const swipeIndicator = document.getElementById('swipe_indicator');
     
     let firstInteraction = true;
     let quotePool = [];
     let liveInterval = null;
     let autoplayActive = false;
     let autoplayInterval = null;
-    let pressTimer = null;
-    let longPressed = false;
     const AUTOPLAY_DURATION = 5000; 
+
+    let touchStartY = 0;
+    let isMenuOpen = false;
 
     function getLiveStats() {
         const now = new Date();
         let hours = now.getHours();
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
+        hours = hours % 12 || 12;
         const timeStr = `${hours}:${minutes} ${ampm}`;
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
         const diff = endOfDay - now;
@@ -261,15 +375,11 @@
     function showNotification(text) {
         notification.innerText = text;
         notification.classList.add('show');
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 1800);
+        setTimeout(() => notification.classList.remove('show'), 1800);
     }
 
     function updateDisplay() {
-        if (quotePool.length === 0) {
-            refreshPool();
-        }
+        if (quotePool.length === 0) refreshPool();
 
         const nextQuote = quotePool.pop();
         display.style.opacity = '0';
@@ -277,12 +387,10 @@
         
         if (firstInteraction) {
             hintArea.classList.add('hidden-hint');
+            swipeIndicator.style.opacity = '0'; 
         }
         
-        if (liveInterval) {
-            clearInterval(liveInterval);
-            liveInterval = null;
-        }
+        if (liveInterval) { clearInterval(liveInterval); liveInterval = null; }
 
         setTimeout(() => {
             display.innerText = nextQuote.t;
@@ -304,38 +412,78 @@
         }, 300);
     }
 
-    function toggleAutoplay() {
+    function openMenu() {
+        isMenuOpen = true;
+        menu.classList.add('open');
+        overlay.classList.add('visible');
+        swipeIndicator.style.opacity = '0'; 
+    }
+
+    function closeMenu() {
+        isMenuOpen = false;
+        menu.classList.remove('open');
+        overlay.classList.remove('visible');
+    }
+
+    function toggleAutoplay(e) {
+        e.stopPropagation();
         autoplayActive = !autoplayActive;
+        apStatus.innerText = autoplayActive ? "ON" : "OFF";
+        apStatus.style.color = autoplayActive ? "#4ADE80" : "#FFF";
         if (autoplayActive) {
-            showNotification("Autoplay On");
-            if (autoplayInterval) clearInterval(autoplayInterval);
             autoplayInterval = setInterval(updateDisplay, AUTOPLAY_DURATION);
+            showNotification("Autoplay Started");
         } else {
-            showNotification("Autoplay Off");
-            if (autoplayInterval) clearInterval(autoplayInterval);
+            clearInterval(autoplayInterval);
+            showNotification("Autoplay Stopped");
         }
     }
 
-    function startPressTimer() {
-        longPressed = false;
-        pressTimer = setTimeout(() => {
-            longPressed = true;
-            toggleAutoplay();
-            pressTimer = null;
-        }, 600); 
+    function toggleFullscreen(e) {
+        e.stopPropagation();
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {
+                showNotification("Denied");
+            });
+            fsStatus.innerText = "EXIT";
+        } else {
+            document.exitFullscreen();
+            fsStatus.innerText = "FULLSCREEN";
+        }
     }
 
-    function endPressTimer() {
-        if (pressTimer) {
-            clearTimeout(pressTimer);
-            pressTimer = null;
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaY = touchStartY - touchEndY;
+
+        if (deltaY > 60 && !isMenuOpen) {
+            openMenu();
+            return;
         }
-        
-        if (!longPressed && !autoplayActive) {
-            updateDisplay();
+
+        if (deltaY < -60 && isMenuOpen) {
+            closeMenu();
+            return;
         }
-        longPressed = false;
-    }
+
+        if (Math.abs(deltaY) < 10) {
+            if (isMenuOpen) {
+                if (!menu.contains(e.target)) {
+                    closeMenu();
+                }
+            } else {
+                updateDisplay();
+            }
+        }
+    }, { passive: true });
+
+    overlay.onclick = closeMenu;
+    document.getElementById('btn_autoplay').onclick = toggleAutoplay;
+    document.getElementById('btn_fullscreen').onclick = toggleFullscreen;
 
     window.onload = () => {
         refreshPool();
@@ -353,25 +501,20 @@
             setTimeout(() => {
                 if (firstInteraction) {
                     hintArea.classList.remove('opacity-0');
+                    swipeIndicator.style.opacity = '1'; 
                 }
             }, 1000);
         });
     };
 
-    // Desktop Events
-    document.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        startPressTimer();
+    // Update button text if fullscreen state changes via system/keys
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            fsStatus.innerText = "FULLSCREEN";
+        } else {
+            fsStatus.innerText = "EXIT";
+        }
     });
-    document.addEventListener('mouseup', endPressTimer);
-
-    // Mobile Events
-    document.addEventListener('touchstart', (e) => {
-        startPressTimer();
-    }, { passive: true });
-    document.addEventListener('touchend', (e) => {
-        endPressTimer();
-    }, { passive: true });
 
 })();
 </script>
