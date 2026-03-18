@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Distance Sign</title>
+    <title>Distance Sign - Fullscreen Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
@@ -190,7 +190,6 @@
     <div id="ui-panel-overlay">
         <div id="ui-panel">
             <label class="ios-label">Enter Text</label>
-            <!-- Default text removed to allow fast entry -->
             <textarea id="text-input" class="ios-input" rows="1" placeholder="Type message here..."></textarea>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
@@ -295,6 +294,19 @@
             }
         }
 
+        function requestFullScreen() {
+            const de = document.documentElement;
+            if (de.requestFullscreen) {
+                de.requestFullscreen();
+            } else if (de.mozRequestFullScreen) {
+                de.mozRequestFullScreen();
+            } else if (de.webkitRequestFullscreen) {
+                de.webkitRequestFullscreen();
+            } else if (de.msRequestFullscreen) {
+                de.msRequestFullscreen();
+            }
+        }
+
         function animate(currentTime) {
             if (!lastTime) {
                 lastTime = currentTime;
@@ -351,6 +363,7 @@
         };
 
         doneBtn.onclick = () => {
+            requestFullScreen();
             isStarted = true;
             wrapper.style.opacity = "1";
             overlay.classList.add('hidden-panel');
