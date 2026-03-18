@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Distance Sign Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #FFD700; 
+            --panel-blur: 40px;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #rotation-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vh; 
+            height: 100vw;
+            transform: translate(-50%, -50%) rotate(90deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 5;
+            transition: opacity 0.3s ease;
+            opacity: 0; 
+        }
+
+        #ticker-container {
+            display: flex;
+            white-space: nowrap;
+            will-change: transform;
+            position: absolute;
+            left: 0;
+        }
+
+        .ticker-text {
+            color: var(--text-color);
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            word-spacing: 0.3em;
+            display: inline-block;
+        }
+
+        #menu-trigger {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 101;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #ui-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(var(--panel-blur));
+            -webkit-backdrop-filter: blur(var(--panel-blur));
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        #ui-panel {
+            background: rgba(30, 30, 32, 0.95);
+            width: 100%;
+            max-width: 440px;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            padding: 1.5rem 1.25rem 2rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .hidden-panel {
+            background: transparent !important;
+            backdrop-filter: blur(0px) !important;
+            -webkit-backdrop-filter: blur(0px) !important;
+            pointer-events: none;
+        }
+
+        .hidden-panel #ui-panel { transform: translateY(100%); }
+
+        .ios-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .ios-input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 17px;
+            width: 100%;
+            outline: none;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .control-row {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .mode-pill {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: 0.2s;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+        }
+
+        .mode-pill.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .color-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .color-dot.active { border-color: white; transform: scale(1.2); }
+
+        .ios-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+        }
+
+        .ios-switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider-switch {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .slider-switch:before {
+            position: absolute;
+            content: "";
+            height: 22px; width: 22px;
+            left: 2px; bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-switch { background-color: #34C759; }
+        input:checked + .slider-switch:before { transform: translateX(20px); }
+
+        input[type="range"].ios-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type="range"].ios-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px; height: 24px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        #done-btn {
+            background: #ffffff; color: #000000;
+            width: 100%; padding: 16px;
+            border-radius: 18px; font-weight: 800; font-size: 17px;
+            margin-top: 8px;
+            transition: transform 0.1s active;
+        }
+
+        #done-btn:active { transform: scale(0.98); }
+
+        .is-blank #rotation-wrapper, .is-blank #menu-trigger {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="rotation-wrapper">
+        <div id="ticker-container">
+            <div id="scroller" class="ticker-text">DISTANCE SIGN PRO</div>
+        </div>
+    </div>
+
+    <button id="menu-trigger">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <div id="ui-panel-overlay">
+        <div id="ui-panel">
+            <label class="ios-label">Enter Text</label>
+            <textarea id="text-input" class="ios-input" rows="1">DISTANCE SIGN PRO</textarea>
+
+            <div class="control-row mb-4">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-white text-[14px] font-semibold">Blank Screen on Hold</span>
+                    <label class="ios-switch">
+                        <input type="checkbox" id="blank-toggle">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+                <p class="text-[10px] text-gray-400 leading-tight">Hold main screen to hide text. Starts disabled.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="ios-label">Animation Mode</label>
+                    <div class="flex bg-white/5 rounded-2xl p-1">
+                        <div id="m-loop" class="mode-pill active">Loop</div>
+                        <div id="m-once" class="mode-pill">Once</div>
+                        <div id="m-still" class="mode-pill">Still</div>
+                    </div>
+                </div>
+                <div>
+                    <label class="ios-label">Color</label>
+                    <div class="flex justify-between items-center px-1 py-1" id="color-picker">
+                        <div class="color-dot bg-white" data-color="#FFFFFF"></div>
+                        <div class="color-dot bg-yellow-400 active" data-color="#FFD700"></div>
+                        <div class="color-dot bg-red-500" data-color="#EF4444"></div>
+                        <div class="color-dot bg-green-500" data-color="#22C55E"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-row mb-4">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <div class="flex justify-between text-[11px] font-bold text-gray-400 mb-2 uppercase"><span>Speed</span></div>
+                        <input type="range" id="speed-slider" class="ios-slider" min="0" max="100" value="30">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[11px] font-bold text-gray-400 mb-2 uppercase"><span>Size</span></div>
+                        <input type="range" id="size-slider" class="ios-slider" min="10" max="120" value="80">
+                    </div>
+                </div>
+            </div>
+
+            <button id="done-btn">Done</button>
+        </div>
+    </div>
+
+    <script>
+        const wrapper = document.getElementById('rotation-wrapper');
+        const container = document.getElementById('ticker-container');
+        const scroller = document.getElementById('scroller');
+        const overlay = document.getElementById('ui-panel-overlay');
+        const speedSlider = document.getElementById('speed-slider');
+        const sizeSlider = document.getElementById('size-slider');
+        const textInput = document.getElementById('text-input');
+        const blankToggle = document.getElementById('blank-toggle');
+        const menuTrigger = document.getElementById('menu-trigger');
+        const doneBtn = document.getElementById('done-btn');
+
+        let xPos = window.innerHeight;
+        let speedValue = 30;
+        let lastTime = 0;
+        let isHolding = false;
+        let currentMode = 'loop';
+        let hasFinishedOnce = false;
+        let isStarted = false;
+
+        function updateSettings() {
+            scroller.textContent = textInput.value || " ";
+            scroller.style.fontSize = sizeSlider.value + "vw";
+            speedValue = speedSlider.value;
+            
+            // Reset position logic
+            hasFinishedOnce = false;
+            if (currentMode === 'still') {
+                xPos = 0;
+            } else {
+                xPos = window.innerHeight;
+            }
+            container.style.transform = `translate3d(${xPos}px, 0, 0)`;
+        }
+
+        function enterFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        }
+
+        function animate(currentTime) {
+            if (!lastTime) {
+                lastTime = currentTime;
+                requestAnimationFrame(animate);
+                return;
+            }
+            const delta = currentTime - lastTime;
+            lastTime = currentTime;
+
+            if (isStarted && !isHolding && currentMode !== 'still' && !hasFinishedOnce) {
+                const speed = (speedValue / 100) * 0.8;
+                if (speed > 0) {
+                    xPos -= speed * delta;
+                    
+                    const textWidth = scroller.offsetWidth;
+                    
+                    // Reset condition
+                    if (xPos < -textWidth) {
+                        if (currentMode === 'loop') {
+                            xPos = window.innerHeight;
+                            hasFinishedOnce = false; // Explicitly ensure false for loop
+                        } else {
+                            xPos = -textWidth;
+                            hasFinishedOnce = true;
+                        }
+                    }
+                    container.style.transform = `translate3d(${xPos}px, 0, 0)`;
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('touchstart', (e) => {
+            if (!blankToggle.checked || !isStarted) return;
+            if (e.target.closest('#menu-trigger') || !overlay.classList.contains('hidden-panel')) return;
+            isHolding = true;
+            document.body.classList.add('is-blank');
+        });
+
+        window.addEventListener('touchend', () => {
+            isHolding = false;
+            document.body.classList.remove('is-blank');
+        });
+
+        menuTrigger.onclick = (e) => { 
+            e.stopPropagation(); 
+            overlay.classList.remove('hidden-panel'); 
+        };
+
+        doneBtn.onclick = () => {
+            isStarted = true;
+            wrapper.style.opacity = "1";
+            overlay.classList.add('hidden-panel');
+            enterFullScreen();
+            updateSettings(); 
+        };
+
+        overlay.onclick = (e) => { 
+            if(e.target === overlay) overlay.classList.add('hidden-panel'); 
+        };
+
+        const modes = {
+            'loop': document.getElementById('m-loop'),
+            'once': document.getElementById('m-once'),
+            'still': document.getElementById('m-still')
+        };
+
+        Object.keys(modes).forEach(m => {
+            modes[m].onclick = () => {
+                currentMode = m;
+                Object.values(modes).forEach(el => el.classList.remove('active'));
+                modes[m].classList.add('active');
+                updateSettings();
+            }
+        });
+
+        document.querySelectorAll('.color-dot').forEach(dot => {
+            dot.onclick = () => {
+                document.querySelector('.color-dot.active').classList.remove('active');
+                dot.classList.add('active');
+                document.documentElement.style.setProperty('--text-color', dot.dataset.color);
+            };
+        });
+
+        speedSlider.oninput = () => { speedValue = speedSlider.value; };
+        sizeSlider.oninput = () => { scroller.style.fontSize = sizeSlider.value + "vw"; };
+        textInput.oninput = () => { scroller.textContent = textInput.value || " "; };
+
+        updateSettings();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
+
