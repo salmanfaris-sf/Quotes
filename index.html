@@ -89,11 +89,13 @@ body {
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 <main class="relative w-full">
-  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
+  <!-- Section height is 100vh, we use flex-col and padding to lift the scroll hint -->
+  <section class="h-screen flex flex-col items-center justify-between px-6 pt-24 pb-20 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
       <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:.2s"></h1>
     </div>
-    <div id="sd" class="py-12 z1" style="transition-delay:.8s">
+    <!-- Adjusted container for the scroll down hint to be higher up from the bottom -->
+    <div id="sd" class="z1 flex justify-center items-center" style="transition-delay:.8s">
       <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
@@ -195,7 +197,6 @@ body {
     const spans = document.querySelectorAll(".hi");
     const centerY = vh * 0.5;
     
-    // We find the one sentence that is closest to the center of the screen
     let activeSpan = null;
     let minDistance = Infinity;
 
@@ -211,7 +212,6 @@ body {
     });
 
     spans.forEach(span => {
-      // Only highlight if it's the closest one AND it's reasonably near the center
       if (span === activeSpan && minDistance < vh * 0.4) {
         span.classList.add("active");
       } else {
