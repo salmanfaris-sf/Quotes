@@ -89,13 +89,13 @@ body {
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 <main class="relative w-full">
-  <!-- Section height is 100vh, we use flex-col and padding to lift the scroll hint -->
-  <section class="h-screen flex flex-col items-center justify-between px-6 pt-24 pb-20 relative z-10">
+  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <!-- Heading remains in its exact original centered position -->
       <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:.2s"></h1>
     </div>
-    <!-- Adjusted container for the scroll down hint to be higher up from the bottom -->
-    <div id="sd" class="z1 flex justify-center items-center" style="transition-delay:.8s">
+    <!-- Scroll Down indicator moved further up (pb-40 instead of pb-12/32) without affecting heading position -->
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:.8s">
       <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
