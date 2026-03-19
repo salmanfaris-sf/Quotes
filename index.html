@@ -1,39 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050505">
-<title>Daily Wisdom</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},colors:{c1:'#050505',c2:'#C5A059',eye:'#B8B8B0'}}}}</script>
-<style>html,body{height:100%;margin:0;background-color:#050505;color:#d1d1d1;scroll-behavior:smooth;display:flex;flex-direction:column;font-smoothing:antialiased;overflow-x:hidden}.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}.z0.zs{background-color:rgba(5,5,5,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}.z2{position:fixed;top:50%;left:50%;width:100vw;height:100vw;background:radial-gradient(circle,rgba(255,255,255,.02) 0,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}.zi{text-indent:12rem}@media(max-width:768px){.zi{text-indent:0}}.zw{color:#ececec;text-shadow:0 0 20px rgba(255,255,255,.1)}.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:.4;color:#fff}.zb{color:#C5A059;opacity:.9;text-shadow:0 0 30px rgba(197,160,89,.3)}.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,.5)}@keyframes flash{0%,100%{opacity:.1}50%{opacity:.7}}.zf{animation:flash 2s ease-in-out infinite}#sd{transition:opacity .5s ease,visibility .5s}.hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:.15;color:#B8B8B0}.hi.active{opacity:1;color:#fff;text-shadow:0 0 15px rgba(255,255,255,0.4)}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Quotes.</title>
+    <meta name="theme-color" content="#000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1K1TKBQFFK');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --text: #e5e7eb;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .fade-entrance {
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-entrance.visible {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(-10px);
+        }
+
+        #g4x_txt {
+            transition: opacity 0.5s ease;
+            white-space: pre-wrap;
+            margin-bottom: 8px; 
+        }
+
+        #live_info {
+            font-size: 13px;
+            color: #777;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            transition: opacity 0.5s ease;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .tap-hint {
+            font-size: 10px;
+            color: #444;
+            transition: opacity 0.8s ease;
+            white-space: nowrap;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            pointer-events: none;
+            min-height: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .hidden-hint {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        #notification {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 100;
+            border: none;
+        }
+
+        #notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
 </head>
 <body>
-<div class="z2"></div>
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-<div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">...</div>
-<div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">...</div>
-</nav>
-<main class="flex-grow">
-<section class="min-h-screen flex flex-col items-center justify-center px-6 relative z-10">
-<div class="h-10"></div>
-<div class="text-center flex-grow flex flex-col justify-center items-center">
-<h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-none z1" style="transition-delay:.2s"></h1>
-</div>
-<div id="sd" class="pb-32 z1" style="transition-delay:.8s">
-<div class="zs1 zf">Scroll Down</div>
-</div>
-</section>
-<article id="m0" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 space-y-72"></article>
-</main>
-<footer class="w-full flex justify-end px-12 py-12 relative z-10 z1">
-<div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-40">&mdash; BY SALMAN FARIS</div>
-</footer>
-<script>(function(){const _k=['True Faith','Pure Soul','Clear Path','Strong Will','Firm Deed'],_v=[['RG8gbm90IGJlIGFmcmFpZCBvZiB3aGF0IHBlb3BsZSB0aGluay4gSWYgeW91IGZlYXIgQWxsYWgsIHlvdSB3aWxsIG5vdCBmZWFyIGFueSBtYW4uIFBlb3BsZSdzIHdvcmRzIGNhbm5vdCBraWxsIHlvdS4gRG8gbm90IGxpc3RlbiB0byB0aGVtLiBMaXN0ZW4gdG8geW91ciBDcmVhdG9yIGluc3RlYWQuIFN0YW5kIHRhbGwuIEJlIHN0cm9uZyBpbiB5b3VyIGZhaXRoLiBBbHdheXMgZG8gd2hhdCBpcyByaWdodC4=','WW91ciB3b3J0aCBpcyBhYm91dCB5b3VyIGdvb2QgYWN0aW9ucywgbm90IGhvdyB5b3UgbG9vay4gQWxsYWggZG9lcyBub3QgY2FyZSBhYm91dCB5b3VyIGZhY2Ugb3IgeW91ciBib2R5LiBIZSBsb29rcyBhdCB5b3VyIGhlYXJ0LiBTdG9wIHdhc3RpbmcgdGltZSBoYXRpbmcgeW91cnNlbGYuIElmIHlvdSBwbGVhc2UgQWxsYWgsIHRoZSB3b3JkcyBvZiBvdGhlcnMgZG8gbm90IG1hdHRlci4=','VGhlIGJlc3Qgd2F5IHRvIGxpdmUgaXMgdG8gb2JleSBBbGxhaC4gV2l0aG91dCBIaW0sIHlvdSBoYXZlIG5vdGhpbmcuIFdpdGggSmltLCB5b3UgaGF2ZSBldmVyeXRoaW5nLiBMaXZlIHdpdGggYSBjbGVhciBnb2FsLiBTZWVrIHRvIHBsZWFzZSB0aGUgT25lIHdobyBtYWRlIHlvdS4gRG8gbm90IHdhaXQgZm9yIHBlb3BsZSB0byBsb3ZlIHlvdS4=','U2hhaXRhbiBpcyB5b3VyIG9idmlvdXMgZW5lbXkuIEhlIHdhbnRzIHlvdSB0byBzbGVlcCBhbGwgZGF5LiBIZSB3YW50cyB5b3UgdG8gYmUgbGF6eS4gSGUgd2FudHMgeW91IHRvIHdhc3RlIHlvdXIgbGlmZSBvbiB5b3VyIHBob25lLiBGaWdodCBoaW0uIEdldCB1cCBub3cuIFN0YXJ0IHlvdXIgd29yay4gQSBzdHJvbmcgcGVyc29uIGlzIGFsd2F5cyBiZXR0ZXIgdGhhbiBhIHdlYWsgb25lLg==','RG8gbm90IGJlIHNhZCBhYm91dCBhIGpvYiB0aGF0IGlzIGhhcmQuIEl0IGlzIGEgd2F5IHRvIGxlYXJuIGhvdyB0byBiZSBzdHJvbmcuIFdvcmsgdG8gZmVlZCB5b3VyIGZhbWlseS4gVXNlIHlvdXIgZnJlZSB0aW1lIHRvIGJ1aWxkIHlvdXIgZHJlYW0uIEFsbGFoIHNlZXMgZXZlcnkgc3RlcCB5b3UgdGFrZS4gWW91ciBoYXJkIHdvcmsgaXMgbmV2ZXIgd2FzdGVkLg=='],['QmUgc3Ryb25nIGJ5IHNheWluZyBubyB0byBiYWQgdGhpbmdzLiBEbyB3aGF0IGlzIGdvb2QgZXZlbiB3aGVuIGl0IGZlZWxzIGhhcmQuIElmIHlvdSBjYW4gY29udHJvbiB5b3Vyc2VsZiwgeW91IGNhbiB3aW4uIFN0b3Agd2FpdGluZyBmb3IgdGhlIHJpZ2h0IHRpbWUuIEdldCB0byB3b3JrIG5vdy4gVHJ1ZSBwb3dlciBjb21lcyBmcm9tIGZvbGxvd2luZyB0aGUgbGF3cyBvZiBBbGxhaC4=','RGlzY2lwbGluZSBtYWtlcyB5b3Ugc3BlY2lhbC4gSWYgeW91IGNhbm5vdCBydWxlIHlvdXIgZGF5LCBvdGhlcnMgd2lsbCBkbyBpdCBmb3IgeW91LiBBIHF1aWV0IG1hbiB3aG8gcHJheXMgRmFqciBoYXMgYWxyZWFkeSB3b24uIEJ1aWxkIHlvdXIgZGF5IGFyb3VuZCB5b3VyIHByYXllcnMsIG5vdCB5b3VyIHNsZWVwLiBTdHJlbmd0aCBjb21lcyBmcm9tIGhhcmQgd29yay4=','WW91ciB0aW1lIGlzIG1vcmUgaW1wb3J0YW50IHRoYW4gbW9uZXkuIEEgc2Vjb25kIGxvc3QgaXMgZ29uZSBmb3JldmVyLiBTdG9wIGxvb2tpbmcgYXQgeW91ciBzY3JlZW4gYWxsIGRheS4gU3RvcCB3YWl0aW5nIGZvciBoZWxwLiBTaGFpdGFuIGxvdmVzIGl0IHdoZW4geW91IHB1dCBvZmYgd29yay4gQmUgZmFzdC4gQmUgc21hcnQuIEV2ZXJ5IG1vbWVudCBpcyBhIGdpZnQu','WW91ciBnb2FsIGlzIGEgcHJvbWlzZSB0byB5b3Vyc2VsZi4gRG8gbm90IGJyZWFrIGl0IGp1c3QgYmVjYXVzZSB5b3UgYXJlIHRpcmVkLiBXYWtlIHVwIGVhcmx5LiBTdGF5IGxhdGUuIFRoZSBoYXJkIHdvcmsgaXMgd2hlcmUgeW91ciBzb3VsIGlzIHRlc3RlZC4gQWxsYWggbG92ZXMgdGhlIHBlcnNvbiB3aG8gdHJpZXMgdG8gYmUgdGhlIGJlc3QuIEJlIGdvb2QgaW4gZXZlcnl0aGluZy4=','U3RvcCB3YWl0aW5nIGZvciBwZW9wbGUgdG8gc2F5IHlvdSBhcmUgZ29vZC4gT25seSB0aGUgd29yZHMgb2YgQWxsYWggbWF0dGVyIGluIHRoZSBlbmQuIEJlIGEgYnJhdmUgbWFuIGluIHB1YmxpYyBhbmQgYSBodW1ibGUgc2VydmFudCBpbiBwcml2YXRlLiBZb3VyIHJlYWwgd29ydGggaXMgaW4geW91ciBmYWl0aCwgbm90IGluIHlvdXIgYmFuayBhY2NvdW50Lg=='],['VHJ1c3QgQWxsYWggd2hlbiBsaWZlIGlzIGhhcmQuIFNheSBBbGhhbWR1bGlsbGFoIGV2ZW4gaW4gdGhlIG1pZGRsZSBvZiBhIHByb2JsZW0uIFlvdSBidWlsZCB5b3VyIGhlYXJ0IGJ5IHByYXlpbmcgZXZlcnkgZGF5LiBTdG9wIGNvbXBsYWluaW5nLiBTdGFydCBidWlsZGluZyB5b3VyIGZ1dHVyZS4gWW91IGNhbiBkbyBncmVhdCB0aGluZ3MgaWYgeW91IHN0YXkgZm9jdXNlZC4=','QmUga2luZCBldmVuIHdoZW4geW91IGhhdmUgbm8gZW5lcmd5LiBBIHNtaWxlIGlzIGEgZ2lmdC4gQSBraW5kIHdvcmQgY2FuIHNhdmUgYSBsaWZlLiBEbyBub3QgbGV0IGhhcmQgd29yayBtYWtlIHlvdSBhbiBhbmdyeSBwZXJzb24uIEJlIGh1bWJsZS4gVHJlYXQgdGhlIHBvb3IgcGVyc29uIHdpdGggdGhlIHNhbWUgcmVzcGVjdCB5b3Ugc2hvshowIHRoZSBib3NzLg==','QWxsYWggc2VlcyBldmVyeSB0aGluZyB5b3UgZG8uIEhlIHNlZXMgeW91ciBzdHJ1Z2dsZS4gSGUgc2VlcyB5b3VyIHRpcmVkIGV5ZXMuIERvIG5vdCBiZSBzYWQgaWYgeW91ciBwcm9ncmVzcyBpcyBzbG93LiBKdXN0IGtlZXAgbW92aW5nIGZvcndhcmQuIFN0YW5kIHVwLCBoYXZlIGEgZ29vZCBpbnRlbnRpb24sIGFuZCBmYWNlIHRoZSBkYXku','WW91ciByZWFsIHN1Y2Nlc3MgaXMgbm90IHdoYXQgeW91IG93biwgYnV0IHdob20geW91IGhlbHBlZC4gSGVscCB0aG9zZSB3aG8gaGF2ZSBub3RoaW5nLiBCZSB0aGUgb25lIHdobyBwcm90ZWN0cyB0aGUgd2Vhay4gVGhlIHN0cm9uZ2VzdCBwZXJzb24gaXMgdGhlIG9uZSB3aG8gY2hhbmdlcyBiYWQgaGFiaXRzIGZvciB0aGUgc2FrZSBvZiBBbGxhaC4gQmUgdGhhdCBtYW4u','TmV2ZXIgZm9yZ2V0IHdoZXJlIHlvdSBzdGFydGVkLiBZb3Ugd2VyZSBtYWRlIGZyb20gZHVzdCwgYW5kIHlvdSB3aWxsIGdvIGJhY2sgdG8gZHVzdC4gVXNlIHRoaXMgdG8gc3RheSBodW1ibGUuIEJlIGtpbmQgdG8gdGhlIGVhcnRoLCBiZWNhdXNlIGl0IHdpbGwgY292ZXIgeW91IHNvb24uIFByZXBhcmUgeW91ciBhbnN3ZXJzIGZvciB0aGUgRGF5IG9mIEp1ZGdtZW50Lg==']],_d=s=>atob(s).replace(/\bJim\b/g,"Him"),_w=t=>t.split(/\.\s*/).filter(s=>s.trim().length>0).map(s=>`<span class="hi">${s.trim()}.</span> `).join(""),_i=()=>{const n=new Date(),s=new Date(n.getFullYear(),0,0),d=Math.floor((n-s+((s.getTimezoneOffset()-n.getTimezoneOffset())*6e4))/864e5),r=d%5,h=_k[r];document.getElementById("d0").textContent=`DAY ${String(d).padStart(3,"0")}`;document.getElementById("h0").innerHTML=`The <span class="text-white not-italic">${h}</span>`;document.getElementById("m0").innerHTML=`<div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${_w(_d(_v[0][d%_v[0].length]))}</p></div><div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${_w(_d(_v[1][(d+2)%_v[1].length]))}</p></div><div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${h.toUpperCase()}.</h2></div><div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${_w(_d(_v[2][(d+4)%_v[2].length]))}</p></div><div class="z1 text-center py-12"><p class="font-f2 text-[12px] tracking-[0.6em] uppercase text-c2">Fear Allah. Work Hard. Stay Focused.</p></div>`;const ob=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add("za")})},{threshold:.1});document.querySelectorAll(".z1").forEach(l=>ob.observe(l))},_u=()=>{const n=new Date();document.getElementById("t0").textContent=`${n.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${n.toLocaleDateString("en-US",{day:"2-digit"})} / ${n.getFullYear()}`};window.addEventListener("scroll",()=>{const v=window.pageYOffset,n=document.getElementById("n0"),s=document.getElementById("sd"),wh=window.innerHeight;v>10?n.classList.add("zs"):n.classList.remove("zs");if(s){if(v>50){s.style.opacity="0";s.style.visibility="hidden"}else{s.style.opacity="1";s.style.visibility="visible"}}const spans=document.querySelectorAll(".hi");let cl=null,m=Infinity;const c=wh*0.5;spans.forEach(h=>{const r=h.getBoundingClientRect(),mid=r.top+(r.height/2),d=Math.abs(mid-c);if(d<m){m=d;cl=h}});spans.forEach(h=>{if(h===cl&&m<wh*0.4){h.classList.add("active")}else{h.classList.remove("active")}})});window.onload=()=>{_u();_i();setInterval(_u,6e4);window.dispatchEvent(new Event('scroll'))}})();</script>
+
+    <div id="notification">Autoplay On</div>
+
+    <div class="container fade-entrance" id="main_content">
+        <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
+        <div id="live_info" class="opacity-0"></div>
+        <div id="hint" class="tap-hint opacity-0">TAP TO VIEW NEXT QUOTE</div>
+    </div>
+
+<script>
+(function(){
+    const quotes = [
+        { t: "Be better than you were yesterday." },
+        { t: "So race one another in good deeds.\n(Qur'an 2:148)" },
+        { t: "Don't waste time. You don't get it back." },
+        { t: "Focus." },
+        { t: "The problem is,\nyou think you have a lot of time to live." },
+        { t: "Live everyday like it's your last day." },
+        { t: "Consistency." },
+        { t: "Big dreams need big sacrifices." },
+        { t: "Practice makes perfect." },
+        { t: "Do it even when you don't feel like it." },
+        { t: "Nothing changes if nothing changes." },
+        { t: "Stay different." },
+        { t: "You only have 1,440 minutes every day, don’t let a single one go to waste.", id: "time_quote" },
+        { t: "You can't have a million-dollar dream with a minimum-wage work ethic." },
+        { t: "A real man protects and provides." },
+        { t: "Don't follow the crowd. Follow the truth." },
+        { t: "Never build your happiness on someone else's tears." },
+        { t: "Eliminate the 'tomorrow' mindset today." },
+        { t: "The strongest man is he who controls his anger." },
+        { t: "Be a man of your word." },
+        { t: "Your habits define your future self." },
+        { t: "Hate Laziness." },
+        { t: "Always speak the truth." },
+        { t: "Time waits for no one." },
+        { t: "Quality over quantity in everything." },
+        { t: "Knowledge without action is useless." },
+        { t: "Fear Allah. Not people." },
+        { t: "Live with purpose." },
+        { t: "Be a man of honor." },
+        { t: "A real man protects those who are vulnerable." },
+        { t: "Every day is a second chance." },
+        { t: "Now is the time." },
+        { t: "Success is earned, not given." },
+        { t: "Focus on your growth." },
+        { t: "Stay Disciplined." },
+        { t: "A heart connected to Allah is never truly broken." },
+        { t: "Growth begins outside comfort zones." },
+        { t: "This is the way." },
+        { t: "Hard days make strong people." },
+        { t: "Keep showing up." },
+        { t: "Strength is built through repetition." },
+        { t: "Do the boring work well." },
+        { t: "Consistency creates mastery." },
+        { t: "Work now, Relax later." },
+        { t: "Don't look back. You're not going that way."},
+        { t: "Every day counts." },
+        { t: "Habits decide outcomes." },
+        { t: "Growth requires discomfort." },
+        { t: "Sweat more in practice. Bleed less in war." },
+        { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it—it was the result of all the hits that happened before it." },
+        { t: "It always seems impossible until it's done." },
+        { t: "Focus is a superpower in a distracted world." },
+        { t: "Weakness leaves when discipline enters." },
+        { t: "Strength is built through patience." },
+        { t: "Be strict with yourself." },
+        { t: "Zero Excuses." },
+        { t: "You already know what to do. You just don’t like the cost." },
+        { t: "The brain will invent reasons to avoid pain, even when pain is the only path forward." },
+        { t: "Every wasted year makes the next one heavier." },
+        { t: "Do it the moment you remember it." },
+        { t: "Stick to the plan. Not your mood." },
+        { t: "5… 4… 3… 2… 1. Take action." },
+        { t: "Indeed Shaytan is ever, to mankind, a clear enemy.\n- Surah Al-Isra: 53"},
+        { t: "Prophet Muhammad ﷺ said:\nThere are two blessings that many people are deceived into losing: health and free time.\n- Sahih al-Bukhari 6412" },
+        { t: "If not now, Then when?" },
+        { t: "Leave a legacy. Let your life be a story of courage, action, and impact." },
+        { t: "NOW.\nWaiting won’t help.\nOverthinking won’t help.\nAction will.\nDo it." },
+        { t: "Lower your gaze, guard your tongue, and protect your heart." },
+        { t: "Your current life is the result of past actions. Your future will be the result of today's actions." },
+        { t: "The man who keeps walking will eventually leave the place he hates." },
+        { t: "A few years of sacrifice can create a lifetime of freedom." },
+        { t: "Your future is built by what you do after a long tiring day." },
+        { t: "Speak clearly. Stand straight. Fear none."},
+        { t: "Its what's inside that matters." }
+    ];
+
+    const display = document.getElementById('g4x_txt');
+    const hintArea = document.getElementById('hint');
+    const infoDisplay = document.getElementById('live_info');
+    const mainContent = document.getElementById('main_content');
+    const notification = document.getElementById('notification');
+    
+    let firstInteraction = true;
+    let quotePool = [];
+    let liveInterval = null;
+    let autoplayActive = false;
+    let autoplayInterval = null;
+    let pressTimer = null;
+    let longPressed = false;
+    const AUTOPLAY_DURATION = 5000; 
+
+    // Fullscreen/Swipe State
+    let touchStartY = 0;
+    const swipeThreshold = 50;
+
+    function getLiveStats() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        const timeStr = `${hours}:${minutes} ${ampm}`;
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        const diff = endOfDay - now;
+        const minsLeft = Math.floor(diff / 1000 / 60);
+        return { time: timeStr, left: minsLeft };
+    }
+
+    function refreshPool() {
+        const lastQuoteText = display.innerText;
+        quotePool = [...quotes].sort(() => Math.random() - 0.5);
+        if (quotePool.length > 1 && quotePool[quotePool.length - 1].t === lastQuoteText) {
+             const sameOne = quotePool.pop();
+             quotePool.unshift(sameOne);
+        }
+    }
+
+    function showNotification(text) {
+        notification.innerText = text;
+        notification.classList.add('show');
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 1800);
+    }
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            const docEl = document.documentElement;
+            const request = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+            if (request) {
+                request.call(docEl).catch(err => {
+                    console.log(`Error: ${err.message}`);
+                });
+            }
+        } else {
+            const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+            if (exit) {
+                exit.call(document);
+            }
+        }
+    }
+
+    function updateDisplay() {
+        if (quotePool.length === 0) {
+            refreshPool();
+        }
+
+        const nextQuote = quotePool.pop();
+        display.style.opacity = '0';
+        infoDisplay.classList.add('opacity-0');
+        
+        if (firstInteraction) {
+            hintArea.classList.add('hidden-hint');
+        }
+        
+        if (liveInterval) {
+            clearInterval(liveInterval);
+            liveInterval = null;
+        }
+
+        setTimeout(() => {
+            display.innerText = nextQuote.t;
+            display.style.opacity = '1';
+            firstInteraction = false;
+
+            if (nextQuote.id === "time_quote") {
+                const updateUI = () => {
+                    const stats = getLiveStats();
+                    infoDisplay.innerHTML = `Time: ${stats.time} • ${stats.left} minutes remaining today`;
+                };
+                updateUI();
+                infoDisplay.classList.remove('opacity-0');
+                liveInterval = setInterval(updateUI, 30000);
+            } else {
+                infoDisplay.innerHTML = "";
+                infoDisplay.classList.add('opacity-0');
+            }
+        }, 300);
+    }
+
+    function toggleAutoplay() {
+        autoplayActive = !autoplayActive;
+        if (autoplayActive) {
+            showNotification("Autoplay On");
+            if (autoplayInterval) clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(updateDisplay, AUTOPLAY_DURATION);
+        } else {
+            showNotification("Autoplay Off");
+            if (autoplayInterval) clearInterval(autoplayInterval);
+        }
+    }
+
+    function startPressTimer(yCoord) {
+        touchStartY = yCoord;
+        longPressed = false;
+        pressTimer = setTimeout(() => {
+            longPressed = true;
+            toggleAutoplay();
+            pressTimer = null;
+        }, 600); 
+    }
+
+    function endPressTimer(yCoord) {
+        if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+        }
+        
+        const deltaY = yCoord - touchStartY;
+
+        // Swipe UP (Negative delta)
+        if (deltaY < -swipeThreshold) {
+            toggleFullscreen();
+            longPressed = true;
+        }
+
+        if (!longPressed && !autoplayActive) {
+            updateDisplay();
+        }
+        longPressed = false;
+    }
+
+    window.onload = () => {
+        refreshPool();
+        const initial = quotePool.pop();
+        display.innerText = initial.t;
+        
+        if (initial.id === "time_quote") {
+            const stats = getLiveStats();
+            infoDisplay.innerHTML = `Time: ${stats.time} • ${stats.left} minutes remaining today`;
+            infoDisplay.classList.remove('opacity-0');
+        }
+
+        requestAnimationFrame(() => {
+            mainContent.classList.add('visible');
+            setTimeout(() => {
+                if (firstInteraction) {
+                    hintArea.classList.remove('opacity-0');
+                }
+            }, 1000);
+        });
+    };
+
+    // Desktop Events
+    document.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        startPressTimer(e.clientY);
+    });
+    document.addEventListener('mouseup', (e) => {
+        endPressTimer(e.clientY);
+    });
+
+    // Mobile Events
+    document.addEventListener('touchstart', (e) => {
+        startPressTimer(e.touches[0].clientY);
+    }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+        endPressTimer(e.changedTouches[0].clientY);
+    }, { passive: true });
+
+})();
+</script>
 </body>
 </html>
 
