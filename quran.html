@@ -8,7 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -26,116 +26,183 @@ html { background-color: #000000; scroll-behavior: smooth; }
 body { 
     margin: 0; 
     background-color: #000000;
-    color: #ffffff; 
+    color: #d1d1d1; 
     font-smoothing: antialiased; 
     overflow-x: hidden; 
 }
 
-/* Transitions */
-.z1{opacity:0;transform:translateY(10px);transition:all 0.8s ease-out}
+/* Animations */
+.z1{opacity:0;transform:translateY(20px);transition:all 1.2s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0)}
 
-/* Item Rows */
+/* Top Left Branding */
+.top-brand {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 300;
+    z-index: 50;
+}
+
+/* Library List - Minimalist & Borderless */
 .audio-card {
     background: transparent;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 30px 0;
-    transition: opacity 0.3s ease;
+    padding: 30px 10px;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.4s ease;
     cursor: pointer;
+    overflow: hidden;
 }
-.audio-card:hover { opacity: 0.7; }
-.audio-card.active { border-bottom-color: #C5A059; }
+.audio-card:hover { opacity: 0.8; }
 
-/* Search Input */
+/* The Glow "Light Up" Effect for Library Selection */
+.glow-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s;
+    opacity: 0;
+    z-index: 0;
+}
+.audio-card.active .glow-bg {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+/* Search Bar */
+.search-container {
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
 .search-input {
     background: transparent;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     width: 100%;
     padding: 15px 0;
     outline: none;
     text-align: center;
-    border: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
-.search-input::placeholder { color: rgba(255,255,255,0.3); }
+.search-input::placeholder { text-transform: none; color: rgba(255,255,255,0.2); letter-spacing: 0; }
 
-/* Play Indicator */
-.playing-indicator { display: flex; align-items: flex-end; gap: 3px; height: 12px; }
+/* Pulse Indicator */
+.playing-indicator { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
 .playing-indicator span { width: 1.5px; background: #C5A059; animation: bar-up 0.8s ease-in-out infinite alternate; }
 .playing-indicator span:nth-child(2) { animation-delay: 0.2s; }
 .playing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bar-up { 0% { height: 3px; } 100% { height: 12px; } }
+@keyframes bar-up { 0% { height: 4px; } 100% { height: 14px; } }
 
-/* Player Overlay */
+/* Player UI Overlay */
 #fs-player {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000000; z-index: 100;
     display: none; flex-direction: column; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.5s ease;
+    opacity: 0; transition: opacity 0.7s ease;
 }
 #fs-player.active { display: flex; opacity: 1; }
 
-/* Timeline */
-.progress-area { width: 100%; padding: 40px 0; cursor: pointer; }
-.progress-container { width: 100%; height: 2px; background: rgba(255, 255, 255, 0.1); position: relative; }
-.progress-bar { height: 100%; background: #C5A059; width: 0%; transition: width 0.1s linear; }
+.ripple-target {
+    position: absolute; width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.2) 0%, transparent 70%);
+    pointer-events: none; opacity: 0; transform: scale(0.5);
+}
+.ripple-target.active { animation: ripple-pop 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes ripple-pop { 0% { transform: scale(0.5); opacity: 0; } 20% { opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
+
+@keyframes move-left-smooth { 0% { transform: translateX(0); } 40% { transform: translateX(-30px); } 100% { transform: translateX(0); } }
+@keyframes move-right-smooth { 0% { transform: translateX(0); } 40% { transform: translateX(30px); } 100% { transform: translateX(0); } }
+.anim-move-left { animation: move-left-smooth 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+.anim-move-right { animation: move-right-smooth 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Progress UI */
+.progress-area { width: 100%; padding: 30px 0; cursor: pointer; }
+.progress-container { width: 100%; height: 1px; background: rgba(255, 255, 255, 0.08); position: relative; }
+.progress-bar { height: 100%; background: #C5A059; width: 0%; box-shadow: 0 0 10px rgba(197, 160, 89, 0.3); }
 
 #yt-container { position: absolute; visibility: hidden; pointer-events: none; }
 </style>
 </head>
 <body class="font-sans">
 
-<main class="pt-20 pb-40 px-6">
-    <section class="max-w-md mx-auto mb-16 z1">
-        <div class="border-b border-white/10">
-            <input type="text" id="search-bar" placeholder="Search recitations" class="search-input" oninput="filterLibrary()">
+<div class="top-brand z1">Qur'an Recitations</div>
+
+<main class="pt-40 pb-60 px-8">
+    <section class="max-w-xl mx-auto mb-24 z1">
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search surah" class="search-input" oninput="filterLibrary()">
         </div>
     </section>
 
-    <section id="library-grid" class="max-w-2xl mx-auto"></section>
+    <section id="library-grid" class="max-w-3xl mx-auto flex flex-col space-y-4"></section>
 </main>
 
-<!-- Full Screen Player -->
-<div id="fs-player">
-    <div class="text-center w-full px-8">
-        <h2 id="fs-title" class="text-4xl md:text-6xl font-medium tracking-tight mb-4"></h2>
-        <p id="fs-reciter" class="text-sm tracking-widest uppercase text-white/40 mb-20"></p>
-        
-        <div class="flex items-center justify-center space-x-12 mb-20">
-            <button onclick="seekRel(-10)" class="text-white/30 hover:text-white transition-colors">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
-            </button>
-            <button onclick="togglePlay()" class="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white transition-all">
-                <svg id="fs-icon-svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5V19L19 12L8 5Z"/>
-                </svg>
-            </button>
-            <button onclick="seekRel(10)" class="text-white/30 hover:text-white transition-colors">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
-            </button>
+<!-- Full Screen Player Overlay -->
+<div id="fs-player" onclick="handleScreenTap(event)">
+    <div class="text-center space-y-20 select-none w-full relative pointer-events-none">
+        <div class="px-6">
+            <!-- Adjusted font size to fit one line: text-2xl to text-4xl responsive -->
+            <h2 id="fs-title" class="text-2xl md:text-5xl text-white mb-6 font-light tracking-tight uppercase whitespace-nowrap overflow-hidden text-ellipsis"></h2>
+            <p id="fs-reciter" class="text-[9px] tracking-[0.6em] uppercase text-c2/50"></p>
         </div>
+        
+        <div class="flex items-center justify-center space-x-12 md:space-x-24 relative pointer-events-auto">
+            <div class="relative flex items-center justify-center">
+                <div id="rip-prev" class="ripple-target"></div>
+                <button id="btn-prev" onclick="event.stopPropagation(); seekRel(-10)" class="text-c2/20 tracking-[0.3em] text-[10px] md:text-sm uppercase hover:text-c2/60 transition-colors">
+                    &lt;&lt; 10
+                </button>
+            </div>
 
-        <div class="max-w-md mx-auto">
-            <div class="progress-area" onclick="handleProgressBarClick(event)">
-                <div class="progress-container">
-                    <div id="fs-progress" class="progress-bar"></div>
+            <div class="relative flex items-center justify-center">
+                <div id="rip-play" class="ripple-target" style="width:200px; height:200px;"></div>
+                <div id="fs-play-btn" onclick="event.stopPropagation(); togglePlay()" class="w-20 h-20 md:w-28 md:h-28 rounded-full border border-white/5 flex items-center justify-center text-c2 bg-white/[0.01] z-10 hover:border-c2/30 transition-all duration-500">
+                    <svg id="fs-icon-svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5V19L19 12L8 5Z"/>
+                    </svg>
                 </div>
             </div>
-            <div class="flex justify-between text-[10px] tracking-tighter opacity-30 mt-2 uppercase font-medium">
-                <span id="fs-curr">00:00</span>
-                <span id="fs-dur">00:00</span>
+
+            <div class="relative flex items-center justify-center">
+                <div id="rip-next" class="ripple-target"></div>
+                <button id="btn-next" onclick="event.stopPropagation(); seekRel(10)" class="text-c2/20 tracking-[0.3em] text-[10px] md:text-sm uppercase hover:text-c2/60 transition-colors">
+                    10 &gt;&gt;
+                </button>
             </div>
         </div>
     </div>
+    
+    <div class="w-full max-w-xl px-12 mt-40">
+        <div class="progress-area" onclick="handleProgressBarClick(event)">
+            <div class="progress-container">
+                <div id="fs-progress" class="progress-bar"></div>
+            </div>
+        </div>
+        <div class="flex justify-between text-[8px] tracking-[0.4em] opacity-20 mt-4 uppercase pointer-events-none">
+            <span id="fs-curr">00:00</span>
+            <span id="fs-dur">--:--</span>
+        </div>
+    </div>
 
-    <button onclick="closeFS()" class="absolute top-10 right-10 text-white/20 hover:text-white text-xs uppercase tracking-widest transition-colors">Close</button>
+    <button onclick="closeFS(event)" class="absolute top-10 right-10 text-white/10 hover:text-white/40 transition-colors uppercase text-[8px] tracking-[0.5em]">Dismiss</button>
 </div>
 
 <div id="yt-container"></div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-let player, activeId = null, progressInterval;
+let player, activeId = null, currentItem = null, progressInterval, lastTapTime = 0;
 
 const recitationLibrary = [
     { title: "Surah Fatir (1-18)", reciter: "Abdul Basit Abdussamad", id: "2aUV7aA2Vs8" },
@@ -170,12 +237,13 @@ function renderLibrary(list = recitationLibrary) {
     const grid = document.getElementById('library-grid');
     grid.innerHTML = list.map(item => `
         <div class="audio-card z1 ${activeId === item.id ? 'active' : ''}" data-id="${item.id}" onclick='openFS(${JSON.stringify(item)})'>
-            <div class="flex justify-between items-center">
+            <div class="glow-bg"></div>
+            <div class="relative z-10 flex justify-between items-center px-4">
                 <div>
-                    <h3 class="text-xl font-normal text-white/90">${item.title}</h3>
-                    <p class="text-[10px] tracking-widest uppercase text-white/30 mt-1">${item.reciter}</p>
+                    <h3 class="text-2xl font-light text-white/90 uppercase tracking-tight">${item.title}</h3>
+                    <p class="text-[8px] tracking-[0.4em] uppercase text-c2/30 mt-2 font-light">${item.reciter}</p>
                 </div>
-                <div class="status-indicator"></div>
+                <div class="status-indicator min-w-[20px]"></div>
             </div>
         </div>
     `).join('');
@@ -183,7 +251,7 @@ function renderLibrary(list = recitationLibrary) {
     setTimeout(() => {
         const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('za'); }), { threshold: 0.1 });
         document.querySelectorAll('.z1').forEach(el => obs.observe(el));
-    }, 50);
+    }, 100);
     updateLibraryStatus();
 }
 
@@ -194,6 +262,7 @@ function filterLibrary() {
 }
 
 function openFS(item) {
+    currentItem = item;
     document.getElementById('fs-title').textContent = item.title;
     document.getElementById('fs-reciter').textContent = item.reciter;
     const fs = document.getElementById('fs-player');
@@ -206,20 +275,24 @@ function openFS(item) {
     } else {
         player.playVideo();
     }
+    updateLibraryStatus();
 }
 
-function closeFS() {
+function closeFS(e) {
+    if(e) e.stopPropagation();
     const fs = document.getElementById('fs-player');
     fs.classList.remove('active');
-    setTimeout(() => fs.style.display = 'none', 500);
+    setTimeout(() => fs.style.display = 'none', 700);
 }
 
 function updateLibraryStatus() {
     document.querySelectorAll('.audio-card').forEach(card => {
         const id = card.getAttribute('data-id');
         const indicator = card.querySelector('.status-indicator');
-        const isPlaying = activeId === id && player && player.getPlayerState() === 1;
-        card.classList.toggle('active', activeId === id);
+        const isActive = activeId === id;
+        const isPlaying = isActive && player && player.getPlayerState() === 1;
+        
+        card.classList.toggle('active', isActive);
         indicator.innerHTML = isPlaying ? `<div class="playing-indicator"><span></span><span></span><span></span></div>` : '';
     });
 }
@@ -227,10 +300,34 @@ function updateLibraryStatus() {
 function togglePlay() {
     if (player.getPlayerState() === 1) player.pauseVideo();
     else player.playVideo();
+    triggerAnim('rip-play', 'fs-play-btn', 'pop');
 }
 
 function seekRel(sec) {
-    player.seekTo(player.getCurrentTime() + sec, true);
+    const cur = player.getCurrentTime();
+    player.seekTo(cur + sec, true);
+    if (sec < 0) triggerAnim('rip-prev', 'btn-prev', 'left');
+    else triggerAnim('rip-next', 'btn-next', 'right');
+}
+
+function triggerAnim(ripId, btnId, type) {
+    const rip = document.getElementById(ripId), btn = document.getElementById(btnId);
+    rip.classList.remove('active');
+    btn.classList.remove('anim-move-left', 'anim-move-right');
+    void rip.offsetWidth;
+    rip.classList.add('active');
+    if (type === 'left') btn.classList.add('anim-move-left');
+    if (type === 'right') btn.classList.add('anim-move-right');
+}
+
+function handleScreenTap(e) {
+    const now = Date.now();
+    if (now - lastTapTime < 300) {
+        const x = e.clientX, w = window.innerWidth;
+        if (x < w * 0.4) seekRel(-10);
+        else if (x > w * 0.6) seekRel(10);
+    }
+    lastTapTime = now;
 }
 
 function handleProgressBarClick(e) {
