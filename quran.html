@@ -3,231 +3,264 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-<meta name="theme-color" content="#050505">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-1K1TKBQFFK');
-</script>
-<title>Salman Faris | Daily Wisdom & Reflections</title>
-<meta name="description" content="The personal digital space of Salman Faris. Daily reflections on faith, discipline, and the pursuit of a purposeful life.">
-<meta name="author" content="Salman Faris">
-<link rel="canonical" href="https://salmanfaris.com/">
-<meta property="og:title" content="Salman Faris">
-<meta property="og:description" content="Daily insights on discipline and faith.">
-<meta property="og:url" content="https://salmanfaris.com/">
-<meta property="og:type" content="website">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Salman Faris",
-  "url": "https://salmanfaris.com",
-  "author": {
-    "@type": "Person",
-    "name": "Salman Faris"
-  },
-  "description": "A digital space for reflections on faith and strength."
-}
-</script>
+<meta name="theme-color" content="#000000">
+<title>Qur'an Recitations</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
     extend:{
-      fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
-      colors:{c1:'#050505',c2:'#C5A059',eye:'#B8B8B0'}
+      fontFamily:{
+        sans:['Inter', 'system-ui', '-apple-system', 'sans-serif']
+      },
+      colors:{c1:'#000000',c2:'#C5A059'}
     }
   }
 }
 </script>
 <style>
-html {
-  background-color: #050505;
-  scroll-behavior: auto;
+html { background-color: #000000; scroll-behavior: smooth; }
+body { 
+    margin: 0; 
+    background-color: #000000;
+    color: #ffffff; 
+    font-smoothing: antialiased; 
+    overflow-x: hidden; 
 }
-body {
-  margin: 0;
-  background-color: #050505;
-  color: #d1d1d1;
-  display: block;
-  font-smoothing: antialiased;
-  width: 100%;
-  position: relative;
+
+/* Transitions */
+.z1{opacity:0;transform:translateY(10px);transition:all 0.8s ease-out}
+.z1.za{opacity:1;transform:translateY(0)}
+
+/* Item Rows */
+.audio-card {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 30px 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
 }
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
-.z0.zs{background-color:rgba(5,5,5,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
-.z2{position:fixed;top:50%;left:50%;width:100vw;height:100vw;background:radial-gradient(circle,rgba(255,255,255,.02) 0,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}
-.zi{text-indent:12rem}
-@media(max-width:768px){.zi{text-indent:0}}
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:.4;color:#fff}
-.zb{color:#C5A059;opacity:.9;text-shadow:0 0 30px rgba(197,160,89,.3)}
-.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,.5)}
-@keyframes flash{0%,100%{opacity:.1}50%{opacity:.7}}
-.zf{animation:flash 2s ease-in-out infinite}
-#sd{transition:opacity .5s ease,visibility .5s}
-.hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
-.sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
+.audio-card:hover { opacity: 0.7; }
+.audio-card.active { border-bottom-color: #C5A059; }
+
+/* Search Input */
+.search-input {
+    background: transparent;
+    color: white;
+    font-size: 1.1rem;
+    width: 100%;
+    padding: 15px 0;
+    outline: none;
+    text-align: center;
+    border: none;
+}
+.search-input::placeholder { color: rgba(255,255,255,0.3); }
+
+/* Play Indicator */
+.playing-indicator { display: flex; align-items: flex-end; gap: 3px; height: 12px; }
+.playing-indicator span { width: 1.5px; background: #C5A059; animation: bar-up 0.8s ease-in-out infinite alternate; }
+.playing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.playing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bar-up { 0% { height: 3px; } 100% { height: 12px; } }
+
+/* Player Overlay */
+#fs-player {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000000; z-index: 100;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.5s ease;
+}
+#fs-player.active { display: flex; opacity: 1; }
+
+/* Timeline */
+.progress-area { width: 100%; padding: 40px 0; cursor: pointer; }
+.progress-container { width: 100%; height: 2px; background: rgba(255, 255, 255, 0.1); position: relative; }
+.progress-bar { height: 100%; background: #C5A059; width: 0%; transition: width 0.1s linear; }
+
+#yt-container { position: absolute; visibility: hidden; pointer-events: none; }
 </style>
 </head>
-<body>
-<div class="sr-only">
-  <h1>Salman Faris</h1>
-  <p>This is the official homepage of Salman Faris. It features daily thoughts, spiritual reflections, and insights on personal discipline and strength.</p>
-</div>
-<div class="z2"></div>
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
-  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
-</nav>
-<main class="relative w-full">
-  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
-    <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <!-- Heading remains in its exact original centered position -->
-      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:.2s"></h1>
-    </div>
-    <!-- Scroll Down indicator moved further up (pb-40 instead of pb-12/32) without affecting heading position -->
-    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:.8s">
-      <div class="zs1 zf">Scroll Down</div>
-    </div>
-  </section>
-  <article id="m0" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 space-y-72"></article>
+<body class="font-sans">
+
+<main class="pt-20 pb-40 px-6">
+    <section class="max-w-md mx-auto mb-16 z1">
+        <div class="border-b border-white/10">
+            <input type="text" id="search-bar" placeholder="Search recitations" class="search-input" oninput="filterLibrary()">
+        </div>
+    </section>
+
+    <section id="library-grid" class="max-w-2xl mx-auto"></section>
 </main>
-<footer class="w-full flex justify-end px-12 py-12 relative z-10 z1">
-  <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-40">&mdash; BY SALMAN FARIS</div>
-</footer>
+
+<!-- Full Screen Player -->
+<div id="fs-player">
+    <div class="text-center w-full px-8">
+        <h2 id="fs-title" class="text-4xl md:text-6xl font-medium tracking-tight mb-4"></h2>
+        <p id="fs-reciter" class="text-sm tracking-widest uppercase text-white/40 mb-20"></p>
+        
+        <div class="flex items-center justify-center space-x-12 mb-20">
+            <button onclick="seekRel(-10)" class="text-white/30 hover:text-white transition-colors">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+            </button>
+            <button onclick="togglePlay()" class="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white transition-all">
+                <svg id="fs-icon-svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5V19L19 12L8 5Z"/>
+                </svg>
+            </button>
+            <button onclick="seekRel(10)" class="text-white/30 hover:text-white transition-colors">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+            </button>
+        </div>
+
+        <div class="max-w-md mx-auto">
+            <div class="progress-area" onclick="handleProgressBarClick(event)">
+                <div class="progress-container">
+                    <div id="fs-progress" class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="flex justify-between text-[10px] tracking-tighter opacity-30 mt-2 uppercase font-medium">
+                <span id="fs-curr">00:00</span>
+                <span id="fs-dur">00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="closeFS()" class="absolute top-10 right-10 text-white/20 hover:text-white text-xs uppercase tracking-widest transition-colors">Close</button>
+</div>
+
+<div id="yt-container"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-(function(){
-  const themes = ['True Faith', 'Pure Soul', 'Clear Path', 'Strong Will', 'Firm Deed'];
-  const content = [
-    [
-      "Do not be afraid of what people think. If you fear Allah, you will not fear any man. People's words cannot kill you. Do not listen to them. Listen to your Creator instead. Stand tall. Be strong in your faith. Always do what is right.",
-      "Your worth is about your good actions, not how you look. Allah does not care about your face or your body. He looks at your heart. Stop wasting time hating yourself. If you please Allah, the words of others do not matter.",
-      "The best way to live is to obey Allah. Without Him, you have nothing. With Him, you have everything. Live with a clear goal. Seek to please the One who made you. Do not wait for people to love you.",
-      "Shaitan is your obvious enemy. He wants you to sleep all day. He wants you to be lazy. He wants you to waste your life on your phone. Fight him. Get up now. Start your work. A strong person is always better than a weak one.",
-      "Do not be sad about a job that is hard. It is a way to learn how to be strong. Work to feed your family. Use your free time to build your dream. Allah sees every step you take. Your hard work is never wasted."
-    ],
-    [
-      "Be strong by saying no to bad things. Do what is good even when it feels hard. If you can control yourself, you can win. Stop waiting for the right time. Get to work now. True power comes from following the laws of Allah.",
-      "Discipline makes you special. If you cannot rule your day, others will do it for you. A quiet man who prays Fajr has already won. Build your day around your prayers, not your sleep. Strength comes from hard work.",
-      "Your time is more important than money. A second lost is gone forever. Stop looking at your screen all day. Stop waiting for help. Shaitan loves it when you put off work. Be fast. Be smart. Every moment is a gift.",
-      "Your goal is a promise to yourself. Do not break it just because you are tired. Wake up early. Stay late. The hard work is where your soul is tested. Allah loves the person who tries to be the best. Be good in everything.",
-      "Stop waiting for people to say you are good. Only the words of Allah matter in the end. Be a brave man in public and a humble servant in private. Your real worth is in your faith, not in your bank account."
-    ],
-    [
-      "Trust Allah when life is hard. Say Alhamdulillah even in the middle of a problem. You build your heart by praying every day. Stop complaining. Start building your future. You can do great things if you stay focused.",
-      "Be kind even when you have no energy. A smile is a gift. A kind word can save a life. Do not let hard work make you an angry person. Be humble. Treat the poor person with the same respect you show the boss.",
-      "Allah sees everything you do. He sees your struggle. He sees your tired eyes. Do not be sad if your progress is slow. Just keep moving forward. Stand up, have a good intention, and face the day.",
-      "Your real success is not what you own, but whom you helped. Help those who have nothing. Be the one who protects the weak. The strongest person is the one who changes bad habits for the sake of Allah. Be that man.",
-      "Never forget where you started. You were made from dust, and you will go back to dust. Use this to stay humble. Be kind to the earth, because it will cover you soon. Prepare your answers for the Day of Judgment."
-    ]
-  ];
-  const wrapWords = (text) => {
-    return text.split(/\.\s*/)
-      .filter(s => s.trim().length > 0)
-      .map(s => `<span class="hi">${s.trim()}.</span> `)
-      .join("");
-  };
-  const init = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
-    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const themeIndex = dayOfYear % 5;
-    const themeName = themes[themeIndex];
-    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
-    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
-    document.getElementById("m0").innerHTML = `
-      <div class="z1">
-        <p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">
-          ${wrapWords(content[0][dayOfYear % content[0].length])}
-        </p>
-      </div>
-      <div class="z1">
-        <p class="font-f1 text-6xl md:text-8xl leading-[1.05]">
-          ${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}
-        </p>
-      </div>
-      <div class="py-24 text-center z1">
-        <h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2>
-      </div>
-      <div class="z1">
-        <p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">
-          ${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}
-        </p>
-      </div>
-      <div class="z1 text-center py-12">
-        <p class="font-f2 text-[12px] tracking-[0.6em] uppercase text-c2">Fear Allah. Work Hard. Stay Focused.</p>
-      </div>
-    `;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("za");
-      });
-    }, { threshold: 0.05 });
-    document.querySelectorAll(".z1").forEach(el => observer.observe(el));
-  };
-  const updateTime = () => {
-    const n = new Date();
-    document.getElementById("t0").textContent = `${n.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${n.toLocaleDateString("en-US",{day:"2-digit"})} / ${n.getFullYear()}`;
-  };
-  window.addEventListener("scroll", () => {
-    const scrollPos = window.scrollY || window.pageYOffset;
-    const nav = document.getElementById("n0");
-    const scrollHint = document.getElementById("sd");
-    const vh = window.innerHeight;
-    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    if (scrollHint) {
-      if (scrollPos > 20) {
-        scrollHint.style.opacity = "0";
-        scrollHint.style.pointerEvents = "none";
-      } else {
-        scrollHint.style.opacity = "1";
-        scrollHint.style.pointerEvents = "auto";
-      }
-    }
-    const spans = document.querySelectorAll(".hi");
-    const centerY = vh * 0.5;
+let player, activeId = null, progressInterval;
+
+const recitationLibrary = [
+    { title: "Surah Fatir (1-18)", reciter: "Abdul Basit Abdussamad", id: "2aUV7aA2Vs8" },
+    { title: "Surah Yusuf", reciter: "Muhammad Hisham", id: "C0idKuUWdmU" },
+    { title: "Surah Al-Baqarah", reciter: "Muhammad Hisham", id: "qfa9eYbyfWA" },
+    { title: "Surah Al-Kahf", reciter: "Raad Al Kurdi", id: "jHZMsEinTwk" },
+    { title: "Surah Al-Insan", reciter: "Omar Hisham", id: "JRn8Xc41nUI" },
+    { title: "Surah Maryam", reciter: "Sherif Mostafa", id: "Jrtn8SPrMiw" }
+];
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('yt-container', {
+        height: '1', width: '1',
+        playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'enablejsapi': 1, 'playsinline': 1 },
+        events: {
+            'onStateChange': (e) => {
+                if (e.data == YT.PlayerState.PLAYING) {
+                    startProgress();
+                    updateIcons(true);
+                    updateLibraryStatus();
+                } else {
+                    clearInterval(progressInterval);
+                    updateIcons(false);
+                    updateLibraryStatus();
+                }
+            }
+        }
+    });
+}
+
+function renderLibrary(list = recitationLibrary) {
+    const grid = document.getElementById('library-grid');
+    grid.innerHTML = list.map(item => `
+        <div class="audio-card z1 ${activeId === item.id ? 'active' : ''}" data-id="${item.id}" onclick='openFS(${JSON.stringify(item)})'>
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-normal text-white/90">${item.title}</h3>
+                    <p class="text-[10px] tracking-widest uppercase text-white/30 mt-1">${item.reciter}</p>
+                </div>
+                <div class="status-indicator"></div>
+            </div>
+        </div>
+    `).join('');
     
-    let activeSpan = null;
-    let minDistance = Infinity;
-
-    spans.forEach(span => {
-      const rect = span.getBoundingClientRect();
-      const mid = rect.top + (rect.height / 2);
-      const dist = Math.abs(mid - centerY);
-      
-      if (dist < minDistance) {
-        minDistance = dist;
-        activeSpan = span;
-      }
-    });
-
-    spans.forEach(span => {
-      if (span === activeSpan && minDistance < vh * 0.4) {
-        span.classList.add("active");
-      } else {
-        span.classList.remove("active");
-      }
-    });
-  }, { passive: true });
-  window.onload = () => {
-    updateTime();
-    init();
-    setInterval(updateTime, 60000);
     setTimeout(() => {
-      window.dispatchEvent(new Event('scroll'));
-    }, 150);
-  };
-})();
+        const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('za'); }), { threshold: 0.1 });
+        document.querySelectorAll('.z1').forEach(el => obs.observe(el));
+    }, 50);
+    updateLibraryStatus();
+}
+
+function filterLibrary() {
+    const query = document.getElementById('search-bar').value.toLowerCase();
+    const filtered = recitationLibrary.filter(i => i.title.toLowerCase().includes(query) || i.reciter.toLowerCase().includes(query));
+    renderLibrary(filtered);
+}
+
+function openFS(item) {
+    document.getElementById('fs-title').textContent = item.title;
+    document.getElementById('fs-reciter').textContent = item.reciter;
+    const fs = document.getElementById('fs-player');
+    fs.style.display = 'flex';
+    setTimeout(() => fs.classList.add('active'), 10);
+    
+    if (activeId !== item.id) {
+        activeId = item.id;
+        player.loadVideoById(item.id);
+    } else {
+        player.playVideo();
+    }
+}
+
+function closeFS() {
+    const fs = document.getElementById('fs-player');
+    fs.classList.remove('active');
+    setTimeout(() => fs.style.display = 'none', 500);
+}
+
+function updateLibraryStatus() {
+    document.querySelectorAll('.audio-card').forEach(card => {
+        const id = card.getAttribute('data-id');
+        const indicator = card.querySelector('.status-indicator');
+        const isPlaying = activeId === id && player && player.getPlayerState() === 1;
+        card.classList.toggle('active', activeId === id);
+        indicator.innerHTML = isPlaying ? `<div class="playing-indicator"><span></span><span></span><span></span></div>` : '';
+    });
+}
+
+function togglePlay() {
+    if (player.getPlayerState() === 1) player.pauseVideo();
+    else player.playVideo();
+}
+
+function seekRel(sec) {
+    player.seekTo(player.getCurrentTime() + sec, true);
+}
+
+function handleProgressBarClick(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const p = (e.clientX - rect.left) / rect.width;
+    player.seekTo(player.getDuration() * p, true);
+}
+
+function startProgress() {
+    clearInterval(progressInterval);
+    progressInterval = setInterval(() => {
+        const time = player.getCurrentTime(), dur = player.getDuration();
+        if (dur > 0) {
+            document.getElementById('fs-progress').style.width = (time / dur * 100) + '%';
+            document.getElementById('fs-curr').textContent = formatTime(time);
+            document.getElementById('fs-dur').textContent = formatTime(dur);
+        }
+    }, 500);
+}
+
+function formatTime(s) {
+    const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+}
+
+function updateIcons(playing) {
+    document.getElementById('fs-icon-svg').innerHTML = playing ? '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>' : '<path d="M8 5V19L19 12L8 5Z"/>';
+}
+
+window.onload = () => renderLibrary();
 </script>
 </body>
 </html>
