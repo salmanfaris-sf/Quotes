@@ -60,19 +60,18 @@ body {
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 .sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
 
-/* Video Grid Styles */
+/* Responsive Video Grid */
 .v-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
   width: 100%;
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
 .v-wrap {
   width: 100%;
-  aspect-ratio: 9/16;
   background: #111;
   border-radius: 20px;
   overflow: hidden;
@@ -80,12 +79,14 @@ body {
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   position: relative;
   cursor: pointer;
+  /* Remove fixed aspect ratio to allow auto-height */
+  height: auto;
 }
 
 video {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto; /* Allow video to dictate the height */
+  display: block;
 }
 
 .v-play-btn {
@@ -93,36 +94,36 @@ video {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  width: 90px;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .v-play-btn svg {
   fill: white;
-  width: 28px;
-  height: 28px;
-  /* Visual correction for centering a triangle in a circle */
-  transform: translateX(2px);
+  width: 36px;
+  height: 36px;
+  transform: translateX(4px);
 }
 
 .v-wrap:hover .v-play-btn {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 .v-wrap.is-playing .v-play-btn {
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(0.8);
+  transform: translate(-50%, -50%) scale(0.5);
 }
 </style>
 </head>
@@ -146,10 +147,8 @@ video {
     </div>
   </section>
 
-  <!-- Content Section -->
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <!-- Video Section -->
   <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
     <div class="z1 mb-16 text-center w-full">
        <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-12">Reflections</h3>
@@ -160,13 +159,7 @@ video {
            <div class="v-play-btn">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
            </div>
-           <video 
-             controlsList="nodownload noremoteplayback" 
-             disablePictureInPicture 
-             oncontextmenu="return false;"
-             preload="metadata" 
-             playsinline 
-             loop>
+           <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
              <source src="videos/1.mp4" type="video/mp4">
            </video>
          </div>
@@ -176,13 +169,7 @@ video {
            <div class="v-play-btn">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
            </div>
-           <video 
-             controlsList="nodownload noremoteplayback" 
-             disablePictureInPicture 
-             oncontextmenu="return false;"
-             preload="metadata" 
-             playsinline 
-             loop>
+           <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
              <source src="videos/2.mp4" type="video/mp4">
            </video>
          </div>
@@ -201,37 +188,13 @@ video {
 <script>
 (function(){
   const themes = ['Strong Mind', 'Deep Will', 'Full Focus', 'Never Stop', 'Great Aim'];
-  
   const content = [
-    [
-      "Do not care what other people think. If you can control your mind, you can control your life. What people say does not last. Who you are inside lasts forever. Stand by what you believe. Always do the right thing.",
-      "Your value comes from what you do, not how you look. The world does not care about your face. It cares about how strong you are. Stop looking for others to like you. If you are happy with yourself, nothing else matters.",
-      "The best way to live is to have a goal. Without a goal, you are lost. With a goal, you are strong. Live with a clear plan. Try to find the truth. Do not wait for others to show you the way.",
-      "Being lazy is your biggest enemy. It wants you to stay in bed. It wants you to be average. It wants you to waste time on your phone. Fight it. Wake up early. Start your work. A busy mind is a free mind.",
-      "Do not be mad if your life is hard. Hard times make you better. Work hard to take care of your family. Use your quiet time to build your future. The world sees every step you take. Hard work always pays off."
-    ],
-    [
-      "Strength is saying no to things that feel good but are bad for you. Pick the hard path if it is the right path. If you can control yourself, you can win. The time to start is now. Real power is self-control.",
-      "Doing the same good things every day is the way to win. If you do not control your habits, they will control you. If you win the morning, you win the day. Build your life around good actions. Being strong is a choice you make every day.",
-      "Your time is the most important thing you have. When it is gone, you cannot get it back. Stop looking at things that do not matter. Stop waiting for help. Being lazy is a slow death. Be fast. Be clear. Every hour is a choice.",
-      "Your word is a promise to yourself. Do not break it when you are tired. Wake up with a plan. Finish with a smile. The struggle is how you learn. Being great is not one act, it is what you do every day. Be the best you can be.",
-      "Stop waiting for the world to get better. Make yourself better first. Be strong for your friends and family. Listen more than you speak. Your real value is measured by what you do for others."
-    ],
-    [
-      "Trust the process when you are not sure. Be thankful even when things are bad. You build your heart by working every day. Stop crying about the rain. Start building your house. You can do great things if you keep trying.",
-      "Be kind because everyone is having a hard time. Kindness is a kind of strength. One good act can change a life. Do not let a hard world make you mean. Stay humble. Treat everyone with the same respect.",
-      "The world looks at what you do, not what you say. People see that you do not give up. They see that you are focused. Do not be sad if you are slow. You move a mountain one stone at a time. Stand up and move.",
-      "Real success is who you became, not what you bought. Help people who have less than you. Protect those who are weak. The strongest person is the one who beats their own bad habits. Try to be that person.",
-      "Never forget where you came from. You came from the earth and you will go back to it. Use this to stay humble. Take care of the world. Build something that stays after you are gone."
-    ]
+    ["Do not care what other people think. If you can control your mind, you can control your life. What people say does not last. Who you are inside lasts forever. Stand by what you believe. Always do the right thing.", "Your value comes from what you do, not how you look. The world does not care about your face. It cares about how strong you are. Stop looking for others to like you. If you are happy with yourself, nothing else matters.", "The best way to live is to have a goal. Without a goal, you are lost. With a goal, you are strong. Live with a clear plan. Try to find the truth. Do not wait for others to show you the way.", "Being lazy is your biggest enemy. It wants you to stay in bed. It wants you to be average. It wants you to waste time on your phone. Fight it. Wake up early. Start your work. A busy mind is a free mind.", "Do not be mad if your life is hard. Hard times make you better. Work hard to take care of your family. Use your quiet time to build your future. The world sees every step you take. Hard work always pays off."],
+    ["Strength is saying no to things that feel good but are bad for you. Pick the hard path if it is the right path. If you can control yourself, you can win. The time to start is now. Real power is self-control.", "Doing the same good things every day is the way to win. If you do not control your habits, they will control you. If you win the morning, you win the day. Build your life around good actions. Being strong is a choice you make every day.", "Your time is the most important thing you have. When it is gone, you cannot get it back. Stop looking at things that do not matter. Stop waiting for help. Being lazy is a slow death. Be fast. Be clear. Every hour is a choice.", "Your word is a promise to yourself. Do not break it when you are tired. Wake up with a plan. Finish with a smile. The struggle is how you learn. Being great is not one act, it is what you do every day. Be the best you can be.", "Stop waiting for the world to get better. Make yourself better first. Be strong for your friends and family. Listen more than you speak. Your real value is measured by what you do for others."],
+    ["Trust the process when you are not sure. Be thankful even when things are bad. You build your heart by working every day. Stop crying about the rain. Start building your house. You can do great things if you keep trying.", "Be kind because everyone is having a hard time. Kindness is a kind of strength. One good act can change a life. Do not let a hard world make you mean. Stay humble. Treat everyone with the same respect.", "The world looks at what you do, not what you say. People see that you do not give up. They see that you are focused. Do not be sad if you are slow. You move a mountain one stone at a time. Stand up and move.", "Real success is who you became, not what you bought. Help people who have less than you. Protect those who are weak. The strongest person is the one who beats their own bad habits. Try to be that person.", "Never forget where you came from. You came from the earth and you will go back to it. Use this to stay humble. Take care of the world. Build something that stays after you are gone."]
   ];
 
-  const wrapWords = (text) => {
-    return text.split(/\.\s*/)
-      .filter(s => s.trim().length > 0)
-      .map(s => `<span class="hi">${s.trim()}.</span> `)
-      .join("");
-  };
+  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
   const init = () => {
     const now = new Date();
@@ -245,39 +208,18 @@ video {
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
     
     document.getElementById("m0").innerHTML = `
-      <div class="z1">
-        <p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">
-          ${wrapWords(content[0][dayOfYear % content[0].length])}
-        </p>
-      </div>
-      <div class="z1">
-        <p class="font-f1 text-6xl md:text-8xl leading-[1.05]">
-          ${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}
-        </p>
-      </div>
-      <div class="py-24 text-center z1">
-        <h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2>
-      </div>
-      <div class="z1">
-        <p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">
-          ${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}
-        </p>
-      </div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[0][dayOfYear % content[0].length])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}</p></div>
+      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}</p></div>
     `;
 
-    // Video Logic for multiple videos
-    const containers = document.querySelectorAll('.v-container');
-    
-    containers.forEach(container => {
+    document.querySelectorAll('.v-container').forEach(container => {
       const video = container.querySelector('video');
       container.addEventListener('click', () => {
         if (video.paused) {
-          // Pause other videos first
           document.querySelectorAll('video').forEach(v => {
-            if(v !== video) {
-              v.pause();
-              v.parentElement.classList.remove('is-playing');
-            }
+            if(v !== video) { v.pause(); v.parentElement.classList.remove('is-playing'); }
           });
           video.play();
           container.classList.add('is-playing');
@@ -289,11 +231,8 @@ video {
     });
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("za");
-      });
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
-
     document.querySelectorAll(".z1").forEach(el => observer.observe(el));
   };
 
@@ -307,42 +246,21 @@ video {
     const nav = document.getElementById("n0");
     const scrollHint = document.getElementById("sd");
     const vh = window.innerHeight;
-    
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    
-    if (scrollHint) {
-      if (scrollPos > 20) {
-        scrollHint.style.opacity = "0";
-        scrollHint.style.pointerEvents = "none";
-      } else {
-        scrollHint.style.opacity = "1";
-        scrollHint.style.pointerEvents = "auto";
-      }
-    }
+    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
 
     const spans = document.querySelectorAll(".hi");
     const centerY = vh * 0.5;
-    
     let activeSpan = null;
     let minDistance = Infinity;
-
     spans.forEach(span => {
       const rect = span.getBoundingClientRect();
-      const mid = rect.top + (rect.height / 2);
-      const dist = Math.abs(mid - centerY);
-      
-      if (dist < minDistance) {
-        minDistance = dist;
-        activeSpan = span;
-      }
+      const dist = Math.abs((rect.top + rect.height / 2) - centerY);
+      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
     });
-
     spans.forEach(span => {
-      if (span === activeSpan && minDistance < vh * 0.4) {
-        span.classList.add("active");
-      } else {
-        span.classList.remove("active");
-      }
+      if (span === activeSpan && minDistance < vh * 0.4) span.classList.add("active");
+      else span.classList.remove("active");
     });
   }, { passive: true });
 
@@ -350,9 +268,7 @@ video {
     updateTime();
     init();
     setInterval(updateTime, 60000);
-    setTimeout(() => {
-      window.dispatchEvent(new Event('scroll'));
-    }, 150);
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
   };
 })();
 </script>
