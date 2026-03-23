@@ -60,10 +60,18 @@ body {
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 .sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
 
-/* Video Container Styles */
+/* Video Grid Styles */
+.v-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .v-wrap {
   width: 100%;
-  max-width: 400px;
   aspect-ratio: 9/16;
   background: #111;
   border-radius: 20px;
@@ -73,38 +81,48 @@ body {
   position: relative;
   cursor: pointer;
 }
+
 video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .v-play-btn {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .v-play-btn svg {
   fill: white;
-  width: 30px;
-  height: 30px;
-  margin-left: 5px;
+  width: 28px;
+  height: 28px;
+  /* Visual correction for centering a triangle in a circle */
+  transform: translateX(2px);
 }
+
+.v-wrap:hover .v-play-btn {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .v-wrap.is-playing .v-play-btn {
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(1.2);
+  transform: translate(-50%, -50%) scale(0.8);
 }
 </style>
 </head>
@@ -133,27 +151,45 @@ video {
 
   <!-- Video Section -->
   <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
-    <div class="z1 mb-16 text-center">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-8">Reflections</h3>
-       <div class="v-wrap" id="videoContainer">
-         <div class="v-play-btn" id="playBtn">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <div class="z1 mb-16 text-center w-full">
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-12">Reflections</h3>
+       
+       <div class="v-grid">
+         <!-- Video 1 -->
+         <div class="v-wrap v-container">
+           <div class="v-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+           </div>
+           <video 
+             controlsList="nodownload noremoteplayback" 
+             disablePictureInPicture 
+             oncontextmenu="return false;"
+             preload="metadata" 
+             playsinline 
+             loop>
+             <source src="videos/1.mp4" type="video/mp4">
+           </video>
          </div>
-         <video 
-           id="mainVideo"
-           controlsList="nodownload noremoteplayback" 
-           disablePictureInPicture 
-           oncontextmenu="return false;"
-           preload="metadata" 
-           playsinline 
-           loop>
-           <source src="videos/1.mp4" type="video/mp4">
-           Your browser does not support the video tag.
-         </video>
+
+         <!-- Video 2 -->
+         <div class="v-wrap v-container">
+           <div class="v-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+           </div>
+           <video 
+             controlsList="nodownload noremoteplayback" 
+             disablePictureInPicture 
+             oncontextmenu="return false;"
+             preload="metadata" 
+             playsinline 
+             loop>
+             <source src="videos/2.mp4" type="video/mp4">
+           </video>
+         </div>
        </div>
     </div>
     <div class="z1 text-center py-12">
-      <p class="font-f2 text-[12px] tracking-[0.6em] uppercase text-c2">Clear Mind. Strong Body. Kind Heart.</p>
+      <p class="font-f2 text-[12px] tracking-[0.6em] uppercase text-c2">Defeat Laziness. Conquer Yourself. Build the Future.</p>
     </div>
   </section>
 </main>
@@ -229,18 +265,27 @@ video {
       </div>
     `;
 
-    // Video Logic
-    const video = document.getElementById('mainVideo');
-    const container = document.getElementById('videoContainer');
+    // Video Logic for multiple videos
+    const containers = document.querySelectorAll('.v-container');
     
-    container.addEventListener('click', () => {
-      if (video.paused) {
-        video.play();
-        container.classList.add('is-playing');
-      } else {
-        video.pause();
-        container.classList.remove('is-playing');
-      }
+    containers.forEach(container => {
+      const video = container.querySelector('video');
+      container.addEventListener('click', () => {
+        if (video.paused) {
+          // Pause other videos first
+          document.querySelectorAll('video').forEach(v => {
+            if(v !== video) {
+              v.pause();
+              v.parentElement.classList.remove('is-playing');
+            }
+          });
+          video.play();
+          container.classList.add('is-playing');
+        } else {
+          video.pause();
+          container.classList.remove('is-playing');
+        }
+      });
     });
 
     const observer = new IntersectionObserver((entries) => {
