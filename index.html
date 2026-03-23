@@ -48,9 +48,9 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
 .hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-/* Responsive Video List */
 .v-grid { display: flex; flex-direction: column; gap: 80px; width: 100%; max-width: 800px; margin: 0 auto; }
-.v-wrap { width: 100%; background: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.6); position: relative; cursor: pointer; transition: transform 0.4s ease; }
+.v-wrap { width: 100%; background: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.6); position: relative; cursor: pointer; transition: transform 0.4s ease; display: none; }
+.v-wrap.visible { display: block; }
 .v-wrap:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); }
 video { width: 100%; height: auto; display: block; background: #000; }
 
@@ -64,7 +64,6 @@ video { width: 100%; height: auto; display: block; background: #000; }
 }
 .v-play-btn svg { fill: white; width: 38px; height: 38px; transform: translateX(5px); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(0.6); }
-.v-wrap:hover .v-play-btn { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); }
 </style>
 </head>
 <body>
@@ -88,7 +87,6 @@ video { width: 100%; height: auto; display: block; background: #000; }
   <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
     <div class="z1 mb-16 text-center w-full">
        <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-16">Reflections</h3>
-       <!-- Video Container will be populated by JS -->
        <div id="video-list" class="v-grid"></div>
     </div>
     <div class="z1 text-center py-20">
@@ -114,8 +112,11 @@ video { width: 100%; height: auto; display: block; background: #000; }
 
   const initVideos = () => {
     const list = document.getElementById('video-list');
-    // Generates 10 video slots automatically
-    for(let i=1; i<=10; i++) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+    }, { threshold: 0.05 });
+
+    for(let i=1; i<=200; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap v-container z1';
       vWrap.innerHTML = `
@@ -126,8 +127,7 @@ video { width: 100%; height: auto; display: block; background: #000; }
       `;
 
       const video = vWrap.querySelector('video');
-      
-      // Error handling: if video doesn't exist, hide the container
+      video.onloadedmetadata = () => { vWrap.classList.add('visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
       vWrap.addEventListener('click', () => {
@@ -151,25 +151,22 @@ video { width: 100%; height: auto; display: block; background: #000; }
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const themeIndex = dayOfYear % 5;
-    const themeName = themes[themeIndex];
     
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
-    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
+    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
     
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[0][dayOfYear % content[0].length])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}</p></div>
-      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2></div>
+      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}</p></div>
     `;
 
     initVideos();
-
-    const observer = new IntersectionObserver((entries) => {
+    const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
-    document.querySelectorAll(".z1").forEach(el => observer.observe(el));
+    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
   };
 
   const updateTime = () => {
