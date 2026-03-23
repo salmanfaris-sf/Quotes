@@ -71,21 +71,40 @@ body {
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   position: relative;
+  cursor: pointer;
 }
 video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* Prevent right-click overlay if needed */
-.v-overlay {
+.v-play-btn {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.v-play-btn svg {
+  fill: white;
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+}
+.v-wrap.is-playing .v-play-btn {
+  opacity: 0;
   pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.2);
 }
 </style>
 </head>
@@ -115,10 +134,13 @@ video {
   <!-- Video Section -->
   <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
     <div class="z1 mb-16 text-center">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-4">Reflections</h3>
-       <div class="v-wrap">
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-8">Reflections</h3>
+       <div class="v-wrap" id="videoContainer">
+         <div class="v-play-btn" id="playBtn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+         </div>
          <video 
-           controls 
+           id="mainVideo"
            controlsList="nodownload noremoteplayback" 
            disablePictureInPicture 
            oncontextmenu="return false;"
@@ -206,6 +228,20 @@ video {
         </p>
       </div>
     `;
+
+    // Video Logic
+    const video = document.getElementById('mainVideo');
+    const container = document.getElementById('videoContainer');
+    
+    container.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        container.classList.add('is-playing');
+      } else {
+        video.pause();
+        container.classList.remove('is-playing');
+      }
+    });
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
