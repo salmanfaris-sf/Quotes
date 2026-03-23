@@ -30,19 +30,8 @@ tailwind.config={
 }
 </script>
 <style>
-html {
-  background-color: #050505;
-  scroll-behavior: auto;
-}
-body {
-  margin: 0;
-  background-color: #050505;
-  color: #d1d1d1;
-  display: block;
-  font-smoothing: antialiased;
-  width: 100%;
-  position: relative;
-}
+html { background-color: #050505; scroll-behavior: auto; }
+body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: antialiased; width: 100%; position: relative; }
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(5,5,5,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
@@ -58,80 +47,27 @@ body {
 #sd{transition:opacity .5s ease,visibility .5s}
 .hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
-.sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
 
-/* Responsive Video Grid */
-.v-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.v-wrap {
-  width: 100%;
-  background: #111;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  position: relative;
-  cursor: pointer;
-  /* Remove fixed aspect ratio to allow auto-height */
-  height: auto;
-}
-
-video {
-  width: 100%;
-  height: auto; /* Allow video to dictate the height */
-  display: block;
-}
+/* Responsive Video List */
+.v-grid { display: flex; flex-direction: column; gap: 80px; width: 100%; max-width: 800px; margin: 0 auto; }
+.v-wrap { width: 100%; background: #111; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.6); position: relative; cursor: pointer; transition: transform 0.4s ease; }
+.v-wrap:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); }
+video { width: 100%; height: auto; display: block; background: #000; }
 
 .v-play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90px;
-  height: 90px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 96px; height: 96px; background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
-
-.v-play-btn svg {
-  fill: white;
-  width: 36px;
-  height: 36px;
-  transform: translateX(4px);
-}
-
-.v-wrap:hover .v-play-btn {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%) scale(1.05);
-}
-
-.v-wrap.is-playing .v-play-btn {
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -50%) scale(0.5);
-}
+.v-play-btn svg { fill: white; width: 38px; height: 38px; transform: translateX(5px); }
+.v-wrap.is-playing .v-play-btn { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(0.6); }
+.v-wrap:hover .v-play-btn { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); }
 </style>
 </head>
 <body>
-<div class="sr-only">
-  <h1>Salman Faris</h1>
-  <p>Simple advice on working hard and being a better person.</p>
-</div>
 <div class="z2"></div>
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
@@ -151,32 +87,12 @@ video {
 
   <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
     <div class="z1 mb-16 text-center w-full">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-12">Reflections</h3>
-       
-       <div class="v-grid">
-         <!-- Video 1 -->
-         <div class="v-wrap v-container">
-           <div class="v-play-btn">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-           </div>
-           <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
-             <source src="videos/1.mp4" type="video/mp4">
-           </video>
-         </div>
-
-         <!-- Video 2 -->
-         <div class="v-wrap v-container">
-           <div class="v-play-btn">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-           </div>
-           <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
-             <source src="videos/2.mp4" type="video/mp4">
-           </video>
-         </div>
-       </div>
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-16">Reflections</h3>
+       <!-- Video Container will be populated by JS -->
+       <div id="video-list" class="v-grid"></div>
     </div>
-    <div class="z1 text-center py-12">
-      <p class="font-f2 text-[12px] tracking-[0.6em] uppercase text-c2">Defeat Laziness. Conquer Yourself. Build the Future.</p>
+    <div class="z1 text-center py-20">
+      <p class="font-f2 text-[12px] tracking-[0.8em] uppercase text-c2">Defeat Laziness. Conquer Yourself. Build the Future.</p>
     </div>
   </section>
 </main>
@@ -196,6 +112,40 @@ video {
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
+  const initVideos = () => {
+    const list = document.getElementById('video-list');
+    // Generates 10 video slots automatically
+    for(let i=1; i<=10; i++) {
+      const vWrap = document.createElement('div');
+      vWrap.className = 'v-wrap v-container z1';
+      vWrap.innerHTML = `
+        <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
+          <source src="videos/${i}.mp4" type="video/mp4">
+        </video>
+      `;
+
+      const video = vWrap.querySelector('video');
+      
+      // Error handling: if video doesn't exist, hide the container
+      video.onerror = () => vWrap.remove();
+
+      vWrap.addEventListener('click', () => {
+        if (video.paused) {
+          document.querySelectorAll('video').forEach(v => {
+            if(v !== video) { v.pause(); v.parentElement.classList.remove('is-playing'); }
+          });
+          video.play();
+          vWrap.classList.add('is-playing');
+        } else {
+          video.pause();
+          vWrap.classList.remove('is-playing');
+        }
+      });
+      list.appendChild(vWrap);
+    }
+  };
+
   const init = () => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
@@ -214,21 +164,7 @@ video {
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}</p></div>
     `;
 
-    document.querySelectorAll('.v-container').forEach(container => {
-      const video = container.querySelector('video');
-      container.addEventListener('click', () => {
-        if (video.paused) {
-          document.querySelectorAll('video').forEach(v => {
-            if(v !== video) { v.pause(); v.parentElement.classList.remove('is-playing'); }
-          });
-          video.play();
-          container.classList.add('is-playing');
-        } else {
-          video.pause();
-          container.classList.remove('is-playing');
-        }
-      });
-    });
+    initVideos();
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
