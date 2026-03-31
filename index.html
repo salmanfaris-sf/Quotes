@@ -13,12 +13,12 @@
   gtag('config', 'G-1K1TKBQFFK');
 </script>
 <title>Salman Faris | Simple Wisdom</title>
-<meta name="description" content="Personal thoughts of Salman Faris on hard work, focus, and life.">
+<meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
 <meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -85,11 +85,11 @@ video { width: 100%; height: auto; display: block; background: #000; }
 
   <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
     <div class="z1 mb-16 text-center w-full">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-16">Reflections</h3>
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-16">The Archive</h3>
        <div id="video-list" class="v-grid"></div>
     </div>
     <div class="z1 text-center py-20">
-      <p class="font-f2 text-[12px] tracking-[0.8em] uppercase text-c2">Defeat Laziness. Conquer Yourself. Build the Future.</p>
+      <p id="bottom-mantra" class="font-f2 text-[12px] tracking-[0.8em] uppercase text-c2"></p>
     </div>
   </section>
 </main>
@@ -100,11 +100,23 @@ video { width: 100%; height: auto; display: block; background: #000; }
 
 <script>
 (function(){
-  const themes = ['Strong Mind', 'Deep Will', 'Full Focus', 'Never Stop', 'Great Aim'];
+  const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
+  
+  // Dynamic mantras for the bottom section
+  const mantras = [
+    "Hate Laziness. Conquer the Day.",
+    "Zero Excuses. Infinite Action.",
+    "The Clock is Ticking. Build your Legacy.",
+    "Discipline is Freedom. Start Now.",
+    "Face the Pain. Earn the Result.",
+    "Kill the Weakness. Feed the Will.",
+    "Consistency creates Mastery. Never Stop."
+  ];
+
   const content = [
-    ["Do not care what other people think. If you can control your mind, you can control your life. What people say does not last. Who you are inside lasts forever. Stand by what you believe. Always do the right thing.", "Your value comes from what you do, not how you look. The world does not care about your face. It cares about how strong you are. Stop looking for others to like you. If you are happy with yourself, nothing else matters.", "The best way to live is to have a goal. Without a goal, you are lost. With a goal, you are strong. Live with a clear plan. Try to find the truth. Do not wait for others to show you the way.", "Being lazy is your biggest enemy. It wants you to stay in bed. It wants you to be average. It wants you to waste time on your phone. Fight it. Wake up early. Start your work. A busy mind is a free mind.", "Do not be mad if your life is hard. Hard times make you better. Work hard to take care of your family. Use your quiet time to build your future. The world sees every step you take. Hard work always pays off."],
-    ["Strength is saying no to things that feel good but are bad for you. Pick the hard path if it is the right path. If you can control yourself, you can win. The time to start is now. Real power is self-control.", "Doing the same good things every day is the way to win. If you do not control your habits, they will control you. If you win the morning, you win the day. Build your life around good actions. Being strong is a choice you make every day.", "Your time is the most important thing you have. When it is gone, you cannot get it back. Stop looking at things that do not matter. Stop waiting for help. Being lazy is a slow death. Be fast. Be clear. Every hour is a choice.", "Your word is a promise to yourself. Do not break it when you are tired. Wake up with a plan. Finish with a smile. The struggle is how you learn. Being great is not one act, it is what you do every day. Be the best you can be.", "Stop waiting for the world to get better. Make yourself better first. Be strong for your friends and family. Listen more than you speak. Your real value is measured by what you do for others."],
-    ["Trust the process when you are not sure. Be thankful even when things are bad. You build your heart by working every day. Stop crying about the rain. Start building your house. You can do great things if you keep trying.", "Be kind because everyone is having a hard time. Kindness is a kind of strength. One good act can change a life. Do not let a hard world make you mean. Stay humble. Treat everyone with the same respect.", "The world looks at what you do, not what you say. People see that you do not give up. They see that you are focused. Do not be sad if you are slow. You move a mountain one stone at a time. Stand up and move.", "Real success is who you became, not what you bought. Help people who have less than you. Protect those who are weak. The strongest person is the one who beats their own bad habits. Try to be that person.", "Never forget where you came from. You came from the earth and you will go back to it. Use this to stay humble. Take care of the world. Build something that stays after you are gone."]
+    ["You already know what to do. You just don’t like the cost. The brain will invent reasons to avoid pain, even when pain is the only path forward. Every wasted year makes the next one heavier. Do it the moment you remember it. Stick to the plan. Not your mood.", "You only have one thousand four hundred and forty minutes every day. Don’t let a single one go to waste. Focus is a superpower in a distracted world. Weakness leaves when discipline enters. Strength is built through patience. Be strict with yourself.", "Success is earned, not given. Focus on your growth. Stay Disciplined. Growth begins outside comfort zones. Hard days make strong people. Keep showing up. Strength is built through repetition. Do the boring work well.", "A real man protects and provides. Don't follow the crowd. Follow the truth. Never build your happiness on someone else's tears. Eliminate the tomorrow mindset today. The strongest man is he who controls his anger. Be a man of your word.", "Don't waste time. You don't get it back. The problem is, you think you have a lot of time to live. Live everyday like it's your last day. Consistency is the only way out. Big dreams need big sacrifices. Practice makes perfect."],
+    ["Nothing changes if nothing changes. Stay different. You can't have a million dollar dream with a minimum wage work ethic. Your habits define your future self. Hate Laziness. Always speak the truth. Time waits for no one.", "Knowledge without action is useless. Fear Allah. Not people. Live with purpose. Be a man of honor. A real man protects those who are vulnerable. Every day is a second chance. Now is the time.", "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock one hundred times and it won't even move. But on the one hundred and first hit, it suddenly breaks. It wasn't just the last hit. It was all of them.", "Zero Excuses. Sweat more in practice. Bleed less in war. Habits decide outcomes. Growth requires discomfort. Work now. Relax later. Don't look back. You're not going that way. Every day counts.", "Focus. Be better than you were yesterday. So race one another in good deeds. Consistency creates mastery. This is the way. Leave a legacy. Let your life be a story of courage, action, and impact."],
+    ["Waiting won’t help. Overthinking won’t help. Action will. Do it. Lower your gaze, guard your tongue, and protect your heart. Your current life is the result of past actions. Your future is the result of today's actions.", "The man who keeps walking will eventually leave the place he hates. A few years of sacrifice can create a lifetime of freedom. Your future is built by what you do after a long tiring day. Speak clearly. Stand straight. Fear none.", "It always seems impossible until it's done. Discipline is doing what needs to be done, even if you don't want to do it. Stop looking for shortcuts. There are none. Only work. Only results.", "People will forget your words, but they will never forget your results. Stop talking and start building. The world doesn't care about your potential. It cares about your output. Be undeniable.", "Every second is a war against your own laziness. Win the war. Don't let your ancestors down. Be the one who changed the family line. Discipline is the highest form of self-love."]
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
@@ -129,7 +141,6 @@ video { width: 100%; height: auto; display: block; background: #000; }
       video.onloadedmetadata = () => { vWrap.classList.add('visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // Reset when finished
       video.addEventListener('ended', () => {
         vWrap.classList.remove('is-playing');
         video.currentTime = 0;
@@ -160,6 +171,9 @@ video { width: 100%; height: auto; display: block; background: #000; }
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
     
+    // Set dynamic bottom mantra
+    document.getElementById("bottom-mantra").textContent = mantras[dayOfYear % mantras.length];
+
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[0][dayOfYear % content[0].length])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}</p></div>
