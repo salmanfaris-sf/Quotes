@@ -63,6 +63,8 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   border: 1px solid rgba(255,255,255,0.05);
 }
 
+.v-wrap:hover { transform: scale(1.02); border-color: rgba(197,160,89,0.3); }
+
 .v-wrap video { 
   width: 100%; 
   height: 100%; 
@@ -70,50 +72,23 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* FULLSCREEN STATE */
-.v-wrap.is-playing {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  max-width: none;
-  aspect-ratio: auto;
-  z-index: 1000;
-  border-radius: 0;
-  margin: 0;
-  background: #000;
-}
-
-.v-wrap.is-playing video {
-  object-fit: contain;
-}
+/* NATIVE FULLSCREEN FIXES */
+video:fullscreen { object-fit: contain; background: #000; }
+video:-webkit-full-screen { object-fit: contain; background: #000; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 70px; height: 70px; background: rgba(255, 255, 255, 1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .v-play-btn svg { fill: #000; width: 24px; height: 24px; transform: translateX(2px); }
-
-.v-wrap.is-playing .v-play-btn { opacity: 0; pointer-events: none; }
-
-/* Close button for full screen */
-.v-close {
-  position: absolute; top: 30px; right: 30px;
-  width: 44px; height: 44px; background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 1010; color: #fff; font-size: 24px; opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.v-wrap.is-playing .v-close { opacity: 1; pointer-events: auto; }
 
 .v-info {
   position: absolute; bottom: 20px; left: 20px; z-index: 10;
   font-family: 'Inter', sans-serif; opacity: 0.4; font-size: 9px; letter-spacing: 0.2em;
 }
-.v-wrap.is-playing .v-info { display: none; }
 </style>
 </head>
 <body>
@@ -182,37 +157,41 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
-        <div class="v-close">&times;</div>
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">CH. ${String(i).padStart(3, '0')}</div>
-        <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
+        <video controls disablePictureInPicture preload="metadata" playsinline loop style="pointer-events: none;">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
 
       const video = vWrap.querySelector('video');
-      const closeBtn = vWrap.querySelector('.v-close');
 
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      const enterFS = (e) => {
-        if (vWrap.classList.contains('is-playing')) return;
-        e.stopPropagation();
-        vWrap.classList.add('is-playing');
+      // Native Full Screen Logic
+      vWrap.addEventListener('click', () => {
+        if (video.requestFullscreen) {
+          video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+          video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+          video.msRequestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+          // iOS specific
+          video.webkitEnterFullscreen();
+        }
         video.play();
-        document.body.style.overflow = 'hidden';
-      };
+      });
 
-      const exitFS = (e) => {
-        e.stopPropagation();
-        vWrap.classList.remove('is-playing');
-        video.pause();
-        document.body.style.overflow = 'auto';
+      // Exit logic for some browsers to stop video when full screen exits
+      const exitHandler = () => {
+        if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+          video.pause();
+        }
       };
-
-      vWrap.addEventListener('click', enterFS);
-      closeBtn.addEventListener('click', exitFS);
+      document.addEventListener('fullscreenchange', exitHandler);
+      document.addEventListener('webkitfullscreenchange', exitHandler);
 
       list.appendChild(vWrap);
     }
