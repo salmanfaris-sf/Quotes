@@ -87,15 +87,17 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
 
+/* The static play button shown in the grid */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 70px; height: 70px; background: #fff;
+  width: 70px; height: 70px; background: #000; /* Changed to Black background */
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #000; width: 24px; height: 24px; transform: translateX(2px); }
+.v-play-btn svg { fill: #fff; width: 24px; height: 24px; transform: translateX(2px); } /* Changed icon to White */
 
 .v-info {
   position: absolute; bottom: 20px; left: 24px; z-index: 10;
@@ -108,35 +110,39 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-/* Premium feedback overlay - Updated for clarity and punch */
+/* Updated high-contrast status feedback */
 .v-status-icon {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.5);
-  background: #000;
-  width: 80px;
-  height: 80px;
+  transform: translate(-50%, -50%) scale(0.6);
+  background: #000; /* Solid Black */
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-  z-index: 2147483647; /* Ensure it stays on top even in FS */
+  transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.2s ease;
+  z-index: 9999;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
 }
 
 .v-status-icon svg {
     width: 32px;
     height: 32px;
-    fill: #fff;
+    fill: #fff; /* Solid White */
 }
 
 .v-status-icon.show { 
     opacity: 1; 
     transform: translate(-50%, -50%) scale(1); 
 }
+
+/* Hide when video is actually playing and not in FS to keep grid clean */
+.v-wrap.is-playing .v-play-btn { opacity: 0; }
 
 .hidden { display: none !important; }
 </style>
@@ -199,13 +205,8 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
   const showStatusIcon = (videoContainer, type) => {
     let icon = videoContainer.querySelector('.v-status-icon');
-    if(!icon) {
-        icon = document.createElement('div');
-        icon.className = 'v-status-icon';
-        videoContainer.appendChild(icon);
-    }
+    if(!icon) return;
     
-    // Clear previous timeouts if user clicks fast
     if (icon._timer) clearTimeout(icon._timer);
     
     const svg = type === 'play' 
@@ -214,14 +215,14 @@ video::-webkit-media-controls-enclosure { display:none !important; }
     
     icon.innerHTML = svg;
     
-    // Use requestAnimationFrame to ensure CSS transition works
-    requestAnimationFrame(() => {
-        icon.classList.add('show');
-    });
+    // Force a reflow for the scale animation
+    icon.classList.remove('show');
+    void icon.offsetWidth;
+    icon.classList.add('show');
 
     icon._timer = setTimeout(() => {
         icon.classList.remove('show');
-    }, 600);
+    }, 800);
   };
 
   const initVideos = () => {
@@ -252,12 +253,15 @@ video::-webkit-media-controls-enclosure { display:none !important; }
         }
         video.pause();
         video.currentTime = 0;
+        vWrap.classList.remove('is-playing');
       });
 
-      // Handle Fullscreen interaction for play/pause
-      video.addEventListener('click', (e) => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            e.stopPropagation(); // Prevent duplicate events
+      // Unified click handler for FS and Grid
+      vWrap.addEventListener('click', (e) => {
+        const isFS = document.fullscreenElement || document.webkitIsFullScreen;
+        
+        if (isFS) {
+            // Click inside FS
             if (video.paused) {
                 video.play();
                 showStatusIcon(vWrap, 'play');
@@ -265,26 +269,29 @@ video::-webkit-media-controls-enclosure { display:none !important; }
                 video.pause();
                 showStatusIcon(vWrap, 'pause');
             }
-        }
-      });
-
-      vWrap.addEventListener('click', (e) => {
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+        } else {
+            // Click in Grid - Enter FS
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
                 video.muted = false;
                 fs.call(video).then(() => {
                     video.play();
+                    vWrap.classList.add('is-playing');
                 });
             }
         }
+      });
+
+      // Prevent native controls from popping up on mobile click if possible
+      video.addEventListener('click', (e) => {
+        e.preventDefault();
       });
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
           video.pause();
           video.muted = true;
-          video.controls = false;
+          vWrap.classList.remove('is-playing');
         }
       };
       
