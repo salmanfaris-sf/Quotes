@@ -48,21 +48,57 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
 .hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-.v-grid { display: flex; flex-direction: column; gap: 80px; width: 100%; max-width: 800px; margin: 0 auto; }
-.v-wrap { width: 100%; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; transition: opacity 0.4s ease; display: none; }
-.v-wrap.visible { display: block; }
-video { width: 100%; height: auto; display: block; background: #000; }
+/* Cinematic Video Section */
+#v-section { scroll-snap-type: y proximity; }
+.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.v-wrap { 
+  width: 100vw; 
+  height: 90vh; 
+  max-width: 900px; 
+  margin: 40px 0;
+  position: relative; 
+  background: #000; 
+  overflow: hidden; 
+  cursor: pointer;
+  scroll-snap-align: center;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+  border-radius: 0;
+}
+
+@media(min-width: 1024px) {
+  .v-wrap { border-radius: 24px; height: 85vh; }
+}
+
+.v-wrap video { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  display: block;
+}
+
+/* Shadow Overlay for depth */
+.v-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.6) 100%);
+  z-index: 5; pointer-events: none;
+}
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 70px; height: 70px; background: rgba(255, 255, 255, 0.9);
+  width: 90px; height: 90px; background: rgba(255, 255, 255, 1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 10; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 50px rgba(0,0,0,0.5);
 }
-.v-play-btn svg { fill: #000; width: 24px; height: 24px; transform: translateX(2px); }
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.08); background: #fff; }
-.v-wrap.is-playing .v-play-btn { opacity: 0; pointer-events: none; visibility: hidden; }
+.v-play-btn svg { fill: #000; width: 32px; height: 32px; transform: translateX(3px); }
+
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); }
+.v-wrap.is-playing .v-play-btn { opacity: 0; pointer-events: none; visibility: hidden; transform: translate(-50%, -50%) scale(0.8); }
+
+.v-info {
+  position: absolute; bottom: 40px; left: 40px; z-index: 10;
+  font-family: 'Inter', sans-serif; opacity: 0.8;
+}
 </style>
 </head>
 <body>
@@ -71,6 +107,7 @@ video { width: 100%; height: auto; display: block; background: #000; }
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
+
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
@@ -83,12 +120,13 @@ video { width: 100%; height: auto; display: block; background: #000; }
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="max-w-screen-2xl mx-auto px-6 py-40 relative z-10 flex flex-col items-center">
-    <div class="z1 mb-16 text-center w-full">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 mb-16">The Archive</h3>
-       <div id="video-list" class="v-grid"></div>
+  <section id="v-section" class="relative z-10 pb-40">
+    <div class="z1 mb-24 text-center px-6">
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40">The Archive</h3>
     </div>
-    <div class="z1 text-center py-20">
+    <div id="video-list" class="v-grid"></div>
+    
+    <div class="z1 text-center py-40 px-6">
       <p id="bottom-mantra" class="font-f2 text-[12px] tracking-[0.8em] uppercase text-c2"></p>
     </div>
   </section>
@@ -102,7 +140,6 @@ video { width: 100%; height: auto; display: block; background: #000; }
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
   
-  // Dynamic mantras for the bottom section
   const mantras = [
     "Hate Laziness. Conquer the Day.",
     "Zero Excuses. Infinite Action.",
@@ -124,27 +161,32 @@ video { width: 100%; height: auto; display: block; background: #000; }
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
-    }, { threshold: 0.05 });
+      entries.forEach(entry => { 
+        if (entry.isIntersecting) {
+            entry.target.classList.add("za");
+        } else {
+            // Pause if it scrolls out of view
+            const v = entry.target.querySelector('video');
+            if(v) { v.pause(); entry.target.classList.remove('is-playing'); }
+        }
+      });
+    }, { threshold: 0.4 });
 
     for(let i=1; i<=200; i++) {
       const vWrap = document.createElement('div');
-      vWrap.className = 'v-wrap v-container z1';
+      vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
+        <div class="v-overlay"></div>
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline>
+        <div class="v-info text-[9px] tracking-[0.3em] uppercase text-white/50">Chapter ${i}</div>
+        <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline loop>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
 
       const video = vWrap.querySelector('video');
-      video.onloadedmetadata = () => { vWrap.classList.add('visible'); observer.observe(vWrap); };
+      video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
-
-      video.addEventListener('ended', () => {
-        vWrap.classList.remove('is-playing');
-        video.currentTime = 0;
-      });
 
       vWrap.addEventListener('click', () => {
         if (video.paused) {
@@ -170,8 +212,6 @@ video { width: 100%; height: auto; display: block; background: #000; }
     
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
-    
-    // Set dynamic bottom mantra
     document.getElementById("bottom-mantra").textContent = mantras[dayOfYear % mantras.length];
 
     document.getElementById("m0").innerHTML = `
