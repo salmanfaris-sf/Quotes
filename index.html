@@ -72,9 +72,11 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* NATIVE FULLSCREEN FIXES */
-video:fullscreen { object-fit: contain; background: #000; }
-video:-webkit-full-screen { object-fit: contain; background: #000; }
+video::-webkit-media-controls { display:none !important; }
+video::-webkit-media-controls-enclosure { display:none !important; }
+
+video:fullscreen { object-fit: contain; background: #000; pointer-events: auto !important; }
+video:fullscreen::-webkit-media-controls { display: flex !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -86,8 +88,14 @@ video:-webkit-full-screen { object-fit: contain; background: #000; }
 .v-play-btn svg { fill: #000; width: 24px; height: 24px; transform: translateX(2px); }
 
 .v-info {
-  position: absolute; bottom: 20px; left: 20px; z-index: 10;
-  font-family: 'Inter', sans-serif; opacity: 0.4; font-size: 9px; letter-spacing: 0.2em;
+  position: absolute; bottom: 20px; left: 24px; z-index: 10;
+  font-family: 'Inter', sans-serif; 
+  opacity: 0.35; 
+  font-size: 8px; 
+  font-weight: 600;
+  letter-spacing: 0.5em;
+  color: #fff;
+  text-transform: uppercase;
 }
 </style>
 </head>
@@ -158,41 +166,34 @@ video:-webkit-full-screen { object-fit: contain; background: #000; }
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <div class="v-info">CH. ${String(i).padStart(3, '0')}</div>
-        <video controls disablePictureInPicture preload="metadata" playsinline loop style="pointer-events: none;">
+        <div class="v-info">REEL &nbsp;${String(i).padStart(3, '0')}</div>
+        <video preload="metadata" playsinline loop style="pointer-events: none;">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
 
       const video = vWrap.querySelector('video');
-
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // Native Full Screen Logic
       vWrap.addEventListener('click', () => {
-        if (video.requestFullscreen) {
-          video.requestFullscreen();
-        } else if (video.webkitRequestFullscreen) {
-          video.webkitRequestFullscreen();
-        } else if (video.msRequestFullscreen) {
-          video.msRequestFullscreen();
-        } else if (video.webkitEnterFullscreen) {
-          // iOS specific
-          video.webkitEnterFullscreen();
+        video.controls = true;
+        const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen || video.msRequestFullscreen;
+        if (fs) {
+          fs.call(video);
+          video.play();
         }
-        video.play();
       });
 
-      // Exit logic for some browsers to stop video when full screen exits
-      const exitHandler = () => {
-        if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+      const resetFS = () => {
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+          video.controls = false;
           video.pause();
         }
       };
-      document.addEventListener('fullscreenchange', exitHandler);
-      document.addEventListener('webkitfullscreenchange', exitHandler);
-
+      
+      document.addEventListener('fullscreenchange', resetFS);
+      document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
     }
   };
