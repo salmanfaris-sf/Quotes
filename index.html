@@ -91,16 +91,16 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 68px; height: 68px; 
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.4s ease;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 10; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); opacity: 0.9; }
+.v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.8; }
 
 .v-info {
   position: absolute; bottom: 16px; left: 20px; z-index: 10;
@@ -113,7 +113,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(255, 255, 255, 0.12); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(0, 0, 0, 0.7); border-color: rgba(197,160,89,0.3); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
 
 .quote-container {
@@ -204,20 +204,16 @@ footer {
 
   const updateClockAndStats = () => {
     const now = new Date();
-    
-    // Update Navbar Time (Month DD / YYYY)
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
     
-    // Update Quote Stats (Live HH:MM:SS AM/PM + Minutes Remaining)
-    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+    // Updated: removed seconds from the time string
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    
     const totalMinutesInDay = 1440;
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const remainingMinutes = totalMinutesInDay - currentMinutes;
-    
     const statsEl = document.getElementById('live-stats');
-    if (statsEl) {
-      statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`;
-    }
+    if (statsEl) { statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; }
   };
 
   const initVideos = () => {
@@ -271,7 +267,6 @@ footer {
     `;
     initVideos();
     updateClockAndStats();
-    
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
@@ -301,7 +296,6 @@ footer {
 
   window.onload = () => {
     init();
-    // Start live updates every second
     setInterval(updateClockAndStats, 1000);
     setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
   };
