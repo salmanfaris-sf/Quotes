@@ -49,26 +49,20 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
 .v-grid { display: flex; flex-direction: column; gap: 80px; width: 100%; max-width: 800px; margin: 0 auto; }
-.v-wrap { width: 100%; background: #0a0a0a; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 30px 80px rgba(0,0,0,0.8); position: relative; cursor: pointer; transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), border-color 0.4s ease; display: none; }
+.v-wrap { width: 100%; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; transition: opacity 0.4s ease; display: none; }
 .v-wrap.visible { display: block; }
-.v-wrap:hover { transform: translateY(-8px); border-color: rgba(197,160,89,0.3); }
-video { width: 100%; height: auto; display: block; background: #000; transition: filter 0.5s ease; }
-.v-wrap.is-playing video { filter: brightness(1.1); }
+video { width: 100%; height: auto; display: block; background: #000; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 80px; height: 80px; background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  width: 70px; height: 70px; background: rgba(255, 255, 255, 0.9);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 0 rgba(255,255,255,0);
+  z-index: 10; transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
-.v-wrap:hover .v-play-btn { background: rgba(197,160,89,0.2); border-color: rgba(197,160,89,0.5); transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 20px rgba(197,160,89,0.2); }
-.v-play-btn svg { fill: #fff; width: 28px; height: 28px; transform: translateX(3px); filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); transition: fill 0.3s ease; }
-.v-wrap:hover .v-play-btn svg { fill: #C5A059; }
-
-.v-wrap.is-playing .v-play-btn { opacity: 0; visibility: hidden; transform: translate(-50%, -50%) scale(0.5); }
+.v-play-btn svg { fill: #000; width: 24px; height: 24px; transform: translateX(2px); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.08); background: #fff; }
+.v-wrap.is-playing .v-play-btn { opacity: 0; pointer-events: none; visibility: hidden; }
 </style>
 </head>
 <body>
@@ -125,9 +119,7 @@ video { width: 100%; height: auto; display: block; background: #000; transition:
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap v-container z1';
       vWrap.innerHTML = `
-        <div class="v-play-btn">
-          <svg viewBox="0 0 24 24"><path d="M7 5.5v13a1 1 0 0 0 1.555.832l10-6.5a1 1 0 0 0 0-1.664l-10-6.5A1 1 0 0 0 7 5.5z"/></svg>
-        </div>
+        <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <video controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" preload="metadata" playsinline>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
@@ -137,21 +129,16 @@ video { width: 100%; height: auto; display: block; background: #000; transition:
       video.onloadedmetadata = () => { vWrap.classList.add('visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // Stop video when it ends
+      // Reset when finished
       video.addEventListener('ended', () => {
-        video.pause();
-        video.currentTime = 0;
         vWrap.classList.remove('is-playing');
+        video.currentTime = 0;
       });
 
       vWrap.addEventListener('click', () => {
         if (video.paused) {
-          // Pause all other videos
           document.querySelectorAll('video').forEach(v => {
-            if(v !== video) { 
-              v.pause(); 
-              v.parentElement.classList.remove('is-playing'); 
-            }
+            if(v !== video) { v.pause(); v.parentElement.classList.remove('is-playing'); }
           });
           video.play();
           vWrap.classList.add('is-playing');
