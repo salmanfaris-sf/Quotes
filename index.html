@@ -118,30 +118,29 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
 .quote-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 90vw;
     margin: 0 auto;
     text-align: center;
 }
 .quote-line {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(10px, 2.5vw, 14px); /* Fluid typography to fit screen */
-    font-weight: 500;
-    line-height: 1.8;
+    font-size: clamp(11px, 3.2vw, 15px); /* Adjusted for lowercase fitting */
+    font-weight: 400;
+    line-height: 1.6;
     color: #C5A059;
-    opacity: 0.95;
+    opacity: 0.9;
     margin: 0;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
+    letter-spacing: 0.05em; /* Reduced for lowercase readability */
+    /* text-transform removed to allow lowercase */
 }
 .quote-stats {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(10px, 2.5vw, 14px);
+    font-size: clamp(10px, 2.8vw, 13px);
     color: #C5A059;
-    opacity: 0.95;
-    letter-spacing: 0.3em;
-    margin-top: 8px;
-    text-transform: uppercase;
-    font-weight: 600;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    margin-top: 12px;
+    font-weight: 500;
 }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
@@ -204,7 +203,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       const remainingMinutes = totalMinutes - currentMinutes;
       const statsEl = document.getElementById('live-stats');
-      if (statsEl) statsEl.textContent = `TIME: ${timeStr} • ${remainingMinutes} MINUTES REMAINING TODAY`;
+      if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`;
   };
 
   const initVideos = () => {
