@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <meta name="theme-color" content="#050505">
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -72,25 +71,76 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* Hide ALL controls in normal view */
+/* Hide Native Controls */
 video::-webkit-media-controls { display:none !important; }
-video::-webkit-media-controls-enclosure { display:none !important; }
 
-/* CSS to hide seek/scrubbing specifically in fullscreen */
-video:fullscreen::-webkit-media-controls-timeline,
-video:fullscreen::-webkit-media-controls-current-time-display,
-video:fullscreen::-webkit-media-controls-time-remaining-display,
-video:fullscreen::-webkit-media-controls-mute-button,
-video:fullscreen::-webkit-media-controls-fullscreen-button {
-    display: none !important;
+/* Custom Fullscreen UI */
+.v-fs-ui {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%);
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* Keep play button visible in FS controls */
-video:fullscreen::-webkit-media-controls-play-button {
-    display: flex !important;
+video:fullscreen + .v-fs-ui, 
+video:-webkit-full-screen + .v-fs-ui {
+    display: flex;
 }
 
-video:fullscreen { object-fit: contain; background: #000; pointer-events: auto !important; }
+/* Show UI on movement in FS */
+.v-fs-show-ui { opacity: 1; pointer-events: auto; }
+
+.v-fs-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.v-fs-play-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.v-fs-play-btn svg { fill: #fff; width: 20px; height: 20px; }
+
+.v-fs-track-container {
+    flex-grow: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.2);
+    position: relative;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.v-fs-track-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #C5A059;
+    width: 0%;
+}
+
+.v-fs-time {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.1em;
+    min-width: 40px;
+}
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -169,6 +219,13 @@ video:fullscreen { object-fit: contain; background: #000; pointer-events: auto !
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
+  const formatTime = (seconds) => {
+    if (isNaN(seconds)) return "0:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
@@ -184,43 +241,95 @@ video:fullscreen { object-fit: contain; background: #000; pointer-events: auto !
         <video preload="metadata" playsinline loop style="pointer-events: none;">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
+        <div class="v-fs-ui">
+            <div class="v-fs-controls">
+                <div class="v-fs-play-btn">
+                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
+                    <svg class="pause-icon hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </div>
+                <div class="v-fs-track-container">
+                    <div class="v-fs-track-fill"></div>
+                </div>
+                <div class="v-fs-time">0:00</div>
+            </div>
+        </div>
       `;
 
       const video = vWrap.querySelector('video');
+      const ui = vWrap.querySelector('.v-fs-ui');
+      const playPauseBtn = ui.querySelector('.v-fs-play-btn');
+      const playIcon = playPauseBtn.querySelector('.play-icon');
+      const pauseIcon = playPauseBtn.querySelector('.pause-icon');
+      const trackContainer = ui.querySelector('.v-fs-track-container');
+      const trackFill = ui.querySelector('.v-fs-track-fill');
+      const timeDisplay = ui.querySelector('.v-fs-time');
+
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // Fullscreen Activation
-      vWrap.addEventListener('click', () => {
-        video.controls = true;
-        const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen || video.msRequestFullscreen;
-        if (fs) {
-          fs.call(video);
-          video.play();
-        }
-      });
+      // UI Visibility Logic
+      let uiTimer;
+      const showUI = () => {
+          ui.classList.add('v-fs-show-ui');
+          clearTimeout(uiTimer);
+          uiTimer = setTimeout(() => {
+              if (!video.paused) ui.classList.remove('v-fs-show-ui');
+          }, 3000);
+      };
 
-      // Tap to Toggle Play/Pause in Fullscreen
-      video.addEventListener('click', (e) => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            e.preventDefault(); // Stop default browser behavior
-            if (video.paused) video.play();
-            else video.pause();
-        }
-      });
-
-      // Prevent seek on double click in fullscreen
-      video.addEventListener('dblclick', (e) => {
-          if (document.fullscreenElement || document.webkitIsFullScreen) {
-              e.preventDefault();
-              e.stopPropagation();
+      // Play/Pause Logic
+      const togglePlay = (e) => {
+          if (e) e.stopPropagation();
+          if (video.paused) {
+              video.play();
+              playIcon.classList.add('hidden');
+              pauseIcon.classList.remove('hidden');
+          } else {
+              video.pause();
+              playIcon.classList.remove('hidden');
+              pauseIcon.classList.add('hidden');
+              ui.classList.add('v-fs-show-ui');
           }
-      }, true);
+      };
+
+      // Track Progress
+      video.addEventListener('timeupdate', () => {
+          const pct = (video.currentTime / video.duration) * 100;
+          trackFill.style.width = `${pct}%`;
+          timeDisplay.textContent = formatTime(video.duration - video.currentTime);
+      });
+
+      // Scrubbing
+      trackContainer.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const rect = trackContainer.getBoundingClientRect();
+          const pos = (e.clientX - rect.left) / rect.width;
+          video.currentTime = pos * video.duration;
+      });
+
+      playPauseBtn.addEventListener('click', togglePlay);
+
+      vWrap.addEventListener('click', (e) => {
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen || video.msRequestFullscreen;
+            if (fs) {
+                fs.call(video);
+                video.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            }
+        } else {
+            togglePlay();
+        }
+      });
+
+      video.addEventListener('mousemove', showUI);
+      video.addEventListener('touchstart', showUI);
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-          video.controls = false;
           video.pause();
+          ui.classList.remove('v-fs-show-ui');
         }
       };
       
