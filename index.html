@@ -29,25 +29,29 @@ tailwind.config={
 }
 </script>
 <style>
+:root { --sat: env(safe-area-inset-top); }
 html, body { 
   background-color: #000000; 
-  scroll-behavior: auto; 
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
   width: 100%;
-  position: relative;
 }
 
-/* Prevent scroll when class is applied */
+body { color: #d1d1d1; font-smoothing: antialiased; position: relative; }
+
+/* Fixed Scroll Lock Fix */
 body.no-scroll {
-  overflow: hidden;
-  height: 100vh;
-  touch-action: none;
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
 }
 
-body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
-
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s; z-index: 50;}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+
+/* Hide Nav when video is open */
+body.no-scroll nav { opacity: 0; visibility: hidden; pointer-events: none; }
+
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
 
@@ -104,7 +108,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 /* Cinematic Smooth Overlay */
 #cinema-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: 1000; 
+  z-index: 10000; /* Extremely high to cover everything */
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0);
   backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
@@ -116,8 +120,8 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 }
 
 #cinema-overlay.active {
-  background: rgba(0,0,0,0.98);
-  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+  background: rgba(0,0,0,1);
+  backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);
   pointer-events: auto;
   visibility: visible;
 }
@@ -128,49 +132,38 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(0.85);
+  transform: scale(0.9);
   opacity: 0;
-  filter: blur(10px);
-  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              opacity 0.6s ease,
-              filter 0.8s ease;
+  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1), 
+              opacity 0.6s ease;
 }
 
 #cinema-overlay.active #cinema-video-container {
   transform: scale(1);
   opacity: 1;
-  filter: blur(0px);
 }
 
 #cinema-video {
   max-width: 100%;
   max-height: 100%;
-  border-radius: 4px;
+  object-fit: contain;
 }
 
 #cinema-close {
-  position: fixed; top: 30px; right: 30px; z-index: 1001;
+  position: absolute; top: 30px; right: 30px; z-index: 10001;
   width: 48px; height: 48px;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.6s ease;
 }
 
-#cinema-overlay.active #cinema-close {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#cinema-close:hover { 
-  background: rgba(255,255,255,0.1); 
-  transform: scale(1.1) rotate(90deg);
-}
+#cinema-overlay.active #cinema-close { opacity: 1; }
+#cinema-close:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); }
 #cinema-close svg { width: 20px; height: 20px; stroke: #fff; }
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
@@ -184,7 +177,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
 <div id="cinema-overlay">
   <div id="cinema-close">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
@@ -194,12 +187,12 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   </div>
 </div>
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center">
+<nav id="n0" class="z0 fixed top-0 w-full py-4 px-8 flex justify-between items-center">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 
-<main id="main-site" class="relative w-full transition-all duration-700">
+<main id="main-site" class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
       <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
@@ -251,32 +244,39 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
     if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`;
   };
 
+  let scrollPosBeforeLock = 0;
+
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const overlay = document.getElementById('cinema-overlay');
     const cinemaVideo = document.getElementById('cinema-video');
     const closeBtn = document.getElementById('cinema-close');
-    const mainSite = document.getElementById('main-site');
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.1 });
 
     const openCinema = (src) => {
-      document.body.classList.add('no-scroll'); // Lock scrolling
+      scrollPosBeforeLock = window.scrollY; // Store position
+      document.body.style.top = `-${scrollPosBeforeLock}px`; // Shift body
+      document.body.classList.add('no-scroll');
+      
       cinemaVideo.src = src;
       overlay.classList.add('active');
-      mainSite.style.filter = "grayscale(1) brightness(0.2)";
       cinemaVideo.play().catch(e => console.log("Play interrupted"));
     };
 
     const closeCinema = () => {
-      document.body.classList.remove('no-scroll'); // Unlock scrolling
       overlay.classList.remove('active');
-      mainSite.style.filter = "none";
+      
+      // Cleanup
       setTimeout(() => {
         cinemaVideo.pause();
         cinemaVideo.src = "";
+        
+        document.body.classList.remove('no-scroll');
+        document.body.style.top = '';
+        window.scrollTo(0, scrollPosBeforeLock); // Restore exact position
       }, 700);
     };
 
