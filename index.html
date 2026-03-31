@@ -83,24 +83,29 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
 }
 
-video:fullscreen { object-fit: contain !important; background-color: black; }
-video::-webkit-full-screen { object-fit: contain !important; background-color: black; }
+/* Strict Control Removal */
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
+video::-webkit-media-controls-panel { display: none !important; }
+video::-webkit-media-controls-play-button { display: none !important; }
+video::-webkit-media-controls-start-playback-button { display: none !important; }
+
+video:fullscreen { object-fit: contain !important; background-color: black; }
+video::-webkit-full-screen { object-fit: contain !important; background-color: black; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 68px; height: 68px; 
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 72px; height: 72px; 
+  background: rgba(0, 0, 0, 0.65); /* Darker transparent black */
+  backdrop-filter: blur(30px) saturate(1.5); /* Deep blur and slight saturation */
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  z-index: 10; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.8);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.8; }
+.v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.9; }
 
 .v-info {
   position: absolute; bottom: 16px; left: 20px; z-index: 10;
@@ -113,8 +118,8 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(0, 0, 0, 0.7); border-color: rgba(197,160,89,0.3); }
-.v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(0, 0, 0, 0.8); border-color: rgba(197,160,89,0.4); }
+.v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.6); visibility: hidden; }
 
 .quote-container {
     width: 100%;
@@ -141,15 +146,8 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
-
-.quote-wrapper {
-    padding-top: 80px; 
-    padding-bottom: 60px;
-}
-
-footer {
-    padding-top: 20px;
-}
+.quote-wrapper { padding-top: 80px; padding-bottom: 60px; }
+footer { padding-top: 20px; }
 </style>
 </head>
 <body>
@@ -205,10 +203,7 @@ footer {
   const updateClockAndStats = () => {
     const now = new Date();
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
-    
-    // Updated: removed seconds from the time string
     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-    
     const totalMinutesInDay = 1440;
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const remainingMinutes = totalMinutesInDay - currentMinutes;
@@ -228,23 +223,43 @@ footer {
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline muted>
+        <video preload="metadata" playsinline muted disablePictureInPicture>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
       video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
+      
+      // Tap to toggle logic (especially for fullscreen)
+      video.addEventListener('click', (e) => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            e.preventDefault();
+            if (video.paused) video.play();
+            else video.pause();
+        }
+      });
+
       video.addEventListener('ended', () => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
             document.exitFullscreen?.() || document.webkitExitFullscreen?.();
         }
         video.pause(); video.currentTime = 0; vWrap.classList.remove('is-playing');
       });
+
       vWrap.addEventListener('click', () => {
-        const fs = video.requestFullscreen || video.webkitRequestFullscreen;
-        if (fs) { video.muted = false; fs.call(video).then(() => { video.play(); vWrap.classList.add('is-playing'); }); }
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+            if (fs) { 
+                video.muted = false; 
+                fs.call(video).then(() => { 
+                    video.play(); 
+                    vWrap.classList.add('is-playing'); 
+                }); 
+            }
+        }
       });
+
       const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.muted = true; vWrap.classList.remove('is-playing'); } };
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
