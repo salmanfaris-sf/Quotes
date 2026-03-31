@@ -74,7 +74,7 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
 /* Hide Native Controls */
 video::-webkit-media-controls { display:none !important; }
 
-/* Custom Fullscreen UI */
+/* Custom Fullscreen UI Overlay */
 .v-fs-ui {
     position: absolute;
     inset: 0;
@@ -82,19 +82,19 @@ video::-webkit-media-controls { display:none !important; }
     flex-direction: column;
     justify-content: flex-end;
     padding: 30px;
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%);
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%);
     z-index: 100;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
+/* Show UI only when in FS mode */
 video:fullscreen + .v-fs-ui, 
 video:-webkit-full-screen + .v-fs-ui {
     display: flex;
 }
 
-/* Show UI on movement in FS */
 .v-fs-show-ui { opacity: 1; pointer-events: auto; }
 
 .v-fs-controls {
@@ -102,6 +102,7 @@ video:-webkit-full-screen + .v-fs-ui {
     align-items: center;
     gap: 20px;
     width: 100%;
+    margin-bottom: 10px;
 }
 
 .v-fs-play-btn {
@@ -112,17 +113,19 @@ video:-webkit-full-screen + .v-fs-ui {
     justify-content: center;
     cursor: pointer;
     pointer-events: auto;
+    flex-shrink: 0;
 }
 
-.v-fs-play-btn svg { fill: #fff; width: 20px; height: 20px; }
+.v-fs-play-btn svg { fill: #fff; width: 22px; height: 22px; }
 
 .v-fs-track-container {
     flex-grow: 1;
-    height: 2px;
-    background: rgba(255,255,255,0.2);
+    height: 1.5px;
+    background: rgba(255,255,255,0.15);
     position: relative;
     cursor: pointer;
     pointer-events: auto;
+    margin: 0 10px;
 }
 
 .v-fs-track-fill {
@@ -137,9 +140,11 @@ video:-webkit-full-screen + .v-fs-ui {
 .v-fs-time {
     font-family: 'Inter', sans-serif;
     font-size: 10px;
-    color: rgba(255,255,255,0.6);
-    letter-spacing: 0.1em;
-    min-width: 40px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.15em;
+    min-width: 45px;
+    text-align: right;
+    font-weight: 400;
 }
 
 .v-play-btn {
@@ -267,7 +272,6 @@ video:-webkit-full-screen + .v-fs-ui {
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // UI Visibility Logic
       let uiTimer;
       const showUI = () => {
           ui.classList.add('v-fs-show-ui');
@@ -277,13 +281,13 @@ video:-webkit-full-screen + .v-fs-ui {
           }, 3000);
       };
 
-      // Play/Pause Logic
       const togglePlay = (e) => {
           if (e) e.stopPropagation();
           if (video.paused) {
               video.play();
               playIcon.classList.add('hidden');
               pauseIcon.classList.remove('hidden');
+              showUI();
           } else {
               video.pause();
               playIcon.classList.remove('hidden');
@@ -292,14 +296,12 @@ video:-webkit-full-screen + .v-fs-ui {
           }
       };
 
-      // Track Progress
       video.addEventListener('timeupdate', () => {
           const pct = (video.currentTime / video.duration) * 100;
           trackFill.style.width = `${pct}%`;
           timeDisplay.textContent = formatTime(video.duration - video.currentTime);
       });
 
-      // Scrubbing
       trackContainer.addEventListener('click', (e) => {
           e.stopPropagation();
           const rect = trackContainer.getBoundingClientRect();
@@ -317,6 +319,7 @@ video:-webkit-full-screen + .v-fs-ui {
                 video.play();
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
+                showUI();
             }
         } else {
             togglePlay();
