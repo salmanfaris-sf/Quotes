@@ -29,26 +29,41 @@ tailwind.config={
 }
 </script>
 <style>
-html { background-color: #050505; scroll-behavior: auto; }
-body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: antialiased; width: 100%; position: relative; }
+/* Prevent horizontal scrolling/swiping of the page content */
+html, body { 
+  background-color: #050505; 
+  scroll-behavior: auto; 
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  touch-action: pan-y; /* Only allow vertical panning */
+}
+
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
+
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(5,5,5,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
+
+/* Background glow - restricted to screen width */
 .z2{position:fixed;top:50%;left:50%;width:100vw;height:100vw;background:radial-gradient(circle,rgba(255,255,255,.02) 0,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
+
 .zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:.4;color:#fff}
 .zb{color:#C5A059;opacity:.9;text-shadow:0 0 30px rgba(197,160,89,.3)}
 .zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,.5)}
 @keyframes flash{0%,100%{opacity:.1}50%{opacity:.7}}
 .zf{animation:flash 2s ease-in-out infinite}
 #sd{transition:opacity .5s ease,visibility .5s}
+
 .hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
 /* Video Grid Styles */
-.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 60px; }
+.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 60px; overflow: hidden; }
 .v-wrap { 
   width: 90vw; 
   aspect-ratio: 16/9;
@@ -71,18 +86,10 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* Maintain original aspect ratio in Fullscreen */
+/* Maintain original aspect ratio and background in Fullscreen */
 video:fullscreen, video:-webkit-full-screen {
   object-fit: contain !important;
   background-color: black !important;
-}
-
-/* Hide the 3-dot menu button in Chrome/Safari */
-video::-webkit-media-controls-enclosure {
-  overflow: hidden !important;
-}
-video::-webkit-media-controls-panel {
-  width: calc(100% + 30px) !important;
 }
 
 .v-play-btn {
@@ -177,7 +184,7 @@ video::-webkit-media-controls-panel {
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline loop muted controlsList="nodownload noplaybackrate">
+        <video preload="metadata" playsinline loop muted>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
@@ -186,11 +193,17 @@ video::-webkit-media-controls-panel {
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
+      // Fix for Picture-in-Picture sound
+      video.addEventListener('enterpictureinpicture', () => {
+        video.muted = false;
+        video.play();
+      });
+
       vWrap.addEventListener('click', (e) => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
-                video.controls = true; // Enable native controls only in FS
+                video.controls = true; // Use all native controls including menu
                 video.muted = false;
                 fs.call(video).then(() => {
                     video.play();
@@ -201,7 +214,7 @@ video::-webkit-media-controls-panel {
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-          video.controls = false; // Hide native controls when exiting FS
+          video.controls = false;
           video.pause();
           video.muted = true;
         }
