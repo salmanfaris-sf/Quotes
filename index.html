@@ -13,6 +13,7 @@
 </script>
 <title>Salman Faris | Simple Wisdom</title>
 <meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
+<meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,26 +31,18 @@ tailwind.config={
 <style>
 html, body { 
   background-color: #050505; 
-  scroll-behavior: smooth; 
+  scroll-behavior: auto; 
   overflow-x: hidden;
   width: 100%;
   position: relative;
-  touch-action: pan-y;
-  -webkit-font-smoothing: antialiased;
+  touch-action: pan-y; 
 }
 
-body { margin: 0; color: #d1d1d1; }
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s; will-change: background-color, backdrop-filter;}
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(5,5,5,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-
-.z1 {
-  opacity:0;
-  transform:translateY(30px);
-  filter:blur(10px);
-  transition: opacity 1.2s cubic-bezier(.16,1,.3,1), transform 1.2s cubic-bezier(.16,1,.3,1), filter 1.2s cubic-bezier(.16,1,.3,1);
-  will-change: transform, opacity;
-}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
 
 .z2{position:fixed;top:50%;left:50%;width:100vw;height:100vw;background:radial-gradient(circle,rgba(255,255,255,.02) 0,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}
@@ -62,56 +55,65 @@ body { margin: 0; color: #d1d1d1; }
 .zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,.5)}
 @keyframes flash{0%,100%{opacity:.1}50%{opacity:.7}}
 .zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity .5s ease,visibility .5s}
 
-.hi{transition:color .4s ease,text-shadow .4s ease,opacity .4s ease;opacity:0.15;color:#B8B8B0;display:inline-block;will-change: opacity, color;}
+.hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-/* Video Grid Styles - Optimized for performance */
-.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 60px; min-height: 200px; }
+/* Video Grid Styles */
+.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
 .v-wrap { 
   width: 90vw; 
   aspect-ratio: 16/9;
   max-width: 800px; 
   position: relative; 
-  background: #0a0a0a; 
+  background: #000; 
   overflow: hidden; 
   cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.03);
-  will-change: transform;
+  border: 1px solid rgba(255,255,255,0.05);
+  display: none; /* Hidden by default, shown only if video loads */
 }
+
+.v-wrap.is-visible { display: block; }
+.v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.3); }
 
 .v-wrap video { 
   width: 100%; 
   height: 100%; 
   object-fit: cover; 
   display: block;
-  opacity: 0;
-  transition: opacity 0.8s ease;
 }
-.v-wrap.loaded video { opacity: 1; }
 
 video::-webkit-media-controls { display:none !important; }
+video::-webkit-media-controls-enclosure { display:none !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 50px; height: 50px; background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 60px; height: 60px; background: #000;
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: opacity 0.3s ease;
+  z-index: 10; transition: all 0.4s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 18px; height: 18px; transform: translateX(2px); }
+.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); }
 
 .v-info {
-  position: absolute; bottom: 12px; left: 16px; z-index: 10;
+  position: absolute; bottom: 16px; left: 20px; z-index: 10;
   font-family: 'Inter', sans-serif; 
-  opacity: 0.3; font-size: 7px; letter-spacing: 0.4em;
-  color: #fff; text-transform: uppercase;
+  opacity: 0.35; 
+  font-size: 8px; 
+  font-weight: 600;
+  letter-spacing: 0.5em;
+  color: #fff;
+  text-transform: uppercase;
 }
 
 .v-wrap.is-playing .v-play-btn { opacity: 0; }
+
+#v-section { padding-bottom: 0; margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -124,29 +126,29 @@ video::-webkit-media-controls { display:none !important; }
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:.1s"></h1>
+      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:.2s"></h1>
     </div>
-    <div id="sd" class="pb-24 z1" style="transition-delay:.4s">
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:.8s">
       <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10 pb-20">
-    <div class="z1 mb-12 text-center px-6">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/30">The Archive</h3>
+  <section id="v-section" class="relative z-10">
+    <div class="z1 mb-16 text-center px-6">
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40">The Archive</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
-    <div class="z1 text-center pt-32 pb-10 px-6">
+    <div class="z1 text-center pt-20 pb-0 px-6">
       <p id="bottom-mantra" class="font-f2 text-[11px] tracking-[0.8em] uppercase text-c2"></p>
     </div>
   </section>
 </main>
 
 <footer class="w-full flex justify-end px-12 py-10 relative z-10 z1">
-  <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-30">&mdash; BY SALMAN FARIS</div>
+  <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-40">&mdash; BY SALMAN FARIS</div>
 </footer>
 
 <script>
@@ -170,107 +172,79 @@ video::-webkit-media-controls { display:none !important; }
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
-  // Smooth Water Implementation: Lazy Loading & Performance Optimization
   const initVideos = () => {
     const list = document.getElementById('video-list');
-    
-    // Observer for reveal animations
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add("za");
-            const v = entry.target.querySelector('video');
-            if(v && !v.src) {
-                const source = v.querySelector('source');
-                v.src = source.src;
-                v.load();
-            }
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '200px' });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+    }, { threshold: 0.1 });
 
-    // Video creation factory - doesn't load until needed
-    const createVideoSlot = (id) => {
+    // Limit set to 50 for performance and stability
+    const videoCount = 50;
+    
+    for(let i=1; i<=videoCount; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <div class="v-info">ARCHIVE &nbsp;${String(id).padStart(3, '0')}</div>
-        <video preload="none" playsinline muted loop>
-          <source src="videos/${id}.mp4" type="video/mp4">
+        <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
+        <video preload="metadata" playsinline muted>
+          <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
 
       const video = vWrap.querySelector('video');
       
-      video.onloadeddata = () => vWrap.classList.add('loaded');
-      
-      // Cleanup if file not found - minimizes blank space
+      video.onloadeddata = () => {
+        vWrap.classList.add('is-visible');
+        observer.observe(vWrap);
+      };
+
       video.onerror = () => vWrap.remove();
 
-      // Fullscreen and Play logic
-      vWrap.onclick = () => {
+      video.addEventListener('ended', () => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
+            document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+        }
+        video.pause();
+        video.currentTime = 0;
+        vWrap.classList.remove('is-playing');
+      });
+
+      vWrap.addEventListener('click', (e) => {
+        const isFS = document.fullscreenElement || document.webkitIsFullScreen;
+        if (isFS) {
             video.paused ? video.play() : video.pause();
         } else {
-            video.muted = false;
-            const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
+                video.muted = false;
                 fs.call(video).then(() => {
                     video.play();
                     vWrap.classList.add('is-playing');
                 });
             }
         }
-      };
-
-      video.addEventListener('ended', () => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            document.exitFullscreen?.() || document.webkitExitFullscreen?.();
-        }
-        vWrap.classList.remove('is-playing');
       });
 
+      const resetFS = () => {
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+          video.pause();
+          video.muted = true;
+          vWrap.classList.remove('is-playing');
+        }
+      };
+      
+      document.addEventListener('fullscreenchange', resetFS);
+      document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
-      revealObserver.observe(vWrap);
-    };
-
-    // Sequentially check videos in small batches to avoid network congestion
-    let currentIdx = 1;
-    const batchSize = 10;
-    const totalPossible = 200;
-
-    const loadBatch = () => {
-      const end = Math.min(currentIdx + batchSize, totalPossible + 1);
-      for (let i = currentIdx; i < end; i++) {
-        createVideoSlot(i);
-      }
-      currentIdx = end;
-      if (currentIdx <= totalPossible) {
-        requestIdleCallback ? requestIdleCallback(() => setTimeout(loadBatch, 500)) : setTimeout(loadBatch, 800);
-      }
-    };
-
-    loadBatch();
-
-    // Reset state on exit fullscreen
-    const resetFS = () => {
-      if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-        document.querySelectorAll('video').forEach(v => {
-            v.pause();
-            v.muted = true;
-            v.closest('.v-wrap').classList.remove('is-playing');
-        });
-      }
-    };
-    document.addEventListener('fullscreenchange', resetFS);
-    document.addEventListener('webkitfullscreenchange', resetFS);
+    }
   };
 
   const init = () => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
-    const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
     
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
@@ -284,7 +258,6 @@ video::-webkit-media-controls { display:none !important; }
     `;
 
     initVideos();
-    
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
@@ -297,21 +270,24 @@ video::-webkit-media-controls { display:none !important; }
   };
 
   window.addEventListener("scroll", () => {
-    const scrollPos = window.pageYOffset;
+    const scrollPos = window.scrollY || window.pageYOffset;
     const nav = document.getElementById("n0");
     const scrollHint = document.getElementById("sd");
     const vh = window.innerHeight;
-    
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    if (scrollHint) scrollHint.style.opacity = scrollPos > 20 ? "0" : "1";
+    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
 
-    // Text highlighting logic - throttled for smoothness
     const spans = document.querySelectorAll(".hi");
     const centerY = vh * 0.5;
+    let activeSpan = null;
+    let minDistance = Infinity;
     spans.forEach(span => {
       const rect = span.getBoundingClientRect();
       const dist = Math.abs((rect.top + rect.height / 2) - centerY);
-      if (dist < vh * 0.25) span.classList.add("active");
+      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
+    });
+    spans.forEach(span => {
+      if (span === activeSpan && minDistance < vh * 0.4) span.classList.add("active");
       else span.classList.remove("active");
     });
   }, { passive: true });
@@ -320,6 +296,7 @@ video::-webkit-media-controls { display:none !important; }
     updateTime();
     init();
     setInterval(updateTime, 60000);
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
   };
 })();
 </script>
