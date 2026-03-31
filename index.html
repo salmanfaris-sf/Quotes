@@ -87,7 +87,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
 
-/* The static play button shown in the grid */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 60px; height: 60px; background: #000;
@@ -110,7 +109,6 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-/* Hide when video is actually playing to keep grid clean */
 .v-wrap.is-playing .v-play-btn { opacity: 0; }
 
 .hidden { display: none !important; }
@@ -135,13 +133,13 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10 pb-20">
+  <section id="v-section" class="relative z-10 pb-10">
     <div class="z1 mb-16 text-center px-6">
        <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40">The Archive</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
-    <div class="z1 text-center pt-24 pb-12 px-6">
+    <div class="z1 text-center pt-20 pb-0 px-6">
       <p id="bottom-mantra" class="font-f2 text-[11px] tracking-[0.8em] uppercase text-c2"></p>
     </div>
   </section>
