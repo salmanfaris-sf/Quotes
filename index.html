@@ -83,6 +83,30 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
 }
 
+/* Custom Video Progress Bar - specifically for fullscreen */
+.v-pbar-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    z-index: 2147483647; /* Ensure it stays on top in fullscreen */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.v-pbar-fill {
+    height: 100%;
+    width: 0%;
+    background: #555555; /* Neutral grey as requested */
+}
+
+/* Show progress bar when playing in fullscreen */
+.is-playing .v-pbar-container {
+    opacity: 1;
+}
+
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
 video::-webkit-media-controls-panel { display: none !important; }
@@ -178,7 +202,6 @@ footer { padding-top: 20px; }
 
   <section id="v-section" class="relative z-10">
     <div class="z1 mb-16 text-center px-6">
-       <!-- Changed to Visual Reflections with refined styling -->
        <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Visual Reflections</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
@@ -231,14 +254,25 @@ footer { padding-top: 20px; }
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
+        <div class="v-pbar-container"><div class="v-pbar-fill"></div></div>
         <video preload="metadata" playsinline muted disablePictureInPicture>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
+      const pbar = vWrap.querySelector('.v-pbar-fill');
+      
       video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
       
+      // Update progress bar
+      video.ontimeupdate = () => {
+        if (video.duration) {
+            const percent = (video.currentTime / video.duration) * 100;
+            pbar.style.width = percent + '%';
+        }
+      };
+
       video.addEventListener('click', (e) => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
             e.preventDefault();
@@ -251,13 +285,16 @@ footer { padding-top: 20px; }
         if (document.fullscreenElement || document.webkitIsFullScreen) {
             document.exitFullscreen?.() || document.webkitExitFullscreen?.();
         }
-        video.pause(); video.currentTime = 0; vWrap.classList.remove('is-playing');
+        video.pause(); 
+        video.currentTime = 0; 
+        vWrap.classList.remove('is-playing');
       });
 
       vWrap.addEventListener('click', () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen;
             if (fs) { 
+                video.currentTime = 0; 
                 video.muted = false; 
                 fs.call(video).then(() => { 
                     video.play(); 
@@ -267,7 +304,14 @@ footer { padding-top: 20px; }
         }
       });
 
-      const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.muted = true; vWrap.classList.remove('is-playing'); } };
+      const resetFS = () => { 
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
+            video.pause(); 
+            video.currentTime = 0; 
+            video.muted = true; 
+            vWrap.classList.remove('is-playing'); 
+        } 
+      };
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
