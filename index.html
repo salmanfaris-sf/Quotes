@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-<meta name="theme-color" content="#050505">
+<meta name="theme-color" content="#000000">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -23,14 +23,14 @@ tailwind.config={
   theme:{
     extend:{
       fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
-      colors:{c1:'#050505',c2:'#C5A059',eye:'#B8B8B0'}
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
     }
   }
 }
 </script>
 <style>
 html, body { 
-  background-color: #050505; 
+  background-color: #000000; 
   scroll-behavior: auto; 
   overflow-x: hidden;
   width: 100%;
@@ -41,11 +41,9 @@ html, body {
 body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
-.z0.zs{background-color:rgba(5,5,5,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
-
-.z2{position:fixed;top:50%;left:50%;width:100vw;height:100vw;background:radial-gradient(circle,rgba(255,255,255,.02) 0,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
@@ -92,17 +90,17 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 44px; height: 44px; 
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 68px; height: 68px; 
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 10px; height: 10px; transform: translateX(1px); opacity: 0.7; }
+.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); opacity: 0.9; }
 
 .v-info {
   position: absolute; bottom: 16px; left: 20px; z-index: 10;
@@ -115,40 +113,41 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.05); background: rgba(255, 255, 255, 0.07); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(255, 255, 255, 0.12); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
 
 .quote-container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     text-align: center;
 }
 .quote-line {
     font-family: 'Inter', sans-serif;
-    font-size: 9px; 
-    font-weight: 400;
-    line-height: 1.8;
-    color: #fff;
-    opacity: 0.6;
+    font-size: 13px; /* Increased size */
+    font-weight: 500;
+    line-height: 2.2;
+    color: #C5A059; /* Matching Day color */
+    opacity: 0.95;
     margin: 0;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
 }
 .quote-stats {
     font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    color: #fff;
-    opacity: 0.6;
-    letter-spacing: 0.15em;
-    margin-top: 4px;
+    font-size: 13px; /* Increased size */
+    color: #C5A059; /* Matching Day color */
+    opacity: 0.95;
+    letter-spacing: 0.25em;
+    margin-top: 10px;
     text-transform: uppercase;
+    font-weight: 600;
 }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
 </style>
 </head>
 <body>
-<div class="z2"></div>
+
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
@@ -203,7 +202,8 @@ video::-webkit-media-controls-enclosure { display:none !important; }
       const totalMinutes = 1440;
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       const remainingMinutes = totalMinutes - currentMinutes;
-      document.getElementById('live-stats').textContent = `TIME: ${timeStr} • ${remainingMinutes} MINUTES REMAINING TODAY`;
+      const statsEl = document.getElementById('live-stats');
+      if (statsEl) statsEl.textContent = `TIME: ${timeStr} • ${remainingMinutes} MINUTES REMAINING TODAY`;
   };
 
   const initVideos = () => {
