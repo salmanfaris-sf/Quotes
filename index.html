@@ -116,6 +116,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 .v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(255, 255, 255, 0.12); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
 
+/* Spacing Adjustments */
 .quote-container {
     width: 100%;
     max-width: 90vw;
@@ -136,11 +137,20 @@ video::-webkit-media-controls-enclosure { display:none !important; }
     font-size: clamp(10px, 3vw, 14px);
     color: #ffffff;
     opacity: 0.5;
-    margin-top: 14px;
+    margin-top: 10px;
     font-weight: 500;
 }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
+
+.quote-wrapper {
+    padding-top: 80px;  /* Reduced from 192px (pt-48) */
+    padding-bottom: 60px; /* Reduced from 128px (pb-32) */
+}
+
+footer {
+    padding-top: 20px; /* Reduced to sit closer to quote */
+}
 </style>
 </head>
 <body>
@@ -168,7 +178,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
     </div>
     <div id="video-list" class="v-grid"></div>
     
-    <div class="z1 text-center pt-48 pb-32 px-6">
+    <div class="z1 text-center px-6 quote-wrapper">
         <div class="quote-container">
             <p class="quote-line">You only have 1,440 minutes every day,</p>
             <p class="quote-line">don't let a single one go to waste.</p>
@@ -178,7 +188,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   </section>
 </main>
 
-<footer class="w-full flex justify-end px-12 py-10 relative z-10 z1">
+<footer class="w-full flex justify-end px-12 pb-10 relative z-10 z1">
   <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-40">&mdash; BY SALMAN FARIS</div>
 </footer>
 
