@@ -71,8 +71,11 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* Hide Native Controls */
-video::-webkit-media-controls { display:none !important; }
+/* Ensure original aspect ratio in fullscreen */
+video:fullscreen, video:-webkit-full-screen {
+  object-fit: contain !important;
+  background-color: black;
+}
 
 /* Custom Fullscreen UI Overlay */
 .v-fs-ui {
@@ -84,7 +87,7 @@ video::-webkit-media-controls { display:none !important; }
     padding: 30px;
     background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%);
     z-index: 100;
-    pointer-events: none;
+    pointer-events: auto; /* Changed to auto to capture clicks for play/pause */
     opacity: 0;
     transition: opacity 0.4s ease;
 }
@@ -95,7 +98,7 @@ video:-webkit-full-screen + .v-fs-ui {
     display: flex;
 }
 
-.v-fs-show-ui { opacity: 1; pointer-events: auto; }
+.v-fs-show-ui { opacity: 1; }
 
 .v-fs-controls {
     display: flex;
@@ -112,7 +115,6 @@ video:-webkit-full-screen + .v-fs-ui {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    pointer-events: auto;
     flex-shrink: 0;
 }
 
@@ -124,7 +126,6 @@ video:-webkit-full-screen + .v-fs-ui {
     background: rgba(255,255,255,0.15);
     position: relative;
     cursor: pointer;
-    pointer-events: auto;
     margin: 0 10px;
 }
 
@@ -166,6 +167,8 @@ video:-webkit-full-screen + .v-fs-ui {
   color: #fff;
   text-transform: uppercase;
 }
+
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -237,7 +240,7 @@ video:-webkit-full-screen + .v-fs-ui {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.1 });
 
-    for(let i=1; i<=200; i++) {
+    for(let i=1; i<=20; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
@@ -311,6 +314,14 @@ video:-webkit-full-screen + .v-fs-ui {
 
       playPauseBtn.addEventListener('click', togglePlay);
 
+      // Handle clicking anywhere in fullscreen (the UI overlay captures this now)
+      ui.addEventListener('click', (e) => {
+        // Only trigger toggle if not clicking specific control elements
+        if (e.target === ui || e.target.classList.contains('v-fs-show-ui')) {
+           togglePlay();
+        }
+      });
+
       vWrap.addEventListener('click', (e) => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen || video.msRequestFullscreen;
@@ -321,13 +332,16 @@ video:-webkit-full-screen + .v-fs-ui {
                 pauseIcon.classList.remove('hidden');
                 showUI();
             }
-        } else {
-            togglePlay();
         }
       });
 
-      video.addEventListener('mousemove', showUI);
-      video.addEventListener('touchstart', showUI);
+      // Show UI on any interaction in FS
+      document.addEventListener('mousemove', () => {
+        if (document.fullscreenElement) showUI();
+      });
+      document.addEventListener('touchstart', () => {
+        if (document.fullscreenElement) showUI();
+      });
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
