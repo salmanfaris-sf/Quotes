@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="theme-color" content="#000000">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1K1TKBQFFK');
+</script>
+<title>Salman Faris | Simple Wisdom</title>
+<meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
+<meta name="author" content="Salman Faris">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
+    }
+  }
+}
+</script>
+<style>
+html, body { 
+  background-color: #000000; 
+  scroll-behavior: auto; 
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  touch-action: pan-y; 
+}
+
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
+
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
+
+.zi{text-indent:12rem}
+@media(max-width:768px){.zi{text-indent:0}}
+
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
+
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
+
+.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+.v-wrap { 
+  width: 90vw; 
+  aspect-ratio: 16/9;
+  max-width: 800px; 
+  position: relative; 
+  background: #000; 
+  overflow: hidden; 
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  display: none; 
+}
+
+.v-wrap.is-visible { display: block; }
+.v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.3); }
+
+.v-wrap video { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  display: block;
+}
+
+video::-webkit-media-controls { display:none !important; }
+video::-webkit-media-controls-enclosure { display:none !important; }
+video::-webkit-media-controls-panel { display: none !important; }
+
+video:fullscreen { object-fit: contain !important; background-color: black; }
+video::-webkit-full-screen { object-fit: contain !important; background-color: black; }
+
+.v-play-btn {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 64px; height: 64px; 
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.3px solid rgba(255,255,255,0.15);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 35px rgba(0,0,0,0.4), inset 0 0 10px rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+.v-play-btn svg { 
+  fill: #fff; width: 20px; height: 20px; 
+  transform: translateX(2px); 
+  opacity: 0.9; 
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+}
+
+.v-info {
+  position: absolute; bottom: 16px; left: 20px; z-index: 10;
+  font-family: 'Inter', sans-serif; 
+  opacity: 0.35; 
+  font-size: 8px; 
+  font-weight: 600;
+  letter-spacing: 0.5em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.v-wrap:hover .v-play-btn { 
+  transform: translate(-50%, -50%) scale(1.12); 
+  background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 80%);
+  border-color: rgba(197,160,89,0.5); 
+  box-shadow: 0 0 50px rgba(197,160,89,0.2);
+}
+.v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
+
+.quote-container {
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    text-align: center;
+}
+.quote-line {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(12px, 3.8vw, 17px); 
+    font-weight: 400;
+    line-height: 1.5;
+    color: #ffffff;
+    opacity: 0.9;
+    margin: 0;
+}
+.quote-stats {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(10px, 3vw, 14px);
+    color: #ffffff;
+    opacity: 0.5;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+#v-section { padding-bottom: 0; margin-bottom: 0; }
+.quote-wrapper { padding-top: 80px; padding-bottom: 60px; }
+footer { padding-top: 20px; }
+</style>
+</head>
+<body>
+
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
+  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
+  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
+</nav>
+
+<main class="relative w-full">
+  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
+    <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
+    </div>
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
+      <div class="zs1 zf">Scroll Down</div>
+    </div>
+  </section>
+
+  <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
+
+  <section id="v-section" class="relative z-10">
+    <div class="z1 mb-16 text-center px-6">
+       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Visual Reflections</h3>
+    </div>
+    <div id="video-list" class="v-grid"></div>
+    
+    <div class="z1 text-center px-6 quote-wrapper">
+        <div class="quote-container">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">don't let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
+        </div>
+    </div>
+  </section>
+</main>
+
+<footer class="w-full flex justify-center px-6 pb-12 relative z-10 z1">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
+</footer>
+
+<script>
+(function(){
+  const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
+  const content = [
+    ["You already know what to do. You just don’t like the cost. The brain will invent reasons to avoid pain, even when pain is the only path forward. Every wasted year makes the next one heavier. Do it the moment you remember it. Stick to the plan. Not your mood.", "You only have one thousand four hundred and forty minutes every day. Don’t let a single one go to waste. Focus is a superpower in a distracted world. Weakness leaves when discipline enters. Strength is built through patience. Be strict with yourself.", "Success is earned, not given. Focus on your growth. Stay Disciplined. Growth begins outside comfort zones. Hard days make strong people. Keep showing up. Strength is built through repetition. Do the boring work well.", "A real man protects and provides. Don't follow the crowd. Follow the truth. Never build your happiness on someone else's tears. Eliminate the tomorrow mindset today. The strongest man is he who controls his anger. Be a man of your word.", "Don't waste time. You don't get it back. The problem is, you think you have a lot of time to live. Live everyday like it's your last day. Consistency is the only way out. Big dreams need big sacrifices. Practice makes perfect."],
+    ["Nothing changes if nothing changes. Stay different. You can't have a million dollar dream with a minimum wage work ethic. Your habits define your future self. Hate Laziness. Always speak the truth. Time waits for no one.", "Knowledge without action is useless. Fear Allah. Not people. Live with purpose. Be a man of honor. A real man protects those who are vulnerable. Every day is a second chance. Now is the time.", "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock one hundred times and it won't even move. But on the one hundred and first hit, it suddenly breaks. It wasn't just the last hit. It was all of them.", "Zero Excuses. Sweat more in practice. Bleed less in war. Habits decide outcomes. Growth requires discomfort. Work now. Relax later. Don't look back. You're not going that way. Every day counts.", "Focus. Be better than you were yesterday. So race one another in good deeds. Consistency creates mastery. This is the way. Leave a legacy. Let your life be a story of courage, action, and impact."],
+    ["Waiting won’t help. Overthinking won’t help. Action will. Do it. Lower your gaze, guard your tongue, and protect your heart. Your current life is the result of past actions. Your future is the result of today's actions.", "The man who keeps walking will eventually leave the place he hates. A few years of sacrifice can create a lifetime of freedom. Your future is built by what you do after a long tiring day. Speak clearly. Stand straight. Fear none.", "It always seems impossible until it's done. Discipline is doing what needs to be done, even if you don't want to do it. Stop looking for shortcuts. There are none. Only work. Only results.", "People will forget your words, but they will never forget your results. Stop talking and start building. The world doesn't care about your potential. It cares about your output. Be undeniable.", "Every second is a war against your own laziness. Win the war. Don't let your ancestors down. Be the one who changed the family line. Discipline is the highest form of self-love."]
+  ];
+
+  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
+
+  const updateClockAndStats = () => {
+    const now = new Date();
+    document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const totalMinutesInDay = 1440;
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const remainingMinutes = totalMinutesInDay - currentMinutes;
+    const statsEl = document.getElementById('live-stats');
+    if (statsEl) { statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; }
+  };
+
+  const initVideos = () => {
+    const list = document.getElementById('video-list');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+    }, { threshold: 0.1 });
+
+    for(let i=1; i<=200; i++) {
+      const vWrap = document.createElement('div');
+      vWrap.className = 'v-wrap z1';
+      vWrap.innerHTML = `
+        <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
+        <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
+        <video preload="metadata" playsinline muted disablePictureInPicture>
+          <source src="videos/${i}.mp4" type="video/mp4">
+        </video>
+      `;
+      const video = vWrap.querySelector('video');
+      video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
+      video.onerror = () => vWrap.remove();
+      
+      video.addEventListener('click', (e) => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            e.preventDefault();
+            if (video.paused) video.play();
+            else video.pause();
+        }
+      });
+
+      video.addEventListener('ended', () => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+        }
+        video.pause(); 
+        video.currentTime = 0; 
+        vWrap.classList.remove('is-playing');
+      });
+
+      vWrap.addEventListener('click', () => {
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+            if (fs) { 
+                video.currentTime = 0; // Reset to beginning on every click/fullscreen entry
+                video.muted = false; 
+                fs.call(video).then(() => { 
+                    video.play(); 
+                    vWrap.classList.add('is-playing'); 
+                }); 
+            }
+        }
+      });
+
+      const resetFS = () => { 
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
+            video.pause(); 
+            video.currentTime = 0; // Reset when exiting fullscreen too
+            video.muted = true; 
+            vWrap.classList.remove('is-playing'); 
+        } 
+      };
+      document.addEventListener('fullscreenchange', resetFS);
+      document.addEventListener('webkitfullscreenchange', resetFS);
+      list.appendChild(vWrap);
+    }
+  };
+
+  const init = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
+    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
+    document.getElementById("m0").innerHTML = `
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[0][dayOfYear % content[0].length])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}</p></div>
+      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}</p></div>
+    `;
+    initVideos();
+    updateClockAndStats();
+    const generalObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+    }, { threshold: 0.05 });
+    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
+  };
+
+  window.addEventListener("scroll", () => {
+    const scrollPos = window.scrollY;
+    const nav = document.getElementById("n0");
+    const scrollHint = document.getElementById("sd");
+    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
+    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
+    const spans = document.querySelectorAll(".hi");
+    const centerY = window.innerHeight * 0.5;
+    let activeSpan = null;
+    let minDistance = Infinity;
+    spans.forEach(span => {
+      const rect = span.getBoundingClientRect();
+      const dist = Math.abs((rect.top + rect.height / 2) - centerY);
+      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
+    });
+    spans.forEach(span => {
+      if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
+      else span.classList.remove("active");
+    });
+  }, { passive: true });
+
+  window.onload = () => {
+    init();
+    setInterval(updateClockAndStats, 1000);
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
+  };
+})();
+</script>
+</body>
+</html>
+
