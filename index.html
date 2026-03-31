@@ -90,10 +90,9 @@ video::-webkit-media-controls-panel { display: none !important; }
 video:fullscreen { object-fit: contain !important; background-color: black; }
 video::-webkit-full-screen { object-fit: contain !important; background-color: black; }
 
-/* Balanced Premium Play Button Design */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 64px; height: 64px; /* Increased from 56px to 64px for a balanced size */
+  width: 64px; height: 64px; 
   background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
   backdrop-filter: blur(12px); 
   -webkit-backdrop-filter: blur(12px);
@@ -179,7 +178,8 @@ footer { padding-top: 20px; }
 
   <section id="v-section" class="relative z-10">
     <div class="z1 mb-16 text-center px-6">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40">The Archive</h3>
+       <!-- Changed to Visual Reflections with refined styling -->
+       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Visual Reflections</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
@@ -193,8 +193,8 @@ footer { padding-top: 20px; }
   </section>
 </main>
 
-<footer class="w-full flex justify-end px-12 pb-10 relative z-10 z1">
-  <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-40">&mdash; BY SALMAN FARIS</div>
+<footer class="w-full flex justify-center px-6 pb-12 relative z-10 z1">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
 </footer>
 
 <script>
