@@ -71,30 +71,32 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* Ensure original aspect ratio in fullscreen */
+/* Maintain original aspect ratio and prevent stretching in Fullscreen */
 video:fullscreen, video:-webkit-full-screen {
   object-fit: contain !important;
-  background-color: black;
+  background-color: black !important;
 }
 
 /* Custom Fullscreen UI Overlay */
+/* We use a container that sits inside the fullscreen element */
 .v-fs-ui {
     position: absolute;
     inset: 0;
     display: none;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 30px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%);
-    z-index: 100;
-    pointer-events: auto; /* Changed to auto to capture clicks for play/pause */
+    padding: 40px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%),
+                linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%);
+    z-index: 2147483647; /* Highest possible z-index for FS */
+    pointer-events: auto;
     opacity: 0;
     transition: opacity 0.4s ease;
 }
 
-/* Show UI only when in FS mode */
-video:fullscreen + .v-fs-ui, 
-video:-webkit-full-screen + .v-fs-ui {
+/* Show UI when the container or video is in FS */
+.v-wrap:fullscreen .v-fs-ui, 
+.v-wrap:-webkit-full-screen .v-fs-ui {
     display: flex;
 }
 
@@ -103,30 +105,35 @@ video:-webkit-full-screen + .v-fs-ui {
 .v-fs-controls {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
     width: 100%;
-    margin-bottom: 10px;
+    max-width: 900px;
+    margin: 0 auto 20px auto;
 }
 
 .v-fs-play-btn {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    transition: background 0.3s;
 }
+.v-fs-play-btn:hover { background: rgba(255,255,255,0.2); }
 
-.v-fs-play-btn svg { fill: #fff; width: 22px; height: 22px; }
+.v-fs-play-btn svg { fill: #fff; width: 24px; height: 24px; }
 
 .v-fs-track-container {
     flex-grow: 1;
-    height: 1.5px;
-    background: rgba(255,255,255,0.15);
+    height: 4px;
+    background: rgba(255,255,255,0.2);
     position: relative;
     cursor: pointer;
-    margin: 0 10px;
+    border-radius: 2px;
 }
 
 .v-fs-track-fill {
@@ -136,16 +143,16 @@ video:-webkit-full-screen + .v-fs-ui {
     height: 100%;
     background: #C5A059;
     width: 0%;
+    border-radius: 2px;
 }
 
 .v-fs-time {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    color: rgba(255,255,255,0.7);
-    letter-spacing: 0.15em;
-    min-width: 45px;
+    font-size: 12px;
+    color: #fff;
+    letter-spacing: 0.1em;
+    min-width: 60px;
     text-align: right;
-    font-weight: 400;
 }
 
 .v-play-btn {
@@ -246,14 +253,14 @@ video:-webkit-full-screen + .v-fs-ui {
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline loop style="pointer-events: none;">
+        <video preload="metadata" playsinline loop muted style="pointer-events: none;">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
         <div class="v-fs-ui">
             <div class="v-fs-controls">
                 <div class="v-fs-play-btn">
-                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
-                    <svg class="pause-icon hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    <svg class="play-icon hidden" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
+                    <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                 </div>
                 <div class="v-fs-track-container">
                     <div class="v-fs-track-fill"></div>
@@ -281,7 +288,7 @@ video:-webkit-full-screen + .v-fs-ui {
           clearTimeout(uiTimer);
           uiTimer = setTimeout(() => {
               if (!video.paused) ui.classList.remove('v-fs-show-ui');
-          }, 3000);
+          }, 2500);
       };
 
       const togglePlay = (e) => {
@@ -300,6 +307,7 @@ video:-webkit-full-screen + .v-fs-ui {
       };
 
       video.addEventListener('timeupdate', () => {
+          if (!video.duration) return;
           const pct = (video.currentTime / video.duration) * 100;
           trackFill.style.width = `${pct}%`;
           timeDisplay.textContent = formatTime(video.duration - video.currentTime);
@@ -310,42 +318,47 @@ video:-webkit-full-screen + .v-fs-ui {
           const rect = trackContainer.getBoundingClientRect();
           const pos = (e.clientX - rect.left) / rect.width;
           video.currentTime = pos * video.duration;
+          showUI();
       });
 
       playPauseBtn.addEventListener('click', togglePlay);
 
-      // Handle clicking anywhere in fullscreen (the UI overlay captures this now)
-      ui.addEventListener('click', (e) => {
-        // Only trigger toggle if not clicking specific control elements
-        if (e.target === ui || e.target.classList.contains('v-fs-show-ui')) {
-           togglePlay();
-        }
-      });
-
+      // Trigger Fullscreen on wrap click
       vWrap.addEventListener('click', (e) => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen || video.msRequestFullscreen;
+            const fs = vWrap.requestFullscreen || vWrap.webkitRequestFullscreen || vWrap.msRequestFullscreen;
             if (fs) {
-                fs.call(video);
-                video.play();
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-                showUI();
+                fs.call(vWrap).then(() => {
+                    video.muted = false; // Unmute on FS
+                    video.play();
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    showUI();
+                });
             }
         }
       });
 
-      // Show UI on any interaction in FS
-      document.addEventListener('mousemove', () => {
-        if (document.fullscreenElement) showUI();
+      // Handle clicking anywhere in fullscreen to toggle play
+      ui.addEventListener('click', (e) => {
+          // If click is on the background (the UI container itself)
+          if (e.target === ui) {
+              togglePlay();
+          }
       });
-      document.addEventListener('touchstart', () => {
-        if (document.fullscreenElement) showUI();
+
+      // Show UI on mouse movement in fullscreen
+      vWrap.addEventListener('mousemove', () => {
+          if (document.fullscreenElement) showUI();
+      });
+      vWrap.addEventListener('touchstart', () => {
+          if (document.fullscreenElement) showUI();
       });
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
           video.pause();
+          video.muted = true;
           ui.classList.remove('v-fs-show-ui');
         }
       };
