@@ -29,14 +29,13 @@ tailwind.config={
 }
 </script>
 <style>
-/* Prevent horizontal scrolling/swiping of the page content */
 html, body { 
   background-color: #050505; 
   scroll-behavior: auto; 
   overflow-x: hidden;
   width: 100%;
   position: relative;
-  touch-action: pan-y; /* Only allow vertical panning */
+  touch-action: pan-y; 
 }
 
 body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
@@ -46,7 +45,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
 
-/* Background glow - restricted to screen width */
 .z2{position:fixed;top:50%;left:50%;width:100vw;height:100vw;background:radial-gradient(circle,rgba(255,255,255,.02) 0,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 
 .zi{text-indent:12rem}
@@ -86,7 +84,10 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
 }
 
-/* Maintain original aspect ratio and background in Fullscreen */
+/* Hide default controls everywhere including fullscreen */
+video::-webkit-media-controls { display:none !important; }
+video::-webkit-media-controls-enclosure { display:none !important; }
+
 video:fullscreen, video:-webkit-full-screen {
   object-fit: contain !important;
   background-color: black !important;
@@ -112,6 +113,23 @@ video:fullscreen, video:-webkit-full-screen {
   color: #fff;
   text-transform: uppercase;
 }
+
+/* Premium feedback overlay */
+.v-status-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+.v-status-icon.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
 .hidden { display: none !important; }
 </style>
@@ -172,6 +190,23 @@ video:fullscreen, video:-webkit-full-screen {
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
+  const showStatusIcon = (videoContainer, type) => {
+    let icon = videoContainer.querySelector('.v-status-icon');
+    if(!icon) {
+        icon = document.createElement('div');
+        icon.className = 'v-status-icon';
+        videoContainer.appendChild(icon);
+    }
+    
+    const svg = type === 'play' 
+        ? '<svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>'
+        : '<svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+    
+    icon.innerHTML = svg;
+    icon.classList.add('show');
+    setTimeout(() => icon.classList.remove('show'), 600);
+  };
+
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
@@ -184,7 +219,7 @@ video:fullscreen, video:-webkit-full-screen {
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline loop muted>
+        <video preload="metadata" playsinline muted>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
@@ -193,30 +228,42 @@ video:fullscreen, video:-webkit-full-screen {
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // Fix for Picture-in-Picture sound
-      video.addEventListener('enterpictureinpicture', () => {
-        video.muted = false;
-        video.play();
+      // Exit Fullscreen on End
+      video.addEventListener('ended', () => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+        }
+        video.pause();
+        video.currentTime = 0;
       });
 
       vWrap.addEventListener('click', (e) => {
+        // If not in fullscreen, enter it
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
-                video.controls = true; // Use all native controls including menu
                 video.muted = false;
                 fs.call(video).then(() => {
                     video.play();
                 });
+            }
+        } else {
+            // Logic for clicking WHILE in fullscreen: Toggle Play/Pause
+            if (video.paused) {
+                video.play();
+                showStatusIcon(vWrap, 'play');
+            } else {
+                video.pause();
+                showStatusIcon(vWrap, 'pause');
             }
         }
       });
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-          video.controls = false;
           video.pause();
           video.muted = true;
+          video.controls = false;
         }
       };
       
