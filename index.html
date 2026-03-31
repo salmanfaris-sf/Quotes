@@ -47,7 +47,7 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
 .hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-/* Cinematic Video Section */
+/* Video Grid Styles */
 .v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 60px; }
 .v-wrap { 
   width: 90vw; 
@@ -71,88 +71,18 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
-/* Maintain original aspect ratio and prevent stretching in Fullscreen */
+/* Maintain original aspect ratio in Fullscreen */
 video:fullscreen, video:-webkit-full-screen {
   object-fit: contain !important;
   background-color: black !important;
 }
 
-/* Custom Fullscreen UI Overlay */
-/* We use a container that sits inside the fullscreen element */
-.v-fs-ui {
-    position: absolute;
-    inset: 0;
-    display: none;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 40px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%),
-                linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%);
-    z-index: 2147483647; /* Highest possible z-index for FS */
-    pointer-events: auto;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+/* Hide the 3-dot menu button in Chrome/Safari */
+video::-webkit-media-controls-enclosure {
+  overflow: hidden !important;
 }
-
-/* Show UI when the container or video is in FS */
-.v-wrap:fullscreen .v-fs-ui, 
-.v-wrap:-webkit-full-screen .v-fs-ui {
-    display: flex;
-}
-
-.v-fs-show-ui { opacity: 1; }
-
-.v-fs-controls {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto 20px auto;
-}
-
-.v-fs-play-btn {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    transition: background 0.3s;
-}
-.v-fs-play-btn:hover { background: rgba(255,255,255,0.2); }
-
-.v-fs-play-btn svg { fill: #fff; width: 24px; height: 24px; }
-
-.v-fs-track-container {
-    flex-grow: 1;
-    height: 4px;
-    background: rgba(255,255,255,0.2);
-    position: relative;
-    cursor: pointer;
-    border-radius: 2px;
-}
-
-.v-fs-track-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background: #C5A059;
-    width: 0%;
-    border-radius: 2px;
-}
-
-.v-fs-time {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    color: #fff;
-    letter-spacing: 0.1em;
-    min-width: 60px;
-    text-align: right;
+video::-webkit-media-controls-panel {
+  width: calc(100% + 30px) !important;
 }
 
 .v-play-btn {
@@ -161,6 +91,7 @@ video:fullscreen, video:-webkit-full-screen {
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  pointer-events: none;
 }
 .v-play-btn svg { fill: #000; width: 24px; height: 24px; transform: translateX(2px); }
 
@@ -234,13 +165,6 @@ video:fullscreen, video:-webkit-full-screen {
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
-  const formatTime = (seconds) => {
-    if (isNaN(seconds)) return "0:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
@@ -253,113 +177,33 @@ video:fullscreen, video:-webkit-full-screen {
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline loop muted style="pointer-events: none;">
+        <video preload="metadata" playsinline loop muted controlsList="nodownload noplaybackrate">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
-        <div class="v-fs-ui">
-            <div class="v-fs-controls">
-                <div class="v-fs-play-btn">
-                    <svg class="play-icon hidden" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
-                    <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                </div>
-                <div class="v-fs-track-container">
-                    <div class="v-fs-track-fill"></div>
-                </div>
-                <div class="v-fs-time">0:00</div>
-            </div>
-        </div>
       `;
 
       const video = vWrap.querySelector('video');
-      const ui = vWrap.querySelector('.v-fs-ui');
-      const playPauseBtn = ui.querySelector('.v-fs-play-btn');
-      const playIcon = playPauseBtn.querySelector('.play-icon');
-      const pauseIcon = playPauseBtn.querySelector('.pause-icon');
-      const trackContainer = ui.querySelector('.v-fs-track-container');
-      const trackFill = ui.querySelector('.v-fs-track-fill');
-      const timeDisplay = ui.querySelector('.v-fs-time');
-
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      let uiTimer;
-      const showUI = () => {
-          ui.classList.add('v-fs-show-ui');
-          clearTimeout(uiTimer);
-          uiTimer = setTimeout(() => {
-              if (!video.paused) ui.classList.remove('v-fs-show-ui');
-          }, 2500);
-      };
-
-      const togglePlay = (e) => {
-          if (e) e.stopPropagation();
-          if (video.paused) {
-              video.play();
-              playIcon.classList.add('hidden');
-              pauseIcon.classList.remove('hidden');
-              showUI();
-          } else {
-              video.pause();
-              playIcon.classList.remove('hidden');
-              pauseIcon.classList.add('hidden');
-              ui.classList.add('v-fs-show-ui');
-          }
-      };
-
-      video.addEventListener('timeupdate', () => {
-          if (!video.duration) return;
-          const pct = (video.currentTime / video.duration) * 100;
-          trackFill.style.width = `${pct}%`;
-          timeDisplay.textContent = formatTime(video.duration - video.currentTime);
-      });
-
-      trackContainer.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const rect = trackContainer.getBoundingClientRect();
-          const pos = (e.clientX - rect.left) / rect.width;
-          video.currentTime = pos * video.duration;
-          showUI();
-      });
-
-      playPauseBtn.addEventListener('click', togglePlay);
-
-      // Trigger Fullscreen on wrap click
       vWrap.addEventListener('click', (e) => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-            const fs = vWrap.requestFullscreen || vWrap.webkitRequestFullscreen || vWrap.msRequestFullscreen;
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
-                fs.call(vWrap).then(() => {
-                    video.muted = false; // Unmute on FS
+                video.controls = true; // Enable native controls only in FS
+                video.muted = false;
+                fs.call(video).then(() => {
                     video.play();
-                    playIcon.classList.add('hidden');
-                    pauseIcon.classList.remove('hidden');
-                    showUI();
                 });
             }
         }
       });
 
-      // Handle clicking anywhere in fullscreen to toggle play
-      ui.addEventListener('click', (e) => {
-          // If click is on the background (the UI container itself)
-          if (e.target === ui) {
-              togglePlay();
-          }
-      });
-
-      // Show UI on mouse movement in fullscreen
-      vWrap.addEventListener('mousemove', () => {
-          if (document.fullscreenElement) showUI();
-      });
-      vWrap.addEventListener('touchstart', () => {
-          if (document.fullscreenElement) showUI();
-      });
-
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+          video.controls = false; // Hide native controls when exiting FS
           video.pause();
           video.muted = true;
-          ui.classList.remove('v-fs-show-ui');
         }
       };
       
