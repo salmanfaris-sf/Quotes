@@ -61,7 +61,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
 /* Video Grid Styles */
-.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 60px; overflow: hidden; }
+.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; overflow: hidden; }
 .v-wrap { 
   width: 90vw; 
   aspect-ratio: 16/9;
@@ -90,17 +90,17 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 /* The static play button shown in the grid */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 70px; height: 70px; background: #000; /* Changed to Black background */
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 60px; height: 60px; background: #000;
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 24px; height: 24px; transform: translateX(2px); } /* Changed icon to White */
+.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); }
 
 .v-info {
-  position: absolute; bottom: 20px; left: 24px; z-index: 10;
+  position: absolute; bottom: 16px; left: 20px; z-index: 10;
   font-family: 'Inter', sans-serif; 
   opacity: 0.35; 
   font-size: 8px; 
@@ -110,38 +110,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-/* Updated high-contrast status feedback */
-.v-status-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.6);
-  background: #000; /* Solid Black */
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.2s ease;
-  z-index: 9999;
-  box-shadow: 0 0 40px rgba(0,0,0,0.8);
-}
-
-.v-status-icon svg {
-    width: 32px;
-    height: 32px;
-    fill: #fff; /* Solid White */
-}
-
-.v-status-icon.show { 
-    opacity: 1; 
-    transform: translate(-50%, -50%) scale(1); 
-}
-
-/* Hide when video is actually playing and not in FS to keep grid clean */
+/* Hide when video is actually playing to keep grid clean */
 .v-wrap.is-playing .v-play-btn { opacity: 0; }
 
 .hidden { display: none !important; }
@@ -166,19 +135,19 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10 pb-40">
-    <div class="z1 mb-24 text-center px-6">
+  <section id="v-section" class="relative z-10 pb-20">
+    <div class="z1 mb-16 text-center px-6">
        <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40">The Archive</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
-    <div class="z1 text-center py-40 px-6">
-      <p id="bottom-mantra" class="font-f2 text-[12px] tracking-[0.8em] uppercase text-c2"></p>
+    <div class="z1 text-center pt-24 pb-12 px-6">
+      <p id="bottom-mantra" class="font-f2 text-[11px] tracking-[0.8em] uppercase text-c2"></p>
     </div>
   </section>
 </main>
 
-<footer class="w-full flex justify-end px-12 py-12 relative z-10 z1">
+<footer class="w-full flex justify-end px-12 py-10 relative z-10 z1">
   <div class="text-[10px] uppercase tracking-[0.6em] font-f2 text-white font-medium opacity-40">&mdash; BY SALMAN FARIS</div>
 </footer>
 
@@ -203,28 +172,6 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
-  const showStatusIcon = (videoContainer, type) => {
-    let icon = videoContainer.querySelector('.v-status-icon');
-    if(!icon) return;
-    
-    if (icon._timer) clearTimeout(icon._timer);
-    
-    const svg = type === 'play' 
-        ? '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
-        : '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-    
-    icon.innerHTML = svg;
-    
-    // Force a reflow for the scale animation
-    icon.classList.remove('show');
-    void icon.offsetWidth;
-    icon.classList.add('show');
-
-    icon._timer = setTimeout(() => {
-        icon.classList.remove('show');
-    }, 800);
-  };
-
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
@@ -237,7 +184,6 @@ video::-webkit-media-controls-enclosure { display:none !important; }
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <div class="v-status-icon"></div>
         <video preload="metadata" playsinline muted>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
@@ -256,21 +202,11 @@ video::-webkit-media-controls-enclosure { display:none !important; }
         vWrap.classList.remove('is-playing');
       });
 
-      // Unified click handler for FS and Grid
       vWrap.addEventListener('click', (e) => {
         const isFS = document.fullscreenElement || document.webkitIsFullScreen;
-        
         if (isFS) {
-            // Click inside FS
-            if (video.paused) {
-                video.play();
-                showStatusIcon(vWrap, 'play');
-            } else {
-                video.pause();
-                showStatusIcon(vWrap, 'pause');
-            }
+            video.paused ? video.play() : video.pause();
         } else {
-            // Click in Grid - Enter FS
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
                 video.muted = false;
@@ -280,11 +216,6 @@ video::-webkit-media-controls-enclosure { display:none !important; }
                 });
             }
         }
-      });
-
-      // Prevent native controls from popping up on mobile click if possible
-      video.addEventListener('click', (e) => {
-        e.preventDefault();
       });
 
       const resetFS = () => {
