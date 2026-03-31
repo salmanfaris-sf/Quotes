@@ -61,7 +61,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
 /* Video Grid Styles */
-.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; overflow: hidden; }
+.v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
 .v-wrap { 
   width: 90vw; 
   aspect-ratio: 16/9;
@@ -73,8 +73,10 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.05);
+  display: none; /* Hidden by default, shown only if video loads */
 }
 
+.v-wrap.is-visible { display: block; }
 .v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.3); }
 
 .v-wrap video { 
@@ -111,7 +113,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
 .v-wrap.is-playing .v-play-btn { opacity: 0; }
 
-.hidden { display: none !important; }
+#v-section { padding-bottom: 0; margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -133,7 +135,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10 pb-10">
+  <section id="v-section" class="relative z-10">
     <div class="z1 mb-16 text-center px-6">
        <h3 class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40">The Archive</h3>
     </div>
@@ -176,7 +178,8 @@ video::-webkit-media-controls-enclosure { display:none !important; }
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.1 });
 
-    for(let i=1; i<=20; i++) {
+    // Loop through 200 potential video slots
+    for(let i=1; i<=200; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
@@ -188,7 +191,15 @@ video::-webkit-media-controls-enclosure { display:none !important; }
       `;
 
       const video = vWrap.querySelector('video');
-      video.onloadedmetadata = () => { observer.observe(vWrap); };
+      
+      // Crucial: Only show the container if the video actually starts loading
+      video.onloadeddata = () => {
+        vWrap.classList.add('is-visible');
+        observer.observe(vWrap);
+      };
+
+      // If video file is missing (404), it won't trigger onloadeddata, 
+      // thus vWrap stays display:none and occupies ZERO space.
       video.onerror = () => vWrap.remove();
 
       video.addEventListener('ended', () => {
