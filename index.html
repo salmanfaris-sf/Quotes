@@ -50,17 +50,16 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
 
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:.4;color:#fff}
-.zb{color:#C5A059;opacity:.9;text-shadow:0 0 30px rgba(197,160,89,.3)}
-.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,.5)}
-@keyframes flash{0%,100%{opacity:.1}50%{opacity:.7}}
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
 .zf{animation:flash 2s ease-in-out infinite}
-#sd{transition:opacity .5s ease,visibility .5s}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
 
-.hi{transition:color .6s ease,text-shadow .6s ease,opacity .6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-/* Video Grid Styles */
 .v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
 .v-wrap { 
   width: 90vw; 
@@ -79,7 +78,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .v-wrap.is-visible { display: block; }
 .v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.3); }
 
-/* Ensure video respects container and fullscreen logic */
 .v-wrap video { 
   width: 100%; 
   height: 100%; 
@@ -87,33 +85,24 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
 }
 
-/* Specific rule for native fullscreen: prevent stretching */
-video:fullscreen {
-  object-fit: contain !important;
-  background-color: black;
-}
-video::-webkit-full-screen {
-  object-fit: contain !important;
-  background-color: black;
-}
-
+video:fullscreen { object-fit: contain !important; background-color: black; }
+video::-webkit-full-screen { object-fit: contain !important; background-color: black; }
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
 
-/* Premium Blurred Play Button */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 72px; height: 72px; 
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
+  width: 44px; height: 44px; 
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); opacity: 0.9; }
+.v-play-btn svg { fill: #fff; width: 10px; height: 10px; transform: translateX(1px); opacity: 0.7; }
 
 .v-info {
   position: absolute; bottom: 16px; left: 20px; z-index: 10;
@@ -126,8 +115,34 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-transform: uppercase;
 }
 
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.3); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.05); background: rgba(255, 255, 255, 0.07); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+
+.quote-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+.quote-line {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px; 
+    font-weight: 400;
+    line-height: 1.8;
+    color: #fff;
+    opacity: 0.6;
+    margin: 0;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+.quote-stats {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: #fff;
+    opacity: 0.6;
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+    text-transform: uppercase;
+}
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
 </style>
@@ -142,9 +157,9 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:.2s"></h1>
+      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
     </div>
-    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:.8s">
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
@@ -157,8 +172,12 @@ video::-webkit-media-controls-enclosure { display:none !important; }
     </div>
     <div id="video-list" class="v-grid"></div>
     
-    <div class="z1 text-center pt-20 pb-0 px-6">
-      <p id="bottom-mantra" class="font-f2 text-[11px] tracking-[0.8em] uppercase text-c2"></p>
+    <div class="z1 text-center pt-48 pb-32 px-6">
+        <div class="quote-container">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">don't let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
+        </div>
     </div>
   </section>
 </main>
@@ -170,16 +189,6 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 <script>
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
-  const mantras = [
-    "Hate Laziness. Conquer the Day.",
-    "Zero Excuses. Infinite Action.",
-    "The Clock is Ticking. Build your Legacy.",
-    "Discipline is Freedom. Start Now.",
-    "Face the Pain. Earn the Result.",
-    "Kill the Weakness. Feed the Will.",
-    "Consistency creates Mastery. Never Stop."
-  ];
-
   const content = [
     ["You already know what to do. You just don’t like the cost. The brain will invent reasons to avoid pain, even when pain is the only path forward. Every wasted year makes the next one heavier. Do it the moment you remember it. Stick to the plan. Not your mood.", "You only have one thousand four hundred and forty minutes every day. Don’t let a single one go to waste. Focus is a superpower in a distracted world. Weakness leaves when discipline enters. Strength is built through patience. Be strict with yourself.", "Success is earned, not given. Focus on your growth. Stay Disciplined. Growth begins outside comfort zones. Hard days make strong people. Keep showing up. Strength is built through repetition. Do the boring work well.", "A real man protects and provides. Don't follow the crowd. Follow the truth. Never build your happiness on someone else's tears. Eliminate the tomorrow mindset today. The strongest man is he who controls his anger. Be a man of your word.", "Don't waste time. You don't get it back. The problem is, you think you have a lot of time to live. Live everyday like it's your last day. Consistency is the only way out. Big dreams need big sacrifices. Practice makes perfect."],
     ["Nothing changes if nothing changes. Stay different. You can't have a million dollar dream with a minimum wage work ethic. Your habits define your future self. Hate Laziness. Always speak the truth. Time waits for no one.", "Knowledge without action is useless. Fear Allah. Not people. Live with purpose. Be a man of honor. A real man protects those who are vulnerable. Every day is a second chance. Now is the time.", "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock one hundred times and it won't even move. But on the one hundred and first hit, it suddenly breaks. It wasn't just the last hit. It was all of them.", "Zero Excuses. Sweat more in practice. Bleed less in war. Habits decide outcomes. Growth requires discomfort. Work now. Relax later. Don't look back. You're not going that way. Every day counts.", "Focus. Be better than you were yesterday. So race one another in good deeds. Consistency creates mastery. This is the way. Leave a legacy. Let your life be a story of courage, action, and impact."],
@@ -187,6 +196,15 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
+
+  const updateLiveRemaining = () => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const totalMinutes = 1440;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const remainingMinutes = totalMinutes - currentMinutes;
+      document.getElementById('live-stats').textContent = `TIME: ${timeStr} • ${remainingMinutes} MINUTES REMAINING TODAY`;
+  };
 
   const initVideos = () => {
     const list = document.getElementById('video-list');
@@ -204,49 +222,20 @@ video::-webkit-media-controls-enclosure { display:none !important; }
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
-
       const video = vWrap.querySelector('video');
-      
-      video.onloadeddata = () => {
-        vWrap.classList.add('is-visible');
-        observer.observe(vWrap);
-      };
-
+      video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
-
       video.addEventListener('ended', () => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
             document.exitFullscreen?.() || document.webkitExitFullscreen?.();
         }
-        video.pause();
-        video.currentTime = 0;
-        vWrap.classList.remove('is-playing');
+        video.pause(); video.currentTime = 0; vWrap.classList.remove('is-playing');
       });
-
-      vWrap.addEventListener('click', (e) => {
-        const isFS = document.fullscreenElement || document.webkitIsFullScreen;
-        if (isFS) {
-            video.paused ? video.play() : video.pause();
-        } else {
-            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
-            if (fs) {
-                video.muted = false;
-                fs.call(video).then(() => {
-                    video.play();
-                    vWrap.classList.add('is-playing');
-                });
-            }
-        }
+      vWrap.addEventListener('click', () => {
+        const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+        if (fs) { video.muted = false; fs.call(video).then(() => { video.play(); vWrap.classList.add('is-playing'); }); }
       });
-
-      const resetFS = () => {
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-          video.pause();
-          video.muted = true;
-          vWrap.classList.remove('is-playing');
-        }
-      };
-      
+      const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.muted = true; vWrap.classList.remove('is-playing'); } };
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
@@ -258,19 +247,16 @@ video::-webkit-media-controls-enclosure { display:none !important; }
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
-    document.getElementById("bottom-mantra").textContent = mantras[dayOfYear % mantras.length];
-
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[0][dayOfYear % content[0].length])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}</p></div>
       <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}</p></div>
     `;
-
     initVideos();
+    updateLiveRemaining();
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
@@ -280,18 +266,17 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   const updateTime = () => {
     const n = new Date();
     document.getElementById("t0").textContent = `${n.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${n.toLocaleDateString("en-US",{day:"2-digit"})} / ${n.getFullYear()}`;
+    updateLiveRemaining();
   };
 
   window.addEventListener("scroll", () => {
-    const scrollPos = window.scrollY || window.pageYOffset;
+    const scrollPos = window.scrollY;
     const nav = document.getElementById("n0");
     const scrollHint = document.getElementById("sd");
-    const vh = window.innerHeight;
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
-
     const spans = document.querySelectorAll(".hi");
-    const centerY = vh * 0.5;
+    const centerY = window.innerHeight * 0.5;
     let activeSpan = null;
     let minDistance = Infinity;
     spans.forEach(span => {
@@ -300,7 +285,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
       if (dist < minDistance) { minDistance = dist; activeSpan = span; }
     });
     spans.forEach(span => {
-      if (span === activeSpan && minDistance < vh * 0.4) span.classList.add("active");
+      if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
       else span.classList.remove("active");
     });
   }, { passive: true });
