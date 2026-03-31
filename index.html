@@ -67,7 +67,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   aspect-ratio: 16/9;
   max-width: 800px; 
   position: relative; 
-  background: #111; 
+  background: #000; 
   overflow: hidden; 
   cursor: pointer;
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -75,7 +75,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   border: 1px solid rgba(255,255,255,0.05);
 }
 
-.v-wrap:hover { transform: scale(1.02); border-color: rgba(197,160,89,0.3); }
+.v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.3); }
 
 .v-wrap video { 
   width: 100%; 
@@ -84,18 +84,12 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
 }
 
-/* Hide default controls everywhere including fullscreen */
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
 
-video:fullscreen, video:-webkit-full-screen {
-  object-fit: contain !important;
-  background-color: black !important;
-}
-
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 70px; height: 70px; background: rgba(255, 255, 255, 1);
+  width: 70px; height: 70px; background: #fff;
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -114,22 +108,35 @@ video:fullscreen, video:-webkit-full-screen {
   text-transform: uppercase;
 }
 
-/* Premium feedback overlay */
+/* Premium feedback overlay - Updated for clarity and punch */
 .v-status-icon {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(10px);
-  padding: 20px;
+  transform: translate(-50%, -50%) scale(0.5);
+  background: #000;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.3s ease;
-  z-index: 100;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+  z-index: 2147483647; /* Ensure it stays on top even in FS */
 }
-.v-status-icon.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+.v-status-icon svg {
+    width: 32px;
+    height: 32px;
+    fill: #fff;
+}
+
+.v-status-icon.show { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1); 
+}
 
 .hidden { display: none !important; }
 </style>
@@ -198,13 +205,23 @@ video:fullscreen, video:-webkit-full-screen {
         videoContainer.appendChild(icon);
     }
     
+    // Clear previous timeouts if user clicks fast
+    if (icon._timer) clearTimeout(icon._timer);
+    
     const svg = type === 'play' 
-        ? '<svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>'
-        : '<svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        ? '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+        : '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
     
     icon.innerHTML = svg;
-    icon.classList.add('show');
-    setTimeout(() => icon.classList.remove('show'), 600);
+    
+    // Use requestAnimationFrame to ensure CSS transition works
+    requestAnimationFrame(() => {
+        icon.classList.add('show');
+    });
+
+    icon._timer = setTimeout(() => {
+        icon.classList.remove('show');
+    }, 600);
   };
 
   const initVideos = () => {
@@ -219,6 +236,7 @@ video:fullscreen, video:-webkit-full-screen {
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
+        <div class="v-status-icon"></div>
         <video preload="metadata" playsinline muted>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
@@ -228,7 +246,6 @@ video:fullscreen, video:-webkit-full-screen {
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
-      // Exit Fullscreen on End
       video.addEventListener('ended', () => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
             document.exitFullscreen?.() || document.webkitExitFullscreen?.();
@@ -237,8 +254,21 @@ video:fullscreen, video:-webkit-full-screen {
         video.currentTime = 0;
       });
 
+      // Handle Fullscreen interaction for play/pause
+      video.addEventListener('click', (e) => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            e.stopPropagation(); // Prevent duplicate events
+            if (video.paused) {
+                video.play();
+                showStatusIcon(vWrap, 'play');
+            } else {
+                video.pause();
+                showStatusIcon(vWrap, 'pause');
+            }
+        }
+      });
+
       vWrap.addEventListener('click', (e) => {
-        // If not in fullscreen, enter it
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
             if (fs) {
@@ -246,15 +276,6 @@ video:fullscreen, video:-webkit-full-screen {
                 fs.call(video).then(() => {
                     video.play();
                 });
-            }
-        } else {
-            // Logic for clicking WHILE in fullscreen: Toggle Play/Pause
-            if (video.paused) {
-                video.play();
-                showStatusIcon(vWrap, 'play');
-            } else {
-                video.pause();
-                showStatusIcon(vWrap, 'pause');
             }
         }
       });
