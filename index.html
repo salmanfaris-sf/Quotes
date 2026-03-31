@@ -72,11 +72,25 @@ body { margin: 0; background-color: #050505; color: #d1d1d1; font-smoothing: ant
   display: block;
 }
 
+/* Hide ALL controls in normal view */
 video::-webkit-media-controls { display:none !important; }
 video::-webkit-media-controls-enclosure { display:none !important; }
 
+/* CSS to hide seek/scrubbing specifically in fullscreen */
+video:fullscreen::-webkit-media-controls-timeline,
+video:fullscreen::-webkit-media-controls-current-time-display,
+video:fullscreen::-webkit-media-controls-time-remaining-display,
+video:fullscreen::-webkit-media-controls-mute-button,
+video:fullscreen::-webkit-media-controls-fullscreen-button {
+    display: none !important;
+}
+
+/* Keep play button visible in FS controls */
+video:fullscreen::-webkit-media-controls-play-button {
+    display: flex !important;
+}
+
 video:fullscreen { object-fit: contain; background: #000; pointer-events: auto !important; }
-video:fullscreen::-webkit-media-controls { display: flex !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -166,7 +180,7 @@ video:fullscreen::-webkit-media-controls { display: flex !important; }
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <div class="v-info">REEL &nbsp;${String(i).padStart(3, '0')}</div>
+        <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
         <video preload="metadata" playsinline loop style="pointer-events: none;">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
@@ -176,6 +190,7 @@ video:fullscreen::-webkit-media-controls { display: flex !important; }
       video.onloadedmetadata = () => { observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
 
+      // Fullscreen Activation
       vWrap.addEventListener('click', () => {
         video.controls = true;
         const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen || video.msRequestFullscreen;
@@ -184,6 +199,23 @@ video:fullscreen::-webkit-media-controls { display: flex !important; }
           video.play();
         }
       });
+
+      // Tap to Toggle Play/Pause in Fullscreen
+      video.addEventListener('click', (e) => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            e.preventDefault(); // Stop default browser behavior
+            if (video.paused) video.play();
+            else video.pause();
+        }
+      });
+
+      // Prevent seek on double click in fullscreen
+      video.addEventListener('dblclick', (e) => {
+          if (document.fullscreenElement || document.webkitIsFullScreen) {
+              e.preventDefault();
+              e.stopPropagation();
+          }
+      }, true);
 
       const resetFS = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
