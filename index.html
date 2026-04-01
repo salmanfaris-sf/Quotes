@@ -42,7 +42,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.2s cubic-bezier(.16,1,.3,1)}
 .z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
 
 .zi{text-indent:12rem}
@@ -55,7 +55,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .zf{animation:flash 2s ease-in-out infinite}
 #sd{transition:opacity 0.5s ease,visibility 0.5s}
 
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi{transition:color 0.4s ease,text-shadow 0.4s ease,opacity 0.4s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
 .v-grid { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
@@ -70,10 +70,8 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.05);
-  display: none; 
 }
 
-.v-wrap.is-visible { display: block; }
 .v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.3); }
 
 .v-wrap video { 
@@ -221,10 +219,15 @@ footer { padding-top: 20px; }
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+      entries.forEach(entry => { 
+        if (entry.isIntersecting) {
+            entry.target.classList.add("za"); 
+        }
+      });
     }, { threshold: 0.1 });
 
-    for(let i=1; i<=200; i++) {
+    // Limited to 4 videos as requested for better performance
+    for(let i=1; i<=4; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
@@ -234,8 +237,10 @@ footer { padding-top: 20px; }
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
+      
       const video = vWrap.querySelector('video');
-      video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
+      
+      // Error handling for missing files
       video.onerror = () => vWrap.remove();
       
       video.addEventListener('click', (e) => {
@@ -259,7 +264,7 @@ footer { padding-top: 20px; }
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen;
             if (fs) { 
-                video.currentTime = 0; // Reset to beginning on every click/fullscreen entry
+                video.currentTime = 0; 
                 video.muted = false; 
                 fs.call(video).then(() => { 
                     video.play(); 
@@ -272,14 +277,17 @@ footer { padding-top: 20px; }
       const resetFS = () => { 
         if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
             video.pause(); 
-            video.currentTime = 0; // Reset when exiting fullscreen too
+            video.currentTime = 0;
             video.muted = true; 
             vWrap.classList.remove('is-playing'); 
         } 
       };
+      
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
+      
       list.appendChild(vWrap);
+      observer.observe(vWrap);
     }
   };
 
@@ -298,9 +306,11 @@ footer { padding-top: 20px; }
     `;
     initVideos();
     updateClockAndStats();
+    
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
+    
     document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
   };
 
@@ -310,15 +320,18 @@ footer { padding-top: 20px; }
     const scrollHint = document.getElementById("sd");
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
+    
     const spans = document.querySelectorAll(".hi");
     const centerY = window.innerHeight * 0.5;
     let activeSpan = null;
     let minDistance = Infinity;
+    
     spans.forEach(span => {
       const rect = span.getBoundingClientRect();
       const dist = Math.abs((rect.top + rect.height / 2) - centerY);
       if (dist < minDistance) { minDistance = dist; activeSpan = span; }
     });
+    
     spans.forEach(span => {
       if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
       else span.classList.remove("active");
