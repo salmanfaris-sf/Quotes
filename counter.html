@@ -251,7 +251,6 @@
             transition: background 0.2s;
             border-left: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
-            /* Default is none, handled by JS visibility */
             display: none;
         }
 
@@ -424,13 +423,13 @@
             function _p() {
                 if (sn) return;
                 if (ac.state === 'suspended') ac.resume();
-                const o = ac.createOscillator(), g = ac.createGain();
+                const o = ac.createOscillator(), gr = ac.createGain();
                 o.type = 'square';
                 o.frequency.setValueAtTime(2400, ac.currentTime);
-                g.gain.setValueAtTime(.05, ac.currentTime);
-                g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .02);
-                o.connect(g);
-                g.connect(ac.destination);
+                gr.gain.setValueAtTime(.05, ac.currentTime);
+                gr.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .02);
+                o.connect(gr);
+                gr.connect(ac.destination);
                 o.start();
                 o.stop(ac.currentTime + .02)
             }
@@ -471,17 +470,13 @@
             function _z(m, du, showBtn = false) {
                 if (rt) clearTimeout(rt);
                 ht.textContent = m;
-                
-                // Fixing visibility logic for the button
                 if (showBtn) {
                     hb.classList.add('visible');
-                    du = 8000; // Longer duration for goal reached
+                    du = 8000;
                 } else {
                     hb.classList.remove('visible');
                 }
-
                 h.classList.add('active');
-                
                 rt = setTimeout(() => {
                     h.classList.remove('active');
                     rt = null
@@ -536,7 +531,6 @@
                 _w();
                 _x();
                 h.classList.remove('active');
-                // Brief toast to confirm removal
                 setTimeout(() => _z('goal removed', 2000), 400);
             };
 
@@ -544,13 +538,20 @@
                 e.stopPropagation();
                 if (lk) return;
                 const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
+                // Logic: Only proceed if 'r' is not null (User clicked OK)
                 if (r !== null) {
                     const n = parseInt(r);
                     if (!isNaN(n) && n >= 0) {
                         gl = n;
-                        _z(gl > 0 ? `goal set to ${gl}` : 'goal removed', 2000);
+                        if (gl > 0) {
+                            // Reset counter only on valid OK click with positive goal
+                            v = 0;
+                            _z(`goal set to ${gl} (count reset)`, 2000);
+                        } else {
+                            _z('goal removed', 2000);
+                        }
                         _w();
-                        _x()
+                        _x();
                     }
                 }
             };
@@ -566,7 +567,7 @@
                     sn = !sn;
                     qf = 1;
                     if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'tap sound off' : 'tap sound on (increase device volume)', 2000)
+                    _z(sn ? 'tap sound off' : 'tap sound on', 2000)
                 }, 800)
             });
 
