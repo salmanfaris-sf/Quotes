@@ -4,13 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <meta name="theme-color" content="#000000">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-1K1TKBQFFK');
-</script>
 <title>Salman Faris | Simple Wisdom</title>
 <meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
 <meta name="author" content="Salman Faris">
@@ -91,12 +84,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 }
 
 video::-webkit-media-controls { display:none !important; }
-video::-webkit-media-controls-enclosure { display:none !important; }
-video::-webkit-media-controls-panel { display: none !important; }
-
-video:fullscreen { object-fit: contain !important; background-color: black; }
-video::-webkit-full-screen { object-fit: contain !important; background-color: black; }
-
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 72px; height: 72px; 
@@ -126,10 +113,7 @@ video::-webkit-full-screen { object-fit: contain !important; background-color: b
   text-align: center;
 }
 
-.v-wrap:hover .v-play-btn { 
-  transform: translate(-50%, -50%) scale(1.1); 
-  border-color: rgba(197,160,89,0.5); 
-}
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(197,160,89,0.5); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
 .quote-container {
@@ -157,8 +141,9 @@ video::-webkit-full-screen { object-fit: contain !important; background-color: b
 }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
-.quote-wrapper { padding-top: 100px; padding-bottom: 80px; }
-footer { padding-top: 20px; }
+/* Reduced padding here to close the gap */
+.quote-wrapper { padding-top: 40px; padding-bottom: 30px; }
+footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
 <body>
@@ -181,7 +166,7 @@ footer { padding-top: 20px; }
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
   <section id="v-section" class="relative z-10">
-    <div class="z1 mb-20 text-center px-6">
+    <div class="z1 mb-16 text-center px-6">
        <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Visual Feed</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
@@ -193,20 +178,32 @@ footer { padding-top: 20px; }
             <p id="live-stats" class="quote-stats"></p>
         </div>
     </div>
-  </section>
 </main>
 
-<footer class="w-full flex justify-center px-6 pb-12 relative z-10 z1">
+<footer class="w-full flex justify-center px-6 relative z-10 z1">
   <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
 </footer>
 
 <script>
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
+  
   const content = [
-    ["You already know what to do. You just don’t like the cost. The brain will invent reasons to avoid pain, even when pain is the only path forward. Every wasted year makes the next one heavier. Do it the moment you remember it. Stick to the plan. Not your mood.", "You only have one thousand four hundred and forty minutes every day. Don’t let a single one go to waste. Focus is a superpower in a distracted world. Weakness leaves when discipline enters. Strength is built through patience. Be strict with yourself.", "Success is earned, not given. Focus on your growth. Stay Disciplined. Growth begins outside comfort zones. Hard days make strong people. Keep showing up. Strength is built through repetition. Do the boring work well.", "A real man protects and provides. Don't follow the crowd. Follow the truth. Never build your happiness on someone else's tears. Eliminate the tomorrow mindset today. The strongest man is he who controls his anger. Be a man of your word.", "Don't waste time. You don't get it back. The problem is, you think you have a lot of time to live. Live everyday like it's your last day. Consistency is the only way out. Big dreams need big sacrifices. Practice makes perfect."],
-    ["Nothing changes if nothing changes. Stay different. You can't have a million dollar dream with a minimum wage work ethic. Your habits define your future self. Hate Laziness. Always speak the truth. Time waits for no one.", "Knowledge without action is useless. Fear Allah. Not people. Live with purpose. Be a man of honor. A real man protects those who are vulnerable. Every day is a second chance. Now is the time.", "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock one hundred times and it won't even move. But on the one hundred and first hit, it suddenly breaks. It wasn't just the last hit. It was all of them.", "Zero Excuses. Sweat more in practice. Bleed less in war. Habits decide outcomes. Growth requires discomfort. Work now. Relax later. Don't look back. You're not going that way. Every day counts.", "Focus. Be better than you were yesterday. So race one another in good deeds. Consistency creates mastery. This is the way. Leave a legacy. Let your life be a story of courage, action, and impact."],
-    ["Waiting won’t help. Overthinking won’t help. Action will. Do it. Lower your gaze, guard your tongue, and protect your heart. Your current life is the result of past actions. Your future is the result of today's actions.", "The man who keeps walking will eventually leave the place he hates. A few years of sacrifice can create a lifetime of freedom. Your future is built by what you do after a long tiring day. Speak clearly. Stand straight. Fear none.", "It always seems impossible until it's done. Discipline is doing what needs to be done, even if you don't want to do it. Stop looking for shortcuts. There are none. Only work. Only results.", "People will forget your words, but they will never forget your results. Stop talking and start building. The world doesn't care about your potential. It cares about your output. Be undeniable.", "Every second is a war against your own laziness. Win the war. Don't let your ancestors down. Be the one who changed the family line. Discipline is the highest form of self-love."]
+    [
+      "You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.",
+      "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.",
+      "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."
+    ],
+    [
+      "Nothing changes if you do nothing. You cannot dream big and work small. Your habits show who you really are. A man who cannot control himself cannot control his life. Stop talking about what you want to do. Start doing it. Hate laziness like it is a disease. Always speak the truth. Stand straight and face your fears.",
+      "Knowledge is nothing without action. Fear nothing but a life of regret. Live with a clear goal. A real man protects his family. He provides for those he loves. He does not follow the crowd. He follows the truth. Every morning is a new chance to fix your life. The time to start is right now. Do not look back.",
+      "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep moving forward. Never stop hitting the rock."
+    ],
+    [
+      "Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.",
+      "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.",
+      "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."
+    ]
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
@@ -242,43 +239,20 @@ footer { padding-top: 20px; }
       video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
       video.onerror = () => vWrap.remove();
       
-      video.addEventListener('click', (e) => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            e.preventDefault();
-            if (video.paused) video.play();
-            else video.pause();
-        }
-      });
-
-      video.addEventListener('ended', () => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            document.exitFullscreen?.() || document.webkitExitFullscreen?.();
-        }
-        video.pause(); 
-        video.currentTime = 0; 
-        vWrap.classList.remove('is-playing');
-      });
-
       vWrap.addEventListener('click', () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen;
             if (fs) { 
                 video.currentTime = 0; 
                 video.muted = false; 
-                fs.call(video).then(() => { 
-                    video.play(); 
-                    vWrap.classList.add('is-playing'); 
-                }); 
+                fs.call(video).then(() => { video.play(); vWrap.classList.add('is-playing'); }); 
             }
         }
       });
 
       const resetFS = () => { 
         if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
-            video.pause(); 
-            video.currentTime = 0;
-            video.muted = true; 
-            vWrap.classList.remove('is-playing'); 
+            video.pause(); video.currentTime = 0; video.muted = true; vWrap.classList.remove('is-playing'); 
         } 
       };
       document.addEventListener('fullscreenchange', resetFS);
@@ -292,16 +266,21 @@ footer { padding-top: 20px; }
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
+    
+    const setIdx = dayOfYear % content.length;
+    
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[0][dayOfYear % content[0].length])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[1][(dayOfYear + 2) % content[1].length])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
       <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[2][(dayOfYear + 4) % content[2].length])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
     initVideos();
     updateClockAndStats();
+    
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
@@ -314,6 +293,7 @@ footer { padding-top: 20px; }
     const scrollHint = document.getElementById("sd");
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
+    
     const spans = document.querySelectorAll(".hi");
     const centerY = window.innerHeight * 0.5;
     let activeSpan = null;
