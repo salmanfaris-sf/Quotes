@@ -61,88 +61,11 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-.v-grid { 
-  width: 100%; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 60px; 
-}
-
-.v-wrap { 
-  width: 85vw; 
-  aspect-ratio: 9/16; 
-  max-width: 450px; 
-  position: relative; 
-  background: #000000; 
-  overflow: hidden; 
-  cursor: pointer;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 24px; 
-  border: 1px solid rgba(255,255,255,0.05);
-  display: none; 
-}
-
-.v-wrap.is-visible { display: block; }
-
-.v-wrap video { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover;
-  display: block;
-  background: #000000;
-  pointer-events: auto;
-  filter: blur(12px) brightness(0.6); 
-  opacity: 0.75;
-  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.v-wrap.is-playing video {
-  filter: blur(0px) brightness(1);
-  opacity: 1;
-  object-fit: contain;
-}
-
-video:fullscreen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; }
-video:-webkit-full-screen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; }
-video::-webkit-media-controls { display:none !important; }
-video::-webkit-media-controls-enclosure { display:none !important; }
-
-.v-play-btn {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 72px; height: 72px; 
-  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
-  backdrop-filter: blur(8px); 
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-}
-.v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.8; }
-
-.v-info {
-  position: absolute; top: 24px; left: 0; right: 0; z-index: 10;
-  font-family: 'Inter', sans-serif; 
-  opacity: 0.5; 
-  font-size: 8px; 
-  font-weight: 600;
-  letter-spacing: 0.8em;
-  color: #fff;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.v-wrap:hover video { transform: scale(1.02); opacity: 0.9; filter: blur(6px) brightness(0.7); }
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(255,255,255,0.3); }
-.v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
-
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
 .quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 14px); color: #ffffff; opacity: 0.5; margin-top: 10px; font-weight: 500; }
 
-#v-section { padding-bottom: 0; margin-bottom: 0; }
-.quote-wrapper { padding-top: 40px; padding-bottom: 30px; }
+.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
@@ -165,12 +88,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10">
-    <div id="reflections-header" class="z1 mb-16 text-center px-6 opacity-0 pointer-events-none">
-       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Reflections</h3>
-    </div>
-    <div id="video-list" class="v-grid"></div>
-    
+  <section class="relative z-10">
     <div class="z1 text-center px-6 quote-wrapper">
         <div class="quote-container">
             <p class="quote-line">You only have 1,440 minutes every day,</p>
@@ -178,6 +96,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
             <p id="live-stats" class="quote-stats"></p>
         </div>
     </div>
+  </section>
 </main>
 
 <footer class="w-full flex justify-center px-6 relative z-10 z1">
@@ -219,93 +138,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     if (statsEl) { statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; }
   };
 
-  const initVideos = () => {
-    const list = document.getElementById('video-list');
-    const header = document.getElementById('reflections-header');
-    let validVideosCount = 0;
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
-    }, { threshold: 0.1 });
-
-    for(let i=1; i<=200; i++) {
-      const vWrap = document.createElement('div');
-      vWrap.className = 'v-wrap z1';
-      vWrap.innerHTML = `
-        <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video 
-          preload="metadata" 
-          playsinline 
-          muted 
-          disablePictureInPicture 
-          oncontextmenu="return false;" 
-          controlsList="nodownload nofullscreen noplaybackrate">
-          <source src="videos/${i}.mp4" type="video/mp4">
-        </video>
-      `;
-      const video = vWrap.querySelector('video');
-      
-      fetch(`videos/${i}.mp4`, { method: 'HEAD' })
-        .then(res => {
-          if (res.ok) {
-            vWrap.classList.add('is-visible');
-            validVideosCount++;
-            if (validVideosCount > 0) {
-                header.classList.remove('opacity-0', 'pointer-events-none');
-                header.classList.add('za');
-            }
-            observer.observe(vWrap);
-          } else {
-            vWrap.remove();
-          }
-        })
-        .catch(() => vWrap.remove());
-
-      const resetUI = () => {
-          video.pause();
-          video.currentTime = 0; // Ensures next play starts from beginning
-          video.muted = true;
-          vWrap.classList.remove('is-playing');
-      };
-
-      video.onended = () => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-          const exitFS = document.exitFullscreen || document.webkitExitFullscreen;
-          if (exitFS) exitFS.call(document);
-        }
-        resetUI();
-      };
-      
-      video.addEventListener('click', (e) => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            e.preventDefault(); e.stopPropagation();
-            if (video.paused) video.play(); else video.pause();
-        }
-      });
-
-      vWrap.addEventListener('click', () => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) return;
-        const fs = video.requestFullscreen || video.webkitRequestFullscreen;
-        if (fs) { 
-            video.currentTime = 0; // Force reset before play
-            video.muted = false; 
-            vWrap.classList.add('is-playing'); 
-            fs.call(video).then(() => { video.play(); }); 
-        }
-      });
-
-      const handleFSChange = () => { 
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
-            resetUI();
-        } 
-      };
-      document.addEventListener('fullscreenchange', handleFSChange);
-      document.addEventListener('webkitfullscreenchange', handleFSChange);
-      list.appendChild(vWrap);
-    }
-  };
-
   const init = () => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
@@ -323,13 +155,12 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
-    initVideos();
     updateClockAndStats();
     
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
-    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
+    document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
   };
 
   window.addEventListener("scroll", () => {
