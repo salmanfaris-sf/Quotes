@@ -78,7 +78,7 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #0a0a0a; 
+  background: #111; 
   overflow: hidden; 
   cursor: pointer;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -198,13 +198,20 @@ footer { padding-bottom: 60px; }
     const fsOverlay = document.getElementById('fs-overlay');
     const fsVideo = document.getElementById('fs-video');
 
+    const videoUrls = [
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    ];
+
     const openFS = (src) => {
         fsVideo.src = src;
         fsOverlay.classList.add('active');
-        // Force the video to be ready since it was preloaded
         fsVideo.play().catch(e => {
-            console.log("Auto-play failed, waiting for user interaction");
-            // If play fails, usually we just show the overlay and wait for another tap on the video itself
+            console.log("Auto-play failed.");
         });
         document.body.style.overflow = 'hidden';
     };
@@ -228,27 +235,26 @@ footer { padding-bottom: 60px; }
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.1 });
 
-    // Preload strategy: Set preload="auto" immediately for initial content
-    for(let i=1; i<=12; i++) {
+    // Initialize boxes immediately
+    videoUrls.forEach((url, i) => {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <video preload="auto" playsinline muted loop>
-          <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+          <source src="${url}" type="video/mp4">
         </video>
       `;
       
       const video = vWrap.querySelector('video');
-      video.onloadedmetadata = () => { observer.observe(vWrap); };
+      video.oncanplay = () => { observer.observe(vWrap); };
       
       vWrap.addEventListener('click', () => {
-        const source = vWrap.querySelector('source').src;
-        openFS(source);
+        openFS(url);
       });
 
       list.appendChild(vWrap);
-    }
+    });
   };
 
   const init = () => {
