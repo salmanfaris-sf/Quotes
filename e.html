@@ -85,7 +85,16 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
 .v-wrap.is-visible { display: block; }
 
-/* "Low Quality" Preview Style */
+.v-preview-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+
 .v-wrap video { 
   width: 100%; 
   height: 100%; 
@@ -93,21 +102,26 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
   background: #000000;
   pointer-events: auto;
-  /* Visual treatment for 'low quality' look */
-  filter: blur(4px) contrast(1.1) brightness(0.7) saturate(0.8); 
-  opacity: 0.6;
+  /* Visual treatment: Heavy blur + pixelated/low-res feel for preview */
+  filter: blur(25px) contrast(0.8) brightness(0.6); 
+  transform: scale(0.3); /* Drastically shrink to force loss of detail */
+  image-rendering: pixelated; /* Forces low-quality pixelated rendering */
+  opacity: 0.4;
   transition: filter 0.5s ease, opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Reset styles for high-quality video playback */
 .v-wrap.is-playing video {
-  filter: blur(0px) contrast(1) brightness(1) saturate(1);
+  filter: blur(0px) contrast(1) brightness(1);
   opacity: 1;
+  transform: scale(1);
+  image-rendering: auto; /* Return to high quality */
   object-fit: contain;
 }
 
-video:fullscreen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; }
-video:-webkit-full-screen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; }
-video::-webkit-media-controls { display:none !important; }
+/* Fullscreen handling overrides */
+video:fullscreen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; transform: scale(1) !important; image-rendering: auto !important; }
+video:-webkit-full-screen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; transform: scale(1) !important; image-rendering: auto !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -133,7 +147,7 @@ video::-webkit-media-controls { display:none !important; }
   text-transform: uppercase;
 }
 
-.v-wrap:hover video { transform: scale(1.02); opacity: 0.8; filter: blur(2px) brightness(0.8); }
+.v-wrap:hover video { opacity: 0.6; filter: blur(15px) brightness(0.7); transform: scale(0.35); }
 .v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(255,255,255,0.3); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
@@ -231,17 +245,19 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
+        <div class="v-preview-container">
+           <video 
+            preload="metadata" 
+            playsinline 
+            muted 
+            disablePictureInPicture 
+            oncontextmenu="return false;" 
+            controlsList="nodownload nofullscreen noplaybackrate">
+            <source src="videos/${i}.mp4" type="video/mp4">
+          </video>
+        </div>
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">REF &nbsp;${String(i).padStart(3, '0')}</div>
-        <video 
-          preload="metadata" 
-          playsinline 
-          muted 
-          disablePictureInPicture 
-          oncontextmenu="return false;" 
-          controlsList="nodownload nofullscreen noplaybackrate">
-          <source src="videos/${i}.mp4" type="video/mp4">
-        </video>
       `;
       const video = vWrap.querySelector('video');
       
