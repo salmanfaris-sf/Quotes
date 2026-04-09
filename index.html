@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <meta name="theme-color" content="#000000">
 <title>Salman Faris | Simple Wisdom</title>
-<meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
-<meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,7 +49,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-/* YouTube-style Rectangular Grid */
 .v-grid { 
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -60,14 +57,8 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   max-width: 1200px;
   margin: 0 auto;
 }
-
-@media(min-width: 640px) {
-  .v-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-}
-
-@media(min-width: 1024px) {
-  .v-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
-}
+@media(min-width: 640px) { .v-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
+@media(min-width: 1024px) { .v-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
 
 .v-wrap { 
   aspect-ratio: 16/9; 
@@ -80,74 +71,33 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   border: 1px solid rgba(255,255,255,0.05);
   display: none; 
 }
-
 .v-wrap.is-visible { display: block; }
 .v-wrap:hover { transform: translateY(-5px); border-color: rgba(197,160,89,0.4); }
 
-.v-wrap video { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
-  display: block;
-}
+.v-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Ensure no stretching in Fullscreen */
-video:fullscreen {
-  object-fit: contain !important;
-  background-color: #000;
-}
-video:-webkit-full-screen {
-  object-fit: contain !important;
-  background-color: #000;
-}
-
+video:fullscreen { object-fit: contain !important; background-color: #000; }
+video:-webkit-full-screen { object-fit: contain !important; background-color: #000; }
 video::-webkit-media-controls { display:none !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 48px; height: 48px; 
-  background: rgba(0,0,0,0.4);
+  width: 40px; height: 40px; 
+  background: rgba(255,255,255,0.1);
   backdrop-filter: blur(8px); 
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.4s ease;
+  z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
-.v-play-btn svg { 
-  fill: #fff; width: 16px; height: 16px; 
-  transform: translateX(2px); 
-  opacity: 0.9; 
-}
+.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); opacity: 0.9; }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(197,160,89,0.5); }
 
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); background: rgba(197,160,89,0.8); border-color: transparent; }
-.v-wrap:hover .v-play-btn svg { fill: #000; }
+.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
+.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 14px); color: #ffffff; opacity: 0.5; margin-top: 10px; font-weight: 500; }
 
-.quote-container {
-    width: 100%;
-    max-width: 90vw;
-    margin: 0 auto;
-    text-align: center;
-}
-.quote-line {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(12px, 3.8vw, 17px); 
-    font-weight: 400;
-    line-height: 1.5;
-    color: #ffffff;
-    opacity: 0.9;
-    margin: 0;
-}
-.quote-stats {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(10px, 3vw, 14px);
-    color: #ffffff;
-    opacity: 0.5;
-    margin-top: 10px;
-    font-weight: 500;
-}
-
-#v-section { padding-bottom: 0; margin-bottom: 0; }
 .quote-wrapper { padding-top: 100px; padding-bottom: 80px; }
 footer { padding-top: 20px; padding-bottom: 60px; }
 </style>
@@ -193,23 +143,10 @@ footer { padding-top: 20px; padding-bottom: 60px; }
 <script>
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
-  
   const content = [
-    [
-      "You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.",
-      "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.",
-      "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."
-    ],
-    [
-      "Nothing changes if you do nothing. You cannot dream big and work small. Your habits show who you really are. A man who cannot control himself cannot control his life. Stop talking about what you want to do. Start doing it. Hate laziness like it is a disease. Always speak the truth. Stand straight and face your fears.",
-      "Knowledge is nothing without action. Fear nothing but a life of regret. Live with a clear goal. A real man protects his family. He provides for those he loves. He does not follow the crowd. He follows the truth. Every morning is a new chance to fix your life. The time to start is right now. Do not look back.",
-      "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep moving forward. Never stop hitting the rock."
-    ],
-    [
-      "Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.",
-      "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.",
-      "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."
-    ]
+    ["You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.", "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.", "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."],
+    ["Nothing changes if you do nothing. You cannot dream big and work small. Your habits show who you really are. A man who cannot control himself cannot control his life. Stop talking about what you want to do. Start doing it. Hate laziness like it is a disease. Always speak the truth. Stand straight and face your fears.", "Knowledge is nothing without action. Fear nothing but a life of regret. Live with a clear goal. A real man protects his family. He provides for those he loves. He does not follow the crowd. He follows the truth. Every morning is a new chance to fix your life. The time to start is right now. Do not look back.", "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep moving forward. Never stop hitting the rock."],
+    ["Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.", "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.", "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."]
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
@@ -218,11 +155,9 @@ footer { padding-top: 20px; padding-bottom: 60px; }
     const now = new Date();
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-    const totalMinutesInDay = 1440;
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const remainingMinutes = totalMinutesInDay - currentMinutes;
+    const rem = 1440 - (now.getHours() * 60 + now.getMinutes());
     const statsEl = document.getElementById('live-stats');
-    if (statsEl) { statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; }
+    if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${rem} minutes remaining today`;
   };
 
   const initVideos = () => {
@@ -248,18 +183,22 @@ footer { padding-top: 20px; padding-bottom: 60px; }
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen;
             if (fs) { 
-                video.currentTime = 0; 
-                video.muted = false; 
+                video.currentTime = 0; video.muted = false; 
                 fs.call(video).then(() => { video.play(); }); 
             }
         }
       });
 
-      const resetFS = () => { 
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
-            video.pause(); video.currentTime = 0; video.muted = true; 
-        } 
-      };
+      // Tap to toggle play/pause in fullscreen
+      video.addEventListener('click', (e) => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            e.preventDefault();
+            if (video.paused) video.play();
+            else video.pause();
+        }
+      });
+
+      const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.currentTime = 0; video.muted = true; } };
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
@@ -271,12 +210,9 @@ footer { padding-top: 20px; padding-bottom: 60px; }
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
-    
     const setIdx = dayOfYear % content.length;
-    
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
@@ -285,40 +221,33 @@ footer { padding-top: 20px; padding-bottom: 60px; }
     `;
     initVideos();
     updateClockAndStats();
-    
-    const generalObserver = new IntersectionObserver((entries) => {
+    const genObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
-    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
+    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => genObs.observe(el));
   };
 
   window.addEventListener("scroll", () => {
     const scrollPos = window.scrollY;
     const nav = document.getElementById("n0");
-    const scrollHint = document.getElementById("sd");
+    const hint = document.getElementById("sd");
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
-    
+    if (hint) { hint.style.opacity = scrollPos > 20 ? "0" : "1"; }
     const spans = document.querySelectorAll(".hi");
-    const centerY = window.innerHeight * 0.5;
-    let activeSpan = null;
-    let minDistance = Infinity;
-    spans.forEach(span => {
-      const rect = span.getBoundingClientRect();
-      const dist = Math.abs((rect.top + rect.height / 2) - centerY);
-      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
+    const cy = window.innerHeight * 0.5;
+    let act = null; let min = Infinity;
+    spans.forEach(s => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs((r.top + r.height/2) - cy);
+      if (d < min) { min = d; act = s; }
     });
-    spans.forEach(span => {
-      if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
-      else span.classList.remove("active");
+    spans.forEach(s => {
+      if (s === act && min < window.innerHeight * 0.4) s.classList.add("active");
+      else s.classList.remove("active");
     });
   }, { passive: true });
 
-  window.onload = () => {
-    init();
-    setInterval(updateClockAndStats, 1000);
-    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
-  };
+  window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
 })();
 </script>
 </body>
