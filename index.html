@@ -113,7 +113,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 .v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.7; }
 
 .v-info {
-  position: absolute; bottom: 24px; left: 0; right: 0; z-index: 10;
+  position: absolute; top: 24px; left: 0; right: 0; z-index: 10;
   font-family: 'Inter', sans-serif; 
   opacity: 0.4; 
   font-size: 8px; 
@@ -221,7 +221,8 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     for(let i=1; i<=200; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
-      // Added preload="none" and a transparent poster to ensure PURE BLACK preview
+      // Poster set to transparent 1x1 base64 to ensure black background
+      // v-info moved to top (absolute top: 24px in CSS)
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
@@ -238,7 +239,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       `;
       const video = vWrap.querySelector('video');
       
-      // HEAD request check to hide non-existent videos
       fetch(`videos/${i}.mp4`, { method: 'HEAD' })
         .then(res => {
           if (res.ok) {
@@ -255,12 +255,20 @@ footer { padding-top: 10px; padding-bottom: 40px; }
         })
         .catch(() => vWrap.remove());
 
-      // Auto-exit fullscreen when video ends
+      const resetToBlack = () => {
+          video.pause();
+          video.currentTime = 0;
+          video.load(); // Force reset to show the poster again (Black)
+          video.muted = true;
+          vWrap.classList.remove('is-playing');
+      };
+
       video.onended = () => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
           const exitFS = document.exitFullscreen || document.webkitExitFullscreen;
           if (exitFS) exitFS.call(document);
         }
+        resetToBlack();
       };
       
       video.addEventListener('click', (e) => {
@@ -279,13 +287,13 @@ footer { padding-top: 10px; padding-bottom: 40px; }
         }
       });
 
-      const resetFS = () => { 
+      const handleFSChange = () => { 
         if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
-            video.pause(); video.currentTime = 0; video.muted = true; vWrap.classList.remove('is-playing'); 
+            resetToBlack();
         } 
       };
-      document.addEventListener('fullscreenchange', resetFS);
-      document.addEventListener('webkitfullscreenchange', resetFS);
+      document.addEventListener('fullscreenchange', handleFSChange);
+      document.addEventListener('webkitfullscreenchange', handleFSChange);
       list.appendChild(vWrap);
     }
   };
