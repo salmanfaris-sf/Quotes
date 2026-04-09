@@ -64,26 +64,41 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   aspect-ratio: 9/16; 
   max-width: 450px; 
   position: relative; 
-  background: #111; 
+  background: #000; 
   overflow: hidden; 
   cursor: pointer;
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 24px; 
   border: 1px solid rgba(255,255,255,0.05);
-  display: none; 
+  display: block; 
 }
-
-.v-wrap.is-visible { display: block; }
-.v-wrap:hover { transform: translateY(-5px); border-color: rgba(197,160,89,0.3); }
 
 .v-wrap video { 
   width: 100%; 
   height: 100%; 
-  object-fit: cover; 
+  object-fit: contain; /* Prevents stretching in fullscreen */
   display: block;
+  background: #000;
+  pointer-events: auto; /* Allow clicks */
+}
+
+/* Specific styling for video element inside fullscreen */
+video:fullscreen {
+  object-fit: contain !important;
+  background-color: black !important;
+}
+video:-webkit-full-screen {
+  object-fit: contain !important;
+  background-color: black !important;
 }
 
 video::-webkit-media-controls { display:none !important; }
+
+/* Remove download option / hide controls */
+video::-webkit-media-controls-enclosure {
+    display:none !important;
+}
+
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 72px; height: 72px; 
@@ -141,12 +156,11 @@ video::-webkit-media-controls { display:none !important; }
 }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
-/* Reduced padding here to close the gap */
 .quote-wrapper { padding-top: 40px; padding-bottom: 30px; }
 footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- Global right click / long press disable -->
 
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
@@ -167,7 +181,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
   <section id="v-section" class="relative z-10">
     <div class="z1 mb-16 text-center px-6">
-       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Visual Feed</h3>
+       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Reflections</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
@@ -231,28 +245,46 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline muted disablePictureInPicture>
+        <video preload="none" playsinline muted disablePictureInPicture oncontextmenu="return false;" controlsList="nodownload nofullscreen noplaybackrate">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
-      video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
-      video.onerror = () => vWrap.remove();
       
-      vWrap.addEventListener('click', () => {
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-            const fs = video.requestFullscreen || video.webkitRequestFullscreen;
-            if (fs) { 
-                video.currentTime = 0; 
-                video.muted = false; 
-                fs.call(video).then(() => { video.play(); vWrap.classList.add('is-playing'); }); 
-            }
+      // Tap to Pause/Play logic
+      video.addEventListener('click', (e) => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (video.paused) video.play();
+            else video.pause();
+        }
+      });
+
+      // Simple blank thumbnail strategy
+      observer.observe(vWrap);
+      
+      vWrap.addEventListener('click', (e) => {
+        // Prevent trigger if already in FS and clicking
+        if (document.fullscreenElement || document.webkitIsFullScreen) return;
+
+        const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+        if (fs) { 
+            video.currentTime = 0; 
+            video.muted = false; 
+            fs.call(video).then(() => { 
+                video.play(); 
+                vWrap.classList.add('is-playing'); 
+            }); 
         }
       });
 
       const resetFS = () => { 
         if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
-            video.pause(); video.currentTime = 0; video.muted = true; vWrap.classList.remove('is-playing'); 
+            video.pause(); 
+            video.currentTime = 0; 
+            video.muted = true; 
+            vWrap.classList.remove('is-playing'); 
         } 
       };
       document.addEventListener('fullscreenchange', resetFS);
@@ -318,4 +350,3 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 </script>
 </body>
 </html>
-
