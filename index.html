@@ -66,19 +66,19 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  gap: 40px; 
+  gap: 60px; 
 }
 
 .v-wrap { 
-  width: 90vw; 
-  aspect-ratio: 16/9; 
-  max-width: 800px; 
+  width: 85vw; 
+  aspect-ratio: 9/16; 
+  max-width: 450px; 
   position: relative; 
   background: #000000; 
   overflow: hidden; 
   cursor: pointer;
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 12px; 
+  border-radius: 24px; 
   border: 1px solid rgba(255,255,255,0.05);
   display: none; 
 }
@@ -92,7 +92,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
   background: #000000;
   pointer-events: auto;
-  filter: blur(8px) brightness(0.6); 
+  filter: blur(12px) brightness(0.6); 
   opacity: 0.75;
   transition: filter 0.5s ease, opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -110,7 +110,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 64px; height: 64px; 
+  width: 72px; height: 72px; 
   background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
   backdrop-filter: blur(8px); 
   -webkit-backdrop-filter: blur(8px);
@@ -119,20 +119,21 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); opacity: 0.8; }
+.v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.8; }
 
 .v-info {
-  position: absolute; bottom: 20px; left: 24px; z-index: 10;
+  position: absolute; top: 24px; left: 0; right: 0; z-index: 10;
   font-family: 'Inter', sans-serif; 
-  opacity: 0.4; 
+  opacity: 0.5; 
   font-size: 8px; 
   font-weight: 600;
   letter-spacing: 0.8em;
   color: #fff;
   text-transform: uppercase;
+  text-align: center;
 }
 
-.v-wrap:hover video { transform: scale(1.03); opacity: 0.9; filter: blur(4px) brightness(0.7); }
+.v-wrap:hover video { transform: scale(1.02); opacity: 0.9; filter: blur(6px) brightness(0.7); }
 .v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(255,255,255,0.3); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
@@ -141,14 +142,15 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 .quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 14px); color: #ffffff; opacity: 0.5; margin-top: 10px; font-weight: 500; }
 
 #v-section { padding-bottom: 0; margin-bottom: 0; }
-.quote-wrapper { padding-top: 60px; padding-bottom: 40px; }
+.quote-wrapper { padding-top: 40px; padding-bottom: 30px; }
 footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
 <body oncontextmenu="return false;">
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-center items-center border-b border-transparent">
-  <div id="t0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">LOADING...</div>
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
+  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
+  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 
 <main class="relative w-full">
@@ -164,7 +166,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
   <section id="v-section" class="relative z-10">
-    <div id="reflections-header" class="z1 mb-12 text-center px-6 opacity-0 pointer-events-none">
+    <div id="reflections-header" class="z1 mb-16 text-center px-6 opacity-0 pointer-events-none">
        <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Reflections</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
@@ -231,7 +233,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <div class="v-info">REF &nbsp;${String(i).padStart(3, '0')}</div>
+        <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
         <video 
           preload="metadata" 
           playsinline 
@@ -262,7 +264,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
       const resetUI = () => {
           video.pause();
-          video.currentTime = 0;
+          video.currentTime = 0; // Ensures next play starts from beginning
           video.muted = true;
           vWrap.classList.remove('is-playing');
       };
@@ -286,7 +288,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
         if (document.fullscreenElement || document.webkitIsFullScreen) return;
         const fs = video.requestFullscreen || video.webkitRequestFullscreen;
         if (fs) { 
-            video.currentTime = 0;
+            video.currentTime = 0; // Force reset before play
             video.muted = false; 
             vWrap.classList.add('is-playing'); 
             fs.call(video).then(() => { video.play(); }); 
@@ -310,6 +312,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
     
+    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
     
     const setIdx = dayOfYear % content.length;
