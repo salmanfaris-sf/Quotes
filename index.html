@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <meta name="theme-color" content="#000000">
 <title>Salman Faris | Simple Wisdom</title>
+<meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
+<meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +16,7 @@ tailwind.config={
   theme:{
     extend:{
       fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
-      colors:{c1:'#000000',c2:'#C5A059'}
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
     }
   }
 }
@@ -27,94 +29,121 @@ html, body {
   width: 100%;
   position: relative;
   touch-action: pan-y; 
-  -webkit-font-smoothing: antialiased;
 }
 
-body { margin: 0; color: #d1d1d1; }
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
-.z0 { transition: background-color .4s ease, backdrop-filter .4s ease, border-bottom .4s ease; }
-.z0.zs { background-color: rgba(0,0,0,.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
 
-.z1 { 
-  opacity: 0; 
-  transform: translateY(20px); 
-  filter: blur(8px); 
-  transition: opacity 1.2s cubic-bezier(.16,1,.3,1), transform 1.2s cubic-bezier(.16,1,.3,1), filter 1.2s cubic-bezier(.16,1,.3,1); 
-  will-change: transform, opacity;
-}
-.z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
+.zi{text-indent:12rem}
+@media(max-width:768px){.zi{text-indent:0}}
 
-.full-width-text {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 6vw;
-  text-align: left;
-  word-spacing: -0.05em;
-}
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
 
-.hi { 
-  transition: color 0.5s ease, opacity 0.5s ease; 
-  opacity: 0.1; 
-  color: #B8B8B0; 
-  display: inline;
-}
-.hi.active { opacity: 1 !important; color: #fff !important; }
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
 .v-grid { 
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  padding: 0 20px;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 60px; 
 }
-@media(min-width: 768px) { .v-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; padding: 0 40px; } }
 
 .v-wrap { 
-  aspect-ratio: 16/9; 
+  width: 85vw; 
+  aspect-ratio: 9/16; 
+  max-width: 450px; 
   position: relative; 
-  background: #000000;
+  background: #111; 
   overflow: hidden; 
   cursor: pointer;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
-  border-radius: 2px; 
-  border: 1px solid rgba(255,255,255,0.08); 
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px; 
+  border: 1px solid rgba(255,255,255,0.05);
+  display: none; 
 }
-.v-wrap:hover { transform: scale(1.01); border-color: #C5A059; }
 
+.v-wrap.is-visible { display: block; }
+.v-wrap:hover { transform: translateY(-5px); border-color: rgba(197,160,89,0.3); }
+
+.v-wrap video { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  display: block;
+}
+
+video::-webkit-media-controls { display:none !important; }
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 54px; height: 54px; 
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(10px); 
+  width: 72px; height: 72px; 
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255,255,255,0.2);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10;
-  border: 1px solid rgba(255,255,255,0.1);
+  z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(1px); }
-
-#fs-overlay {
-    position: fixed; inset: 0; background: #000; z-index: 1000;
-    display: none; align-items: center; justify-content: center;
-    opacity: 0;
-    transition: opacity 0.15s ease-out;
+.v-play-btn svg { 
+  fill: #fff; width: 24px; height: 24px; 
+  transform: translateX(2px); 
+  opacity: 0.9; 
 }
-#fs-overlay.active { display: flex; opacity: 1; }
-#fs-video { width: 100%; height: 100%; object-fit: contain; background: #000; outline: none; }
 
-.quote-wrapper { padding-top: 120px; padding-bottom: 24px; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: 15px; color: #ffffff; opacity: 1; margin: 0; font-weight: 400; letter-spacing: 0.01em; } 
-.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.3; margin-top: 8px; }
+.v-info {
+  position: absolute; bottom: 24px; left: 0; right: 0; z-index: 10;
+  font-family: 'Inter', sans-serif; 
+  opacity: 0.5; 
+  font-size: 9px; 
+  font-weight: 600;
+  letter-spacing: 0.6em;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+}
 
-footer { padding-top: 32px; padding-bottom: 60px; }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(197,160,89,0.5); }
+.v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
-.zd { color: #C5A059; }
-.zb { color: #C5A059; }
+.quote-container {
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    text-align: center;
+}
+.quote-line {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(12px, 3.8vw, 17px); 
+    font-weight: 400;
+    line-height: 1.5;
+    color: #ffffff;
+    opacity: 0.9;
+    margin: 0;
+}
+.quote-stats {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(10px, 3vw, 14px);
+    color: #ffffff;
+    opacity: 0.5;
+    margin-top: 10px;
+    font-weight: 500;
+}
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #000; }
-::-webkit-scrollbar-thumb { background: #222; }
+#v-section { padding-bottom: 0; margin-bottom: 0; }
+/* Reduced padding here to close the gap */
+.quote-wrapper { padding-top: 40px; padding-bottom: 30px; }
+footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
 <body>
@@ -124,195 +153,169 @@ footer { padding-top: 32px; padding-bottom: 60px; }
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 
-<div id="fs-overlay">
-    <video id="fs-video" playsinline loop preload="auto" webkit-playsinline controls></video>
-</div>
-
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight z1"></h1>
+      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
     </div>
-    <div id="sd" class="pb-32 z1">
-      <div class="text-[11px] uppercase tracking-[0.8em] font-f2 opacity-40 text-white animate-pulse">Scroll Down</div>
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
+      <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
 
-  <article id="m0" class="w-full pt-40 pb-20 relative z-10 space-y-72"></article>
+  <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10 pt-40">
-    <div class="z1 mb-20 text-center">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.8em] text-white/20">Recordings</h3>
+  <section id="v-section" class="relative z-10">
+    <div class="z1 mb-16 text-center px-6">
+       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/25">Visual Feed</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
-    <div class="z1 text-center quote-wrapper">
-        <p class="quote-line">You only have 1,440 minutes every day,</p>
-        <p class="quote-line">don't let a single one go to waste.</p>
-        <p id="live-stats" class="quote-stats"></p>
+    <div class="z1 text-center px-6 quote-wrapper">
+        <div class="quote-container">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">don't let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
+        </div>
     </div>
 </main>
 
-<footer class="w-full flex justify-center relative z-10 z1">
-  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-15">BY SALMAN FARIS</div>
+<footer class="w-full flex justify-center px-6 relative z-10 z1">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
 </footer>
 
 <script>
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
+  
   const content = [
-    "You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan. Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall. Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."
+    [
+      "You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.",
+      "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.",
+      "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."
+    ],
+    [
+      "Nothing changes if you do nothing. You cannot dream big and work small. Your habits show who you really are. A man who cannot control himself cannot control his life. Stop talking about what you want to do. Start doing it. Hate laziness like it is a disease. Always speak the truth. Stand straight and face your fears.",
+      "Knowledge is nothing without action. Fear nothing but a life of regret. Live with a clear goal. A real man protects his family. He provides for those he loves. He does not follow the crowd. He follows the truth. Every morning is a new chance to fix your life. The time to start is right now. Do not look back.",
+      "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep moving forward. Never stop hitting the rock."
+    ],
+    [
+      "Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.",
+      "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.",
+      "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."
+    ]
   ];
 
-  const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span> `).join("");
+  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
   const updateClockAndStats = () => {
     const now = new Date();
-    document.getElementById("d0").textContent = `DAY ${String(Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000)).padStart(3, "0")}`;
-    const statsEl = document.getElementById('live-stats');
-    if (statsEl) {
-        const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
-        const rem = 1440 - (now.getHours() * 60 + now.getMinutes());
-        statsEl.innerHTML = `Time: ${timeStr} • ${rem} minutes remaining`;
-    }
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const totalMinutesInDay = 1440;
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const remainingMinutes = totalMinutesInDay - currentMinutes;
+    const statsEl = document.getElementById('live-stats');
+    if (statsEl) { statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; }
   };
 
   const initVideos = () => {
     const list = document.getElementById('video-list');
-    const fsOverlay = document.getElementById('fs-overlay');
-    const fsVideo = document.getElementById('fs-video');
-    const videoUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4"];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+    }, { threshold: 0.1 });
 
-    const openFS = (src) => {
-        // 1. MUST be the first thing in the click stack for browsers to allow it
-        fsVideo.src = src;
-        fsVideo.load();
-        
-        // Immediate Fullscreen attempt
-        const triggerFullscreen = (el) => {
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
-            else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen(); // iOS specific
-        };
-
-        fsOverlay.style.display = 'flex';
-        
-        // Play and Fullscreen
-        fsVideo.play().then(() => {
-            triggerFullscreen(fsVideo);
-        }).catch((err) => {
-            // If failed (maybe due to sound), mute and try again
-            fsVideo.muted = true;
-            fsVideo.play().then(() => triggerFullscreen(fsVideo));
-        });
-
-        requestAnimationFrame(() => {
-          fsOverlay.classList.add('active');
-        });
-        
-        document.body.style.overflow = 'hidden';
-        window.history.pushState({ fs: true }, "");
-    };
-
-    const closeFS = () => {
-        fsOverlay.classList.remove('active');
-        fsVideo.pause();
-        
-        // Exit Fullscreen
-        const exitFullscreen = () => {
-            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-        };
-        exitFullscreen();
-        
-        setTimeout(() => {
-            fsOverlay.style.display = 'none';
-            fsVideo.src = "";
-            fsVideo.muted = false; // Reset for next time
-        }, 150);
-        document.body.style.overflow = '';
-    };
-
-    window.addEventListener('popstate', () => {
-        if (fsOverlay.classList.contains('active')) closeFS();
-    });
-
-    fsOverlay.addEventListener('click', (e) => {
-        // Prevent closing if clicking the video controls themselves
-        if (e.target === fsOverlay) window.history.back();
-    });
-
-    // Close when exiting fullscreen via native button
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement && fsOverlay.classList.contains('active')) {
-            window.history.back();
+    for(let i=1; i<=200; i++) {
+      const vWrap = document.createElement('div');
+      vWrap.className = 'v-wrap z1';
+      vWrap.innerHTML = `
+        <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
+        <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
+        <video preload="metadata" playsinline muted disablePictureInPicture>
+          <source src="videos/${i}.mp4" type="video/mp4">
+        </video>
+      `;
+      const video = vWrap.querySelector('video');
+      video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
+      video.onerror = () => vWrap.remove();
+      
+      vWrap.addEventListener('click', () => {
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+            if (fs) { 
+                video.currentTime = 0; 
+                video.muted = false; 
+                fs.call(video).then(() => { video.play(); vWrap.classList.add('is-playing'); }); 
+            }
         }
-    });
-    document.addEventListener('webkitfullscreenchange', () => {
-        if (!document.webkitIsFullScreen && fsOverlay.classList.contains('active')) {
-            window.history.back();
-        }
-    });
+      });
 
-    videoUrls.forEach((url, index) => {
-        const vWrap = document.createElement('div');
-        vWrap.className = 'v-wrap z1';
-        vWrap.innerHTML = `<div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>`;
-        vWrap.addEventListener('click', (e) => {
-            e.preventDefault();
-            openFS(url);
-        });
-        list.appendChild(vWrap);
-    });
+      const resetFS = () => { 
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
+            video.pause(); video.currentTime = 0; video.muted = true; vWrap.classList.remove('is-playing'); 
+        } 
+      };
+      document.addEventListener('fullscreenchange', resetFS);
+      document.addEventListener('webkitfullscreenchange', resetFS);
+      list.appendChild(vWrap);
+    }
   };
 
   const init = () => {
     const now = new Date();
-    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-    const themeName = themes[dayOfYear % themes.length];
-    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
+    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
+    
+    const setIdx = dayOfYear % content.length;
     
     document.getElementById("m0").innerHTML = `
-      <div class="z1 full-width-text">
-        <p class="font-f1 text-5xl md:text-8xl leading-[1.3]">${wrapWords(content[0])}</p>
-      </div>
-      <div class="py-24 text-center z1">
-        <h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2>
-      </div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
+      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
-    
     initVideos();
     updateClockAndStats();
     
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); });
+    const generalObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
-    document.querySelectorAll(".z1").forEach(el => obs.observe(el));
+    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
   };
 
   window.addEventListener("scroll", () => {
     const scrollPos = window.scrollY;
     const nav = document.getElementById("n0");
-    const hint = document.getElementById("sd");
+    const scrollHint = document.getElementById("sd");
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    if (hint) hint.style.opacity = scrollPos > 20 ? "0" : "1";
+    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
     
     const spans = document.querySelectorAll(".hi");
     const centerY = window.innerHeight * 0.5;
-    spans.forEach(s => {
-      const rect = s.getBoundingClientRect();
+    let activeSpan = null;
+    let minDistance = Infinity;
+    spans.forEach(span => {
+      const rect = span.getBoundingClientRect();
       const dist = Math.abs((rect.top + rect.height / 2) - centerY);
-      s.classList.toggle("active", dist < window.innerHeight * 0.22);
+      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
+    });
+    spans.forEach(span => {
+      if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
+      else span.classList.remove("active");
     });
   }, { passive: true });
 
-  window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
+  window.onload = () => {
+    init();
+    setInterval(updateClockAndStats, 1000);
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
+  };
 })();
 </script>
 </body>
 </html>
+
