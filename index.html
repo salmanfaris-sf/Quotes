@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,40 +81,50 @@ body { margin: 0; color: #d1d1d1; }
   overflow: hidden; 
   cursor: pointer;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-  border-radius: 8px; 
+  border-radius: 12px; 
   border: 1px solid rgba(255,255,255,0.03);
 }
-.v-wrap:hover { transform: scale(1.02); border-color: rgba(197,160,89,0.4); }
+.v-wrap:hover { transform: scale(1.02); border-color: rgba(255,255,255,0.2); }
 .v-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; opacity: 0.7; transition: opacity 0.4s ease; }
 .v-wrap:hover video { opacity: 1; }
 
-/* Premium Play Button - Gold Ring Style */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 54px; height: 54px; 
-  background: radial-gradient(circle, rgba(197,160,89,0.15) 0%, rgba(0,0,0,0.4) 100%);
-  backdrop-filter: blur(8px); 
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(197,160,89,0.5); 
+  width: 58px; height: 58px; 
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6); 
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
 }
-.v-play-btn svg { fill: #C5A059; width: 16px; height: 16px; transform: translateX(2px); transition: fill 0.4s ease; }
+.v-play-btn svg { fill: #ffffff; width: 18px; height: 18px; transform: translateX(2px); }
 .v-wrap:hover .v-play-btn { 
     transform: translate(-50%, -50%) scale(1.1); 
-    border-color: #C5A059;
-    background: radial-gradient(circle, rgba(197,160,89,0.3) 0%, rgba(0,0,0,0.2) 100%);
-    box-shadow: 0 0 30px rgba(197,160,89,0.2);
+    background: rgba(255,255,255,0.15);
+    border-color: #ffffff;
 }
-.v-wrap:hover .v-play-btn svg { fill: #fff; }
+
+/* Custom Fullscreen Experience */
+#fs-overlay {
+    position: fixed; inset: 0; background: #000; z-index: 100;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.4s ease;
+}
+#fs-overlay.active { display: flex; opacity: 1; }
+#fs-video { max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer; }
+#fs-close { 
+    position: absolute; top: 30px; right: 30px; 
+    color: #fff; font-family: Inter, sans-serif; font-size: 10px; 
+    letter-spacing: 0.3em; cursor: pointer; opacity: 0.5;
+}
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 15px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.6; margin: 0; }
-.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 12px); color: #C5A059; opacity: 0.5; margin-top: 8px; font-weight: 500; letter-spacing: 0.1em; }
+.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 12px); color: #ffffff; opacity: 0.5; margin-top: 8px; font-weight: 500; letter-spacing: 0.1em; }
 
-/* Tightened Spacing */
-.quote-wrapper { padding-top: 60px; padding-bottom: 40px; }
+.quote-wrapper { padding-top: 40px; padding-bottom: 30px; }
 footer { padding-bottom: 40px; }
 </style>
 </head>
@@ -126,10 +135,15 @@ footer { padding-bottom: 40px; }
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 
+<div id="fs-overlay">
+    <div id="fs-close">CLOSE</div>
+    <video id="fs-video" playsinline></video>
+</div>
+
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-8xl md:text-[14rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
+      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="pb-32 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
@@ -139,8 +153,8 @@ footer { padding-bottom: 40px; }
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
   <section id="v-section" class="relative z-10">
-    <div class="z1 mb-10 text-center px-6">
-       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/20">Cinema</h3>
+    <div class="z1 mb-8 text-center px-6">
+       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/20">Archive</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
@@ -179,53 +193,62 @@ footer { padding-bottom: 40px; }
 
   const initVideos = () => {
     const list = document.getElementById('video-list');
+    const fsOverlay = document.getElementById('fs-overlay');
+    const fsVideo = document.getElementById('fs-video');
+    const fsClose = document.getElementById('fs-close');
+
+    const openFS = (src) => {
+        fsVideo.src = src;
+        fsOverlay.classList.add('active');
+        fsVideo.play();
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeFS = () => {
+        fsOverlay.classList.remove('active');
+        fsVideo.pause();
+        fsVideo.src = "";
+        document.body.style.overflow = '';
+    };
+
+    fsVideo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (fsVideo.paused) fsVideo.play();
+        else fsVideo.pause();
+    });
+
+    fsClose.addEventListener('click', closeFS);
+    fsOverlay.addEventListener('click', closeFS);
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.1 });
 
-    // Loop up to 200 possible video filenames
     for(let i=1; i<=200; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
-      vWrap.style.display = 'none'; // Initially hide until we know it exists
+      vWrap.style.display = 'none';
       
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="metadata" playsinline muted disablePictureInPicture>
+        <video preload="metadata" playsinline muted>
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
       
-      // Verification logic: only show if the video successfully loads metadata
       video.onloadedmetadata = () => {
           vWrap.style.display = 'block';
           observer.observe(vWrap);
       };
 
-      // If video fails to load (file not found), remove it completely
-      video.onerror = () => {
-          vWrap.remove();
-      };
+      video.onerror = () => { vWrap.remove(); };
 
       vWrap.addEventListener('click', () => {
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen;
-            if (fs) { 
-                video.muted = false; 
-                fs.call(video).then(() => { video.play(); }).catch(e => console.log(e));
-            }
-        }
+        const source = vWrap.querySelector('source').src;
+        openFS(source);
       });
 
-      const resetFS = () => { 
-        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
-            video.pause(); 
-            video.muted = true; 
-        } 
-      };
-      document.addEventListener('fullscreenchange', resetFS);
-      document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
     }
   };
