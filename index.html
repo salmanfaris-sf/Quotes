@@ -77,19 +77,20 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #111; 
+  background: #000; 
   overflow: hidden; 
   cursor: pointer;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 12px; 
   border: 1px solid rgba(255,255,255,0.05);
   will-change: transform;
+  display: none; 
 }
+.v-wrap.verified { display: block; }
 .v-wrap:hover { transform: scale(1.02); }
 .v-wrap video { 
     width: 100%; height: 100%; object-fit: cover; display: block; 
     pointer-events: none; opacity: 0.6; transition: opacity 0.4s ease;
-    transform: translateZ(0);
 }
 .v-wrap:hover video { opacity: 1; }
 
@@ -104,43 +105,24 @@ body { margin: 0; color: #d1d1d1; }
 }
 .v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(2px); opacity: 0.8; }
 
-/* Fullscreen Overlay - No native controls */
+/* Fullscreen Overlay - No Close Button */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
     opacity: 0; transition: opacity 0.3s ease;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
-#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
+#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; outline: none; }
 
-/* Stats Typo */
+video::-webkit-media-controls { display:none !important; }
+video::-webkit-media-controls-panel { display: none !important; }
+
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 4vw, 18px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 1; margin: 0; }
-.quote-stats { 
-    font-family: 'Inter', sans-serif; 
-    font-size: clamp(11px, 3.2vw, 13px); 
-    color: #ffffff; 
-    opacity: 0.4; 
-    margin-top: 14px; 
-    font-weight: 400; 
-    letter-spacing: 0.05em; 
-}
+.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(11px, 3.2vw, 13px); color: #ffffff; opacity: 0.4; margin-top: 14px; font-weight: 400; letter-spacing: 0.05em; }
 
 .quote-wrapper { padding-top: 80px; padding-bottom: 40px; }
 footer { padding-bottom: 60px; }
-
-/* Hide video UI elements */
-video::-webkit-media-controls { display:none !important; }
-video::-webkit-media-controls-enclosure { display:none !important; }
-
-/* Close Button for Fullscreen */
-#fs-close {
-    position: absolute; top: 30px; right: 30px; z-index: 1100;
-    color: white; font-family: 'Inter', sans-serif; font-size: 10px;
-    letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer;
-    opacity: 0.4; transition: opacity 0.3s;
-}
-#fs-close:hover { opacity: 1; }
 </style>
 </head>
 <body>
@@ -151,8 +133,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 </nav>
 
 <div id="fs-overlay">
-    <div id="fs-close">Close</div>
-    <video id="fs-video" playsinline preload="auto" loop></video>
+    <video id="fs-video" playsinline loop></video>
 </div>
 
 <main class="relative w-full">
@@ -199,28 +180,22 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 
   const updateClockAndStats = () => {
     const now = new Date();
-    document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
-    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
-    const rem = 1440 - (now.getHours() * 60 + now.getMinutes());
+    document.getElementById("d0").textContent = `DAY ${String(Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000)).padStart(3, "0")}`;
     const statsEl = document.getElementById('live-stats');
-    if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${rem} minutes remaining`;
+    if (statsEl) {
+        const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+        const rem = 1440 - (now.getHours() * 60 + now.getMinutes());
+        statsEl.textContent = `Time: ${timeStr} • ${rem} minutes remaining`;
+    }
+    document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
   };
 
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const fsOverlay = document.getElementById('fs-overlay');
     const fsVideo = document.getElementById('fs-video');
-    const fsClose = document.getElementById('fs-close');
 
-    // ONLY the videos you specified. Empty placeholders removed.
-    const videoUrls = [
-        "videos/1.mp4",
-        "videos/2.mp4",
-        "videos/3.mp4",
-        "videos/4.mp4",
-        "videos/5.mp4",
-        "videos/6.mp4"
-    ];
+    const potentialUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4", "videos/5.mp4", "videos/6.mp4"];
 
     const openFS = (src) => {
         fsVideo.src = src;
@@ -236,56 +211,46 @@ video::-webkit-media-controls-enclosure { display:none !important; }
         document.body.style.overflow = '';
     };
 
-    // Play/Pause on click in fullscreen
+    // Click video to toggle play/pause OR exit if needed
     fsVideo.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (fsVideo.paused) fsVideo.play();
-        else fsVideo.pause();
+        closeFS(); // Clicking the playing video now closes it back to the grid
     });
 
-    fsClose.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeFS();
-    });
-
-    // Clicking the background overlay also closes
     fsOverlay.addEventListener('click', closeFS);
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { 
+        const v = entry.target.querySelector('video');
         if (entry.isIntersecting) {
             entry.target.classList.add("za");
-            const v = entry.target.querySelector('video');
             if (v) v.play().catch(e => {});
         } else {
-            const v = entry.target.querySelector('video');
             if (v) v.pause();
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.1 });
 
-    videoUrls.forEach((url) => {
-      const vWrap = document.createElement('div');
-      vWrap.className = 'v-wrap z1';
-      vWrap.innerHTML = `
-        <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="metadata" playsinline muted loop>
-          <source src="${url}" type="video/mp4">
-        </video>
-      `;
-      
-      vWrap.addEventListener('click', () => openFS(url));
-      list.appendChild(vWrap);
-      observer.observe(vWrap);
+    potentialUrls.forEach(url => {
+        const vWrap = document.createElement('div');
+        vWrap.className = 'v-wrap z1';
+        vWrap.innerHTML = `
+            <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
+            <video preload="metadata" playsinline muted loop><source src="${url}" type="video/mp4"></video>
+        `;
+        const vElement = vWrap.querySelector('video');
+        vElement.onloadedmetadata = () => {
+            vWrap.classList.add('verified');
+            list.appendChild(vWrap);
+            observer.observe(vWrap);
+        };
+        vWrap.addEventListener('click', () => openFS(url));
     });
   };
 
   const init = () => {
     const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
-    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
+    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
     const setIdx = dayOfYear % content.length;
     document.getElementById("m0").innerHTML = `
@@ -303,37 +268,21 @@ video::-webkit-media-controls-enclosure { display:none !important; }
     document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => genObs.observe(el));
   };
 
-  let ticking = false;
   window.addEventListener("scroll", () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const scrollPos = window.scrollY;
-        const nav = document.getElementById("n0");
-        const hint = document.getElementById("sd");
-        
-        scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-        if (hint) { hint.style.opacity = scrollPos > 20 ? "0" : "1"; }
-        
-        const spans = document.querySelectorAll(".hi");
-        const cy = window.innerHeight * 0.5;
-        let act = null; 
-        let min = Infinity;
-        
-        spans.forEach(s => {
-          const r = s.getBoundingClientRect();
-          const d = Math.abs((r.top + r.height/2) - cy);
-          if (d < min) { min = d; act = s; }
-        });
-        
-        spans.forEach(s => {
-          if (s === act && min < window.innerHeight * 0.35) s.classList.add("active");
-          else s.classList.remove("active");
-        });
-        
-        ticking = false;
-      });
-      ticking = true;
-    }
+    const scrollPos = window.scrollY;
+    const nav = document.getElementById("n0");
+    const hint = document.getElementById("sd");
+    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
+    if (hint) hint.style.opacity = scrollPos > 20 ? "0" : "1";
+    
+    const spans = document.querySelectorAll(".hi");
+    const cy = window.innerHeight * 0.5;
+    spans.forEach(s => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs((r.top + r.height/2) - cy);
+      if (d < window.innerHeight * 0.35) s.classList.add("active");
+      else s.classList.remove("active");
+    });
   }, { passive: true });
 
   window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
