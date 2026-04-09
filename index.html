@@ -4,7 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <meta name="theme-color" content="#000000">
-<title>Salman Faris | Daily Wisdom</title>
+<title>Salman Faris | Simple Wisdom</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1K1TKBQFFK');
+</script>
+
 <meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
 <meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -64,7 +74,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   aspect-ratio: 9/16; 
   max-width: 450px; 
   position: relative; 
-  background: #000; 
+  background: #000000; 
   overflow: hidden; 
   cursor: pointer;
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -80,7 +90,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   height: 100%; 
   object-fit: contain;
   display: block;
-  background: #000;
+  background: #000000;
   pointer-events: auto;
 }
 
@@ -92,29 +102,29 @@ video::-webkit-media-controls-enclosure { display:none !important; }
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 72px; height: 72px; 
-  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
   backdrop-filter: blur(12px); 
   -webkit-backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 24px; height: 24px; transform: translateX(2px); opacity: 0.9; }
+.v-play-btn svg { fill: #fff; width: 22px; height: 22px; transform: translateX(2px); opacity: 0.7; }
 
 .v-info {
   position: absolute; bottom: 24px; left: 0; right: 0; z-index: 10;
   font-family: 'Inter', sans-serif; 
-  opacity: 0.5; 
-  font-size: 9px; 
+  opacity: 0.4; 
+  font-size: 8px; 
   font-weight: 600;
-  letter-spacing: 0.6em;
+  letter-spacing: 0.8em;
   color: #fff;
   text-transform: uppercase;
   text-align: center;
 }
 
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(197,160,89,0.5); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.05); border-color: rgba(197,160,89,0.3); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
@@ -211,28 +221,41 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     for(let i=1; i<=200; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
+      // Added preload="none" and a transparent poster to ensure PURE BLACK preview
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
-        <video preload="metadata" playsinline muted disablePictureInPicture oncontextmenu="return false;" controlsList="nodownload nofullscreen noplaybackrate">
+        <video 
+          preload="none" 
+          poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+          playsinline 
+          muted 
+          disablePictureInPicture 
+          oncontextmenu="return false;" 
+          controlsList="nodownload nofullscreen noplaybackrate">
           <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
       
-      video.onloadeddata = () => {
-        vWrap.classList.add('is-visible');
-        validVideosCount++;
-        if (validVideosCount > 0) {
-            header.classList.remove('opacity-0', 'pointer-events-none');
-            header.classList.add('za');
-        }
-        observer.observe(vWrap);
-      };
+      // HEAD request check to hide non-existent videos
+      fetch(`videos/${i}.mp4`, { method: 'HEAD' })
+        .then(res => {
+          if (res.ok) {
+            vWrap.classList.add('is-visible');
+            validVideosCount++;
+            if (validVideosCount > 0) {
+                header.classList.remove('opacity-0', 'pointer-events-none');
+                header.classList.add('za');
+            }
+            observer.observe(vWrap);
+          } else {
+            vWrap.remove();
+          }
+        })
+        .catch(() => vWrap.remove());
 
-      video.onerror = () => { vWrap.remove(); };
-
-      // Exit fullscreen when video ends
+      // Auto-exit fullscreen when video ends
       video.onended = () => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
           const exitFS = document.exitFullscreen || document.webkitExitFullscreen;
