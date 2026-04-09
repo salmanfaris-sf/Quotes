@@ -32,46 +32,46 @@ html, body {
 
 body { margin: 0; color: #d1d1d1; }
 
-.z0 { transition: background-color .4s, backdrop-filter .4s, border-bottom .4s; }
-.z0.zs { background-color: rgba(0,0,0,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
+.z0 { transition: background-color .4s ease, backdrop-filter .4s ease, border-bottom .4s ease; }
+.z0.zs { background-color: rgba(0,0,0,.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
 
 .z1 { 
   opacity: 0; 
-  transform: translateY(30px); 
-  filter: blur(10px); 
-  transition: all 1s cubic-bezier(.16,1,.3,1); 
+  transform: translateY(20px); 
+  filter: blur(8px); 
+  transition: opacity 1.2s cubic-bezier(.16,1,.3,1), transform 1.2s cubic-bezier(.16,1,.3,1), filter 1.2s cubic-bezier(.16,1,.3,1); 
+  will-change: transform, opacity;
 }
 .z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-/* TEXT FILLING LOGIC */
+/* FIXED TEXT SPACING: Removed inter-word justification to prevent long distances */
 .full-width-text {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  padding: 0 5vw;
-  text-align: justify;
-  text-justify: inter-word; 
-  hyphens: auto;
-  word-break: break-word;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 6vw;
+  text-align: left; /* Normal spacing instead of justify */
+  word-spacing: -0.05em; /* Closer word distance */
 }
 
 .hi { 
-  transition: color 0.6s ease, opacity 0.6s ease; 
-  opacity: 0.12; 
+  transition: color 0.5s ease, opacity 0.5s ease; 
+  opacity: 0.1; 
   color: #B8B8B0; 
   display: inline;
 }
 .hi.active { opacity: 1 !important; color: #fff !important; }
 
-/* Video Grid - Pure Black */
+/* Video Cards */
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
-  padding: 0 24px;
+  gap: 20px;
+  padding: 0 20px;
   max-width: 100%;
   margin: 0 auto;
 }
-@media(min-width: 768px) { .v-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(min-width: 768px) { .v-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; padding: 0 40px; } }
 
 .v-wrap { 
   aspect-ratio: 16/9; 
@@ -80,39 +80,45 @@ body { margin: 0; color: #d1d1d1; }
   overflow: hidden; 
   cursor: pointer;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
-  border-radius: 4px; 
-  border: 1px solid rgba(255,255,255,0.1); 
+  border-radius: 2px; 
+  border: 1px solid rgba(255,255,255,0.08); 
 }
-.v-wrap:hover { transform: scale(1.02); border-color: #C5A059; }
+.v-wrap:hover { transform: scale(1.01); border-color: #C5A059; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 48px; height: 48px; 
-  background: rgba(255,255,255,0.05);
+  width: 54px; height: 54px; 
+  background: rgba(255,255,255,0.03);
   backdrop-filter: blur(10px); 
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10;
+  border: 1px solid rgba(255,255,255,0.1);
 }
-.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); }
+.v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(1px); }
 
-/* Optimized Video Overlay for Speed */
+/* Ultra-Fast Video Overlay */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
     opacity: 0;
-    transition: opacity 0.2s ease-out; /* Much faster transition */
+    transition: opacity 0.15s ease-out;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
-#fs-video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+#fs-video { width: 100%; height: 100%; object-fit: contain; background: #000; outline: none; }
 
-/* Quote Spacing & Color Fixes */
-.quote-wrapper { padding-top: 100px; padding-bottom: 0px; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: 13px; color: #ffffff; opacity: 1; margin: 0; } /* Pure White */
-.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.4; margin-top: 4px; }
-footer { padding-top: 8px; padding-bottom: 60px; }
+/* Bottom Quote & Footer Spacing */
+.quote-wrapper { padding-top: 120px; padding-bottom: 24px; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: 15px; color: #ffffff; opacity: 1; margin: 0; font-weight: 400; letter-spacing: 0.01em; } 
+.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.3; margin-top: 8px; }
+
+footer { padding-top: 32px; padding-bottom: 60px; } /* Added distance from quote to footer */
 
 .zd { color: #C5A059; }
 .zb { color: #C5A059; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #222; }
 </style>
 </head>
 <body>
@@ -123,7 +129,7 @@ footer { padding-top: 8px; padding-bottom: 60px; }
 </nav>
 
 <div id="fs-overlay">
-    <video id="fs-video" playsinline loop preload="auto"></video>
+    <video id="fs-video" playsinline loop preload="auto" webkit-playsinline></video>
 </div>
 
 <main class="relative w-full">
@@ -185,14 +191,15 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     const openFS = (src) => {
         fsVideo.src = src;
         fsOverlay.style.display = 'flex';
-        // Instant trigger
         fsVideo.load(); 
-        fsOverlay.classList.add('active');
-        fsVideo.play().catch(()=>{});
+        requestAnimationFrame(() => {
+          fsOverlay.classList.add('active');
+          fsVideo.play().catch(()=>{});
+        });
         
-        // Native Fullscreen
         if (fsVideo.requestFullscreen) fsVideo.requestFullscreen();
         else if (fsVideo.webkitRequestFullscreen) fsVideo.webkitRequestFullscreen();
+        else if (fsVideo.webkitEnterFullscreen) fsVideo.webkitEnterFullscreen();
         
         document.body.style.overflow = 'hidden';
         window.history.pushState({ fs: true }, "");
@@ -202,10 +209,12 @@ footer { padding-top: 8px; padding-bottom: 60px; }
         fsOverlay.classList.remove('active');
         fsVideo.pause();
         if (document.fullscreenElement) document.exitFullscreen();
+        else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+        
         setTimeout(() => {
             fsOverlay.style.display = 'none';
             fsVideo.src = "";
-        }, 200);
+        }, 150);
         document.body.style.overflow = '';
     };
 
@@ -218,10 +227,7 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     videoUrls.forEach((url, index) => {
         const vWrap = document.createElement('div');
         vWrap.className = 'v-wrap z1';
-        vWrap.innerHTML = `
-            <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-            <div class="v-label">VIDEO ${String(index + 1).padStart(3, "0")}</div>
-        `;
+        vWrap.innerHTML = `<div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>`;
         vWrap.addEventListener('click', () => openFS(url));
         list.appendChild(vWrap);
     });
@@ -247,7 +253,7 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05 });
     document.querySelectorAll(".z1").forEach(el => obs.observe(el));
   };
 
@@ -263,7 +269,7 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     spans.forEach(s => {
       const rect = s.getBoundingClientRect();
       const dist = Math.abs((rect.top + rect.height / 2) - centerY);
-      s.classList.toggle("active", dist < window.innerHeight * 0.25);
+      s.classList.toggle("active", dist < window.innerHeight * 0.22);
     });
   }, { passive: true });
 
