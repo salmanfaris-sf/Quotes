@@ -55,7 +55,7 @@ body { margin: 0; color: #d1d1d1; }
 .zf { animation: flash 2s ease-in-out infinite; }
 #sd { transition: opacity 0.5s ease, visibility 0.5s; }
 
-/* Refined Highlighting */
+/* Text Highlighting - Only center sentence */
 .hi { 
   transition: color 0.6s ease, opacity 0.6s ease; 
   opacity: 0.12; 
@@ -64,11 +64,11 @@ body { margin: 0; color: #d1d1d1; }
 }
 .hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 20px rgba(255,255,255,0.5) !important; }
 
-/* Video Grid */
+/* Video Grid (No auto-play previews) */
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 32px;
   padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
@@ -78,30 +78,44 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #0a0a0a; 
+  background: #111; 
   overflow: hidden; 
   cursor: pointer;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
-  border-radius: 12px; 
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 4px; 
   border: 1px solid rgba(255,255,255,0.05);
   will-change: transform;
 }
-.v-wrap:hover { transform: scale(1.02); border-color: rgba(197,160,89,0.3); }
+.v-wrap:hover { transform: scale(1.015); border-color: rgba(197,160,89,0.2); }
 
-/* Play Button */
+/* Static Thumbnail Image */
+.v-thumb {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0.5; transition: opacity 0.4s ease;
+}
+.v-wrap:hover .v-thumb { opacity: 0.7; }
+
+/* Play Icon Overlay */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 60px; height: 60px; 
-  background: rgba(255,255,255,0.05);
+  width: 50px; height: 50px; 
+  background: rgba(0,0,0,0.4);
   backdrop-filter: blur(10px); 
-  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10;
   transition: all 0.3s ease;
 }
 .v-wrap:hover .v-play-btn { background: #C5A059; transform: translate(-50%, -50%) scale(1.1); }
-.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); transition: fill 0.3s ease; }
+.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(2px); transition: fill 0.3s ease; }
 .v-wrap:hover .v-play-btn svg { fill: #000; }
+
+/* Video Index Label Bottom Left */
+.v-label {
+    position: absolute; bottom: 16px; left: 20px;
+    font-family: 'Inter', sans-serif; font-size: 9px;
+    letter-spacing: 0.3em; color: white; opacity: 0.3;
+    text-transform: uppercase;
+}
 
 /* Fullscreen Overlay */
 #fs-overlay {
@@ -110,22 +124,11 @@ body { margin: 0; color: #d1d1d1; }
     opacity: 0; transition: opacity 0.4s ease;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
-#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
-
-/* Close Button for Fullscreen */
-#fs-close {
-    position: absolute; top: 30px; right: 30px; 
-    color: white; font-family: Inter, sans-serif; font-size: 12px; 
-    letter-spacing: 0.2em; opacity: 0.5; cursor: pointer; z-index: 1010;
-    padding: 10px; text-transform: uppercase;
-}
-#fs-close:hover { opacity: 1; }
-
-.quote-wrapper { padding-top: 80px; padding-bottom: 40px; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 4vw, 18px); color: #ffffff; opacity: 1; margin: 0; }
-.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.4; margin-top: 14px; letter-spacing: 0.1em; }
+#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; outline: none; }
 
 video::-webkit-media-controls { display:none !important; }
+
+.quote-wrapper { padding-top: 120px; padding-bottom: 40px; }
 </style>
 </head>
 <body>
@@ -136,7 +139,7 @@ video::-webkit-media-controls { display:none !important; }
 </nav>
 
 <div id="fs-overlay">
-    <div id="fs-close">Close</div>
+    <!-- Close button removed as per request -->
     <video id="fs-video" playsinline loop></video>
 </div>
 
@@ -154,14 +157,14 @@ video::-webkit-media-controls { display:none !important; }
 
   <section id="v-section" class="relative z-10 py-40">
     <div class="z1 mb-20 text-center px-6">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.8em] text-white/20">Selected Records</h3>
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.8em] text-white/20">Recordings</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
     <div class="z1 text-center px-6 quote-wrapper">
         <div class="max-w-xl mx-auto">
-            <p class="quote-line">You only have 1,440 minutes every day,</p>
-            <p class="quote-line">don't let a single one go to waste.</p>
+            <p class="font-f2 text-sm text-white/90">You only have 1,440 minutes every day,</p>
+            <p class="font-f2 text-sm text-white/90">don't let a single one go to waste.</p>
             <p id="live-stats" class="quote-stats"></p>
         </div>
     </div>
@@ -181,7 +184,6 @@ video::-webkit-media-controls { display:none !important; }
     ["Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.", "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.", "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."]
   ];
 
-  // Refined sentence splitting
   const wrapWords = (text) => {
     return text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span> `).join("");
   };
@@ -202,10 +204,14 @@ video::-webkit-media-controls { display:none !important; }
     const list = document.getElementById('video-list');
     const fsOverlay = document.getElementById('fs-overlay');
     const fsVideo = document.getElementById('fs-video');
-    const fsClose = document.getElementById('fs-close');
 
-    // Sample list - add your real paths here
-    const potentialUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4"];
+    // Sample URLs - these would usually have corresponding .jpg thumbnails
+    const potentialUrls = [
+        { video: "videos/1.mp4", thumb: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800" },
+        { video: "videos/2.mp4", thumb: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800" },
+        { video: "videos/3.mp4", thumb: "https://images.unsplash.com/photo-1549476464-37392f717541?q=80&w=800" },
+        { video: "videos/4.mp4", thumb: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800" }
+    ];
 
     const openFS = (src) => {
         fsVideo.src = src;
@@ -221,27 +227,26 @@ video::-webkit-media-controls { display:none !important; }
         document.body.style.overflow = '';
     };
 
-    // Toggle Play/Pause on video click
     fsVideo.addEventListener('click', (e) => {
         e.stopPropagation();
         if (fsVideo.paused) fsVideo.play();
         else fsVideo.pause();
     });
 
-    fsClose.addEventListener('click', closeFS);
     fsOverlay.addEventListener('click', (e) => {
         if(e.target === fsOverlay) closeFS();
     });
 
-    potentialUrls.forEach(url => {
+    potentialUrls.forEach((item, index) => {
         const vWrap = document.createElement('div');
         vWrap.className = 'v-wrap z1';
-        // Note: No video tag inside the wrap to ensure no auto-playing or resource drain until clicked
+        const displayIndex = String(index + 1).padStart(3, "0");
         vWrap.innerHTML = `
+            <img src="${item.thumb}" class="v-thumb" alt="Thumbnail">
             <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-            <div class="absolute bottom-4 left-6 text-[9px] uppercase tracking-widest opacity-30">Record_${url.split('/').pop()}</div>
+            <div class="v-label">VIDEO ${displayIndex}</div>
         `;
-        vWrap.addEventListener('click', () => openFS(url));
+        vWrap.addEventListener('click', () => openFS(item.video));
         list.appendChild(vWrap);
     });
   };
@@ -277,7 +282,6 @@ video::-webkit-media-controls { display:none !important; }
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (hint) hint.style.opacity = scrollPos > 20 ? "0" : "1";
     
-    // Focus highlight on the center-most sentence
     const spans = document.querySelectorAll(".hi");
     const centerY = window.innerHeight * 0.5;
     
@@ -288,17 +292,13 @@ video::-webkit-media-controls { display:none !important; }
       const rect = s.getBoundingClientRect();
       const elementCenter = rect.top + rect.height / 2;
       const distance = Math.abs(elementCenter - centerY);
-      
-      // Clean previous state
       s.classList.remove("active");
-      
       if (distance < minDistance) {
         minDistance = distance;
         closest = s;
       }
     });
 
-    // Only highlight if it's reasonably near the center
     if (closest && minDistance < window.innerHeight * 0.2) {
       closest.classList.add("active");
     }
