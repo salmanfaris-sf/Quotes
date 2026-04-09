@@ -25,12 +25,13 @@ html, body {
   scroll-behavior: auto; 
   overflow-x: hidden;
   width: 100%;
+  min-height: 100%;
   position: relative;
   touch-action: pan-y; 
   -webkit-font-smoothing: antialiased;
 }
 
-body { margin: 0; color: #d1d1d1; }
+body { margin: 0; color: #d1d1d1; display: flex; flex-direction: column; }
 
 .z0 { transition: background-color .4s, backdrop-filter .4s, border-bottom .4s; }
 .z0.zs { background-color: rgba(0,0,0,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
@@ -63,7 +64,7 @@ body { margin: 0; color: #d1d1d1; }
 }
 .hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 15px rgba(255,255,255,0.4) !important; }
 
-/* Horizontal Video Grid (16:9) */
+/* Grid Layout */
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
@@ -73,62 +74,48 @@ body { margin: 0; color: #d1d1d1; }
   margin: 0 auto;
 }
 @media(min-width: 768px) { .v-grid { grid-template-columns: repeat(2, 1fr); } }
-@media(min-width: 1024px) { .v-grid { grid-template-columns: repeat(3, 1fr); } }
 
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #111; 
+  background: #0a0a0a; 
   overflow: hidden; 
   cursor: pointer;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 12px; 
-  border: 1px solid rgba(255,255,255,0.05);
-  will-change: transform;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 4px; 
+  border: 1px solid rgba(255,255,255,0.03);
 }
-.v-wrap:hover { transform: scale(1.02); }
-.v-wrap video { 
-    width: 100%; height: 100%; object-fit: cover; display: block; 
-    pointer-events: none; opacity: 0.7; transition: opacity 0.4s ease;
-    transform: translateZ(0);
-}
-.v-wrap:hover video { opacity: 1; }
+.v-wrap:hover { transform: translateY(-4px); border-color: rgba(197,160,89,0.3); }
 
+/* Play Button: Clean & Premium */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 48px; height: 48px; 
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(8px); 
-  border: 1px solid rgba(255,255,255,0.4); 
+  width: 50px; height: 50px; 
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10;
+  transition: all 0.3s ease;
 }
-.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); }
+.v-wrap:hover .v-play-btn { background: rgba(197,160,89,0.8); transform: translate(-50%, -50%) scale(1.1); }
+.v-play-btn svg { fill: #fff; width: 12px; height: 12px; transform: translateX(1px); }
 
-/* Fullscreen Overlay */
+/* Fullscreen Overlay (No Controls) */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.2s ease;
+    opacity: 0; transition: opacity 0.3s ease;
+    cursor: zoom-out;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
-#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
-
-/* Stats Typo */
-.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 4vw, 18px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 1; margin: 0; }
-.quote-stats { 
-    font-family: 'Inter', sans-serif; 
-    font-size: clamp(11px, 3.2vw, 13px); 
-    color: #ffffff; 
-    opacity: 0.4; 
-    margin-top: 14px; 
-    font-weight: 400; 
-    letter-spacing: 0.05em; 
+#fs-video { 
+    width: 100%; height: 100%; object-fit: contain; 
+    pointer-events: none; /* Prevents native mobile long-press menus */
 }
 
-.quote-wrapper { padding-top: 60px; padding-bottom: 40px; }
-footer { padding-bottom: 60px; }
+.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
+footer { padding-bottom: 12px; margin-top: 40px; }
 </style>
 </head>
 <body>
@@ -139,10 +126,11 @@ footer { padding-bottom: 60px; }
 </nav>
 
 <div id="fs-overlay">
-    <video id="fs-video" playsinline controls></video>
+    <!-- Removed "controls" attribute -->
+    <video id="fs-video" playsinline loop></video>
 </div>
 
-<main class="relative w-full">
+<main class="relative w-full flex-grow">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
       <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
@@ -170,7 +158,7 @@ footer { padding-bottom: 60px; }
 </main>
 
 <footer class="w-full flex justify-center px-6 relative z-10 z1">
-  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-20">BY SALMAN FARIS</div>
+  <div class="text-[8px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-10">BY SALMAN FARIS</div>
 </footer>
 
 <script>
@@ -198,20 +186,15 @@ footer { padding-bottom: 60px; }
     const fsOverlay = document.getElementById('fs-overlay');
     const fsVideo = document.getElementById('fs-video');
 
-    // Updated to point to your local 'videos' folder
-    const videoUrls = [
+    const availableVideos = [
         "videos/1.mp4",
-        "videos/2.mp4",
-        "videos/3.mp4",
-        "videos/4.mp4",
-        "videos/5.mp4",
-        "videos/6.mp4"
+        "videos/2.mp4"
     ];
 
     const openFS = (src) => {
         fsVideo.src = src;
         fsOverlay.classList.add('active');
-        fsVideo.play().catch(e => console.log("Manual play required"));
+        fsVideo.play().catch(e => console.log("Play blocked by browser"));
         document.body.style.overflow = 'hidden';
     };
 
@@ -222,29 +205,21 @@ footer { padding-bottom: 60px; }
         document.body.style.overflow = '';
     };
 
+    // Close on any click anywhere in the overlay since controls are gone
     fsOverlay.addEventListener('click', closeFS);
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { 
-        if (entry.isIntersecting) {
-            entry.target.classList.add("za");
-            const v = entry.target.querySelector('video');
-            if (v) v.play().catch(e => {}); // Autoplay previews when in view
-        } else {
-            const v = entry.target.querySelector('video');
-            if (v) v.pause();
-        }
+        if (entry.isIntersecting) entry.target.classList.add("za");
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.1 });
 
-    videoUrls.forEach((url, i) => {
+    availableVideos.forEach((url) => {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="metadata" playsinline muted loop>
-          <source src="${url}" type="video/mp4">
-        </video>
+        <div class="w-full h-full bg-[#050505] flex items-center justify-center text-[8px] uppercase tracking-[0.4em] opacity-20">View Reflection</div>
       `;
       
       vWrap.addEventListener('click', () => openFS(url));
