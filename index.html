@@ -80,10 +80,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 24px; 
   border: 1px solid rgba(255,255,255,0.05);
-  display: none;
-  transform: translateZ(0);
-  will-change: transform;
-  contain: layout style paint;
+  display: none; 
 }
 
 .v-wrap.is-visible { display: block; }
@@ -95,13 +92,13 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
   background: #000000;
   pointer-events: auto;
-  opacity: 0.55;
-  transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-  transform: translateZ(0);
+  filter: blur(12px) brightness(0.6); 
+  opacity: 0.75;
+  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .v-wrap.is-playing video {
+  filter: blur(0px) brightness(1);
   opacity: 1;
   object-fit: contain;
 }
@@ -136,7 +133,7 @@ video::-webkit-media-controls-enclosure { display:none !important; }
   text-align: center;
 }
 
-.v-wrap:hover video { transform: scale(1.02); opacity: 0.75; }
+.v-wrap:hover video { transform: scale(1.02); opacity: 0.9; filter: blur(6px) brightness(0.7); }
 .v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(255,255,255,0.3); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
@@ -335,31 +332,25 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
   };
 
-  let scrollTicking = false;
   window.addEventListener("scroll", () => {
-    if (scrollTicking) return;
-    scrollTicking = true;
-    requestAnimationFrame(() => {
-      const scrollPos = window.scrollY;
-      const nav = document.getElementById("n0");
-      const scrollHint = document.getElementById("sd");
-      scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-      if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
-      
-      const spans = document.querySelectorAll(".hi");
-      const centerY = window.innerHeight * 0.5;
-      let activeSpan = null;
-      let minDistance = Infinity;
-      spans.forEach(span => {
-        const rect = span.getBoundingClientRect();
-        const dist = Math.abs((rect.top + rect.height / 2) - centerY);
-        if (dist < minDistance) { minDistance = dist; activeSpan = span; }
-      });
-      spans.forEach(span => {
-        if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
-        else span.classList.remove("active");
-      });
-      scrollTicking = false;
+    const scrollPos = window.scrollY;
+    const nav = document.getElementById("n0");
+    const scrollHint = document.getElementById("sd");
+    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
+    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
+    
+    const spans = document.querySelectorAll(".hi");
+    const centerY = window.innerHeight * 0.5;
+    let activeSpan = null;
+    let minDistance = Infinity;
+    spans.forEach(span => {
+      const rect = span.getBoundingClientRect();
+      const dist = Math.abs((rect.top + rect.height / 2) - centerY);
+      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
+    });
+    spans.forEach(span => {
+      if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
+      else span.classList.remove("active");
     });
   }, { passive: true });
 
