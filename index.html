@@ -55,19 +55,20 @@ body { margin: 0; color: #d1d1d1; }
 .zf { animation: flash 2s ease-in-out infinite; }
 #sd { transition: opacity 0.5s ease, visibility 0.5s; }
 
+/* Refined Highlighting */
 .hi { 
-  transition: color 0.4s ease, opacity 0.4s ease; 
-  opacity: 0.15; 
+  transition: color 0.6s ease, opacity 0.6s ease; 
+  opacity: 0.12; 
   color: #B8B8B0; 
-  display: inline-block; 
+  display: inline; 
 }
-.hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 15px rgba(255,255,255,0.4) !important; }
+.hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 20px rgba(255,255,255,0.5) !important; }
 
-/* Horizontal Video Grid (16:9) */
+/* Video Grid */
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 24px;
   padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
@@ -77,52 +78,54 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #000; 
+  background: #0a0a0a; 
   overflow: hidden; 
   cursor: pointer;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
   border-radius: 12px; 
   border: 1px solid rgba(255,255,255,0.05);
   will-change: transform;
-  display: none; 
 }
-.v-wrap.verified { display: block; }
-.v-wrap:hover { transform: scale(1.02); }
-.v-wrap video { 
-    width: 100%; height: 100%; object-fit: cover; display: block; 
-    pointer-events: none; opacity: 0.6; transition: opacity 0.4s ease;
-}
-.v-wrap:hover video { opacity: 1; }
+.v-wrap:hover { transform: scale(1.02); border-color: rgba(197,160,89,0.3); }
 
+/* Play Button */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 52px; height: 52px; 
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(8px); 
+  width: 60px; height: 60px; 
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px); 
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10;
-  pointer-events: none;
+  transition: all 0.3s ease;
 }
-.v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(2px); opacity: 0.8; }
+.v-wrap:hover .v-play-btn { background: #C5A059; transform: translate(-50%, -50%) scale(1.1); }
+.v-play-btn svg { fill: #fff; width: 20px; height: 20px; transform: translateX(2px); transition: fill 0.3s ease; }
+.v-wrap:hover .v-play-btn svg { fill: #000; }
 
-/* Fullscreen Overlay - No Close Button */
+/* Fullscreen Overlay */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.3s ease;
+    opacity: 0; transition: opacity 0.4s ease;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
-#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; outline: none; }
+#fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
 
-video::-webkit-media-controls { display:none !important; }
-video::-webkit-media-controls-panel { display: none !important; }
-
-.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 4vw, 18px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 1; margin: 0; }
-.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(11px, 3.2vw, 13px); color: #ffffff; opacity: 0.4; margin-top: 14px; font-weight: 400; letter-spacing: 0.05em; }
+/* Close Button for Fullscreen */
+#fs-close {
+    position: absolute; top: 30px; right: 30px; 
+    color: white; font-family: Inter, sans-serif; font-size: 12px; 
+    letter-spacing: 0.2em; opacity: 0.5; cursor: pointer; z-index: 1010;
+    padding: 10px; text-transform: uppercase;
+}
+#fs-close:hover { opacity: 1; }
 
 .quote-wrapper { padding-top: 80px; padding-bottom: 40px; }
-footer { padding-bottom: 60px; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 4vw, 18px); color: #ffffff; opacity: 1; margin: 0; }
+.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.4; margin-top: 14px; letter-spacing: 0.1em; }
+
+video::-webkit-media-controls { display:none !important; }
 </style>
 </head>
 <body>
@@ -133,6 +136,7 @@ footer { padding-bottom: 60px; }
 </nav>
 
 <div id="fs-overlay">
+    <div id="fs-close">Close</div>
     <video id="fs-video" playsinline loop></video>
 </div>
 
@@ -148,22 +152,23 @@ footer { padding-bottom: 60px; }
 
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
-  <section id="v-section" class="relative z-10">
-    <div class="z1 mb-12 text-center px-6">
-       <h3 class="font-f2 text-[10px] uppercase tracking-[0.8em] text-white/20">Reflections</h3>
+  <section id="v-section" class="relative z-10 py-40">
+    <div class="z1 mb-20 text-center px-6">
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.8em] text-white/20">Selected Records</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
     <div class="z1 text-center px-6 quote-wrapper">
-        <div class="quote-container">
+        <div class="max-w-xl mx-auto">
             <p class="quote-line">You only have 1,440 minutes every day,</p>
             <p class="quote-line">don't let a single one go to waste.</p>
             <p id="live-stats" class="quote-stats"></p>
         </div>
     </div>
+  </section>
 </main>
 
-<footer class="w-full flex justify-center px-6 relative z-10 z1">
+<footer class="w-full flex justify-center px-6 py-20 relative z-10 z1">
   <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-20">BY SALMAN FARIS</div>
 </footer>
 
@@ -176,7 +181,10 @@ footer { padding-bottom: 60px; }
     ["Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.", "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.", "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."]
   ];
 
-  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
+  // Refined sentence splitting
+  const wrapWords = (text) => {
+    return text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span> `).join("");
+  };
 
   const updateClockAndStats = () => {
     const now = new Date();
@@ -185,7 +193,7 @@ footer { padding-bottom: 60px; }
     if (statsEl) {
         const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
         const rem = 1440 - (now.getHours() * 60 + now.getMinutes());
-        statsEl.textContent = `Time: ${timeStr} • ${rem} minutes remaining`;
+        statsEl.textContent = `TIME: ${timeStr} • ${rem} MINUTES REMAINING`;
     }
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
   };
@@ -194,8 +202,10 @@ footer { padding-bottom: 60px; }
     const list = document.getElementById('video-list');
     const fsOverlay = document.getElementById('fs-overlay');
     const fsVideo = document.getElementById('fs-video');
+    const fsClose = document.getElementById('fs-close');
 
-    const potentialUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4", "videos/5.mp4", "videos/6.mp4"];
+    // Sample list - add your real paths here
+    const potentialUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4"];
 
     const openFS = (src) => {
         fsVideo.src = src;
@@ -211,78 +221,87 @@ footer { padding-bottom: 60px; }
         document.body.style.overflow = '';
     };
 
-    // Click video to toggle play/pause OR exit if needed
+    // Toggle Play/Pause on video click
     fsVideo.addEventListener('click', (e) => {
         e.stopPropagation();
-        closeFS(); // Clicking the playing video now closes it back to the grid
+        if (fsVideo.paused) fsVideo.play();
+        else fsVideo.pause();
     });
 
-    fsOverlay.addEventListener('click', closeFS);
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { 
-        const v = entry.target.querySelector('video');
-        if (entry.isIntersecting) {
-            entry.target.classList.add("za");
-            if (v) v.play().catch(e => {});
-        } else {
-            if (v) v.pause();
-        }
-      });
-    }, { threshold: 0.1 });
+    fsClose.addEventListener('click', closeFS);
+    fsOverlay.addEventListener('click', (e) => {
+        if(e.target === fsOverlay) closeFS();
+    });
 
     potentialUrls.forEach(url => {
         const vWrap = document.createElement('div');
         vWrap.className = 'v-wrap z1';
+        // Note: No video tag inside the wrap to ensure no auto-playing or resource drain until clicked
         vWrap.innerHTML = `
             <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-            <video preload="metadata" playsinline muted loop><source src="${url}" type="video/mp4"></video>
+            <div class="absolute bottom-4 left-6 text-[9px] uppercase tracking-widest opacity-30">Record_${url.split('/').pop()}</div>
         `;
-        const vElement = vWrap.querySelector('video');
-        vElement.onloadedmetadata = () => {
-            vWrap.classList.add('verified');
-            list.appendChild(vWrap);
-            observer.observe(vWrap);
-        };
         vWrap.addEventListener('click', () => openFS(url));
+        list.appendChild(vWrap);
     });
   };
 
   const init = () => {
     const now = new Date();
     const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
+    const themeName = themes[dayOfYear % 5];
+    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
+    
     const setIdx = dayOfYear % content.length;
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
-      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
+      <div class="z1"><p class="font-f1 text-5xl md:text-7xl leading-[1.2] zi">${wrapWords(content[setIdx][0])}</p></div>
+      <div class="z1"><p class="font-f1 text-5xl md:text-7xl leading-[1.2]">${wrapWords(content[setIdx][1])}</p></div>
+      <div class="py-24 text-center z1"><h2 class="font-f1 text-7xl md:text-[10rem] italic zb">${themeName.toUpperCase()}.</h2></div>
+      <div class="z1"><p class="font-f1 text-5xl md:text-7xl leading-[1.2] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
+    
     initVideos();
     updateClockAndStats();
     
     const genObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
-    document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => genObs.observe(el));
+    document.querySelectorAll(".z1").forEach(el => genObs.observe(el));
   };
 
   window.addEventListener("scroll", () => {
     const scrollPos = window.scrollY;
     const nav = document.getElementById("n0");
     const hint = document.getElementById("sd");
+    
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (hint) hint.style.opacity = scrollPos > 20 ? "0" : "1";
     
+    // Focus highlight on the center-most sentence
     const spans = document.querySelectorAll(".hi");
-    const cy = window.innerHeight * 0.5;
+    const centerY = window.innerHeight * 0.5;
+    
+    let closest = null;
+    let minDistance = Infinity;
+
     spans.forEach(s => {
-      const r = s.getBoundingClientRect();
-      const d = Math.abs((r.top + r.height/2) - cy);
-      if (d < window.innerHeight * 0.35) s.classList.add("active");
-      else s.classList.remove("active");
+      const rect = s.getBoundingClientRect();
+      const elementCenter = rect.top + rect.height / 2;
+      const distance = Math.abs(elementCenter - centerY);
+      
+      // Clean previous state
+      s.classList.remove("active");
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        closest = s;
+      }
     });
+
+    // Only highlight if it's reasonably near the center
+    if (closest && minDistance < window.innerHeight * 0.2) {
+      closest.classList.add("active");
+    }
   }, { passive: true });
 
   window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
