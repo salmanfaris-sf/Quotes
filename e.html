@@ -92,7 +92,17 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #000;
+  background: #050505; /* Near black neutral background */
+}
+
+/* Blank Blur Layer */
+.v-blur-layer {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  z-index: 2;
 }
 
 .v-wrap video { 
@@ -102,31 +112,28 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
   background: #000000;
   pointer-events: auto;
-  /* Visual treatment: Heavy blur + pixelated/low-res feel for preview */
-  filter: blur(25px) contrast(0.8) brightness(0.6); 
-  transform: scale(0.3); /* Drastically shrink to force loss of detail */
-  image-rendering: pixelated; /* Forces low-quality pixelated rendering */
-  opacity: 0.4;
-  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0; /* Completely hidden until played */
+  transition: opacity 0.5s ease;
 }
 
 /* Reset styles for high-quality video playback */
 .v-wrap.is-playing video {
-  filter: blur(0px) contrast(1) brightness(1);
   opacity: 1;
-  transform: scale(1);
-  image-rendering: auto; /* Return to high quality */
   object-fit: contain;
 }
 
+.v-wrap.is-playing .v-blur-layer {
+  display: none;
+}
+
 /* Fullscreen handling overrides */
-video:fullscreen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; transform: scale(1) !important; image-rendering: auto !important; }
-video:-webkit-full-screen { object-fit: contain !important; background-color: black !important; filter: none !important; opacity: 1 !important; transform: scale(1) !important; image-rendering: auto !important; }
+video:fullscreen { object-fit: contain !important; background-color: black !important; opacity: 1 !important; }
+video:-webkit-full-screen { object-fit: contain !important; background-color: black !important; opacity: 1 !important; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 64px; height: 64px; 
-  background: rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(12px); 
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.1);
@@ -147,8 +154,7 @@ video:-webkit-full-screen { object-fit: contain !important; background-color: bl
   text-transform: uppercase;
 }
 
-.v-wrap:hover video { opacity: 0.6; filter: blur(15px) brightness(0.7); transform: scale(0.35); }
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(255,255,255,0.3); }
+.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); }
 .v-wrap.is-playing .v-play-btn { opacity: 0; transform: translate(-50%, -50%) scale(0.5); visibility: hidden; }
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
@@ -246,6 +252,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-preview-container">
+           <div class="v-blur-layer"></div>
            <video 
             preload="metadata" 
             playsinline 
