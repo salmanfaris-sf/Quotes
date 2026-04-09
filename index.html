@@ -32,7 +32,7 @@ html, body {
 
 body { margin: 0; color: #d1d1d1; }
 
-.z0 { transition: background-color .4s, backdrop-filter .4s, border-color .4s; }
+.z0 { transition: background-color .4s, backdrop-filter .4s, border-bottom .4s; }
 .z0.zs { background-color: rgba(0,0,0,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
 
 .z1 { 
@@ -63,67 +63,72 @@ body { margin: 0; color: #d1d1d1; }
 }
 .hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 15px rgba(255,255,255,0.4) !important; }
 
-/* Vertical Video Grid */
+/* Horizontal Video Grid (16:9) */
 .v-grid { 
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 20px;
   padding: 0 24px;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
-@media(min-width: 1024px) { .v-grid { grid-template-columns: repeat(4, 1fr); } }
+@media(min-width: 768px) { .v-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(min-width: 1024px) { .v-grid { grid-template-columns: repeat(3, 1fr); } }
 
 .v-wrap { 
-  aspect-ratio: 9/16; 
+  aspect-ratio: 16/9; 
   position: relative; 
   background: #0a0a0a; 
   overflow: hidden; 
   cursor: pointer;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-  border-radius: 16px; 
-  border: 1px solid rgba(255,255,255,0.03);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 12px; 
+  border: 1px solid rgba(255,255,255,0.05);
+  will-change: transform;
 }
-.v-wrap:hover { transform: scale(1.03); border-color: rgba(255,255,255,0.2); }
-.v-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; opacity: 0.8; transition: opacity 0.4s ease; }
+.v-wrap:hover { transform: scale(1.02); }
+.v-wrap video { 
+    width: 100%; height: 100%; object-fit: cover; display: block; 
+    pointer-events: none; opacity: 0.7; transition: opacity 0.4s ease;
+    transform: translateZ(0); /* Hardware acceleration hint */
+}
 .v-wrap:hover video { opacity: 1; }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 52px; height: 52px; 
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px); 
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.6); 
+  width: 48px; height: 48px; 
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px); 
+  border: 1px solid rgba(255,255,255,0.4); 
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
 }
-.v-play-btn svg { fill: #ffffff; width: 16px; height: 16px; transform: translateX(2px); }
+.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); }
 
-/* Fullscreen Overlay */
+/* Fullscreen Overlay - No Close Button */
 #fs-overlay {
-    position: fixed; inset: 0; background: #000; z-index: 100;
+    position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.4s ease;
+    opacity: 0; transition: opacity 0.3s ease;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
 #fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
 
 /* Stats Typo */
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(13px, 4vw, 16px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 4vw, 18px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 1; margin: 0; }
 .quote-stats { 
     font-family: 'Inter', sans-serif; 
     font-size: clamp(11px, 3.2vw, 13px); 
     color: #ffffff; 
     opacity: 0.4; 
-    margin-top: 12px; 
+    margin-top: 14px; 
     font-weight: 400; 
-    letter-spacing: 0.02em; 
+    letter-spacing: 0.05em; 
 }
 
-.quote-wrapper { padding-top: 50px; padding-bottom: 20px; }
-footer { padding-bottom: 40px; }
+.quote-wrapper { padding-top: 60px; padding-bottom: 40px; }
+footer { padding-bottom: 60px; }
 </style>
 </head>
 <body>
@@ -134,7 +139,7 @@ footer { padding-bottom: 40px; }
 </nav>
 
 <div id="fs-overlay">
-    <video id="fs-video" playsinline></video>
+    <video id="fs-video" playsinline preload="auto"></video>
 </div>
 
 <main class="relative w-full">
@@ -150,9 +155,8 @@ footer { padding-bottom: 40px; }
   <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
 
   <section id="v-section" class="relative z-10">
-    <div class="z1 mb-10 text-center px-6">
-       <!-- Changed to Reflections -->
-       <h3 class="font-f2 text-[9px] uppercase tracking-[0.8em] text-white/20">Reflections</h3>
+    <div class="z1 mb-12 text-center px-6">
+       <h3 class="font-f2 text-[10px] uppercase tracking-[0.8em] text-white/20">Reflections</h3>
     </div>
     <div id="video-list" class="v-grid"></div>
     
@@ -186,7 +190,7 @@ footer { padding-bottom: 40px; }
     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
     const rem = 1440 - (now.getHours() * 60 + now.getMinutes());
     const statsEl = document.getElementById('live-stats');
-    if (statsEl) statsEl.textContent = `time ${timeStr} • ${rem} minutes remaining`;
+    if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${rem} minutes remaining`;
   };
 
   const initVideos = () => {
@@ -197,7 +201,8 @@ footer { padding-bottom: 40px; }
     const openFS = (src) => {
         fsVideo.src = src;
         fsOverlay.classList.add('active');
-        fsVideo.play();
+        fsVideo.load(); // Reload to ensure buffer is fresh
+        fsVideo.play().catch(e => console.log("Play interrupted"));
         document.body.style.overflow = 'hidden';
     };
 
@@ -217,28 +222,30 @@ footer { padding-bottom: 40px; }
     fsOverlay.addEventListener('click', closeFS);
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+      entries.forEach(entry => { 
+          if (entry.isIntersecting) {
+              entry.target.classList.add("za");
+              // Hint the video to start loading slightly as it nears view
+              const v = entry.target.querySelector('video');
+              if (v) v.preload = "metadata";
+          }
+      });
     }, { threshold: 0.1 });
 
-    for(let i=1; i<=200; i++) {
+    // Mock video generation
+    for(let i=1; i<=12; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
-      vWrap.style.display = 'none';
-      
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="metadata" playsinline muted>
-          <source src="videos/${i}.mp4" type="video/mp4">
+        <video preload="none" playsinline muted loop>
+          <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
         </video>
       `;
-      const video = vWrap.querySelector('video');
       
-      video.onloadedmetadata = () => {
-          vWrap.style.display = 'block';
-          observer.observe(vWrap);
-      };
-
-      video.onerror = () => { vWrap.remove(); };
+      const video = vWrap.querySelector('video');
+      video.onloadedmetadata = () => { observer.observe(vWrap); };
+      video.onerror = () => { vWrap.style.display = 'none'; };
 
       vWrap.addEventListener('click', () => {
         const source = vWrap.querySelector('source').src;
