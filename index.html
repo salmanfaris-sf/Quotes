@@ -148,8 +148,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 </head>
 <body oncontextmenu="return false;">
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-center items-center border-b border-transparent">
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 
@@ -264,7 +263,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
       const resetUI = () => {
           video.pause();
-          video.currentTime = 0; // Ensures next play starts from beginning
+          video.currentTime = 0;
           video.muted = true;
           vWrap.classList.remove('is-playing');
       };
@@ -288,7 +287,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
         if (document.fullscreenElement || document.webkitIsFullScreen) return;
         const fs = video.requestFullscreen || video.webkitRequestFullscreen;
         if (fs) { 
-            video.currentTime = 0; // Force reset before play
+            video.currentTime = 0;
             video.muted = false; 
             vWrap.classList.add('is-playing'); 
             fs.call(video).then(() => { video.play(); }); 
@@ -312,7 +311,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
     
-    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
     
     const setIdx = dayOfYear % content.length;
