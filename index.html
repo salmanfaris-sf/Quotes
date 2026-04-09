@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <meta name="theme-color" content="#000000">
-<title>Salman Faris | Simple Wisdom</title>
+<title>Salman Faris | Daily Wisdom</title>
 <meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
 <meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -70,7 +70,7 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 24px; 
   border: 1px solid rgba(255,255,255,0.05);
-  display: none; /* Hidden by default until confirmed to exist */
+  display: none; 
 }
 
 .v-wrap.is-visible { display: block; }
@@ -220,7 +220,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
       `;
       const video = vWrap.querySelector('video');
       
-      // Verification logic: only show if video file loads successfully
       video.onloadeddata = () => {
         vWrap.classList.add('is-visible');
         validVideosCount++;
@@ -231,8 +230,14 @@ footer { padding-top: 10px; padding-bottom: 40px; }
         observer.observe(vWrap);
       };
 
-      video.onerror = () => {
-        vWrap.remove();
+      video.onerror = () => { vWrap.remove(); };
+
+      // Exit fullscreen when video ends
+      video.onended = () => {
+        if (document.fullscreenElement || document.webkitIsFullScreen) {
+          const exitFS = document.exitFullscreen || document.webkitExitFullscreen;
+          if (exitFS) exitFS.call(document);
+        }
       };
       
       video.addEventListener('click', (e) => {
