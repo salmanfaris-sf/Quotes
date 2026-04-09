@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,26 +45,27 @@ body { margin: 0; color: #d1d1d1; }
 }
 .z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-.zi { text-indent: 12rem; }
+.zi { text-indent: 8rem; }
 @media(max-width:768px){ .zi { text-indent: 0; } }
 
 .zs1 { font-size: 11px; letter-spacing: .8em; text-transform: uppercase; font-family: Inter, sans-serif; opacity: 0.4; color: #fff; }
-.zb { color: #C5A059; opacity: 0.9; text-shadow: 0 0 30px rgba(197,160,89,0.3); }
-.zd { color: #C5A059; text-shadow: 0 0 15px rgba(197,160,89,0.5); }
+.zb { color: #C5A059; opacity: 0.9; }
+.zd { color: #C5A059; }
 
 @keyframes flash { 0%,100% { opacity: 0.1; } 50% { opacity: 0.7; } }
 .zf { animation: flash 2s ease-in-out infinite; }
 #sd { transition: opacity 0.5s ease, visibility 0.5s; }
 
+/* Fixed Highlighting - Glow Removed */
 .hi { 
   transition: color 0.6s ease, opacity 0.6s ease; 
   opacity: 0.12; 
   color: #B8B8B0; 
   display: inline; 
 }
-.hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 20px rgba(255,255,255,0.5) !important; }
+.hi.active { opacity: 1 !important; color: #fff !important; }
 
-/* Video Grid - Black Placeholders */
+/* Video Grid - Pure Black */
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
@@ -77,19 +79,19 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #080808; /* Pure black aesthetic */
+  background: #000000; /* Pure Black */
   overflow: hidden; 
   cursor: pointer;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
   border-radius: 4px; 
-  border: 1px solid rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08); /* Subtle edge to see box */
 }
-.v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.2); }
+.v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.4); }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 44px; height: 44px; 
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(10px); 
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10;
@@ -103,7 +105,6 @@ body { margin: 0; color: #d1d1d1; }
     position: absolute; bottom: 16px; left: 20px;
     font-family: 'Inter', sans-serif; font-size: 8px;
     letter-spacing: 0.3em; color: white; opacity: 0.2;
-    text-transform: uppercase;
 }
 
 /* Fullscreen Overlay */
@@ -117,12 +118,15 @@ body { margin: 0; color: #d1d1d1; }
 
 video::-webkit-media-controls { display:none !important; }
 
-/* Tightened Bottom Layout */
+/* Quote Spacing & Text Flow Fix */
 .quote-wrapper { padding-top: 140px; padding-bottom: 12px; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: 13px; color: #ffffff; opacity: 0.7; margin: 0; font-weight: 400; letter-spacing: 0.02em; }
 .quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.3; margin-top: 6px; letter-spacing: 0.02em; }
 
 footer { padding-top: 8px; padding-bottom: 60px; }
+
+/* Fix width of quote containers to allow text to fill the line */
+#m0 > div { max-width: 90%; margin-left: auto; margin-right: auto; }
 </style>
 </head>
 <body>
@@ -192,7 +196,6 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     const list = document.getElementById('video-list');
     const fsOverlay = document.getElementById('fs-overlay');
     const fsVideo = document.getElementById('fs-video');
-
     const videoUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4"];
 
     const openFS = (src) => {
@@ -239,15 +242,15 @@ footer { padding-top: 8px; padding-bottom: 60px; }
   const init = () => {
     const now = new Date();
     const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-    const themeName = themes[dayOfYear % 5];
+    const themeName = themes[dayOfYear % themes.length];
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
     
     const setIdx = dayOfYear % content.length;
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.1] zi">${wrapWords(content[setIdx][0])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.1]">${wrapWords(content[setIdx][1])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.15] zi">${wrapWords(content[setIdx][0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.15]">${wrapWords(content[setIdx][1])}</p></div>
       <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.1] zi">${wrapWords(content[setIdx][2])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.15] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
     
     initVideos();
@@ -285,3 +288,5 @@ footer { padding-top: 8px; padding-bottom: 60px; }
 </script>
 </body>
 </html>
+
+```
