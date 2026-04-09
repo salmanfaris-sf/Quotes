@@ -92,7 +92,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
   display: block;
   background: #000000;
   pointer-events: auto;
-  /* Reduced blur and increased brightness for a cleaner look */
   filter: blur(12px) brightness(0.6); 
   opacity: 0.75;
   transition: filter 0.5s ease, opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -265,6 +264,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
       const resetUI = () => {
           video.pause();
+          video.currentTime = 0; // Ensures next play starts from beginning
           video.muted = true;
           vWrap.classList.remove('is-playing');
       };
@@ -288,6 +288,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
         if (document.fullscreenElement || document.webkitIsFullScreen) return;
         const fs = video.requestFullscreen || video.webkitRequestFullscreen;
         if (fs) { 
+            video.currentTime = 0; // Force reset before play
             video.muted = false; 
             vWrap.classList.add('is-playing'); 
             fs.call(video).then(() => { video.play(); }); 
