@@ -21,7 +21,6 @@ tailwind.config={
 }
 </script>
 <style>
-/* Optimization: use transform-style for 3D acceleration */
 html, body { 
   background-color: #000000; 
   scroll-behavior: auto; 
@@ -37,13 +36,12 @@ body { margin: 0; color: #d1d1d1; }
 .z0 { transition: background-color .4s, backdrop-filter .4s, border-color .4s; }
 .z0.zs { background-color: rgba(0,0,0,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
 
-/* Optimization: will-change prevents repaints during scroll */
 .z1 { 
   opacity: 0; 
   transform: translateY(30px); 
   filter: blur(10px); 
   transition: all 1.2s cubic-bezier(.16,1,.3,1); 
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity; /* Fixes Scroll Lag */
 }
 .z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
 
@@ -59,11 +57,11 @@ body { margin: 0; color: #d1d1d1; }
 #sd { transition: opacity 0.5s ease, visibility 0.5s; }
 
 .hi { 
-  transition: color 0.4s ease, text-shadow 0.4s ease, opacity 0.4s ease; 
+  transition: color 0.4s ease, opacity 0.4s ease; 
   opacity: 0.15; 
   color: #B8B8B0; 
   display: inline-block; 
-  will-change: opacity, color;
+  will-change: opacity;
 }
 .hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 15px rgba(255,255,255,0.4) !important; }
 
@@ -81,40 +79,34 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #111; 
+  background: #0a0a0a; 
   overflow: hidden; 
   cursor: pointer;
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 12px; 
   border: 1px solid rgba(255,255,255,0.05);
-  display: none; 
 }
-.v-wrap.is-visible { display: block; }
 .v-wrap:hover { transform: translateY(-5px); border-color: rgba(197,160,89,0.4); }
 
 .v-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
 
-video:fullscreen { object-fit: contain !important; background-color: #000; pointer-events: auto !important; }
-video:-webkit-full-screen { object-fit: contain !important; background-color: #000; pointer-events: auto !important; }
-
-/* Refined Play Button */
+/* Refined Play Button: More transparent with white border */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 50px; height: 50px; 
-  background: rgba(255,255,255,0.03); /* More transparent */
-  backdrop-filter: blur(4px); 
-  -webkit-backdrop-filter: blur(4px);
-  border: 1.5px solid rgba(255,255,255,0.4); /* Stronger white border */
+  width: 48px; height: 48px; 
+  background: rgba(255,255,255,0.05); 
+  backdrop-filter: blur(6px); 
+  -webkit-backdrop-filter: blur(6px);
+  border: 1.5px solid rgba(255,255,255,0.6); 
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10; transition: all 0.4s ease;
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(2px); opacity: 0.8; }
+.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(2px); opacity: 0.9; }
 .v-wrap:hover .v-play-btn { 
-  transform: translate(-50%, -50%) scale(1.1); 
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(197,160,89,0.8);
-  box-shadow: 0 0 20px rgba(197,160,89,0.2);
+    transform: translate(-50%, -50%) scale(1.15); 
+    background: rgba(255,255,255,0.15); 
+    border-color: #fff;
 }
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
@@ -189,12 +181,6 @@ footer { padding-top: 20px; padding-bottom: 60px; }
       entries.forEach(entry => { 
         if (entry.isIntersecting) {
             entry.target.classList.add("za"); 
-            // Only load source when nearing viewport to save resources
-            const video = entry.target.querySelector('video');
-            if (video && video.dataset.src) {
-                video.src = video.dataset.src;
-                delete video.dataset.src;
-            }
         }
       });
     }, { threshold: 0.1 });
@@ -204,38 +190,28 @@ footer { padding-top: 20px; padding-bottom: 60px; }
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="none" playsinline muted disablePictureInPicture data-src="videos/${i}.mp4">
-          <source type="video/mp4">
+        <video preload="metadata" playsinline muted disablePictureInPicture>
+          <source src="videos/${i}.mp4" type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
-      
-      // Better loading state
-      video.oncanplay = () => { vWrap.classList.add('is-visible'); };
-      video.onerror = () => vWrap.remove();
       
       vWrap.addEventListener('click', () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
             const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen;
             if (fs) { 
                 video.muted = false; 
-                const promise = fs.call(video);
-                if (promise !== undefined) {
-                    promise.then(() => { video.play(); }).catch(e => console.error(e));
-                }
+                fs.call(video).then(() => { video.play(); }).catch(e => console.log(e));
             }
         }
       });
 
-      video.addEventListener('click', (e) => {
-        if (document.fullscreenElement || document.webkitIsFullScreen) {
-            e.preventDefault();
-            if (video.paused) video.play();
-            else video.pause();
-        }
-      });
-
-      const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.muted = true; } };
+      const resetFS = () => { 
+        if (!document.fullscreenElement && !document.webkitIsFullScreen) { 
+            video.pause(); 
+            video.muted = true; 
+        } 
+      };
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
@@ -266,7 +242,6 @@ footer { padding-top: 20px; padding-bottom: 60px; }
     document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => genObs.observe(el));
   };
 
-  // Optimized Scroll Handling using requestAnimationFrame to prevent lag
   let ticking = false;
   window.addEventListener("scroll", () => {
     if (!ticking) {
@@ -290,7 +265,7 @@ footer { padding-top: 20px; padding-bottom: 60px; }
         });
         
         spans.forEach(s => {
-          if (s === act && min < window.innerHeight * 0.3) s.classList.add("active");
+          if (s === act && min < window.innerHeight * 0.35) s.classList.add("active");
           else s.classList.remove("active");
         });
         
