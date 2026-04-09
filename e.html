@@ -93,14 +93,14 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
 .v-wrap.is-visible { display: block; }
 
-/* Thumbnail Placeholder */
+/* Thumbnail Placeholder - Using aesthetic sky images */
 .v-thumb {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.5) blur(4px);
-  transition: transform 0.8s ease, filter 0.5s ease;
+  filter: brightness(0.6) grayscale(20%);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
 }
 
 .v-wrap video { 
@@ -120,9 +120,9 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 64px; height: 64px; 
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10; transition: all 0.4s ease;
 }
@@ -131,11 +131,12 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .v-info {
   position: absolute; top: 24px; left: 0; right: 0; z-index: 10;
   font-family: 'Inter', sans-serif; 
-  opacity: 0.4; font-size: 8px; font-weight: 600;
+  opacity: 0.6; font-size: 8px; font-weight: 600;
   letter-spacing: 0.8em; color: #fff; text-transform: uppercase; text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.v-wrap:hover .v-thumb { transform: scale(1.05); filter: brightness(0.6) blur(0px); }
+.v-wrap:hover .v-thumb { transform: scale(1.1); filter: brightness(0.8) grayscale(0%); }
 .v-wrap.is-playing .v-play-btn, .v-wrap.is-playing .v-thumb { opacity: 0; pointer-events: none; }
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
@@ -185,10 +186,18 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
   
-  // Content arrays...
   const content = [
     ["You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.", "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.", "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."],
     ["Nothing changes if you do nothing. You cannot dream big and work small. Your habits show who you really are. A man who cannot control himself cannot control his life. Stop talking about what you want to do. Start doing it. Hate laziness like it is a disease. Always speak the truth. Stand straight and face your fears.", "Knowledge is nothing without action. Fear nothing but a life of regret. Live with a clear goal. A real man protects his family. He provides for those he loves. He does not follow the crowd. He follows the truth. Every morning is a new chance to fix your life. The time to start is right now. Do not look back.", "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep moving forward. Never stop hitting the rock."]
+  ];
+
+  // Collection of aesthetic sky images from Unsplash
+  const skyThumbnails = [
+    "https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1496450681664-3df85efbd29f?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=80"
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
@@ -206,25 +215,23 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
     const list = document.getElementById('video-list');
     const header = document.getElementById('reflections-header');
     
-    // We only create 10-15 video slots initially to keep DOM light, or load as needed
-    // Using a more efficient approach:
+    // Create slots for videos
     for(let i=1; i<=15; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.dataset.id = i;
       
-      // Use a placeholder or a low-res frame if you have them. 
-      // If not, we use a dark background first.
+      // Select a sky thumbnail based on the index
+      const skyImg = skyThumbnails[(i - 1) % skyThumbnails.length];
+      
       vWrap.innerHTML = `
-        <div class="v-thumb" style="background-image: url('thumbnails/${i}.jpg'), linear-gradient(#111, #000);"></div>
+        <div class="v-thumb" style="background-image: url('${skyImg}');"></div>
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
         <div class="v-info">VIDEO &nbsp;${String(i).padStart(3, '0')}</div>
         <video preload="none" playsinline muted></video>
       `;
       
       list.appendChild(vWrap);
-      
-      // Simple existence check
       vWrap.classList.add('is-visible');
       header.classList.remove('opacity-0');
       header.classList.add('za');
@@ -244,12 +251,10 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
       });
     }
 
-    // Observe for fade-in
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add("za");
-            // Un-observe to save resources
             observer.unobserve(entry.target);
         }
       });
@@ -284,7 +289,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
     document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => generalObserver.observe(el));
   };
 
-  // Scroll handler for highlighting text
   window.addEventListener("scroll", () => {
     const scrollPos = window.scrollY;
     document.getElementById("n0").classList.toggle("zs", scrollPos > 10);
