@@ -44,14 +44,13 @@ body { margin: 0; color: #d1d1d1; }
 }
 .z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-/* FIXED TEXT SPACING: Removed inter-word justification to prevent long distances */
 .full-width-text {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 6vw;
-  text-align: left; /* Normal spacing instead of justify */
-  word-spacing: -0.05em; /* Closer word distance */
+  text-align: left;
+  word-spacing: -0.05em;
 }
 
 .hi { 
@@ -62,7 +61,6 @@ body { margin: 0; color: #d1d1d1; }
 }
 .hi.active { opacity: 1 !important; color: #fff !important; }
 
-/* Video Cards */
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
@@ -96,7 +94,6 @@ body { margin: 0; color: #d1d1d1; }
 }
 .v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(1px); }
 
-/* Ultra-Fast Video Overlay */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
@@ -106,12 +103,11 @@ body { margin: 0; color: #d1d1d1; }
 #fs-overlay.active { display: flex; opacity: 1; }
 #fs-video { width: 100%; height: 100%; object-fit: contain; background: #000; outline: none; }
 
-/* Bottom Quote & Footer Spacing */
 .quote-wrapper { padding-top: 120px; padding-bottom: 24px; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: 15px; color: #ffffff; opacity: 1; margin: 0; font-weight: 400; letter-spacing: 0.01em; } 
 .quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.3; margin-top: 8px; }
 
-footer { padding-top: 32px; padding-bottom: 60px; } /* Added distance from quote to footer */
+footer { padding-top: 32px; padding-bottom: 60px; }
 
 .zd { color: #C5A059; }
 .zb { color: #C5A059; }
@@ -129,7 +125,7 @@ footer { padding-top: 32px; padding-bottom: 60px; } /* Added distance from quote
 </nav>
 
 <div id="fs-overlay">
-    <video id="fs-video" playsinline loop preload="auto" webkit-playsinline></video>
+    <video id="fs-video" playsinline loop preload="auto" webkit-playsinline controls></video>
 </div>
 
 <main class="relative w-full">
@@ -189,17 +185,33 @@ footer { padding-top: 32px; padding-bottom: 60px; } /* Added distance from quote
     const videoUrls = ["videos/1.mp4", "videos/2.mp4", "videos/3.mp4", "videos/4.mp4"];
 
     const openFS = (src) => {
+        // 1. MUST be the first thing in the click stack for browsers to allow it
         fsVideo.src = src;
+        fsVideo.load();
+        
+        // Immediate Fullscreen attempt
+        const triggerFullscreen = (el) => {
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+            else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen(); // iOS specific
+        };
+
         fsOverlay.style.display = 'flex';
-        fsVideo.load(); 
+        
+        // Play and Fullscreen
+        fsVideo.play().then(() => {
+            triggerFullscreen(fsVideo);
+        }).catch((err) => {
+            // If failed (maybe due to sound), mute and try again
+            fsVideo.muted = true;
+            fsVideo.play().then(() => triggerFullscreen(fsVideo));
+        });
+
         requestAnimationFrame(() => {
           fsOverlay.classList.add('active');
-          fsVideo.play().catch(()=>{});
         });
-        
-        if (fsVideo.requestFullscreen) fsVideo.requestFullscreen();
-        else if (fsVideo.webkitRequestFullscreen) fsVideo.webkitRequestFullscreen();
-        else if (fsVideo.webkitEnterFullscreen) fsVideo.webkitEnterFullscreen();
         
         document.body.style.overflow = 'hidden';
         window.history.pushState({ fs: true }, "");
@@ -208,12 +220,20 @@ footer { padding-top: 32px; padding-bottom: 60px; } /* Added distance from quote
     const closeFS = () => {
         fsOverlay.classList.remove('active');
         fsVideo.pause();
-        if (document.fullscreenElement) document.exitFullscreen();
-        else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+        
+        // Exit Fullscreen
+        const exitFullscreen = () => {
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+        };
+        exitFullscreen();
         
         setTimeout(() => {
             fsOverlay.style.display = 'none';
             fsVideo.src = "";
+            fsVideo.muted = false; // Reset for next time
         }, 150);
         document.body.style.overflow = '';
     };
@@ -222,13 +242,31 @@ footer { padding-top: 32px; padding-bottom: 60px; } /* Added distance from quote
         if (fsOverlay.classList.contains('active')) closeFS();
     });
 
-    fsOverlay.addEventListener('click', () => window.history.back());
+    fsOverlay.addEventListener('click', (e) => {
+        // Prevent closing if clicking the video controls themselves
+        if (e.target === fsOverlay) window.history.back();
+    });
+
+    // Close when exiting fullscreen via native button
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && fsOverlay.classList.contains('active')) {
+            window.history.back();
+        }
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+        if (!document.webkitIsFullScreen && fsOverlay.classList.contains('active')) {
+            window.history.back();
+        }
+    });
 
     videoUrls.forEach((url, index) => {
         const vWrap = document.createElement('div');
         vWrap.className = 'v-wrap z1';
         vWrap.innerHTML = `<div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>`;
-        vWrap.addEventListener('click', () => openFS(url));
+        vWrap.addEventListener('click', (e) => {
+            e.preventDefault();
+            openFS(url);
+        });
         list.appendChild(vWrap);
     });
   };
