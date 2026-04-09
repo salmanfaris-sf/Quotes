@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,7 @@ tailwind.config={
 }
 </script>
 <style>
+/* Optimization: use transform-style for 3D acceleration */
 html, body { 
   background-color: #000000; 
   scroll-behavior: auto; 
@@ -27,27 +29,43 @@ html, body {
   width: 100%;
   position: relative;
   touch-action: pan-y; 
+  -webkit-font-smoothing: antialiased;
 }
 
-body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
+body { margin: 0; color: #d1d1d1; }
 
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
-.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
+.z0 { transition: background-color .4s, backdrop-filter .4s, border-color .4s; }
+.z0.zs { background-color: rgba(0,0,0,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
 
-.zi{text-indent:12rem}
-@media(max-width:768px){.zi{text-indent:0}}
+/* Optimization: will-change prevents repaints during scroll */
+.z1 { 
+  opacity: 0; 
+  transform: translateY(30px); 
+  filter: blur(10px); 
+  transition: all 1.2s cubic-bezier(.16,1,.3,1); 
+  will-change: transform, opacity, filter;
+}
+.z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
-.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
-.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
-@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
-.zf{animation:flash 2s ease-in-out infinite}
-#sd{transition:opacity 0.5s ease,visibility 0.5s}
+.zi { text-indent: 12rem; }
+@media(max-width:768px){ .zi { text-indent: 0; } }
 
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
+.zs1 { font-size: 11px; letter-spacing: .8em; text-transform: uppercase; font-family: Inter, sans-serif; opacity: 0.4; color: #fff; }
+.zb { color: #C5A059; opacity: 0.9; text-shadow: 0 0 30px rgba(197,160,89,0.3); }
+.zd { color: #C5A059; text-shadow: 0 0 15px rgba(197,160,89,0.5); }
+
+@keyframes flash { 0%,100% { opacity: 0.1; } 50% { opacity: 0.7; } }
+.zf { animation: flash 2s ease-in-out infinite; }
+#sd { transition: opacity 0.5s ease, visibility 0.5s; }
+
+.hi { 
+  transition: color 0.4s ease, text-shadow 0.4s ease, opacity 0.4s ease; 
+  opacity: 0.15; 
+  color: #B8B8B0; 
+  display: inline-block; 
+  will-change: opacity, color;
+}
+.hi.active { opacity: 1 !important; color: #fff !important; text-shadow: 0 0 15px rgba(255,255,255,0.4) !important; }
 
 .v-grid { 
   display: grid;
@@ -74,25 +92,30 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 .v-wrap.is-visible { display: block; }
 .v-wrap:hover { transform: translateY(-5px); border-color: rgba(197,160,89,0.4); }
 
-.v-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.v-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
 
-video:fullscreen { object-fit: contain !important; background-color: #000; }
-video:-webkit-full-screen { object-fit: contain !important; background-color: #000; }
-video::-webkit-media-controls { display:none !important; }
+video:fullscreen { object-fit: contain !important; background-color: #000; pointer-events: auto !important; }
+video:-webkit-full-screen { object-fit: contain !important; background-color: #000; pointer-events: auto !important; }
 
+/* Refined Play Button */
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 40px; height: 40px; 
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(8px); 
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.2);
+  width: 50px; height: 50px; 
+  background: rgba(255,255,255,0.03); /* More transparent */
+  backdrop-filter: blur(4px); 
+  -webkit-backdrop-filter: blur(4px);
+  border: 1.5px solid rgba(255,255,255,0.4); /* Stronger white border */
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
-.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); opacity: 0.9; }
-.v-wrap:hover .v-play-btn { transform: translate(-50%, -50%) scale(1.1); border-color: rgba(197,160,89,0.5); }
+.v-play-btn svg { fill: #fff; width: 16px; height: 16px; transform: translateX(2px); opacity: 0.8; }
+.v-wrap:hover .v-play-btn { 
+  transform: translate(-50%, -50%) scale(1.1); 
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(197,160,89,0.8);
+  box-shadow: 0 0 20px rgba(197,160,89,0.2);
+}
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
@@ -163,7 +186,17 @@ footer { padding-top: 20px; padding-bottom: 60px; }
   const initVideos = () => {
     const list = document.getElementById('video-list');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+      entries.forEach(entry => { 
+        if (entry.isIntersecting) {
+            entry.target.classList.add("za"); 
+            // Only load source when nearing viewport to save resources
+            const video = entry.target.querySelector('video');
+            if (video && video.dataset.src) {
+                video.src = video.dataset.src;
+                delete video.dataset.src;
+            }
+        }
+      });
     }, { threshold: 0.1 });
 
     for(let i=1; i<=12; i++) {
@@ -171,25 +204,29 @@ footer { padding-top: 20px; padding-bottom: 60px; }
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="metadata" playsinline muted disablePictureInPicture>
-          <source src="videos/${i}.mp4" type="video/mp4">
+        <video preload="none" playsinline muted disablePictureInPicture data-src="videos/${i}.mp4">
+          <source type="video/mp4">
         </video>
       `;
       const video = vWrap.querySelector('video');
-      video.onloadeddata = () => { vWrap.classList.add('is-visible'); observer.observe(vWrap); };
+      
+      // Better loading state
+      video.oncanplay = () => { vWrap.classList.add('is-visible'); };
       video.onerror = () => vWrap.remove();
       
       vWrap.addEventListener('click', () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen) {
-            const fs = video.requestFullscreen || video.webkitRequestFullscreen;
+            const fs = video.requestFullscreen || video.webkitRequestFullscreen || video.webkitEnterFullscreen;
             if (fs) { 
-                video.currentTime = 0; video.muted = false; 
-                fs.call(video).then(() => { video.play(); }); 
+                video.muted = false; 
+                const promise = fs.call(video);
+                if (promise !== undefined) {
+                    promise.then(() => { video.play(); }).catch(e => console.error(e));
+                }
             }
         }
       });
 
-      // Tap to toggle play/pause in fullscreen
       video.addEventListener('click', (e) => {
         if (document.fullscreenElement || document.webkitIsFullScreen) {
             e.preventDefault();
@@ -198,10 +235,11 @@ footer { padding-top: 20px; padding-bottom: 60px; }
         }
       });
 
-      const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.currentTime = 0; video.muted = true; } };
+      const resetFS = () => { if (!document.fullscreenElement && !document.webkitIsFullScreen) { video.pause(); video.muted = true; } };
       document.addEventListener('fullscreenchange', resetFS);
       document.addEventListener('webkitfullscreenchange', resetFS);
       list.appendChild(vWrap);
+      observer.observe(vWrap);
     }
   };
 
@@ -221,30 +259,45 @@ footer { padding-top: 20px; padding-bottom: 60px; }
     `;
     initVideos();
     updateClockAndStats();
+    
     const genObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
     document.querySelectorAll(".z1:not(.v-wrap)").forEach(el => genObs.observe(el));
   };
 
+  // Optimized Scroll Handling using requestAnimationFrame to prevent lag
+  let ticking = false;
   window.addEventListener("scroll", () => {
-    const scrollPos = window.scrollY;
-    const nav = document.getElementById("n0");
-    const hint = document.getElementById("sd");
-    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    if (hint) { hint.style.opacity = scrollPos > 20 ? "0" : "1"; }
-    const spans = document.querySelectorAll(".hi");
-    const cy = window.innerHeight * 0.5;
-    let act = null; let min = Infinity;
-    spans.forEach(s => {
-      const r = s.getBoundingClientRect();
-      const d = Math.abs((r.top + r.height/2) - cy);
-      if (d < min) { min = d; act = s; }
-    });
-    spans.forEach(s => {
-      if (s === act && min < window.innerHeight * 0.4) s.classList.add("active");
-      else s.classList.remove("active");
-    });
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrollPos = window.scrollY;
+        const nav = document.getElementById("n0");
+        const hint = document.getElementById("sd");
+        
+        scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
+        if (hint) { hint.style.opacity = scrollPos > 20 ? "0" : "1"; }
+        
+        const spans = document.querySelectorAll(".hi");
+        const cy = window.innerHeight * 0.5;
+        let act = null; 
+        let min = Infinity;
+        
+        spans.forEach(s => {
+          const r = s.getBoundingClientRect();
+          const d = Math.abs((r.top + r.height/2) - cy);
+          if (d < min) { min = d; act = s; }
+        });
+        
+        spans.forEach(s => {
+          if (s === act && min < window.innerHeight * 0.3) s.classList.add("active");
+          else s.classList.remove("active");
+        });
+        
+        ticking = false;
+      });
+      ticking = true;
+    }
   }, { passive: true });
 
   window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
