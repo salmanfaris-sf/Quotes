@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +44,15 @@ body { margin: 0; color: #d1d1d1; }
 }
 .z1.za { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-.zi { text-indent: 8rem; }
+/* Text Flow Fix: Continuous paragraph instead of block-per-sentence */
+.quote-container { 
+  display: block;
+  width: 100%;
+  text-align: left;
+  line-height: 1.1;
+}
+
+.zi { text-indent: 6rem; }
 @media(max-width:768px){ .zi { text-indent: 0; } }
 
 .zs1 { font-size: 11px; letter-spacing: .8em; text-transform: uppercase; font-family: Inter, sans-serif; opacity: 0.4; color: #fff; }
@@ -56,12 +63,12 @@ body { margin: 0; color: #d1d1d1; }
 .zf { animation: flash 2s ease-in-out infinite; }
 #sd { transition: opacity 0.5s ease, visibility 0.5s; }
 
-/* Fixed Highlighting - Glow Removed */
 .hi { 
   transition: color 0.6s ease, opacity 0.6s ease; 
   opacity: 0.12; 
   color: #B8B8B0; 
   display: inline; 
+  white-space: normal; /* Ensures text wraps naturally */
 }
 .hi.active { opacity: 1 !important; color: #fff !important; }
 
@@ -69,7 +76,7 @@ body { margin: 0; color: #d1d1d1; }
 .v-grid { 
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: 24px;
   padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
@@ -79,54 +86,54 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap { 
   aspect-ratio: 16/9; 
   position: relative; 
-  background: #000000; /* Pure Black */
+  background: #000000;
   overflow: hidden; 
   cursor: pointer;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
   border-radius: 4px; 
-  border: 1px solid rgba(255,255,255,0.08); /* Subtle edge to see box */
+  border: 1px solid rgba(255,255,255,0.1); 
 }
-.v-wrap:hover { transform: scale(1.01); border-color: rgba(197,160,89,0.4); }
+.v-wrap:hover { transform: scale(1.02); border-color: rgba(197,160,89,0.5); }
 
 .v-play-btn {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 44px; height: 44px; 
+  width: 48px; height: 48px; 
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(10px); 
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   z-index: 10;
-  transition: all 0.3s ease;
 }
-.v-wrap:hover .v-play-btn { background: #C5A059; transform: translate(-50%, -50%) scale(1.1); }
-.v-play-btn svg { fill: #fff; width: 12px; height: 12px; transform: translateX(1px); }
+.v-wrap:hover .v-play-btn { background: #C5A059; }
+.v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); }
 .v-wrap:hover .v-play-btn svg { fill: #000; }
 
 .v-label {
-    position: absolute; bottom: 16px; left: 20px;
+    position: absolute; bottom: 14px; left: 16px;
     font-family: 'Inter', sans-serif; font-size: 8px;
     letter-spacing: 0.3em; color: white; opacity: 0.2;
 }
 
-/* Fullscreen Overlay */
+/* Smooth Video Transition */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.4s ease;
+    opacity: 0; transform: scale(0.95);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-#fs-overlay.active { display: flex; opacity: 1; }
+#fs-overlay.active { display: flex; opacity: 1; transform: scale(1); }
 #fs-video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 
 video::-webkit-media-controls { display:none !important; }
 
-/* Quote Spacing & Text Flow Fix */
-.quote-wrapper { padding-top: 140px; padding-bottom: 12px; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: 13px; color: #ffffff; opacity: 0.7; margin: 0; font-weight: 400; letter-spacing: 0.02em; }
-.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.3; margin-top: 6px; letter-spacing: 0.02em; }
+/* Footer & Quote Spacing */
+.quote-wrapper { padding-top: 100px; padding-bottom: 12px; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: 13px; color: #ffffff; opacity: 0.6; margin: 0; font-weight: 400; }
+.quote-stats { font-family: 'Inter', sans-serif; font-size: 11px; color: #ffffff; opacity: 0.25; margin-top: 6px; }
 
-footer { padding-top: 8px; padding-bottom: 60px; }
+footer { padding-top: 4px; padding-bottom: 40px; }
 
-/* Fix width of quote containers to allow text to fill the line */
-#m0 > div { max-width: 90%; margin-left: auto; margin-right: auto; }
+/* Quote width fix */
+#m0 > div { max-width: 100%; }
 </style>
 </head>
 <body>
@@ -137,7 +144,7 @@ footer { padding-top: 8px; padding-bottom: 60px; }
 </nav>
 
 <div id="fs-overlay">
-    <video id="fs-video" playsinline loop></video>
+    <video id="fs-video" playsinline loop preload="auto"></video>
 </div>
 
 <main class="relative w-full">
@@ -168,14 +175,14 @@ footer { padding-top: 8px; padding-bottom: 60px; }
 </main>
 
 <footer class="w-full flex justify-center px-6 relative z-10 z1">
-  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-20">BY SALMAN FARIS</div>
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-15">BY SALMAN FARIS</div>
 </footer>
 
 <script>
 (function(){
   const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
   const content = [
-    ["You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.", "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.", "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."]
+    ["You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan. Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall. Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."]
   ];
 
   const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span> `).join("");
@@ -200,8 +207,15 @@ footer { padding-top: 8px; padding-bottom: 60px; }
 
     const openFS = (src) => {
         fsVideo.src = src;
-        fsOverlay.classList.add('active');
-        fsVideo.play().catch(e => {});
+        fsOverlay.style.display = 'flex';
+        // Small delay to trigger CSS transition
+        setTimeout(() => {
+            fsOverlay.classList.add('active');
+            fsVideo.play().catch(() => {});
+            // Mobile Native Fullscreen Request
+            if (fsVideo.requestFullscreen) fsVideo.requestFullscreen();
+            else if (fsVideo.webkitRequestFullscreen) fsVideo.webkitRequestFullscreen();
+        }, 10);
         document.body.style.overflow = 'hidden';
         window.history.pushState({ fullscreen: true }, "");
     };
@@ -209,7 +223,11 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     const closeFS = () => {
         fsOverlay.classList.remove('active');
         fsVideo.pause();
-        fsVideo.src = "";
+        if (document.fullscreenElement) document.exitFullscreen();
+        setTimeout(() => {
+            fsOverlay.style.display = 'none';
+            fsVideo.src = "";
+        }, 500);
         document.body.style.overflow = '';
     };
 
@@ -246,11 +264,14 @@ footer { padding-top: 8px; padding-bottom: 60px; }
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themeName}</span>`;
     
     const setIdx = dayOfYear % content.length;
+    // Format: All text in a single block for better space filling
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.15] zi">${wrapWords(content[setIdx][0])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.15]">${wrapWords(content[setIdx][1])}</p></div>
-      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.15] zi">${wrapWords(content[setIdx][2])}</p></div>
+      <div class="z1 quote-container">
+        <p class="font-f1 text-5xl md:text-8xl leading-[1.2] zi">${wrapWords(content[setIdx][0])}</p>
+      </div>
+      <div class="py-24 text-center z1">
+        <h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themeName.toUpperCase()}.</h2>
+      </div>
     `;
     
     initVideos();
@@ -288,5 +309,3 @@ footer { padding-top: 8px; padding-bottom: 60px; }
 </script>
 </body>
 </html>
-
-```
