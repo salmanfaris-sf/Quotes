@@ -90,7 +90,7 @@ body { margin: 0; color: #d1d1d1; }
 .v-wrap video { 
     width: 100%; height: 100%; object-fit: cover; display: block; 
     pointer-events: none; opacity: 0.7; transition: opacity 0.4s ease;
-    transform: translateZ(0); /* Hardware acceleration hint */
+    transform: translateZ(0);
 }
 .v-wrap:hover video { opacity: 1; }
 
@@ -105,11 +105,11 @@ body { margin: 0; color: #d1d1d1; }
 }
 .v-play-btn svg { fill: #fff; width: 14px; height: 14px; transform: translateX(1px); }
 
-/* Fullscreen Overlay - No Close Button */
+/* Fullscreen Overlay */
 #fs-overlay {
     position: fixed; inset: 0; background: #000; z-index: 1000;
     display: none; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.3s ease;
+    opacity: 0; transition: opacity 0.2s ease;
 }
 #fs-overlay.active { display: flex; opacity: 1; }
 #fs-video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
@@ -139,7 +139,7 @@ footer { padding-bottom: 60px; }
 </nav>
 
 <div id="fs-overlay">
-    <video id="fs-video" playsinline preload="auto"></video>
+    <video id="fs-video" playsinline></video>
 </div>
 
 <main class="relative w-full">
@@ -201,8 +201,11 @@ footer { padding-bottom: 60px; }
     const openFS = (src) => {
         fsVideo.src = src;
         fsOverlay.classList.add('active');
-        fsVideo.load(); // Reload to ensure buffer is fresh
-        fsVideo.play().catch(e => console.log("Play interrupted"));
+        // Force the video to be ready since it was preloaded
+        fsVideo.play().catch(e => {
+            console.log("Auto-play failed, waiting for user interaction");
+            // If play fails, usually we just show the overlay and wait for another tap on the video itself
+        });
         document.body.style.overflow = 'hidden';
     };
 
@@ -222,31 +225,23 @@ footer { padding-bottom: 60px; }
     fsOverlay.addEventListener('click', closeFS);
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { 
-          if (entry.isIntersecting) {
-              entry.target.classList.add("za");
-              // Hint the video to start loading slightly as it nears view
-              const v = entry.target.querySelector('video');
-              if (v) v.preload = "metadata";
-          }
-      });
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.1 });
 
-    // Mock video generation
+    // Preload strategy: Set preload="auto" immediately for initial content
     for(let i=1; i<=12; i++) {
       const vWrap = document.createElement('div');
       vWrap.className = 'v-wrap z1';
       vWrap.innerHTML = `
         <div class="v-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg></div>
-        <video preload="none" playsinline muted loop>
+        <video preload="auto" playsinline muted loop>
           <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
         </video>
       `;
       
       const video = vWrap.querySelector('video');
       video.onloadedmetadata = () => { observer.observe(vWrap); };
-      video.onerror = () => { vWrap.style.display = 'none'; };
-
+      
       vWrap.addEventListener('click', () => {
         const source = vWrap.querySelector('source').src;
         openFS(source);
