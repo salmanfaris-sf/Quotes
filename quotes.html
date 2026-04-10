@@ -235,10 +235,6 @@
     let longPressed = false;
     const AUTOPLAY_DURATION = 5000; 
 
-    // Fullscreen/Swipe State
-    let touchStartY = 0;
-    const swipeThreshold = 50;
-
     function getLiveStats() {
         const now = new Date();
         let hours = now.getHours();
@@ -268,23 +264,6 @@
         setTimeout(() => {
             notification.classList.remove('show');
         }, 1800);
-    }
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            const docEl = document.documentElement;
-            const request = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-            if (request) {
-                request.call(docEl).catch(err => {
-                    console.log(`Error: ${err.message}`);
-                });
-            }
-        } else {
-            const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-            if (exit) {
-                exit.call(document);
-            }
-        }
     }
 
     function updateDisplay() {
@@ -337,8 +316,7 @@
         }
     }
 
-    function startPressTimer(yCoord) {
-        touchStartY = yCoord;
+    function startPressTimer() {
         longPressed = false;
         pressTimer = setTimeout(() => {
             longPressed = true;
@@ -347,18 +325,10 @@
         }, 600); 
     }
 
-    function endPressTimer(yCoord) {
+    function endPressTimer() {
         if (pressTimer) {
             clearTimeout(pressTimer);
             pressTimer = null;
-        }
-        
-        const deltaY = yCoord - touchStartY;
-
-        // Swipe UP (Negative delta)
-        if (deltaY < -swipeThreshold) {
-            toggleFullscreen();
-            longPressed = true;
         }
 
         if (!longPressed && !autoplayActive) {
@@ -391,22 +361,21 @@
     // Desktop Events
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
-        startPressTimer(e.clientY);
+        startPressTimer();
     });
     document.addEventListener('mouseup', (e) => {
-        endPressTimer(e.clientY);
+        endPressTimer();
     });
 
     // Mobile Events
     document.addEventListener('touchstart', (e) => {
-        startPressTimer(e.touches[0].clientY);
+        startPressTimer();
     }, { passive: true });
     document.addEventListener('touchend', (e) => {
-        endPressTimer(e.changedTouches[0].clientY);
+        endPressTimer();
     }, { passive: true });
 
 })();
 </script>
 </body>
 </html>
-
