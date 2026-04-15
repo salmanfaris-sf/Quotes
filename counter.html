@@ -538,15 +538,14 @@
                 e.stopPropagation();
                 if (lk) return;
                 const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
-                // Logic: Only proceed if 'r' is not null (User clicked OK)
                 if (r !== null) {
                     const n = parseInt(r);
                     if (!isNaN(n) && n >= 0) {
                         gl = n;
                         if (gl > 0) {
-                            // Reset counter only on valid OK click with positive goal
+                            // Reset counter to 0 when a goal is set
                             v = 0;
-                            _z(`goal set to ${gl} (count reset)`, 2000);
+                            _z(`goal set to ${gl} (counter reset)`, 2000);
                         } else {
                             _z('goal removed', 2000);
                         }
@@ -647,4 +646,3 @@
     </script>
 </body>
 </html>
-
