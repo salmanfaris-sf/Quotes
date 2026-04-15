@@ -543,9 +543,8 @@
                     if (!isNaN(n) && n >= 0) {
                         gl = n;
                         if (gl > 0) {
-                            // Reset counter to 0 when a goal is set
                             v = 0;
-                            _z(`goal set to ${gl} (counter reset)`, 2000);
+                            _z(`goal set to ${gl}`, 2000);
                         } else {
                             _z('goal removed', 2000);
                         }
