@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title> Powerful Quotes.</title>
+    <title>Powerful Quotes.</title>
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
@@ -39,6 +39,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* Main quotes stay centered */
             justify-content: center;
             padding: 0 20px;
             cursor: pointer;
@@ -63,7 +64,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform: translateY(-10px);
+            margin-bottom: 20px;
         }
 
         #g4x_txt {
@@ -82,7 +83,12 @@
             margin-bottom: 4px;
         }
 
+        /* Fixed hint at the bottom */
         .tap-hint {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 10px;
             color: #444;
             transition: opacity 0.8s ease;
@@ -90,11 +96,9 @@
             letter-spacing: 0.2em;
             text-transform: uppercase;
             pointer-events: none;
-            min-height: 1.2em;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 10px;
         }
 
         .hidden-hint {
@@ -111,7 +115,6 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
             padding: 6px 14px;
             border-radius: 16px;
             font-size: 10px;
@@ -122,7 +125,6 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             z-index: 100;
-            border: none;
         }
 
         #notification.show {
@@ -133,13 +135,16 @@
 </head>
 <body>
 
-    <div id="notification">Autoplay On</div>
+    <div id="notification">AUTOPLAY ON</div>
 
+    <!-- Centered Quotes -->
     <div class="container fade-entrance" id="main_content">
         <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
         <div id="live_info" class="opacity-0"></div>
-        <div id="hint" class="tap-hint opacity-0">TAP ANYWHERE TO VIEW NEXT QUOTE</div>
     </div>
+
+    <!-- Bottom Hint -->
+    <div id="hint" class="tap-hint opacity-0">TAP ANYWHERE TO VIEW NEXT QUOTE</div>
 
 <script>
 (function(){
@@ -297,7 +302,7 @@
             if (nextQuote.id === "time_quote") {
                 const updateUI = () => {
                     const stats = getLiveStats();
-                    infoDisplay.innerHTML = `Time: ${stats.time} • ${stats.left} minutes remaining today`;
+                    infoDisplay.innerHTML = `TIME: ${stats.time} • ${stats.left} MINUTES REMAINING TODAY`;
                 };
                 updateUI();
                 infoDisplay.classList.remove('opacity-0');
@@ -312,11 +317,11 @@
     function toggleAutoplay() {
         autoplayActive = !autoplayActive;
         if (autoplayActive) {
-            showNotification("Autoplay On");
+            showNotification("AUTOPLAY ON");
             if (autoplayInterval) clearInterval(autoplayInterval);
             autoplayInterval = setInterval(updateDisplay, AUTOPLAY_DURATION);
         } else {
-            showNotification("Autoplay Off");
+            showNotification("AUTOPLAY OFF");
             if (autoplayInterval) clearInterval(autoplayInterval);
         }
     }
@@ -349,7 +354,7 @@
         
         if (initial.id === "time_quote") {
             const stats = getLiveStats();
-            infoDisplay.innerHTML = `Time: ${stats.time} • ${stats.left} minutes remaining today`;
+            infoDisplay.innerHTML = `TIME: ${stats.time} • ${stats.left} MINUTES REMAINING TODAY`;
             infoDisplay.classList.remove('opacity-0');
         }
 
@@ -363,7 +368,6 @@
         });
     };
 
-    // Desktop Events
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         startPressTimer();
@@ -372,7 +376,6 @@
         endPressTimer();
     });
 
-    // Mobile Events
     document.addEventListener('touchstart', (e) => {
         startPressTimer();
     }, { passive: true });
