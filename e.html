@@ -89,7 +89,7 @@
             transform: translateX(-50%);
             font-size: 9px;
             color: #666;
-            transition: opacity 0.8s ease;
+            transition: opacity 2.5s ease;
             white-space: nowrap;
             letter-spacing: 0.25em;
             text-transform: uppercase;
@@ -97,6 +97,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10;
         }
 
         ._h_d {
@@ -270,18 +271,20 @@
 
     function _up() {
         if (_p.length === 0) _rp();
+        if (_f) {
+            _f = false;
+            _ha.classList.add('_h_d');
+        }
 
         const nq = _p.pop();
         _qx.style.opacity = '0';
         _st.classList.add('opacity-0');
         
-        if (_f) _ha.classList.add('_h_d');
         if (_l_i) clearInterval(_l_i);
 
         setTimeout(() => {
             _qx.innerText = nq.t;
             _qx.style.opacity = '1';
-            _f = false;
 
             if (nq.id === "t_q") {
                 const ux = () => {
