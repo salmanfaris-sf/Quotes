@@ -39,23 +39,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Main quotes stay centered */
             justify-content: center;
             padding: 0 20px;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .fade-entrance {
+        ._f1 {
             opacity: 0;
             transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .fade-entrance.visible {
+        ._f1.v {
             opacity: 1;
         }
 
-        .container {
+        ._c1 {
             max-width: 600px;
             width: 100%;
             text-align: center;
@@ -67,13 +66,13 @@
             margin-bottom: 20px;
         }
 
-        #g4x_txt {
+        #_q_ {
             transition: opacity 0.5s ease;
             white-space: pre-wrap;
             margin-bottom: 8px; 
         }
 
-        #live_info {
+        #_st_ {
             font-size: 13px;
             color: #777;
             font-weight: 300;
@@ -83,14 +82,13 @@
             margin-bottom: 4px;
         }
 
-        /* Fixed hint at the bottom */
-        .tap-hint {
+        ._h_t {
             position: fixed;
-            bottom: 40px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 10px;
-            color: #444;
+            color: #666;
             transition: opacity 0.8s ease;
             white-space: nowrap;
             letter-spacing: 0.2em;
@@ -101,12 +99,12 @@
             justify-content: center;
         }
 
-        .hidden-hint {
+        ._h_d {
             opacity: 0 !important;
             pointer-events: none;
         }
 
-        #notification {
+        #_nt_ {
             position: fixed;
             top: 40px;
             left: 50%;
@@ -127,7 +125,7 @@
             z-index: 100;
         }
 
-        #notification.show {
+        #_nt_.s {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
@@ -135,20 +133,18 @@
 </head>
 <body>
 
-    <div id="notification">AUTOPLAY ON</div>
+    <div id="_nt_">AUTOPLAY ON</div>
 
-    <!-- Centered Quotes -->
-    <div class="container fade-entrance" id="main_content">
-        <h1 id="g4x_txt" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
-        <div id="live_info" class="opacity-0"></div>
+    <div class="_c1 _f1" id="_mc_">
+        <h1 id="_q_" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
+        <div id="_st_" class="opacity-0"></div>
     </div>
 
-    <!-- Bottom Hint -->
-    <div id="hint" class="tap-hint opacity-0">TAP ANYWHERE TO VIEW NEXT QUOTE</div>
+    <div id="_hi_" class="_h_t opacity-0">TAP ANYWHERE TO VIEW NEXT QUOTE</div>
 
 <script>
 (function(){
-    const quotes = [
+    const _db = [
         { t: "Be better than you were yesterday." },
         { t: "So race one another in good deeds.\n(Qur'an 2:148)" },
         { t: "Don't waste time. You don't get it back." },
@@ -161,7 +157,7 @@
         { t: "Do it even when you don't feel like it." },
         { t: "Nothing changes if nothing changes." },
         { t: "Stay different." },
-        { t: "You only have 1,440 minutes every day, don’t let a single one go to waste.", id: "time_quote" },
+        { t: "You only have 1,440 minutes every day, don’t let a single one go to waste.", id: "t_q" },
         { t: "You can't have a million-dollar dream with a minimum-wage work ethic." },
         { t: "A real man protects and provides." },
         { t: "Don't follow the crowd. Follow the truth." },
@@ -230,158 +226,134 @@
         { t: "Pressure reveals the man within."}
     ];
 
-    const display = document.getElementById('g4x_txt');
-    const hintArea = document.getElementById('hint');
-    const infoDisplay = document.getElementById('live_info');
-    const mainContent = document.getElementById('main_content');
-    const notification = document.getElementById('notification');
+    const _qx = document.getElementById('_q_');
+    const _ha = document.getElementById('_hi_');
+    const _st = document.getElementById('_st_');
+    const _mc = document.getElementById('_mc_');
+    const _nt = document.getElementById('_nt_');
     
-    let firstInteraction = true;
-    let quotePool = [];
-    let liveInterval = null;
-    let autoplayActive = false;
-    let autoplayInterval = null;
-    let pressTimer = null;
-    let longPressed = false;
-    const AUTOPLAY_DURATION = 5000; 
+    let _f = true;
+    let _p = [];
+    let _l_i = null;
+    let _ap = false;
+    let _ti = null;
+    let _pt = null;
+    let _lp = false;
+    const _dur = 5000; 
 
-    function getLiveStats() {
-        const now = new Date();
-        let hours = now.getHours();
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        const timeStr = `${hours}:${minutes} ${ampm}`;
-        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-        const diff = endOfDay - now;
-        const minsLeft = Math.floor(diff / 1000 / 60);
-        return { time: timeStr, left: minsLeft };
+    function _gs() {
+        const n = new Date();
+        let h = n.getHours();
+        const m = n.getMinutes().toString().padStart(2, '0');
+        const a = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
+        const d = e - n;
+        const ml = Math.floor(d / 60000);
+        return { t: `${h}:${m} ${a}`, l: ml };
     }
 
-    function refreshPool() {
-        const lastQuoteText = display.innerText;
-        quotePool = [...quotes].sort(() => Math.random() - 0.5);
-        if (quotePool.length > 1 && quotePool[quotePool.length - 1].t === lastQuoteText) {
-             const sameOne = quotePool.pop();
-             quotePool.unshift(sameOne);
+    function _rp() {
+        const lx = _qx.innerText;
+        _p = [..._db].sort(() => Math.random() - 0.5);
+        if (_p.length > 1 && _p[_p.length - 1].t === lx) {
+             const s = _p.pop();
+             _p.unshift(s);
         }
     }
 
-    function showNotification(text) {
-        notification.innerText = text;
-        notification.classList.add('show');
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 1800);
+    function _sn(msg) {
+        _nt.innerText = msg;
+        _nt.classList.add('s');
+        setTimeout(() => _nt.classList.remove('s'), 1800);
     }
 
-    function updateDisplay() {
-        if (quotePool.length === 0) {
-            refreshPool();
-        }
+    function _up() {
+        if (_p.length === 0) _rp();
 
-        const nextQuote = quotePool.pop();
-        display.style.opacity = '0';
-        infoDisplay.classList.add('opacity-0');
+        const nq = _p.pop();
+        _qx.style.opacity = '0';
+        _st.classList.add('opacity-0');
         
-        if (firstInteraction) {
-            hintArea.classList.add('hidden-hint');
-        }
-        
-        if (liveInterval) {
-            clearInterval(liveInterval);
-            liveInterval = null;
-        }
+        if (_f) _ha.classList.add('_h_d');
+        if (_l_i) clearInterval(_l_i);
 
         setTimeout(() => {
-            display.innerText = nextQuote.t;
-            display.style.opacity = '1';
-            firstInteraction = false;
+            _qx.innerText = nq.t;
+            _qx.style.opacity = '1';
+            _f = false;
 
-            if (nextQuote.id === "time_quote") {
-                const updateUI = () => {
-                    const stats = getLiveStats();
-                    infoDisplay.innerHTML = `TIME: ${stats.time} • ${stats.left} MINUTES REMAINING TODAY`;
+            if (nq.id === "t_q") {
+                const ux = () => {
+                    const s = _gs();
+                    _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
                 };
-                updateUI();
-                infoDisplay.classList.remove('opacity-0');
-                liveInterval = setInterval(updateUI, 30000);
+                ux();
+                _st.classList.remove('opacity-0');
+                _l_i = setInterval(ux, 30000);
             } else {
-                infoDisplay.innerHTML = "";
-                infoDisplay.classList.add('opacity-0');
+                _st.innerHTML = "";
+                _st.classList.add('opacity-0');
             }
         }, 300);
     }
 
-    function toggleAutoplay() {
-        autoplayActive = !autoplayActive;
-        if (autoplayActive) {
-            showNotification("AUTOPLAY ON");
-            if (autoplayInterval) clearInterval(autoplayInterval);
-            autoplayInterval = setInterval(updateDisplay, AUTOPLAY_DURATION);
+    function _ta() {
+        _ap = !_ap;
+        if (_ap) {
+            _sn("AUTOPLAY ON");
+            if (_ti) clearInterval(_ti);
+            _ti = setInterval(_up, _dur);
         } else {
-            showNotification("AUTOPLAY OFF");
-            if (autoplayInterval) clearInterval(autoplayInterval);
+            _sn("AUTOPLAY OFF");
+            if (_ti) clearInterval(_ti);
         }
     }
 
-    function startPressTimer() {
-        longPressed = false;
-        pressTimer = setTimeout(() => {
-            longPressed = true;
-            toggleAutoplay();
-            pressTimer = null;
+    function _sp() {
+        _lp = false;
+        _pt = setTimeout(() => {
+            _lp = true;
+            _ta();
+            _pt = null;
         }, 600); 
     }
 
-    function endPressTimer() {
-        if (pressTimer) {
-            clearTimeout(pressTimer);
-            pressTimer = null;
+    function _ep() {
+        if (_pt) {
+            clearTimeout(_pt);
+            _pt = null;
         }
-
-        if (!longPressed && !autoplayActive) {
-            updateDisplay();
-        }
-        longPressed = false;
+        if (!_lp && !_ap) _up();
+        _lp = false;
     }
 
     window.onload = () => {
-        refreshPool();
-        const initial = quotePool.pop();
-        display.innerText = initial.t;
+        _rp();
+        const i = _p.pop();
+        _qx.innerText = i.t;
         
-        if (initial.id === "time_quote") {
-            const stats = getLiveStats();
-            infoDisplay.innerHTML = `TIME: ${stats.time} • ${stats.left} MINUTES REMAINING TODAY`;
-            infoDisplay.classList.remove('opacity-0');
+        if (i.id === "t_q") {
+            const s = _gs();
+            _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
+            _st.classList.remove('opacity-0');
         }
 
         requestAnimationFrame(() => {
-            mainContent.classList.add('visible');
+            _mc.classList.add('v');
             setTimeout(() => {
-                if (firstInteraction) {
-                    hintArea.classList.remove('opacity-0');
-                }
+                if (_f) _ha.classList.remove('opacity-0');
             }, 1000);
         });
     };
 
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
-        startPressTimer();
+        _sp();
     });
-    document.addEventListener('mouseup', (e) => {
-        endPressTimer();
-    });
-
-    document.addEventListener('touchstart', (e) => {
-        startPressTimer();
-    }, { passive: true });
-    document.addEventListener('touchend', (e) => {
-        endPressTimer();
-    }, { passive: true });
+    document.addEventListener('mouseup', () => _ep());
+    document.addEventListener('touchstart', () => _sp(), { passive: true });
+    document.addEventListener('touchend', () => _ep(), { passive: true });
 
 })();
 </script>
