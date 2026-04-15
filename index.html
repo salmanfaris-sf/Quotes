@@ -76,7 +76,7 @@
             font-size: 13px;
             color: #777;
             font-weight: 300;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.02em;
             transition: opacity 0.5s ease;
             line-height: 1.6;
             margin-bottom: 4px;
@@ -245,7 +245,7 @@
         const n = new Date();
         let h = n.getHours();
         const m = n.getMinutes().toString().padStart(2, '0');
-        const a = h >= 12 ? 'PM' : 'AM';
+        const a = h >= 12 ? 'pm' : 'am';
         h = h % 12 || 12;
         const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
         const d = e - n;
@@ -286,7 +286,7 @@
             if (nq.id === "t_q") {
                 const ux = () => {
                     const s = _gs();
-                    _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
+                    _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                 };
                 ux();
                 _st.classList.remove('opacity-0');
@@ -335,7 +335,7 @@
         
         if (i.id === "t_q") {
             const s = _gs();
-            _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
+            _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
             _st.classList.remove('opacity-0');
         }
 
