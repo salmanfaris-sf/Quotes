@@ -115,7 +115,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Full Screen Solid Pure Black Menu Overlay (Slow, smooth, eased transition) */
         #_grey_screen_ {
             position: fixed;
             inset: 0;
@@ -123,11 +122,12 @@
             z-index: 50;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: flex-start;
+            padding-top: 80px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.65s cubic-bezier(0.25, 1, 0.33, 1);
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         #_grey_screen_.visible {
@@ -135,17 +135,15 @@
             pointer-events: auto;
         }
 
-        /* Menu layout aligned perfectly to the left */
         .apple-menu-container {
             width: 100%;
             max-width: 320px;
             display: flex;
             flex-direction: column;
-            gap: 28px;
-            padding-left: 12%; 
+            gap: 24px;
+            padding-left: 10%;
         }
 
-        /* Pure Bold White Menu Buttons */
         .menu-opt-bold {
             font-size: 28px;
             font-weight: 700;
@@ -158,8 +156,8 @@
             width: fit-content;
             cursor: pointer;
             opacity: 0;
-            transform: translateY(4px); 
-            transition: opacity 0.75s cubic-bezier(0.25, 1, 0.33, 1), transform 0.75s cubic-bezier(0.25, 1, 0.33, 1);
+            transform: translateY(2px);
+            transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1), transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             text-transform: none;
         }
 
@@ -168,11 +166,10 @@
             transform: translateY(0);
         }
 
-        /* Smooth staggered animation delays for gradual appearance */
-        #_grey_screen_ .menu-opt-bold:nth-child(1) { transition-delay: 0.12s; }
-        #_grey_screen_ .menu-opt-bold:nth-child(2) { transition-delay: 0.22s; }
-        #_grey_screen_ .menu-opt-bold:nth-child(3) { transition-delay: 0.32s; }
-        #_grey_screen_ .menu-opt-bold:nth-child(4) { transition-delay: 0.42s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(1) { transition-delay: 0.02s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(2) { transition-delay: 0.05s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(3) { transition-delay: 0.08s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(4) { transition-delay: 0.11s; }
 
         .menu-opt-bold:active {
             transform: scale(0.97);
@@ -188,7 +185,6 @@
         <div id="_st_" class="opacity-0"></div>
     </div>
 
-    <!-- Apple-inspired Full Screen Left-aligned Pure Black Menu Overlay -->
     <div id="_grey_screen_">
         <div class="apple-menu-container">
             <button id="_m_fs_" class="menu-opt-bold">Full screen</button>
@@ -305,7 +301,6 @@
     let _seqIndex = 0;
     const _dur = 5000; 
 
-    // Touch positions
     let _sx = 0;
     let _sy = 0;
 
@@ -337,10 +332,7 @@
     }
 
     function _up() {
-        if (_locked) {
-            _sn("Locked • Long press to unlock");
-            return;
-        }
+        if (_locked) return;
 
         let nq;
         if (_shuffle) {
@@ -377,53 +369,18 @@
 
     function _toggleLock() {
         _locked = !_locked;
-        if (_locked) {
-            _sn("Locked");
-            if (_ap) _setAutoplay(false);
-        } else {
-            _sn("Unlocked");
-        }
+        _sn(_locked ? "Quote locked" : "Quote unlocked");
     }
 
     function _setAutoplay(val) {
         _ap = val;
+        _sn(_ap ? "Autoplay on" : "Autoplay off");
         if (_ap) {
-            _sn("Autoplay on");
             if (_ti) clearInterval(_ti);
             _ti = setInterval(_up, _dur);
-            if (_locked) {
-                _locked = false;
-            }
+            _locked = false;
         } else {
-            _sn("Autoplay off");
             if (_ti) clearInterval(_ti);
-        }
-    }
-
-    function _toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().then(() => {
-                _sn("Full screen on");
-            }).catch(err => {
-                console.warn(err);
-            });
-        } else {
-            document.exitFullscreen().then(() => {
-                _sn("Full screen off");
-            });
-        }
-    }
-
-    function _toggleShuffle(val) {
-        _shuffle = val; 
-        if (!_shuffle) {
-            _sn("Sequential mode on");
-            const curTxt = _qx.innerText;
-            const idx = _db.findIndex(item => item.t === curTxt);
-            _seqIndex = idx !== -1 ? (idx + 1) % _db.length : 0;
-        } else {
-            _sn("Shuffle mode on");
-            _rp();
         }
     }
 
@@ -437,16 +394,9 @@
         _menuVisible = false;
     }
 
-    // Long press logic
     function _sp(e) {
-        if (e && e.target && _greyScreen.contains(e.target)) {
-            return;
-        }
-        
-        // Disable locking mechanism if Autoplay is currently running
-        if (_ap) {
-            return;
-        }
+        if (e && e.target && _greyScreen.contains(e.target)) return;
+        if (_ap) return; // Completely ignore long press if autoplay is active
 
         _lp = false;
         _pt = setTimeout(() => {
@@ -457,19 +407,14 @@
     }
 
     function _ep(e) {
-        if (e && e.target && _greyScreen.contains(e.target)) {
-            return;
-        }
+        if (e && e.target && _greyScreen.contains(e.target)) return;
         if (_pt) {
             clearTimeout(_pt);
             _pt = null;
         }
         if (!_lp) {
-            if (_menuVisible) {
-                _hideMenu();
-            } else {
-                _up();
-            }
+            if (_menuVisible) _hideMenu();
+            else _up();
         }
         _lp = false;
     }
@@ -478,86 +423,34 @@
         _rp();
         const i = _p[Math.floor(Math.random() * _p.length)];
         _qx.innerText = i.t;
-        
         if (i.id === "t_q") {
             const s = _gs();
             _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
             _st.classList.remove('opacity-0');
         }
-
-        requestAnimationFrame(() => {
-            _mc.classList.add('v');
-        });
+        requestAnimationFrame(() => _mc.classList.add('v'));
     };
 
-    // Event Handlers
-    document.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        _sp(e);
-    });
+    document.addEventListener('mousedown', (e) => { if (e.button === 0) _sp(e); });
     document.addEventListener('mouseup', (e) => _ep(e));
-
-    document.addEventListener('touchstart', (e) => {
-        _sx = e.touches[0].screenX;
-        _sy = e.touches[0].screenY;
-        _sp(e);
-    }, { passive: true });
-
+    document.addEventListener('touchstart', (e) => { _sx = e.touches[0].screenX; _sy = e.touches[0].screenY; _sp(e); }, { passive: true });
     document.addEventListener('touchend', (e) => {
         const ex = e.changedTouches[0].screenX;
         const ey = e.changedTouches[0].screenY;
-        
         const dx = _sx - ex;
         const dy = _sy - ey;
-
         if (Math.abs(dy) > Math.abs(dx)) {
-            if (dy < -50) {
-                // Swipe Down shows Menu
-                if (_pt) clearTimeout(_pt);
-                _showMenu();
-                _lp = true;
-            } else if (dy > 50 && _menuVisible) {
-                // Swipe Up hides Menu
-                if (_pt) clearTimeout(_pt);
-                _hideMenu();
-                _lp = true;
-            }
+            if (dy < -50) { if (_pt) clearTimeout(_pt); _showMenu(); _lp = true; }
+            else if (dy > 50 && _menuVisible) { if (_pt) clearTimeout(_pt); _hideMenu(); _lp = true; }
         }
-
         _ep(e);
     }, { passive: true });
 
-    // Menu Item Actions
-    _mFS.addEventListener('click', (e) => {
-        e.stopPropagation();
-        _toggleFullscreen();
-        _hideMenu();
-    });
-
-    _mAP.addEventListener('click', (e) => {
-        e.stopPropagation();
-        _setAutoplay(!_ap);
-        _hideMenu();
-    });
-
-    _mSH.addEventListener('click', (e) => {
-        e.stopPropagation();
-        _toggleShuffle(!_shuffle);
-        _hideMenu();
-    });
-
-    _mLK.addEventListener('click', (e) => {
-        e.stopPropagation();
-        _toggleLock();
-        _hideMenu();
-    });
-
-    _greyScreen.addEventListener('click', (e) => {
-        if (e.target === _greyScreen) {
-            _hideMenu();
-        }
-    });
-
+    _mFS.addEventListener('click', (e) => { e.stopPropagation(); document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); _hideMenu(); });
+    _mAP.addEventListener('click', (e) => { e.stopPropagation(); _setAutoplay(!_ap); _hideMenu(); });
+    _mSH.addEventListener('click', (e) => { e.stopPropagation(); _shuffle = !_shuffle; _sn(_shuffle ? "Shuffle mode on" : "Sequential mode on"); if(_shuffle) _rp(); _hideMenu(); });
+    _mLK.addEventListener('click', (e) => { e.stopPropagation(); _toggleLock(); _hideMenu(); });
+    _greyScreen.addEventListener('click', (e) => { if (e.target === _greyScreen) _hideMenu(); });
 })();
 </script>
 </body>
