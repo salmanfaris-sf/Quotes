@@ -115,11 +115,11 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Apple-Inspired Full Screen Solid Grey Menu Overlay */
+        /* Full Screen Solid Pure Black Menu Overlay (Smooth Appear/Disappear Fade) */
         #_grey_screen_ {
             position: fixed;
             inset: 0;
-            background: #1c1c1e; /* Pure flat solid grey background with no transparency */
+            background: #000000; /* Pure solid black background */
             z-index: 50;
             display: flex;
             flex-direction: column;
@@ -127,7 +127,7 @@
             align-items: flex-start;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         #_grey_screen_.visible {
@@ -150,25 +150,23 @@
             font-size: 28px;
             font-weight: 700;
             letter-spacing: -0.02em;
-            color: #ffffff; /* Always pure white */
+            color: #ffffff; 
             background: none;
             border: none;
             outline: none;
             text-align: left;
             width: fit-content;
             cursor: pointer;
-            transform: translateY(15px);
             opacity: 0;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             text-transform: none;
         }
 
         #_grey_screen_.visible .menu-opt-bold {
-            transform: translateY(0);
             opacity: 1;
         }
 
-        /* Apple Staggered Delays for 3 options */
+        /* Staggered animation delays for fade-in */
         #_grey_screen_ .menu-opt-bold:nth-child(1) { transition-delay: 0.04s; }
         #_grey_screen_ .menu-opt-bold:nth-child(2) { transition-delay: 0.08s; }
         #_grey_screen_ .menu-opt-bold:nth-child(3) { transition-delay: 0.12s; }
@@ -187,7 +185,7 @@
         <div id="_st_" class="opacity-0"></div>
     </div>
 
-    <!-- Apple-inspired Full Screen Left-aligned Solid Menu Overlay -->
+    <!-- Apple-inspired Full Screen Left-aligned Pure Black Menu Overlay -->
     <div id="_grey_screen_">
         <div class="apple-menu-container">
             <button id="_m_fs_" class="menu-opt-bold">Full screen</button>
@@ -439,6 +437,12 @@
         if (e && e.target && _greyScreen.contains(e.target)) {
             return;
         }
+        
+        // Disable locking mechanism if Autoplay is currently running
+        if (_ap) {
+            return;
+        }
+
         _lp = false;
         _pt = setTimeout(() => {
             _lp = true;
@@ -522,16 +526,19 @@
     _mFS.addEventListener('click', (e) => {
         e.stopPropagation();
         _toggleFullscreen();
+        _hideMenu();
     });
 
     _mAP.addEventListener('click', (e) => {
         e.stopPropagation();
         _setAutoplay(!_ap);
+        _hideMenu();
     });
 
     _mSH.addEventListener('click', (e) => {
         e.stopPropagation();
         _toggleShuffle(!_shuffle);
+        _hideMenu();
     });
 
     _greyScreen.addEventListener('click', (e) => {
