@@ -115,11 +115,11 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Full Screen Solid Pure Black Menu Overlay (Smooth Appear/Disappear Fade) */
+        /* Full Screen Solid Pure Black Menu Overlay (Slow, smooth, eased transition) */
         #_grey_screen_ {
             position: fixed;
             inset: 0;
-            background: #000000; /* Pure solid black background */
+            background: #000000; 
             z-index: 50;
             display: flex;
             flex-direction: column;
@@ -127,7 +127,7 @@
             align-items: flex-start;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.65s cubic-bezier(0.25, 1, 0.33, 1);
         }
 
         #_grey_screen_.visible {
@@ -158,18 +158,21 @@
             width: fit-content;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateY(4px); 
+            transition: opacity 0.75s cubic-bezier(0.25, 1, 0.33, 1), transform 0.75s cubic-bezier(0.25, 1, 0.33, 1);
             text-transform: none;
         }
 
         #_grey_screen_.visible .menu-opt-bold {
             opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Staggered animation delays for fade-in */
-        #_grey_screen_ .menu-opt-bold:nth-child(1) { transition-delay: 0.04s; }
-        #_grey_screen_ .menu-opt-bold:nth-child(2) { transition-delay: 0.08s; }
-        #_grey_screen_ .menu-opt-bold:nth-child(3) { transition-delay: 0.12s; }
+        /* Smooth staggered animation delays for gradual appearance */
+        #_grey_screen_ .menu-opt-bold:nth-child(1) { transition-delay: 0.12s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(2) { transition-delay: 0.22s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(3) { transition-delay: 0.32s; }
+        #_grey_screen_ .menu-opt-bold:nth-child(4) { transition-delay: 0.42s; }
 
         .menu-opt-bold:active {
             transform: scale(0.97);
@@ -191,6 +194,7 @@
             <button id="_m_fs_" class="menu-opt-bold">Full screen</button>
             <button id="_m_ap_" class="menu-opt-bold">Autoplay</button>
             <button id="_m_sh_" class="menu-opt-bold">Shuffle</button>
+            <button id="_m_lk_" class="menu-opt-bold">Lock</button>
         </div>
     </div>
 
@@ -287,6 +291,7 @@
     const _mFS = document.getElementById('_m_fs_');
     const _mAP = document.getElementById('_m_ap_');
     const _mSH = document.getElementById('_m_sh_');
+    const _mLK = document.getElementById('_m_lk_');
     
     let _p = [];
     let _l_i = null;
@@ -538,6 +543,12 @@
     _mSH.addEventListener('click', (e) => {
         e.stopPropagation();
         _toggleShuffle(!_shuffle);
+        _hideMenu();
+    });
+
+    _mLK.addEventListener('click', (e) => {
+        e.stopPropagation();
+        _toggleLock();
         _hideMenu();
     });
 
