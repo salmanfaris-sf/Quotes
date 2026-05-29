@@ -81,23 +81,9 @@
             line-height: 1.6;
             margin-bottom: 4px;
         }
-
-        /* Invisible interactive area in top right corner for full-screen toggle */
-        #_fs_trigger_ {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 80px;
-            height: 80px;
-            z-index: 100;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
-
-    <!-- Invisible Full-screen Tap Zone -->
-    <div id="_fs_trigger_"></div>
 
     <div class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
@@ -191,9 +177,12 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
-    const _fst = document.getElementById('_fs_trigger_');
     
     let _l_i = null;
+    let _startY = 0;
+    let _startX = 0;
+    let _isSwipe = false;
+    let _fsTriggered = false;
 
     // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
@@ -262,21 +251,15 @@
         }, 300);
     }
 
-    function _toggleFullscreen() {
+    function _enterFullscreen() {
         const doc = document.documentElement;
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (!document.fullscreenElement) {
             if (doc.requestFullscreen) {
                 doc.requestFullscreen().catch(() => {});
             } else if (doc.webkitRequestFullscreen) {
                 doc.webkitRequestFullscreen().catch(() => {});
             } else if (doc.msRequestFullscreen) {
                 doc.msRequestFullscreen().catch(() => {});
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen().catch(() => {});
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen().catch(() => {});
             }
         }
     }
@@ -296,19 +279,45 @@
         });
     };
 
-    // Responsive general click trigger for changing quotes
+    // Responsive click trigger (runs only if a swipe wasn't executed)
     document.addEventListener('click', () => {
+        if (_isSwipe) return;
         _up();
     });
 
-    // Invisible top-right corner zone specifically for smooth fullscreen trigger
-    const _handleFs = (e) => {
-        e.stopPropagation(); // Prevents quote from cycling when fullscreen is triggered
-        _toggleFullscreen();
-    };
+    // Touch gesture tracking for responsive and smooth transitions
+    document.addEventListener('touchstart', (e) => {
+        _startY = e.touches[0].clientY;
+        _startX = e.touches[0].clientX;
+        _fsTriggered = false;
+    }, { passive: true });
 
-    _fst.addEventListener('click', _handleFs);
-    _fst.addEventListener('touchstart', _handleFs, { passive: false });
+    document.addEventListener('touchmove', (e) => {
+        const currentY = e.touches[0].clientY;
+        const currentX = e.touches[0].clientX;
+        const diffY = _startY - currentY;
+        const diffX = Math.abs(_startX - currentX);
+
+        // Instantly block native bouncing during upward swipe movements
+        if (diffY > 10 && e.cancelable) {
+            e.preventDefault();
+        }
+
+        // Trigger fullscreen directly during active drag for maximum snappiness
+        if (!_fsTriggered && diffY > 40 && diffX < 25) {
+            _fsTriggered = true;
+            _isSwipe = true;
+            _enterFullscreen();
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+        if (_isSwipe) {
+            setTimeout(() => {
+                _isSwipe = false;
+            }, 100);
+        }
+    }, { passive: true });
 
 })();
 </script>
