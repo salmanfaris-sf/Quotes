@@ -37,11 +37,6 @@
             font-family: 'Inter', sans-serif;
             color: var(--text);
             user-select: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
@@ -56,15 +51,18 @@
         }
 
         ._c1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             max-width: 600px;
-            width: 100%;
+            width: calc(100% - 40px);
             text-align: center;
-            position: relative;
             z-index: 5;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            will-change: transform, opacity;
         }
 
         #_q_ {
@@ -184,6 +182,7 @@
     let _startY = 0;
     let _startX = 0;
     let _isSwipe = false;
+    let _fsTriggered = false;
 
     // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
@@ -280,32 +279,43 @@
         });
     };
 
-    // Fast, responsive click trigger (bypassed if gesture was a swipe up)
+    // Responsive click trigger (runs only if a swipe wasn't executed)
     document.addEventListener('click', () => {
         if (_isSwipe) return;
         _up();
     });
 
-    // Touch gesture tracking for swipe up to enter full screen
+    // Touch gesture tracking for responsive and smooth transitions
     document.addEventListener('touchstart', (e) => {
         _startY = e.touches[0].clientY;
         _startX = e.touches[0].clientX;
+        _fsTriggered = false;
     }, { passive: true });
 
-    document.addEventListener('touchend', (e) => {
-        const endY = e.changedTouches[0].clientY;
-        const endX = e.changedTouches[0].clientX;
-        const diffY = _startY - endY; // Positive value indicates upward swipe
-        const diffX = Math.abs(_startX - endX);
+    document.addEventListener('touchmove', (e) => {
+        const currentY = e.touches[0].clientY;
+        const currentX = e.touches[0].clientX;
+        const diffY = _startY - currentY;
+        const diffX = Math.abs(_startX - currentX);
 
-        // Detect a clean vertical swipe-up gesture
-        if (diffY > 60 && diffX < 40) {
+        // Instantly block native bouncing during upward swipe movements
+        if (diffY > 10 && e.cancelable) {
+            e.preventDefault();
+        }
+
+        // Trigger fullscreen directly during active drag for maximum snappiness
+        if (!_fsTriggered && diffY > 40 && diffX < 25) {
+            _fsTriggered = true;
             _isSwipe = true;
             _enterFullscreen();
-            // Reset the swipe flag briefly after touch ends to prevent accidental tap trigger
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+        if (_isSwipe) {
             setTimeout(() => {
                 _isSwipe = false;
-            }, 150);
+            }, 100);
         }
     }, { passive: true });
 
