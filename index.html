@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>Quotes</title>
+    <title>salmanfaris.com</title>
     <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -37,11 +37,6 @@
             font-family: 'Inter', sans-serif;
             color: var(--text);
             user-select: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
@@ -56,15 +51,18 @@
         }
 
         ._c1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             max-width: 600px;
-            width: 100%;
+            width: calc(100% - 40px);
             text-align: center;
-            position: relative;
             z-index: 5;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            will-change: transform, opacity;
         }
 
         #_q_ {
@@ -83,9 +81,23 @@
             line-height: 1.6;
             margin-bottom: 4px;
         }
+
+        /* Invisible interactive area in top right corner for full-screen toggle */
+        #_fs_trigger_ {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            z-index: 100;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Invisible Full-screen Tap Zone -->
+    <div id="_fs_trigger_"></div>
 
     <div class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
@@ -179,6 +191,7 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
+    const _fst = document.getElementById('_fs_trigger_');
     
     let _l_i = null;
 
@@ -249,6 +262,25 @@
         }, 300);
     }
 
+    function _toggleFullscreen() {
+        const doc = document.documentElement;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (doc.requestFullscreen) {
+                doc.requestFullscreen().catch(() => {});
+            } else if (doc.webkitRequestFullscreen) {
+                doc.webkitRequestFullscreen().catch(() => {});
+            } else if (doc.msRequestFullscreen) {
+                doc.msRequestFullscreen().catch(() => {});
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen().catch(() => {});
+            }
+        }
+    }
+
     window.onload = () => {
         const i = _getNextQuote();
         _qx.innerText = i.t;
@@ -264,10 +296,19 @@
         });
     };
 
-    // Fast, responsive click/tap trigger without locking or press timers
-    document.addEventListener('click', (e) => {
+    // Responsive general click trigger for changing quotes
+    document.addEventListener('click', () => {
         _up();
     });
+
+    // Invisible top-right corner zone specifically for smooth fullscreen trigger
+    const _handleFs = (e) => {
+        e.stopPropagation(); // Prevents quote from cycling when fullscreen is triggered
+        _toggleFullscreen();
+    };
+
+    _fst.addEventListener('click', _handleFs);
+    _fst.addEventListener('touchstart', _handleFs, { passive: false });
 
 })();
 </script>
