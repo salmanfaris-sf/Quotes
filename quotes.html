@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>salmanfaris.com</title>
-    <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Choose the truth. Finish the goal. Don't waste time. Stay disciplined. Stay focused. This is the way.">
+    <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
@@ -21,7 +21,7 @@
     <style>
         :root {
             --bg: #000;
-            --text: #e5e7eb;
+            --text: #ffffff;
         }
 
         html, body {
@@ -71,6 +71,7 @@
             transition: opacity 0.5s ease;
             white-space: pre-wrap;
             margin-bottom: 8px; 
+            color: #ffffff;
         }
 
         #_st_ {
@@ -81,28 +82,6 @@
             transition: opacity 0.5s ease;
             line-height: 1.6;
             margin-bottom: 4px;
-        }
-
-        ._h_t {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: #666;
-            transition: opacity 0.8s ease;
-            white-space: nowrap;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        ._h_d {
-            opacity: 0 !important;
-            pointer-events: none;
         }
 
         #_nt_ {
@@ -119,11 +98,13 @@
             font-size: 10px;
             font-weight: 400;
             letter-spacing: 0.08em;
-            text-transform: uppercase;
+            text-transform: none;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             z-index: 100;
+            text-align: center;
+            white-space: nowrap;
         }
 
         #_nt_.s {
@@ -134,14 +115,12 @@
 </head>
 <body>
 
-    <div id="_nt_">AUTOPLAY ON</div>
+    <div id="_nt_"></div>
 
     <div class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
         <div id="_st_" class="opacity-0"></div>
     </div>
-
-    <div id="_hi_" class="_h_t opacity-0">TAP ANYWHERE TO VIEW NEXT QUOTE</div>
 
 <script>
 (function(){
@@ -218,7 +197,7 @@
         { t: "The man who keeps walking will eventually leave the place he hates." },
         { t: "A few years of sacrifice can create a lifetime of freedom." },
         { t: "Your future is built by what you do\nafter a long tiring day." },
-        { t: "Speak clearly. Stand straight. Fear none."},
+        { t: "Stand straight. Speak clearly. Fear none."},
         { t: "Its what's inside that matters." },
         { t: "Weak men wait for courage.\n Strong men create it through action."},
         { t: "Be the man who acts while others are\n still thinking."},
@@ -228,19 +207,44 @@
     ];
 
     const _qx = document.getElementById('_q_');
-    const _ha = document.getElementById('_hi_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
     const _nt = document.getElementById('_nt_');
     
-    let _f = true;
-    let _p = [];
     let _l_i = null;
-    let _ap = false;
-    let _ti = null;
     let _pt = null;
     let _lp = false;
-    const _dur = 5000; 
+    let _locked = false;
+    let _notifTimeout = null;
+
+    // Secure Fisher-Yates array shuffling
+    function _shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // High quality sequence manager ensuring every single quote shows exactly once per cycle
+    let _currentPool = [];
+    let _lastQuoteText = null;
+
+    function _getNextQuote() {
+        if (_currentPool.length === 0) {
+            let freshList = [..._db];
+            _shuffle(freshList);
+            // Prevent immediate repetition of the previous quote on cycle boundary reset
+            if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
+                const head = freshList.pop();
+                freshList.unshift(head);
+            }
+            _currentPool = freshList;
+        }
+        const choice = _currentPool.pop();
+        _lastQuoteText = choice.t;
+        return choice;
+    }
 
     function _gs() {
         const n = new Date();
@@ -254,35 +258,29 @@
         return { t: `${h}:${m} ${a}`, l: ml };
     }
 
-    function _rp() {
-        const lx = _qx.innerText;
-        _p = [..._db].sort(() => Math.random() - 0.5);
-        if (_p.length > 1 && _p[_p.length - 1].t === lx) {
-             const s = _p.pop();
-             _p.unshift(s);
-        }
-    }
-
     function _sn(msg) {
+        if (_notifTimeout) clearTimeout(_notifTimeout);
         _nt.innerText = msg;
         _nt.classList.add('s');
-        setTimeout(() => _nt.classList.remove('s'), 1800);
+        _notifTimeout = setTimeout(() => _nt.classList.remove('s'), 1800);
     }
 
     function _up() {
-        if (_p.length === 0) _rp();
+        // If locked, reject quote change and show the sentence case reminder
+        if (_locked) {
+            _sn("Quote locked, long press to unlock");
+            return;
+        }
 
-        const nq = _p.pop();
+        const nq = _getNextQuote();
         _qx.style.opacity = '0';
         _st.classList.add('opacity-0');
         
-        if (_f) _ha.classList.add('_h_d');
         if (_l_i) clearInterval(_l_i);
 
         setTimeout(() => {
             _qx.innerText = nq.t;
             _qx.style.opacity = '1';
-            _f = false;
 
             if (nq.id === "t_q") {
                 const ux = () => {
@@ -299,25 +297,23 @@
         }, 300);
     }
 
-    function _ta() {
-        _ap = !_ap;
-        if (_ap) {
-            _sn("AUTOPLAY ON");
-            if (_ti) clearInterval(_ti);
-            _ti = setInterval(_up, _dur);
+    function _toggleLock() {
+        _locked = !_locked;
+        if (_locked) {
+            _sn("Quote locked");
         } else {
-            _sn("AUTOPLAY OFF");
-            if (_ti) clearInterval(_ti);
+            _sn("Quote unlocked");
         }
     }
 
     function _sp() {
         _lp = false;
+        if (_pt) clearTimeout(_pt);
         _pt = setTimeout(() => {
             _lp = true;
-            _ta();
+            _toggleLock();
             _pt = null;
-        }, 600); 
+        }, 550); // standard duration for a premium long press
     }
 
     function _ep() {
@@ -325,13 +321,14 @@
             clearTimeout(_pt);
             _pt = null;
         }
-        if (!_lp && !_ap) _up();
+        if (!_lp) {
+            _up();
+        }
         _lp = false;
     }
 
     window.onload = () => {
-        _rp();
-        const i = _p.pop();
+        const i = _getNextQuote();
         _qx.innerText = i.t;
         
         if (i.id === "t_q") {
@@ -342,19 +339,24 @@
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
-            setTimeout(() => {
-                if (_f) _ha.classList.remove('opacity-0');
-            }, 1000);
         });
     };
 
+    // Clean mouse events
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         _sp();
     });
     document.addEventListener('mouseup', () => _ep());
-    document.addEventListener('touchstart', () => _sp(), { passive: true });
-    document.addEventListener('touchend', () => _ep(), { passive: true });
+
+    // Responsive touch events
+    document.addEventListener('touchstart', (e) => {
+        _sp();
+    }, { passive: true });
+    
+    document.addEventListener('touchend', (e) => {
+        _ep();
+    }, { passive: true });
 
 })();
 </script>
