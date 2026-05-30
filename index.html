@@ -20,7 +20,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght=200;400;600&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -42,6 +42,23 @@ html, body {
 }
 
 body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
+
+/* Loading Screen Transition Hooks */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+}
+#loading-screen.hidden-loader {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
@@ -70,6 +87,11 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
 <body oncontextmenu="return false;">
+
+<!-- 1. Minimalist Fullscreen Loader -->
+<div id="loading-screen">
+  <div class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 zf">Initializing Content</div>
+</div>
 
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
@@ -150,7 +172,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
     updateClockAndStats();
 
-    // Injects and renders full content immediately into the DOM string
+    // 2. FORCED COMPLETE INITIAL SELECTION: Full rendering immediately
     const setIdx = dayOfYear % content.length;
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
@@ -167,6 +189,10 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
     
     handleScroll();
+
+    // 3. Drop loading curtain smoothly only after everything above is executed
+    const loader = document.getElementById("loading-screen");
+    if (loader) { loader.classList.add("hidden-loader"); }
   };
 
   let ticking = false;
