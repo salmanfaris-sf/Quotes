@@ -125,6 +125,8 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     ]
   ];
 
+  let spans = [];
+
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
   const updateClockAndStats = () => {
@@ -146,49 +148,67 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
-    
+    updateClockAndStats();
+
+    // Injects and renders full content immediately into the DOM string
     const setIdx = dayOfYear % content.length;
-    
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
       <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
-    updateClockAndStats();
-    
+
+    spans = document.querySelectorAll(".hi");
+
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
     document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
+    
+    handleScroll();
   };
 
-  window.addEventListener("scroll", () => {
+  let ticking = false;
+  const handleScroll = () => {
     const scrollPos = window.scrollY;
     const nav = document.getElementById("n0");
     const scrollHint = document.getElementById("sd");
+    
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
     
-    const spans = document.querySelectorAll(".hi");
+    if (spans.length === 0) return;
+
     const centerY = window.innerHeight * 0.5;
     let activeSpan = null;
     let minDistance = Infinity;
+
     spans.forEach(span => {
       const rect = span.getBoundingClientRect();
       const dist = Math.abs((rect.top + rect.height / 2) - centerY);
       if (dist < minDistance) { minDistance = dist; activeSpan = span; }
     });
+
     spans.forEach(span => {
       if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
       else span.classList.remove("active");
     });
+  };
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
   }, { passive: true });
 
   window.onload = () => {
     init();
-    setInterval(updateClockAndStats, 1000);
-    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
+    setInterval(updateClockAndStats, 60000);
   };
 })();
 </script>
