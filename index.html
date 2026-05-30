@@ -17,7 +17,7 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000;
@@ -71,6 +71,7 @@
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
+            transition: opacity 0.35s ease-in-out;
         }
 
         #_st_ {
@@ -78,7 +79,7 @@
             color: #777;
             font-weight: 300;
             letter-spacing: 0.02em;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
         }
@@ -87,7 +88,7 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-base md:text-lg font-light leading-relaxed tracking-wide"></h1>
+        <h1 id="_q_" class="text-base md:text-lg font-light leading-relaxed tracking-wide opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </div>
 
@@ -233,8 +234,8 @@
         _st.classList.add('opacity-0');
         if (_l_i) clearInterval(_l_i);
 
-        // Standard crisp fade out
-        _qx.style.transition = 'opacity 0.25s ease-in-out';
+        // Balanced transition duration set to 0.35s
+        _qx.style.transition = 'opacity 0.35s ease-in-out';
         _qx.style.opacity = '0';
 
         setTimeout(() => {
@@ -253,11 +254,12 @@
                 _st.classList.add('opacity-0');
             }
 
-            // Crisp fade in
+            // Balanced transition duration set to 0.35s
             requestAnimationFrame(() => {
+                _qx.style.transition = 'opacity 0.35s ease-in-out';
                 _qx.style.opacity = '1';
             });
-        }, 250);
+        }, 350); // Matches the 0.35s fade-out duration
     }
 
     function _next() {
