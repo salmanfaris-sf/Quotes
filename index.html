@@ -20,7 +20,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght=200;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -42,23 +42,6 @@ html, body {
 }
 
 body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
-
-/* Loading Screen Transition Hooks */
-#loading-screen {
-  position: fixed;
-  inset: 0;
-  background-color: #000000;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
-}
-#loading-screen.hidden-loader {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
 
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
@@ -87,11 +70,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
 <body oncontextmenu="return false;">
-
-<!-- 1. Minimalist Fullscreen Loader -->
-<div id="loading-screen">
-  <div class="font-f2 text-[10px] uppercase tracking-[0.6em] text-white/40 zf">Initializing Content</div>
-</div>
 
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
@@ -147,8 +125,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     ]
   ];
 
-  let spans = [];
-
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
   const updateClockAndStats = () => {
@@ -170,71 +146,49 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     
     document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
-    updateClockAndStats();
-
-    // 2. FORCED COMPLETE INITIAL SELECTION: Full rendering immediately
+    
     const setIdx = dayOfYear % content.length;
+    
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
       <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
     `;
-
-    spans = document.querySelectorAll(".hi");
-
+    updateClockAndStats();
+    
     const generalObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
     document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
-    
-    handleScroll();
-
-    // 3. Drop loading curtain smoothly only after everything above is executed
-    const loader = document.getElementById("loading-screen");
-    if (loader) { loader.classList.add("hidden-loader"); }
   };
 
-  let ticking = false;
-  const handleScroll = () => {
+  window.addEventListener("scroll", () => {
     const scrollPos = window.scrollY;
     const nav = document.getElementById("n0");
     const scrollHint = document.getElementById("sd");
-    
     scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
     if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
     
-    if (spans.length === 0) return;
-
+    const spans = document.querySelectorAll(".hi");
     const centerY = window.innerHeight * 0.5;
     let activeSpan = null;
     let minDistance = Infinity;
-
     spans.forEach(span => {
       const rect = span.getBoundingClientRect();
       const dist = Math.abs((rect.top + rect.height / 2) - centerY);
       if (dist < minDistance) { minDistance = dist; activeSpan = span; }
     });
-
     spans.forEach(span => {
       if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
       else span.classList.remove("active");
     });
-  };
-
-  window.addEventListener("scroll", () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        handleScroll();
-        ticking = false;
-      });
-      ticking = true;
-    }
   }, { passive: true });
 
   window.onload = () => {
     init();
-    setInterval(updateClockAndStats, 60000);
+    setInterval(updateClockAndStats, 1000);
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
   };
 })();
 </script>
