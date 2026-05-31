@@ -91,7 +91,7 @@
             transform: scale(0.96);
         }
 
-        /* Redesigned Elegantly Aranged Menu Dropdown */
+        /* Redesigned Elegantly Arranged Menu Dropdown */
         .menu-dropdown {
             position: absolute;
             top: 50px;
@@ -132,7 +132,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Keeps labels left and icons neatly aligned on the right */
+            justify-content: space-between;
             gap: 12px;
             transition: background 0.15s;
         }
@@ -406,14 +406,20 @@
             pointer-events: none !important
         }
 
-        /* Lockout Mode styling */
+        /* Lockout Mode styling: leaves only reached counter and turn off option visible */
         body.lockout-active .a1,
         body.lockout-active .a2,
-        body.lockout-active .a3,
         body.lockout-active .b2,
-        body.lockout-active #lock-overlay {
+        body.lockout-active #lock-overlay,
+        body.lockout-active #x6,
+        body.lockout-active .a7,
+        body.lockout-active #y1 {
             display: none !important;
             pointer-events: none !important;
+        }
+
+        body.lockout-active #x9 {
+            pointer-events: none !important; /* Locks down interaction with the counter display */
         }
     </style>
 </head>
@@ -421,12 +427,12 @@
 <body oncontextmenu="return !1">
     <div class="a1" id="x1"><span>Counter</span></div>
     <div class="a2">
-        <!-- Modern, lighter horizontal 3-dot trigger -->
+        <!-- Modern, slightly bolder horizontal 3-dot trigger -->
         <button id="menu-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="5" cy="12" r="1.2"></circle>
-                <circle cx="12" cy="12" r="1.2"></circle>
-                <circle cx="19" cy="12" r="1.2"></circle>
+                <circle cx="5" cy="12" r="1.8"></circle>
+                <circle cx="12" cy="12" r="1.8"></circle>
+                <circle cx="19" cy="12" r="1.8"></circle>
             </svg>
         </button>
         <!-- Neatly arranged settings menu -->
