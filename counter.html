@@ -17,7 +17,7 @@
             --b: #000;
             --t: #fff;
             --s: #fff;
-            --m: rgba(35, 35, 35, 0.94);
+            --m: rgba(28, 28, 30, 0.94);
             --accent: #34c759
         }
 
@@ -65,25 +65,85 @@
 
         .a2 {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 20px; /* Moved up from 25px to perfectly align with the Counter text on the left */
+            right: 25px;
             display: flex;
-            gap: 8px;
-            z-index: 10;
+            z-index: 101;
             transition: opacity .4s
         }
 
-        .a2 button {
+        /* Clean, borderless menu button showing only the dots */
+        .a2 button#menu-btn {
             background: none;
             border: none;
             color: var(--s);
-            padding: 10px;
-            border-radius: 50%;
             width: 44px;
             height: 44px;
             display: flex;
             align-items: center;
-            justify-content: center
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .a2 button#menu-btn:active {
+            opacity: 0.6;
+            transform: scale(0.96);
+        }
+
+        /* Borderless Elegantly Arranged Dropdown Menu */
+        .menu-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: var(--m);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: none;
+            border-radius: 14px;
+            padding: 6px;
+            display: none;
+            flex-direction: column;
+            min-width: 175px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+            z-index: 200;
+            animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .menu-dropdown.active {
+            display: flex;
+        }
+
+        .menu-item {
+            background: none;
+            border: none;
+            color: var(--s);
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 400;
+            text-align: left;
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: background 0.15s;
+        }
+
+        .menu-item:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item svg {
+            opacity: 0.8;
+            stroke-width: 1.8;
         }
 
         .a3 {
@@ -339,23 +399,60 @@
             opacity: 0 !important;
             pointer-events: none !important
         }
+
+        /* Lockout Mode styling: leaves only reached counter and turn off option visible */
+        body.lockout-active .a1,
+        body.lockout-active .a2,
+        body.lockout-active .b2,
+        body.lockout-active #lock-overlay,
+        body.lockout-active #x6,
+        body.lockout-active .a7,
+        body.lockout-active #y1 {
+            display: none !important;
+            pointer-events: none !important;
+        }
+
+        body.lockout-active #x9 {
+            pointer-events: none !important; /* Locks down interaction with the counter display */
+        }
     </style>
 </head>
 
 <body oncontextmenu="return !1">
     <div class="a1" id="x1"><span>Counter</span></div>
     <div class="a2">
-        <button id="lock-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        <!-- Modern, bold horizontal 3-dot trigger with no round button background -->
+        <button id="menu-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="5" cy="12" r="1.8"></circle>
+                <circle cx="12" cy="12" r="1.8"></circle>
+                <circle cx="19" cy="12" r="1.8"></circle>
             </svg>
         </button>
-        <button id="x2">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-            </svg>
-        </button>
+        <!-- Neatly arranged settings menu (borderless with updated ordering) -->
+        <div class="menu-dropdown" id="menu-dropdown">
+            <button class="menu-item" id="fs-btn-menu">
+                <span>Fullscreen</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                </svg>
+            </button>
+            <button class="menu-item" id="goal-btn-menu">
+                <span>Set Goal</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+            </button>
+            <button class="menu-item" id="lock-btn-menu">
+                <span>Lock Screen</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </button>
+        </div>
     </div>
     <div id="x3" class="b3">
         <span id="x4"></span>
@@ -379,7 +476,6 @@
         <span>swipe left: reset</span>
         <span>swipe down: minus</span>
         <span>swipe right: increment</span>
-        <span>tap "counter" : set goal</span>
         <span>long tap: sound</span>
     </div>
     <div id="lock-overlay">
@@ -396,9 +492,11 @@
     <script>
         (function () {
             const d = document, w = window, k = { c: '_n_c', b: '_n_b', s: '_m_s', t: '_n_step', g: '_n_goal' },
-                f = d.getElementById('x9'), g = d.getElementById('x2'), h = d.getElementById('x3'), i = d.getElementById('y1'),
+                f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
-                ub = d.getElementById('x1'), pc = d.getElementById('x6'), rg = d.querySelector('.a6'), lb = d.getElementById('lock-btn'),
+                ub = d.getElementById('x1'), pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
+                mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
+                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
 
             let v = parseInt(localStorage.getItem(k.c)) || 0,
@@ -406,7 +504,7 @@
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
                 bd = localStorage.getItem(k.b) === 'true',
                 sn = localStorage.getItem(k.s) !== 'false',
-                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false;
+                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const ac = new (w.AudioContext || w.webkitAudioContext)(),
                 rd = rg.r.baseVal.value,
@@ -417,7 +515,7 @@
             function _u() {
                 if (stt) clearTimeout(stt);
                 i.classList.remove('v');
-                stt = setTimeout(() => { i.classList.add('v') }, 5e3)
+                stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
             function _p() {
@@ -472,7 +570,9 @@
                 ht.textContent = m;
                 if (showBtn) {
                     hb.classList.add('visible');
-                    du = 8000;
+                    du = 9999999;
+                    isLockout = true;
+                    d.body.classList.add('lockout-active');
                 } else {
                     hb.classList.remove('visible');
                 }
@@ -483,12 +583,61 @@
                 }, du)
             }
 
-            lb.onclick = e => {
+            mb.onclick = e => {
                 e.stopPropagation();
+                md.classList.toggle('active');
+            };
+
+            d.addEventListener('click', e => {
+                if (!e.target.closest('.a2')) {
+                    md.classList.remove('active');
+                }
+            });
+
+            lbMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
                 if (navigator.vibrate) navigator.vibrate(50)
+            };
+
+            fsMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => { });
+                else d.exitFullscreen().catch(() => { })
+            };
+
+            function triggerSetGoal() {
+                const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
+                if (r !== null) {
+                    const n = parseInt(r);
+                    if (!isNaN(n) && n >= 0) {
+                        gl = n;
+                        if (gl > 0) {
+                            v = 0;
+                            _z(`goal set to ${gl}`, 2000);
+                        } else {
+                            _z('goal removed', 2000);
+                        }
+                        _w();
+                        _x();
+                    }
+                }
+            }
+
+            goalMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                triggerSetGoal();
+            };
+
+            ub.onclick = e => {
+                e.stopPropagation();
+                if (lk || isLockout) return;
+                triggerSetGoal();
             };
 
             let sx = 0, cx = 0;
@@ -528,34 +677,17 @@
             hb.onclick = e => {
                 e.stopPropagation();
                 gl = 0;
+                isLockout = false;
+                d.body.classList.remove('lockout-active');
                 _w();
                 _x();
                 h.classList.remove('active');
+                if (rt) clearTimeout(rt);
                 setTimeout(() => _z('goal removed', 2000), 400);
             };
 
-            ub.onclick = e => {
-                e.stopPropagation();
-                if (lk) return;
-                const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
-                if (r !== null) {
-                    const n = parseInt(r);
-                    if (!isNaN(n) && n >= 0) {
-                        gl = n;
-                        if (gl > 0) {
-                            v = 0;
-                            _z(`goal set to ${gl}`, 2000);
-                        } else {
-                            _z('goal removed', 2000);
-                        }
-                        _w();
-                        _x();
-                    }
-                }
-            };
-
             d.body.addEventListener('touchstart', e => {
-                if (lk) return;
+                if (lk || isLockout) return;
                 _u();
                 if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay')) return;
                 nx = e.touches[0].clientX;
@@ -570,7 +702,7 @@
             });
 
             d.body.addEventListener('touchend', e => {
-                if (lk) return;
+                if (lk || isLockout) return;
                 if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
@@ -585,7 +717,7 @@
                     v += st;
                     if (gl > 0 && p < gl && v >= gl) {
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-                        _z('goal reached!', 6000, true)
+                        _z('goal reached!', 9999999, true);
                     }
                     _w()
                 } else if (Math.abs(dx) > Math.abs(dy)) {
@@ -621,12 +753,6 @@
                     }
                 }
             });
-
-            g.onclick = e => {
-                e.stopPropagation();
-                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => { });
-                else d.exitFullscreen().catch(() => { })
-            };
 
             d.addEventListener('fullscreenchange', () => {
                 d.body.classList.toggle('f', !!d.fullscreenElement)
