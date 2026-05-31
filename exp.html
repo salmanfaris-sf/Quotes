@@ -72,26 +72,26 @@
             transition: opacity .4s
         }
 
+        /* Clean, borderless menu button showing only the dots */
         .a2 button#menu-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: none;
+            border: none;
             color: var(--s);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: opacity 0.2s, transform 0.1s;
         }
 
         .a2 button#menu-btn:active {
-            background: rgba(255, 255, 255, 0.15);
+            opacity: 0.6;
             transform: scale(0.96);
         }
 
-        /* Redesigned Elegantly Arranged Menu Dropdown */
+        /* Borderless Elegantly Arranged Dropdown Menu */
         .menu-dropdown {
             position: absolute;
             top: 50px;
@@ -99,7 +99,7 @@
             background: var(--m);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: none;
             border-radius: 14px;
             padding: 6px;
             display: none;
@@ -123,7 +123,7 @@
             background: none;
             border: none;
             color: var(--s);
-            padding: 10px 14px;
+            padding: 12px 14px;
             font-size: 0.88rem;
             font-weight: 400;
             text-align: left;
@@ -143,13 +143,7 @@
 
         .menu-item svg {
             opacity: 0.8;
-            stroke-width: 1.6;
-        }
-
-        .menu-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.08);
-            margin: 4px 8px;
+            stroke-width: 1.8;
         }
 
         .a3 {
@@ -427,7 +421,7 @@
 <body oncontextmenu="return !1">
     <div class="a1" id="x1"><span>Counter</span></div>
     <div class="a2">
-        <!-- Modern, slightly bolder horizontal 3-dot trigger -->
+        <!-- Modern, bold horizontal 3-dot trigger with no round button background -->
         <button id="menu-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="5" cy="12" r="1.8"></circle>
@@ -435,29 +429,27 @@
                 <circle cx="19" cy="12" r="1.8"></circle>
             </svg>
         </button>
-        <!-- Neatly arranged settings menu -->
+        <!-- Neatly arranged settings menu (borderless with updated ordering) -->
         <div class="menu-dropdown" id="menu-dropdown">
-            <button class="menu-item" id="lock-btn-menu">
-                <span>Lock Screen</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-            </button>
-            <div class="menu-divider"></div>
             <button class="menu-item" id="fs-btn-menu">
                 <span>Fullscreen</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
                 </svg>
             </button>
-            <div class="menu-divider"></div>
             <button class="menu-item" id="goal-btn-menu">
                 <span>Set Goal</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <circle cx="12" cy="12" r="10"></circle>
                     <circle cx="12" cy="12" r="6"></circle>
                     <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+            </button>
+            <button class="menu-item" id="lock-btn-menu">
+                <span>Lock Screen</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
             </button>
         </div>
@@ -662,7 +654,7 @@
                 if (cx >= mx * .98) {
                     lk = false;
                     d.body.classList.remove('locked');
-                    lo.classList.remove('active');
+                    lo.classList.add('active');
                     sh.style.transform = 'translateX(0)';
                     if (navigator.vibrate) navigator.vibrate([10, 30, 10])
                 }
