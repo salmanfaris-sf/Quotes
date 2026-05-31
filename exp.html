@@ -65,7 +65,7 @@
 
         .a2 {
             position: fixed;
-            top: 25px;
+            top: 20px; /* Moved up from 25px to perfectly align with the Counter text on the left */
             right: 25px;
             display: flex;
             z-index: 101;
@@ -654,7 +654,7 @@
                 if (cx >= mx * .98) {
                     lk = false;
                     d.body.classList.remove('locked');
-                    lo.classList.add('active');
+                    lo.classList.remove('active');
                     sh.style.transform = 'translateX(0)';
                     if (navigator.vibrate) navigator.vibrate([10, 30, 10])
                 }
