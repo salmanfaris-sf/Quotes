@@ -60,7 +60,7 @@
             transition: opacity .4s;
             padding: 10px;
             margin: -10px;
-            pointer-events: auto
+            pointer-events: none; /* Disabled interaction entirely */
         }
 
         .a2 {
@@ -99,12 +99,13 @@
             -webkit-backdrop-filter: blur(25px);
             border: none;
             border-radius: 14px;
-            padding: 6px;
+            padding: 0; /* Set to 0 so menu items touch the outer edges */
             display: none;
             flex-direction: column;
-            min-width: 140px;
+            min-width: 150px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.6);
             z-index: 200;
+            overflow: hidden; /* Clips the background highlights to the outer border-radius */
             animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -121,21 +122,23 @@
             background: none;
             border: none;
             color: var(--s);
-            padding: 12px 16px;
+            padding: 14px 20px; /* Perfectly balanced touch areas */
             font-size: 0.88rem;
             font-weight: 400;
             text-align: left;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 0; /* Edge-to-edge click reaction */
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            transition: background 0.15s;
+            transition: background 0.1s;
         }
 
-        .menu-item:active {
-            background: rgba(255, 255, 255, 0.1);
+        /* Instant touch active state classes */
+        .menu-item:active,
+        .menu-item.active-touch {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .a3 {
@@ -465,7 +468,7 @@
             const d = document, w = window, k = { c: '_n_c', b: '_n_b', s: '_m_s', t: '_n_step', g: '_n_goal' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
-                ub = d.getElementById('x1'), pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
+                pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
@@ -565,6 +568,19 @@
                 }
             });
 
+            // Instant touch responsiveness for all menu items
+            d.querySelectorAll('.menu-item').forEach(btn => {
+                btn.addEventListener('touchstart', () => {
+                    btn.classList.add('active-touch');
+                }, { passive: true });
+                btn.addEventListener('touchend', () => {
+                    btn.classList.remove('active-touch');
+                }, { passive: true });
+                btn.addEventListener('touchcancel', () => {
+                    btn.classList.remove('active-touch');
+                }, { passive: true });
+            });
+
             lbMenu.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
@@ -602,12 +618,6 @@
             goalMenu.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
-                triggerSetGoal();
-            };
-
-            ub.onclick = e => {
-                e.stopPropagation();
-                if (lk || isLockout) return;
                 triggerSetGoal();
             };
 
