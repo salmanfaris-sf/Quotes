@@ -450,7 +450,7 @@
         <span>swipe left: reset</span>
         <span>swipe down: minus</span>
         <span>swipe right: increment</span>
-        <span>long tap: sound</span>
+        <span>long tap: voice</span>
     </div>
     <div id="lock-overlay">
         <div class="slider-track">
@@ -480,8 +480,7 @@
                 sn = localStorage.getItem(k.s) !== 'false',
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
-            const ac = new (w.AudioContext || w.webkitAudioContext)(),
-                rd = rg.r.baseVal.value,
+            const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
@@ -492,18 +491,20 @@
                 stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
-            function _p() {
-                if (sn) return;
-                if (ac.state === 'suspended') ac.resume();
-                const o = ac.createOscillator(), gr = ac.createGain();
-                o.type = 'square';
-                o.frequency.setValueAtTime(2400, ac.currentTime);
-                gr.gain.setValueAtTime(.05, ac.currentTime);
-                gr.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .02);
-                o.connect(gr);
-                gr.connect(ac.destination);
-                o.start();
-                o.stop(ac.currentTime + .02)
+            // Web Speech API - Text to Speech function
+            function _p(textToSpeak) {
+                if (sn) return; // Mute if speech is turned off
+                if ('speechSynthesis' in w) {
+                    // Instantly cancel any ongoing speaking to prevent speech lag on rapid taps
+                    w.speechSynthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
+                    utterance.rate = 1.15; // Crisp, slightly fast speech for seamless counting
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+                    
+                    w.speechSynthesis.speak(utterance);
+                }
             }
 
             function _up() {
@@ -673,12 +674,11 @@
                 if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
-                if (ac.state === 'suspended') ac.resume();
                 pt = setTimeout(() => {
                     sn = !sn;
                     qf = 1;
                     if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'tap sound off' : 'tap sound on', 2000)
+                    _z(sn ? 'voice off' : 'voice on', 2000)
                 }, 800)
             });
 
@@ -693,9 +693,9 @@
                     dy = ny - e.changedTouches[0].clientY;
 
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    _p();
                     const p = v;
                     v += st;
+                    _p(v); // Speak new value
                     if (gl > 0 && p < gl && v >= gl) {
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
                         _z('goal reached!', 9999999, true);
@@ -728,6 +728,7 @@
                             if (confirm(`Subtract ${st} from counter?`)) {
                                 if (navigator.vibrate) navigator.vibrate(40);
                                 v = (v >= st) ? v - st : 0;
+                                _p(v); // Speak new subtracted value
                                 _w(); _x(); _z('number subtracted', 2000)
                             }
                         }
