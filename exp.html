@@ -60,19 +60,18 @@
             transition: opacity .4s;
             padding: 10px;
             margin: -10px;
-            pointer-events: auto
+            pointer-events: none;
         }
 
         .a2 {
             position: fixed;
-            top: 20px; /* Moved up from 25px to perfectly align with the Counter text on the left */
+            top: 20px;
             right: 25px;
             display: flex;
             z-index: 101;
             transition: opacity .4s
         }
 
-        /* Clean, borderless menu button showing only the dots */
         .a2 button#menu-btn {
             background: none;
             border: none;
@@ -91,7 +90,6 @@
             transform: scale(0.96);
         }
 
-        /* Borderless Elegantly Arranged Dropdown Menu */
         .menu-dropdown {
             position: absolute;
             top: 50px;
@@ -101,12 +99,13 @@
             -webkit-backdrop-filter: blur(25px);
             border: none;
             border-radius: 14px;
-            padding: 6px;
+            padding: 0;
             display: none;
             flex-direction: column;
-            min-width: 175px;
+            min-width: 150px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.6);
             z-index: 200;
+            overflow: hidden;
             animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -123,27 +122,22 @@
             background: none;
             border: none;
             color: var(--s);
-            padding: 12px 14px;
+            padding: 14px 20px;
             font-size: 0.88rem;
             font-weight: 400;
             text-align: left;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 0;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            transition: background 0.15s;
+            justify-content: flex-start;
+            transition: background 0.1s;
         }
 
-        .menu-item:active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-item svg {
-            opacity: 0.8;
-            stroke-width: 1.8;
+        .menu-item:active,
+        .menu-item.active-touch {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .a3 {
@@ -400,7 +394,6 @@
             pointer-events: none !important
         }
 
-        /* Lockout Mode styling: leaves only reached counter and turn off option visible */
         body.lockout-active .a1,
         body.lockout-active .a2,
         body.lockout-active .b2,
@@ -413,7 +406,7 @@
         }
 
         body.lockout-active #x9 {
-            pointer-events: none !important; /* Locks down interaction with the counter display */
+            pointer-events: none !important;
         }
     </style>
 </head>
@@ -421,7 +414,6 @@
 <body oncontextmenu="return !1">
     <div class="a1" id="x1"><span>Counter</span></div>
     <div class="a2">
-        <!-- Modern, bold horizontal 3-dot trigger with no round button background -->
         <button id="menu-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="5" cy="12" r="1.8"></circle>
@@ -429,29 +421,10 @@
                 <circle cx="19" cy="12" r="1.8"></circle>
             </svg>
         </button>
-        <!-- Neatly arranged settings menu (borderless with updated ordering) -->
         <div class="menu-dropdown" id="menu-dropdown">
-            <button class="menu-item" id="fs-btn-menu">
-                <span>Fullscreen</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                </svg>
-            </button>
-            <button class="menu-item" id="goal-btn-menu">
-                <span>Set Goal</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <circle cx="12" cy="12" r="6"></circle>
-                    <circle cx="12" cy="12" r="2"></circle>
-                </svg>
-            </button>
-            <button class="menu-item" id="lock-btn-menu">
-                <span>Lock Screen</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-            </button>
+            <button class="menu-item" id="fs-btn-menu">Fullscreen</button>
+            <button class="menu-item" id="goal-btn-menu">Set Goal</button>
+            <button class="menu-item" id="lock-btn-menu">Lock Screen</button>
         </div>
     </div>
     <div id="x3" class="b3">
@@ -476,7 +449,7 @@
         <span>swipe left: reset</span>
         <span>swipe down: minus</span>
         <span>swipe right: increment</span>
-        <span>long tap: sound</span>
+        <span>long tap: voice sound</span>
     </div>
     <div id="lock-overlay">
         <div class="slider-track">
@@ -494,7 +467,7 @@
             const d = document, w = window, k = { c: '_n_c', b: '_n_b', s: '_m_s', t: '_n_step', g: '_n_goal' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
-                ub = d.getElementById('x1'), pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
+                pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
@@ -503,11 +476,31 @@
                 st = parseInt(localStorage.getItem(k.t)) || 1,
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
                 bd = localStorage.getItem(k.b) === 'true',
-                sn = localStorage.getItem(k.s) !== 'false',
+                sn = localStorage.getItem(k.s) !== 'false', // false means voice text-to-speech is active
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
-            const ac = new (w.AudioContext || w.webkitAudioContext)(),
-                rd = rg.r.baseVal.value,
+            let maleVoice = null;
+            function loadMaleVoice() {
+                if (!w.speechSynthesis) return;
+                const voices = w.speechSynthesis.getVoices();
+                // Look for common native system male voice tags
+                maleVoice = voices.find(v => 
+                    (v.lang.startsWith('en-') && 
+                    (v.name.toLowerCase().includes('male') || 
+                     v.name.toLowerCase().includes('google uk english male') ||
+                     v.name.toLowerCase().includes('microsoft david') ||
+                     v.name.toLowerCase().includes('premium'))
+                    )
+                ) || voices.find(v => v.lang.startsWith('en-'));
+            }
+            if (w.speechSynthesis) {
+                loadMaleVoice();
+                if (w.speechSynthesis.onvoiceschanged !== undefined) {
+                    w.speechSynthesis.onvoiceschanged = loadMaleVoice;
+                }
+            }
+
+            const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
@@ -518,18 +511,15 @@
                 stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
-            function _p() {
-                if (sn) return;
-                if (ac.state === 'suspended') ac.resume();
-                const o = ac.createOscillator(), gr = ac.createGain();
-                o.type = 'square';
-                o.frequency.setValueAtTime(2400, ac.currentTime);
-                gr.gain.setValueAtTime(.05, ac.currentTime);
-                gr.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .02);
-                o.connect(gr);
-                gr.connect(ac.destination);
-                o.start();
-                o.stop(ac.currentTime + .02)
+            function _p(currentCount) {
+                if (sn) return; // Silent if voice tracking is disabled
+                if (!w.speechSynthesis) return;
+                
+                w.speechSynthesis.cancel(); // Clears running queues to avoid lag on fast tapping
+                const u = new SpeechSynthesisUtterance(currentCount.toString());
+                if (maleVoice) u.voice = maleVoice;
+                u.rate = 1.1; // Balanced speed rate for active workflows
+                w.speechSynthesis.speak(u);
             }
 
             function _up() {
@@ -594,6 +584,18 @@
                 }
             });
 
+            d.querySelectorAll('.menu-item').forEach(btn => {
+                btn.addEventListener('touchstart', () => {
+                    btn.classList.add('active-touch');
+                }, { passive: true });
+                btn.addEventListener('touchend', () => {
+                    btn.classList.remove('active-touch');
+                }, { passive: true });
+                btn.addEventListener('touchcancel', () => {
+                    btn.classList.remove('active-touch');
+                }, { passive: true });
+            });
+
             lbMenu.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
@@ -631,12 +633,6 @@
             goalMenu.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
-                triggerSetGoal();
-            };
-
-            ub.onclick = e => {
-                e.stopPropagation();
-                if (lk || isLockout) return;
                 triggerSetGoal();
             };
 
@@ -692,12 +688,12 @@
                 if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
-                if (ac.state === 'suspended') ac.resume();
                 pt = setTimeout(() => {
                     sn = !sn;
                     qf = 1;
                     if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'tap sound off' : 'tap sound on', 2000)
+                    _z(sn ? 'voice count off' : 'voice count on', 2000);
+                    _x();
                 }, 800)
             });
 
@@ -712,14 +708,15 @@
                     dy = ny - e.changedTouches[0].clientY;
 
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    _p();
                     const p = v;
                     v += st;
+                    _p(v); // Trigger Text-To-Speech layout
                     if (gl > 0 && p < gl && v >= gl) {
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
                         _z('goal reached!', 9999999, true);
                     }
-                    _w()
+                    _w();
+                    _x();
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 50) {
                         if (confirm('Reset counter to 0?')) {
