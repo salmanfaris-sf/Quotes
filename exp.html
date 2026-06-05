@@ -43,6 +43,12 @@ html, body {
 
 body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
+/* Loader styles */
+#loader-screen {
+  background-color: #000000;
+  z-index: 100;
+}
+
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
@@ -69,19 +75,31 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
 </head>
-<body oncontextmenu="return false;">
+<body oncontextmenu="return false;" class="overflow-hidden">
+
+<!-- Apple-Style Premium Loading Screen -->
+<div id="loader-screen" class="fixed inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out">
+  <div class="w-40 flex flex-col items-center gap-8">
+    <!-- Clean Minimalist Apple-like breathing dot indicator -->
+    <div class="w-4 h-4 rounded-full bg-white opacity-80 animate-pulse"></div>
+    <!-- Thin progress bar container -->
+    <div class="w-full h-[2px] bg-neutral-900 rounded-full overflow-hidden">
+      <div id="loader-progress" class="h-full w-0 bg-white rounded-full transition-all duration-300 ease-out"></div>
+    </div>
+  </div>
+</div>
 
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <!-- Left: Month and Year (Now in clean crisp white) -->
+  <!-- Left: Month and Year (Crisp pure white) -->
   <div id="d0" class="text-white/90 text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">LOADING...</div>
-  <!-- Right: Day of the Week (Now in classic dynamic gold accent color) -->
+  <!-- Right: Day of the Week (Dynamic gold accent color) -->
   <div id="t0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">LOADING...</div>
 </nav>
 
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <!-- Reverted back to the original massive text-9xl md:text-[16rem] styling -->
+      <!-- Massive typographic scale restored -->
       <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
@@ -108,89 +126,89 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
 <script>
 (function(){
-  // 15 Raw action-oriented masculine titles to set the cadence for daily discipline execution
+  // 15 Simple, raw, masculine daily titles
   const themes = [
-    'Pure Action', 'Iron Will', 'Zero Delay', 'No Regret', 'Fast Execution',
-    'Hard Labor', 'Heavy Output', 'Savage Drive', 'Cold Focus', 'Direct Attack',
-    'Ruthless Pace', 'Instant Start', 'Total Effort', 'No Compromise', 'Absolute Force'
+    'Pure Action', 'Iron Will', 'Zero Delay', 'No Regret', 'Fast Work',
+    'Hard Labor', 'Heavy Work', 'Big Drive', 'Cold Focus', 'Run Ahead',
+    'Hard Pace', 'Start Now', 'Full Work', 'No Excuses', 'Real Force'
   ];
   
-  // 15 ultra-focused text tracks solely and ruthlessly dedicated to immediate movement and absolute execution
+  // 15 sets of quotes using simple, action-oriented, direct English words
   const content = [
     [
-      "You know what must be done. You just hate the beginning. Your mind begs for comfort. It tells you to wait for a better mood. These are soft lies. The work is the only cure for your anxiety. Every single hour you delay makes the hill steeper. Do the work now. Execute without permission from your emotions.",
-      "Time is your only depleting resource. You have one thousand four hundred and forty minutes today. If you waste them scrolling or deliberating, they are gone forever. Most people talk themselves out of greatness. You must force your body to move. Action is binary. You are either stepping forward or dying on the vine.",
-      "Real strength is built when you choose the cold floor over the warm bed. Stop analyzing the masterplan. Build the foundation now. The weight will not lift itself, and the pages will not write themselves. Do the boring, repetitive, heavy work today so that you can look back tomorrow and know you did not yield."
+      "You know what you must do. You just do not want to start. Your mind begs you to rest. It tells you to wait. These are all lies. The hard path is the only way to be strong. Do not wait for a good mood. Your mood does not matter. Only your work matters. Get up and do it now.",
+      "Time is passing very fast. You have only one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak. They choose easy things. You must be different. Hard work is what makes you free. Be hard on yourself today so you can stand tall tomorrow.",
+      "Real power is built when you are alone. It is built in the early mornings and late nights. Success is not a gift. You must earn it with sweat. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it every single day until it is done."
     ],
     [
-      "Nothing changes while you remain seated. You cannot think your way out of a life you built through inaction. Your calendar reveals your actual priorities, not your journal. Stop discussing your potential with people who have none. Kill your appetite for cheap comfort and start moving. Action is the ultimate filter.",
-      "Your ideas are completely worthless without flawless execution. Stop waiting for the stars to align. The perfect opportunity is a myth designed by cowards to justify their delay. Run directly toward the tasks that terrify you. The faster you confront the pain of starting, the faster your hesitation dissolves.",
-      "When the resistance hits you, do not slow down. Double your speed. Treat delay like a terminal diagnosis. Every small, hard choice you make today builds an unbreakable habit of victory. Push through the exhaustion. Keep stepping forward. Never allow yourself to go to sleep with unfinished missions."
+      "Nothing changes if you do nothing. You cannot have big dreams but do small work. Your daily habits show who you really are. If you cannot control yourself, you cannot control your life. Stop talking about what you want to do. Start doing it now. Hate being lazy. Stand straight and work.",
+      "What you know is nothing if you do not act. Fear nothing but a wasted life. Live with a clear goal. A real man protects his home. He works for the people he loves. He does not follow the crowd. He does not look back. The time to start is right now.",
+      "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep hitting the rock."
     ],
     [
-      "Waiting is the slow death of ambition. The longer you contemplate a task, the less likely you are to execute it. Lower your gaze from distractions and put your hands to work. Your future self is either thanking you for your labor or paying the painful tax of your laziness. Be the man who does what he says.",
-      "The man who acts will always defeat the man who only dreams. Years of hard, silent work can produce a lifetime of complete leverage. But you have to pay the entry fee today. Speak less. Do more. Let your results produce the sound. Fear nothing but a life spent waiting for things to happen.",
-      "Every single second is a battle against your default state of comfort. You must win this battle. Do not let your family down. Do not let yourself down. Discipline is how you show absolute respect to your potential. Stop analyzing the path. Lift the weight. Start the work right now."
+      "Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Stop looking at things that distract you. Guard your mind from weak thoughts. Your life today is what you did yesterday. Your life tomorrow is what you do right now. Do the work.",
+      "The man who keeps walking will win. A few years of hard work can give you a lifetime of power. But you must pay the price today. Speak less. Do more. Let your work make the noise. Fear no man. Only fear wasting the life you were given. This is the way.",
+      "Every single second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the path of your name. Hard work is how you love yourself. Stop making excuses. Get up and get to work right now."
     ],
     [
-      "If you let your feelings decide your output, you have already surrendered. Your mind wants survival, safety, and silence. Your legacy demands action, sweat, and combat. Stop negotiating with your own weakness. When the alarm rings, your feet must touch the floor before your brain can formulate an excuse.",
-      "The world is filled with spectators who talk about what should be done. Be the operator who actually does it. Reject paths of least resistance. Every comfort you indulge in acts as a slow poison to your drive. If you cannot control your own body and your own time, you will never control your fate.",
-      "Look at your family. Look at your name. You carry the responsibility of generations. Do not dishonor them by living an average, uninspired life. You are the engine of change. Stand tall, carry the heavy loads, and perform your duty without a single whisper of complaint. Push onward."
+      "If you let your feelings stop you, you have already lost. Your mind wants to keep you safe and comfortable. Your destiny demands fight, sweat, and tears. Stop talking to your weak side. When the alarm rings, your feet must touch the floor before you can make an excuse.",
+      "The world is full of people who only watch and talk. Be the one who actually does the work. Do not take the easy road. Every easy choice makes you weak. If you cannot control your own body and your own time, you will never control your own life. Demand more from yourself.",
+      "Look at your family. You carry their name. Do not make them ashamed of you by being average. You are the one who must build the future. Stand up, carry the heavy weight, and do your duty without complaining. Move forward and do not stop."
     ],
     [
-      "The master of any craft does not wait for a beautiful day to practice. He works in the mud, the freezing cold, and the pitch black. You are waiting for conditions that will never exist. The noise will never fully stop, and your energy will never be completely full. Do the heavy work while your muscles ache.",
-      "No one is coming to build your empire. No mentor will force your hands onto the tools. You are entirely alone in this room. Accept this reality and find absolute freedom in it. You are the only variable that matters. Build your fortress brick by heavy brick, every single day, without fail.",
-      "Comfort breeds decay, and decay leads to ultimate defeat. The moment you are satisfied with what you did yesterday is the moment you begin to slide backward. Treat every victory as a starting line. Keep climbing because the climb is the only place where true men are forged. Action is the destination."
+      "A master does not wait for a beautiful day. He works in the mud, the cold, and the dark. You are waiting for a perfect day that will never come. The world will never be quiet. Your mind will never be fully ready. Do the hard work anyway.",
+      "No one is coming to save you. No one will do the work for you. You are completely alone in this room. Accept this and feel free. You are the only one who can change your life. Build your own home block by block, every day, without fail.",
+      "Being comfortable makes you weak. The moment you are happy with what you did yesterday is the moment you stop growing. Treat every win as a new start. Keep climbing because the climb is what makes you a real man. The work itself is the prize."
     ],
     [
-      "Silence your excuses and let your execution speak for you. A man who brags about his potential is merely mourning what he has failed to build. True power is silent. Work in the shadows. When you talk about your plans, you waste the momentum meant for the fight. Work hard, stay focused, and show only completed work.",
-      "You do not need to read another book. You do not need another strategy session. You need to start. You have gathered enough information to last a lifetime. Now apply it. The road is straightforward, yet you overcomplicate it to avoid the immediate discomfort of starting. Break the lock and jump in.",
-      "A quiet life of high output is infinitely better than a loud life of zero results. Let the world run after cheap validation and fake status. You belong to the old ways of daily execution, silent struggle, and absolute completion. Do not talk. Do not promise. Just perform."
+      "Shut your mouth and let your work show. A man who talks about what he will do has done nothing yet. True power is quiet. Work in the dark. When you tell people your plans, you waste the energy you need to fight. Work hard, stay hidden, and show only results.",
+      "You do not need to read more. You do not need more advice. You just need to start. You have enough thoughts in your head. Now use them. The path is simple, but you make it hard so you do not have to feel the pain of starting. Break the chain and move.",
+      "A quiet life of big work is better than a loud life of zero results. Let others chase cheap attention. You belong to the old way of hard work, daily struggle, and finishing what you start. Do not talk. Do not promise. Just do the work."
     ],
     [
-      "Never complain about results you didn't get from work you didn't do. If you hate your current situation, change it. If you want a stronger body, train it. If you want a sharper mind, test it. Discomfort is not a stop sign; it is a signal of growth. Use your anger as fuel and accelerate.",
-      "The greatest victories are won in the flat, boring plains of daily repetition. The initial excitement of a new goal always fades within days. What remains is pure discipline. If you can fall in love with the monotonous grind of execution, you will become truly unstoppable. Repetition is mastery.",
-      "Make your decision once, then never argue with yourself. If you resolved to train at dawn, do not debate it when you open your eyes. The debate is where the weak self wins. Be a soldier to your own directives. Your mind designs the strategy; your body must execute it without a single question."
+      "Do not complain about results you did not get from work you did not do. If you do not like your life, change it. If you want a strong body, build it. If you want a sharp mind, train it. Pain is not a sign to stop; it is a sign to grow. Use it and go faster.",
+      "The biggest wins are won in the boring days of doing the same thing. The fun of a new goal always fades in a few days. What is left is pure discipline. If you can love the boring daily work, you will be unstoppable. Doing it again and again is how you win.",
+      "Make your choice once, then never argue with yourself. If you said you would wake up at dawn, do not debate it when you open your eyes. The debate is where weakness wins. Be a soldier to your own plan. Your mind makes the map; your body must run it."
     ],
     [
-      "Fear is the compass telling you exactly what action to take next. If a project makes you hesitate, it is the precise project you must attack. Do not shrink from the cold glare of challenge. Step directly into the storm. The man who stays comfortable his entire life never discovers his power.",
-      "Every distraction you allow to steal your focus is a vote against your own legacy. Guard your attention with a weapon. The modern world is engineered to keep you weak, distracted, and dependent. Reclaim your mind. Turn off the noise, close the loops, and engage with your work.",
-      "When the sun sets, ask yourself: Did I move forward or did I slide back? There is no middle ground. Every decision is either building your house or burning it down. Be absolutely honest with yourself. If you failed today, own it, bear the sting, and prepare to execute tomorrow."
+      "Fear is the map that shows you where to go. If a task makes you scared, it is the exact task you must do. Do not run from the hard thing. Step right into the storm. The man who stays safe his whole life never knows how strong he is. Break the wall.",
+      "Every distraction you allow to take your mind is a vote against your future. Guard your time like a king guards his crown. The world wants to keep you weak, distracted, and small. Turn off the noise, close the screens, and get to work.",
+      "When the day ends, ask yourself: Did I go forward or did I slide back? There is no standing still. Every choice builds your house or burns it down. Be honest with yourself. If you failed today, own it, feel the sting, and get ready to work tomorrow."
     ],
     [
-      "You are defined by what you tolerate. If you tolerate delay, half-hearted efforts, and unfinished tasks, that is exactly what your life will look like. Raise your standard today. Demand absolute perfection in your effort before you demand anything from others. Start now. Do the hard thing first.",
-      "Stop searching for motivation. It is a weak friend that disappears when the weather turns cold. Depend only on discipline. Discipline is the heavy armor that keeps you moving forward in the deepest winter. Rely on what you can force yourself to do when you absolutely hate doing it.",
-      "Your life is ticking away. Every single breath is a moment you will never get back. Knowing this, how do you find the nerve to waste hours on cheap digital distractions? Wake up to the brutal reality of your mortality. Use your limited hours to build something that lasts."
+      "You are defined by what you allow. If you allow yourself to delay, to do half work, and to leave things unfinished, your life will be a mess. Raise your standards today. Demand the best effort from yourself before you ask anything from others. Start now.",
+      "Stop looking for motivation. It is a fake friend that leaves when the day gets cold. Rely only on discipline. Discipline is the heavy coat that keeps you warm in the deep winter. It is what forces you to work when you absolutely hate it.",
+      "Your life is ticking away. Every breath you take is a moment you will never get back. How can you waste hours looking at a phone screen? Wake up to the truth that you will die. Use your short time to build something real."
     ],
     [
-      "The path of progress is one of continuous execution. You will fail, you will make mistakes, and you will fall down. The difference between the weak and the strong is the speed of recovery. Do not spend three days regretting one bad day. Reset your focus and step directly back into the fight.",
-      "Avoid soft, comfortable, aimless people. Their weakness is highly contagious. Surround yourself with individuals who demand your highest output and challenge your lazy assumptions. If you are the most disciplined person you know, seek a bigger room. Find giants who force you to level up.",
-      "Your life is your direct responsibility. No one is going to carry your pack or do your pushups for you. Stop blaming your past, your circumstances, or your genetics. The hand you have is the hand you must play. Play it like a master. Outwork your doubts until success is the only outcome."
+      "The path to success is just doing the work day after day. You will fail, you will make mistakes, and you will fall. But the strong get back up fast. Do not spend three days feeling bad about one bad day. Clean your face and get back in the fight.",
+      "Stay away from soft, lazy, aimless people. Their weakness will spread to you. Stay near people who demand your best and tell you the truth. If you are the hardest worker in your group, find a new group. Find giants who force you to grow.",
+      "Your life is your own job. No one will carry your bags or do your work for you. Stop blaming your past, your parents, or your bad luck. The cards you have are the cards you must play. Play them like a master. Outwork your doubts until you win."
     ],
     [
-      "While the rest of the world sleeps and relaxes, you have a window to dominate. The quiet hours are the ultimate testing ground. Use this time to outwork your competition, to study, and to execute. No notifications, no social media, just pure raw output. This is how you win.",
-      "Do not let physical fatigue make a coward of your mind. Your brain will try to convince you that you have done enough for the day. It will suggest finishing the task tomorrow. This is the moment of truth. Push through for one more hour. This is where you separate yourself from the herd.",
-      "Night work is not about punishment; it is about choosing your future over your present comfort. You are trading cheap, temporary entertainment for absolute freedom. Keep your head down, block out the world, and let your progress speak for itself when the morning arrives."
+      "While the rest of the world is sleeping and resting, you have a chance to win. The quiet hours of the night are your best time. Use this time to outwork everyone, to study, and to build. No notifications, no screens, just pure hard work.",
+      "Do not let your tired body make your mind a coward. Your brain will tell you that you have done enough. It will tell you to finish the work tomorrow. This is the moment. Push for one more hour. This is how you separate yourself from the crowd.",
+      "Night work is not about pain; it is about choosing your future over today's comfort. You are trading cheap fun for real freedom. Keep your head down, shut out the world, and let your results show when the morning comes."
     ],
     [
-      "An disciplined mind cannot be distracted, manipulated, or stopped. You must build an internal sanctuary that external events cannot touch. When chaos occurs around you, remain perfectly calm, completely analytical, and focused on the next execution. This is real masculine power.",
-      "Stop looking for validation from people you do not respect. Their applause is empty, and their criticism is irrelevant. The only metric that matters is your own self-respect. Did you complete the work you set out to do today? If yes, stand proud. If no, fix it immediately.",
-      "Your ego is your greatest enemy. It wants to believe you are special and that you deserve success without sweat. Kill your ego every morning. Remain a hungry student, stay close to the dirt, and do the heavy lifting that others think they are too important to perform."
+      "A strong mind cannot be distracted or stopped. You must build a fort in your own head that nothing can shake. When everything is crazy around you, stay calm, look at the facts, and do the next task. This is real power.",
+      "Stop looking for praise from people you do not respect. Their words are empty. The only thing that matters is what you see in the mirror at the end of the day. Did you do the work you promised to do? If yes, be proud. If no, fix it.",
+      "Your ego is your worst enemy. It wants to believe you are already great and that you do not need to work. Kill your ego every morning. Remain a student, stay hungry, and do the heavy work that others think they are too important to do."
     ],
     [
-      "Keep the internal fire burning hot, regardless of the cold winds around you. There will be hard seasons where nothing seems to go right and every step is a battle. This is your training ground. Your drive must not depend on external praise. Burn your own fuel. Keep executing.",
-      "Your unused potential is a direct insult to your creation. If you leave this life without realizing your full capabilities, you have lived a life of waste. Do not rob yourself of the chance to see what you are truly capable of doing. Push your physical and mental limits every day.",
-      "The difference between a wish and an objective is execution. Stop wishing for a better body, a stronger mind, or a successful career. Write down the daily actions required, and execute them without fail. A goal without action is a daydream. Get up and execute."
+      "Keep the fire burning hot inside you, even when the wind is cold. There will be hard times when nothing goes right and every step is a fight. This is your test. Your fire must not need others to feed it. Burn your own fuel. Keep working.",
+      "Your potential is a debt you owe to yourself. If you die without seeing what you can do, you have lived a wasted life. Do not rob yourself of the chance to see how strong you can be. Push your limits every single day.",
+      "The difference between a wish and a goal is action. Stop wishing for a better body, a stronger mind, or a better life. Write down the daily work, and do it without fail. A goal without work is just a dream. Get up and do it."
     ],
     [
-      "In the deepest quiet, you find the real blueprint for your work. People are terrified of silence because it forces them to face their own failures. Do not run. Sit with your quiet mind, analyze your progress, and listen to the voice that tells you exactly what to execute next.",
-      "Noise is the ultimate distraction. Cut off the useless inputs. You do not need to know every headline, every political debate, or every online trend. Focus completely on the immediate work in front of you. Simplify your life to maximize your direct daily output.",
-      "The most dangerous man is the one who says nothing but consistently executes. He is not wasting his breath attempting to impress others. He is observing, designing, and taking fast action. Cultivate this quiet power. Let your results do all the talking."
+      "In the deepest quiet, you find the real plan for your life. People hate silence because it forces them to see their own failures. Do not run. Sit with your quiet mind, look at your progress, and listen to the voice that tells you what to do next.",
+      "Noise is the ultimate distraction. Cut out the useless inputs. You do not need to know every news story, every trend, or every online fight. Focus completely on the work in front of you. Simplify your life so you can do more work.",
+      "The most dangerous man is the one who says nothing but always does the work. He does not waste words trying to look good. He is watching, learning, and taking action. Be quiet and let your work make the noise."
     ],
     [
-      "Forge your character through brutal, consistent labor. It requires heat, intense pressure, and heavy blows. Do not run from the stressful moments in your life; they are the tools shaping you into a man of true force. Embrace the daily struggle. It is the only way to build steel.",
-      "Integrity and action are your only true assets. Wealth can vanish, but your work ethic remains yours forever. Guard your daily disciplines with your life. Never compromise your standards for easy routes or temporary pleasure. Stand firm, do the work, and be proud of your effort.",
-      "You will not remember the days you spent sleeping in and relaxing. You will remember the times you were exhausted, wanted to quit, but chose to keep working anyway. These are the moments that build your soul. Give your future self a story of victory and absolute action."
+      "Forge your character like a hammer shapes hot metal. It takes heat, pressure, and hard blows. Do not run from the hard moments in life; they are what shape you into a strong man. Welcome the struggle. It is the only way to build steel.",
+      "Your work ethic is your only real safety in this world. Money can be lost, but your drive remains yours forever. Guard your daily habits with your life. Never take the easy road. Stand firm, do the work, and be proud of your effort.",
+      "You will not remember the days you spent sleeping and resting. You will remember the times you were tired, wanted to quit, but kept working anyway. These are the moments that build your soul. Give your future self a story of victory."
     ]
   ];
 
@@ -235,7 +253,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     const activeTheme = themes[themeIndex];
     const activeParagraphs = content[contentIndex];
 
-    // Set Main Hero Title
+    // Set Main Hero Title (Massive size preserved)
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${activeTheme}</span>`;
     
     // Populate the Body Content with illuminated sentence splits
@@ -295,10 +313,53 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     });
   }, { passive: true });
 
+  // Intelligent Premium Apple-like Loading Sequence
+  const startLoadingAnimation = () => {
+    const progressEl = document.getElementById("loader-progress");
+    const loaderScreen = document.getElementById("loader-screen");
+    let progress = 0;
+
+    // Simulate steady incremental loading
+    const interval = setInterval(() => {
+      if (progress < 85) {
+        progress += Math.floor(Math.random() * 8) + 2;
+        progressEl.style.width = `${Math.min(progress, 85)}%`;
+      }
+    }, 100);
+
+    const finishLoading = () => {
+      clearInterval(interval);
+      progressEl.style.width = "100%";
+      
+      setTimeout(() => {
+        // Fade loader screen away smoothly
+        loaderScreen.style.opacity = "0";
+        loaderScreen.style.pointerEvents = "none";
+        
+        // Restore page scrolling functionality once completely loaded
+        document.body.classList.remove("overflow-hidden");
+        
+        // Initialize resources
+        init();
+        
+        // Trigger scroll event manually to compute dynamic active states
+        setTimeout(() => { 
+          window.dispatchEvent(new Event('scroll')); 
+          loaderScreen.remove(); // Remove loader entirely from DOM once done
+        }, 150);
+      }, 500);
+    };
+
+    if (document.readyState === "complete") {
+      finishLoading();
+    } else {
+      window.addEventListener("load", finishLoading);
+    }
+  };
+
   window.onload = () => {
-    init();
+    startLoadingAnimation();
     setInterval(updateClockAndStats, 1000);
-    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
   };
 })();
 </script>
