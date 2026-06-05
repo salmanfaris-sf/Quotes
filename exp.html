@@ -1,770 +1,306 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments) }
-        gtag('js', new Date());
-        gtag('config', 'G-1K1TKBQFFK')
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-    <meta name="theme-color" content="#000">
-    <title>COUNTER</title>
-    <style>
-        :root {
-            --b: #000;
-            --t: #fff;
-            --s: #fff;
-            --m: rgba(28, 28, 30, 0.94);
-            --accent: #34c759
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="theme-color" content="#000000">
+<title>Salman Faris | Daily Wisdom</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent
-        }
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1K1TKBQFFK');
+</script>
 
-        body,
-        html {
-            overscroll-behavior-y: contain;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            background: var(--b);
-            color: var(--t);
-            font-family: -apple-system, system-ui, sans-serif;
-            cursor: pointer;
-            user-select: none;
-            touch-action: none;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center
-        }
+<meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
+<meta name="author" content="Salman Faris">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
+    }
+  }
+}
+</script>
+<style>
+html, body { 
+  background-color: #000000; 
+  scroll-behavior: auto; 
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  touch-action: pan-y; 
+}
 
-        .a1 {
-            position: fixed;
-            top: 35px;
-            left: 25px;
-            font-size: .75rem;
-            letter-spacing: .15rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: var(--s);
-            z-index: 15;
-            transition: opacity .4s;
-            padding: 10px;
-            margin: -10px;
-            pointer-events: none;
-        }
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
-        .a2 {
-            position: fixed;
-            top: 20px;
-            right: 25px;
-            display: flex;
-            z-index: 101;
-            transition: opacity .4s
-        }
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
 
-        .a2 button#menu-btn {
-            background: none;
-            border: none;
-            color: var(--s);
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
-        }
+.zi{text-indent:12rem}
+@media(max-width:768px){.zi{text-indent:0}}
 
-        .a2 button#menu-btn:active {
-            opacity: 0.6;
-            transform: scale(0.96);
-        }
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
 
-        .menu-dropdown {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: var(--m);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: none;
-            border-radius: 14px;
-            padding: 0;
-            display: none;
-            flex-direction: column;
-            min-width: 150px;
-            box-shadow: 0 12px 36px rgba(0,0,0,0.6);
-            z-index: 200;
-            overflow: hidden;
-            animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
+.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 14px); color: #ffffff; opacity: 0.5; margin-top: 10px; font-weight: 500; }
 
-        .menu-dropdown.active {
-            display: flex;
-        }
-
-        .menu-item {
-            background: none;
-            border: none;
-            color: var(--s);
-            padding: 14px 20px;
-            font-size: 0.88rem;
-            font-weight: 400;
-            text-align: left;
-            width: 100%;
-            border-radius: 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            transition: background 0.1s;
-        }
-
-        .menu-item:active,
-        .menu-item.active-touch {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .a3 {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            width: 100%;
-            pointer-events: none;
-            position: relative
-        }
-
-        .a4 {
-            position: absolute;
-            width: 80vw;
-            height: 80vw;
-            max-width: 400px;
-            max-height: 400px;
-            pointer-events: none;
-            display: none
-        }
-
-        .a4.active {
-            display: block
-        }
-
-        .a5 {
-            transform: rotate(-90deg)
-        }
-
-        .a6 {
-            transition: stroke-dashoffset .35s;
-            transform-origin: 50% 50%;
-            stroke: var(--accent);
-            opacity: .3
-        }
-
-        .a7 {
-            font-size: .7rem;
-            opacity: .5;
-            letter-spacing: .1rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: flex;
-            gap: 15px;
-            z-index: 5
-        }
-
-        .a8 {
-            display: none
-        }
-
-        .a8.v {
-            display: inline-block
-        }
-
-        .a9 {
-            font-size: 18vw;
-            line-height: 1;
-            text-align: center;
-            padding: 0 10px;
-            pointer-events: auto;
-            outline: none;
-            word-break: break-all;
-            max-width: 100%;
-            z-index: 5
-        }
-
-        .b1 {
-            font-size: 1rem;
-            letter-spacing: .05rem;
-            text-transform: uppercase;
-            font-weight: 400;
-            color: var(--s);
-            margin-top: 25px;
-            opacity: 0;
-            transition: opacity .8s ease-in-out;
-            z-index: 5
-        }
-
-        .b1.v {
-            opacity: 1
-        }
-
-        .b2 {
-            position: fixed;
-            bottom: 30px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: .65rem;
-            letter-spacing: .01rem;
-            text-transform: lowercase;
-            color: var(--s);
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 0 20px;
-            flex-wrap: wrap;
-            font-weight: 400;
-            transition: opacity .4s;
-            z-index: 5
-        }
-
-        .b2 span {
-            background: var(--m);
-            padding: 6px 10px;
-            border-radius: 4px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: none
-        }
-
-        .b3 {
-            background: var(--m);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0;
-            font-size: .8rem;
-            font-weight: 500;
-            opacity: 0;
-            transition: opacity .4s, top .4s;
-            pointer-events: none;
-            z-index: 3000;
-            color: var(--s);
-            display: flex;
-            align-items: stretch;
-            overflow: hidden;
-            width: max-content;
-            max-width: 85vw;
-            border-radius: 50px;
-            border: none;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7)
-        }
-
-        .b3.active {
-            pointer-events: auto;
-            opacity: 1;
-            top: 80px;
-        }
-
-        .b3 span {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            white-space: nowrap
-        }
-
-        .b3 button {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #fff;
-            padding: 0 16px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05rem;
-            transition: background 0.2s;
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-            cursor: pointer;
-            display: none;
-        }
-
-        .b3 button.visible {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #lock-overlay {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 85vw;
-            max-width: 340px;
-            height: 70px;
-            background: var(--m);
-            border-radius: 35px;
-            display: none;
-            align-items: center;
-            padding: 8px;
-            z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5)
-        }
-
-        #lock-overlay.active {
-            display: flex
-        }
-
-        .slider-track {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center
-        }
-
-        .slider-text {
-            font-size: .85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: .6;
-            pointer-events: none;
-            font-weight: 500;
-            animation: p 2s infinite
-        }
-
-        @keyframes p {
-            0%, 100% { opacity: .3 }
-            50% { opacity: .8 }
-        }
-
-        .slider-handle {
-            position: absolute;
-            left: 0;
-            width: 54px;
-            height: 54px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            touch-action: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, .4);
-            z-index: 2
-        }
-
-        body.locked .a2,
-        body.locked .b2,
-        body.locked .a1,
-        body.locked .b1 {
-            opacity: 0 !important;
-            pointer-events: none !important
-        }
-
-        body.f .b2,
-        body.f .a2,
-        body.f .b1,
-        body.f .a1 {
-            opacity: 0 !important;
-            pointer-events: none !important
-        }
-
-        body.lockout-active .a1,
-        body.lockout-active .a2,
-        body.lockout-active .b2,
-        body.lockout-active #lock-overlay,
-        body.lockout-active #x6,
-        body.lockout-active .a7,
-        body.lockout-active #y1 {
-            display: none !important;
-            pointer-events: none !important;
-        }
-
-        body.lockout-active #x9 {
-            pointer-events: none !important;
-        }
-    </style>
+.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
+footer { padding-top: 10px; padding-bottom: 40px; }
+</style>
 </head>
+<body oncontextmenu="return false;">
 
-<body oncontextmenu="return !1">
-    <div class="a1" id="x1"><span>Counter</span></div>
-    <div class="a2">
-        <button id="menu-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="5" cy="12" r="1.8"></circle>
-                <circle cx="12" cy="12" r="1.8"></circle>
-                <circle cx="19" cy="12" r="1.8"></circle>
-            </svg>
-        </button>
-        <div class="menu-dropdown" id="menu-dropdown">
-            <button class="menu-item" id="fs-btn-menu">Fullscreen</button>
-            <button class="menu-item" id="goal-btn-menu">Set Goal</button>
-            <button class="menu-item" id="lock-btn-menu">Lock Screen</button>
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
+  <!-- Left: Month and Year (Now in clean crisp white) -->
+  <div id="d0" class="text-white/90 text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">LOADING...</div>
+  <!-- Right: Day of the Week (Now in classic dynamic gold accent color) -->
+  <div id="t0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">LOADING...</div>
+</nav>
+
+<main class="relative w-full">
+  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
+    <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <!-- Reverted back to the original massive text-9xl md:text-[16rem] styling -->
+      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
+    </div>
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
+      <div class="zs1 zf">Scroll Down</div>
+    </div>
+  </section>
+
+  <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
+
+  <section class="relative z-10">
+    <div class="z1 text-center px-6 quote-wrapper">
+        <div class="quote-container border-t border-white/5 pt-16">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">don't let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
         </div>
     </div>
-    <div id="x3" class="b3">
-        <span id="x4"></span>
-        <button id="x5">turn off</button>
-    </div>
-    <div class="a3">
-        <div id="x6" class="a4">
-            <svg class="a5" width="100%" height="100%" viewBox="0 0 100 100">
-                <circle class="a6" stroke-width="2" fill="transparent" r="48" cx="50" cy="50" />
-            </svg>
-        </div>
-        <div class="a7">
-            <span id="x7" class="a8"></span>
-            <span id="x8" class="a8"></span>
-        </div>
-        <div id="x9" class="a9" contenteditable="false" inputmode="numeric">0</div>
-        <div id="y1" class="b1 v">Tap anywhere to count</div>
-    </div>
-    <div class="b2">
-        <span>swipe up: edit</span>
-        <span>swipe left: reset</span>
-        <span>swipe down: minus</span>
-        <span>swipe right: increment</span>
-        <span>long tap: voice sound</span>
-    </div>
-    <div id="lock-overlay">
-        <div class="slider-track">
-            <span class="slider-text">Swipe to unlock</span>
-            <div class="slider-handle" id="slider-handle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6" />
-                </svg>
-            </div>
-        </div>
-    </div>
-    <script>
-        (function () {
-            const d = document, w = window, k = { c: '_n_c', b: '_n_b', s: '_m_s', t: '_n_step', g: '_n_goal' },
-                f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
-                ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
-                pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
-                mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
-                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
-                lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
+  </section>
+</main>
 
-            let v = parseInt(localStorage.getItem(k.c)) || 0,
-                st = parseInt(localStorage.getItem(k.t)) || 1,
-                gl = parseInt(localStorage.getItem(k.g)) || 0,
-                bd = localStorage.getItem(k.b) === 'true',
-                sn = localStorage.getItem(k.s) !== 'false', // false means voice text-to-speech is active
-                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
+<footer class="w-full flex justify-center px-6 relative z-10 z1">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
+</footer>
 
-            let maleVoice = null;
-            function loadMaleVoice() {
-                if (!w.speechSynthesis) return;
-                const voices = w.speechSynthesis.getVoices();
-                // Look for common native system male voice tags
-                maleVoice = voices.find(v => 
-                    (v.lang.startsWith('en-') && 
-                    (v.name.toLowerCase().includes('male') || 
-                     v.name.toLowerCase().includes('google uk english male') ||
-                     v.name.toLowerCase().includes('microsoft david') ||
-                     v.name.toLowerCase().includes('premium'))
-                    )
-                ) || voices.find(v => v.lang.startsWith('en-'));
-            }
-            if (w.speechSynthesis) {
-                loadMaleVoice();
-                if (w.speechSynthesis.onvoiceschanged !== undefined) {
-                    w.speechSynthesis.onvoiceschanged = loadMaleVoice;
-                }
-            }
+<script>
+(function(){
+  // 15 Raw action-oriented masculine titles to set the cadence for daily discipline execution
+  const themes = [
+    'Pure Action', 'Iron Will', 'Zero Delay', 'No Regret', 'Fast Execution',
+    'Hard Labor', 'Heavy Output', 'Savage Drive', 'Cold Focus', 'Direct Attack',
+    'Ruthless Pace', 'Instant Start', 'Total Effort', 'No Compromise', 'Absolute Force'
+  ];
+  
+  // 15 ultra-focused text tracks solely and ruthlessly dedicated to immediate movement and absolute execution
+  const content = [
+    [
+      "You know what must be done. You just hate the beginning. Your mind begs for comfort. It tells you to wait for a better mood. These are soft lies. The work is the only cure for your anxiety. Every single hour you delay makes the hill steeper. Do the work now. Execute without permission from your emotions.",
+      "Time is your only depleting resource. You have one thousand four hundred and forty minutes today. If you waste them scrolling or deliberating, they are gone forever. Most people talk themselves out of greatness. You must force your body to move. Action is binary. You are either stepping forward or dying on the vine.",
+      "Real strength is built when you choose the cold floor over the warm bed. Stop analyzing the masterplan. Build the foundation now. The weight will not lift itself, and the pages will not write themselves. Do the boring, repetitive, heavy work today so that you can look back tomorrow and know you did not yield."
+    ],
+    [
+      "Nothing changes while you remain seated. You cannot think your way out of a life you built through inaction. Your calendar reveals your actual priorities, not your journal. Stop discussing your potential with people who have none. Kill your appetite for cheap comfort and start moving. Action is the ultimate filter.",
+      "Your ideas are completely worthless without flawless execution. Stop waiting for the stars to align. The perfect opportunity is a myth designed by cowards to justify their delay. Run directly toward the tasks that terrify you. The faster you confront the pain of starting, the faster your hesitation dissolves.",
+      "When the resistance hits you, do not slow down. Double your speed. Treat delay like a terminal diagnosis. Every small, hard choice you make today builds an unbreakable habit of victory. Push through the exhaustion. Keep stepping forward. Never allow yourself to go to sleep with unfinished missions."
+    ],
+    [
+      "Waiting is the slow death of ambition. The longer you contemplate a task, the less likely you are to execute it. Lower your gaze from distractions and put your hands to work. Your future self is either thanking you for your labor or paying the painful tax of your laziness. Be the man who does what he says.",
+      "The man who acts will always defeat the man who only dreams. Years of hard, silent work can produce a lifetime of complete leverage. But you have to pay the entry fee today. Speak less. Do more. Let your results produce the sound. Fear nothing but a life spent waiting for things to happen.",
+      "Every single second is a battle against your default state of comfort. You must win this battle. Do not let your family down. Do not let yourself down. Discipline is how you show absolute respect to your potential. Stop analyzing the path. Lift the weight. Start the work right now."
+    ],
+    [
+      "If you let your feelings decide your output, you have already surrendered. Your mind wants survival, safety, and silence. Your legacy demands action, sweat, and combat. Stop negotiating with your own weakness. When the alarm rings, your feet must touch the floor before your brain can formulate an excuse.",
+      "The world is filled with spectators who talk about what should be done. Be the operator who actually does it. Reject paths of least resistance. Every comfort you indulge in acts as a slow poison to your drive. If you cannot control your own body and your own time, you will never control your fate.",
+      "Look at your family. Look at your name. You carry the responsibility of generations. Do not dishonor them by living an average, uninspired life. You are the engine of change. Stand tall, carry the heavy loads, and perform your duty without a single whisper of complaint. Push onward."
+    ],
+    [
+      "The master of any craft does not wait for a beautiful day to practice. He works in the mud, the freezing cold, and the pitch black. You are waiting for conditions that will never exist. The noise will never fully stop, and your energy will never be completely full. Do the heavy work while your muscles ache.",
+      "No one is coming to build your empire. No mentor will force your hands onto the tools. You are entirely alone in this room. Accept this reality and find absolute freedom in it. You are the only variable that matters. Build your fortress brick by heavy brick, every single day, without fail.",
+      "Comfort breeds decay, and decay leads to ultimate defeat. The moment you are satisfied with what you did yesterday is the moment you begin to slide backward. Treat every victory as a starting line. Keep climbing because the climb is the only place where true men are forged. Action is the destination."
+    ],
+    [
+      "Silence your excuses and let your execution speak for you. A man who brags about his potential is merely mourning what he has failed to build. True power is silent. Work in the shadows. When you talk about your plans, you waste the momentum meant for the fight. Work hard, stay focused, and show only completed work.",
+      "You do not need to read another book. You do not need another strategy session. You need to start. You have gathered enough information to last a lifetime. Now apply it. The road is straightforward, yet you overcomplicate it to avoid the immediate discomfort of starting. Break the lock and jump in.",
+      "A quiet life of high output is infinitely better than a loud life of zero results. Let the world run after cheap validation and fake status. You belong to the old ways of daily execution, silent struggle, and absolute completion. Do not talk. Do not promise. Just perform."
+    ],
+    [
+      "Never complain about results you didn't get from work you didn't do. If you hate your current situation, change it. If you want a stronger body, train it. If you want a sharper mind, test it. Discomfort is not a stop sign; it is a signal of growth. Use your anger as fuel and accelerate.",
+      "The greatest victories are won in the flat, boring plains of daily repetition. The initial excitement of a new goal always fades within days. What remains is pure discipline. If you can fall in love with the monotonous grind of execution, you will become truly unstoppable. Repetition is mastery.",
+      "Make your decision once, then never argue with yourself. If you resolved to train at dawn, do not debate it when you open your eyes. The debate is where the weak self wins. Be a soldier to your own directives. Your mind designs the strategy; your body must execute it without a single question."
+    ],
+    [
+      "Fear is the compass telling you exactly what action to take next. If a project makes you hesitate, it is the precise project you must attack. Do not shrink from the cold glare of challenge. Step directly into the storm. The man who stays comfortable his entire life never discovers his power.",
+      "Every distraction you allow to steal your focus is a vote against your own legacy. Guard your attention with a weapon. The modern world is engineered to keep you weak, distracted, and dependent. Reclaim your mind. Turn off the noise, close the loops, and engage with your work.",
+      "When the sun sets, ask yourself: Did I move forward or did I slide back? There is no middle ground. Every decision is either building your house or burning it down. Be absolutely honest with yourself. If you failed today, own it, bear the sting, and prepare to execute tomorrow."
+    ],
+    [
+      "You are defined by what you tolerate. If you tolerate delay, half-hearted efforts, and unfinished tasks, that is exactly what your life will look like. Raise your standard today. Demand absolute perfection in your effort before you demand anything from others. Start now. Do the hard thing first.",
+      "Stop searching for motivation. It is a weak friend that disappears when the weather turns cold. Depend only on discipline. Discipline is the heavy armor that keeps you moving forward in the deepest winter. Rely on what you can force yourself to do when you absolutely hate doing it.",
+      "Your life is ticking away. Every single breath is a moment you will never get back. Knowing this, how do you find the nerve to waste hours on cheap digital distractions? Wake up to the brutal reality of your mortality. Use your limited hours to build something that lasts."
+    ],
+    [
+      "The path of progress is one of continuous execution. You will fail, you will make mistakes, and you will fall down. The difference between the weak and the strong is the speed of recovery. Do not spend three days regretting one bad day. Reset your focus and step directly back into the fight.",
+      "Avoid soft, comfortable, aimless people. Their weakness is highly contagious. Surround yourself with individuals who demand your highest output and challenge your lazy assumptions. If you are the most disciplined person you know, seek a bigger room. Find giants who force you to level up.",
+      "Your life is your direct responsibility. No one is going to carry your pack or do your pushups for you. Stop blaming your past, your circumstances, or your genetics. The hand you have is the hand you must play. Play it like a master. Outwork your doubts until success is the only outcome."
+    ],
+    [
+      "While the rest of the world sleeps and relaxes, you have a window to dominate. The quiet hours are the ultimate testing ground. Use this time to outwork your competition, to study, and to execute. No notifications, no social media, just pure raw output. This is how you win.",
+      "Do not let physical fatigue make a coward of your mind. Your brain will try to convince you that you have done enough for the day. It will suggest finishing the task tomorrow. This is the moment of truth. Push through for one more hour. This is where you separate yourself from the herd.",
+      "Night work is not about punishment; it is about choosing your future over your present comfort. You are trading cheap, temporary entertainment for absolute freedom. Keep your head down, block out the world, and let your progress speak for itself when the morning arrives."
+    ],
+    [
+      "An disciplined mind cannot be distracted, manipulated, or stopped. You must build an internal sanctuary that external events cannot touch. When chaos occurs around you, remain perfectly calm, completely analytical, and focused on the next execution. This is real masculine power.",
+      "Stop looking for validation from people you do not respect. Their applause is empty, and their criticism is irrelevant. The only metric that matters is your own self-respect. Did you complete the work you set out to do today? If yes, stand proud. If no, fix it immediately.",
+      "Your ego is your greatest enemy. It wants to believe you are special and that you deserve success without sweat. Kill your ego every morning. Remain a hungry student, stay close to the dirt, and do the heavy lifting that others think they are too important to perform."
+    ],
+    [
+      "Keep the internal fire burning hot, regardless of the cold winds around you. There will be hard seasons where nothing seems to go right and every step is a battle. This is your training ground. Your drive must not depend on external praise. Burn your own fuel. Keep executing.",
+      "Your unused potential is a direct insult to your creation. If you leave this life without realizing your full capabilities, you have lived a life of waste. Do not rob yourself of the chance to see what you are truly capable of doing. Push your physical and mental limits every day.",
+      "The difference between a wish and an objective is execution. Stop wishing for a better body, a stronger mind, or a successful career. Write down the daily actions required, and execute them without fail. A goal without action is a daydream. Get up and execute."
+    ],
+    [
+      "In the deepest quiet, you find the real blueprint for your work. People are terrified of silence because it forces them to face their own failures. Do not run. Sit with your quiet mind, analyze your progress, and listen to the voice that tells you exactly what to execute next.",
+      "Noise is the ultimate distraction. Cut off the useless inputs. You do not need to know every headline, every political debate, or every online trend. Focus completely on the immediate work in front of you. Simplify your life to maximize your direct daily output.",
+      "The most dangerous man is the one who says nothing but consistently executes. He is not wasting his breath attempting to impress others. He is observing, designing, and taking fast action. Cultivate this quiet power. Let your results do all the talking."
+    ],
+    [
+      "Forge your character through brutal, consistent labor. It requires heat, intense pressure, and heavy blows. Do not run from the stressful moments in your life; they are the tools shaping you into a man of true force. Embrace the daily struggle. It is the only way to build steel.",
+      "Integrity and action are your only true assets. Wealth can vanish, but your work ethic remains yours forever. Guard your daily disciplines with your life. Never compromise your standards for easy routes or temporary pleasure. Stand firm, do the work, and be proud of your effort.",
+      "You will not remember the days you spent sleeping in and relaxing. You will remember the times you were exhausted, wanted to quit, but chose to keep working anyway. These are the moments that build your soul. Give your future self a story of victory and absolute action."
+    ]
+  ];
 
-            const rd = rg.r.baseVal.value,
-                cr = rd * 2 * Math.PI;
+  // Helper to wrap sentences inside individual high-contrast fading interactive span blocks
+  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
-            rg.style.strokeDasharray = `${cr} ${cr}`;
+  // Update clock dynamically & handle premium bottom countdown stats
+  const updateClockAndStats = () => {
+    const now = new Date();
+    
+    // Left navbar: Month & Year (Clean crisp white)
+    const month = now.toLocaleDateString("en-US", { month: "long" }).toUpperCase();
+    const year = now.getFullYear();
+    document.getElementById("d0").textContent = `${month} ${year}`;
+    
+    // Right navbar: Day of the Week (Dynamic gold accent color)
+    const weekday = now.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+    document.getElementById("t0").textContent = weekday;
 
-            function _u() {
-                if (stt) clearTimeout(stt);
-                i.classList.remove('v');
-                stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
-            }
+    // Time & Remaining Minutes calculations
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const totalMinutesInDay = 1440;
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const remainingMinutes = totalMinutesInDay - currentMinutes;
+    
+    const statsEl = document.getElementById('live-stats');
+    if (statsEl) { 
+      statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; 
+    }
+  };
 
-            function _p(currentCount) {
-                if (sn) return; // Silent if voice tracking is disabled
-                if (!w.speechSynthesis) return;
-                
-                w.speechSynthesis.cancel(); // Clears running queues to avoid lag on fast tapping
-                const u = new SpeechSynthesisUtterance(currentCount.toString());
-                if (maleVoice) u.voice = maleVoice;
-                u.rate = 1.1; // Balanced speed rate for active workflows
-                w.speechSynthesis.speak(u);
-            }
+  const init = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    // Calculate rotational offsets so heading matches content in unique daily permutations
+    const themeIndex = dayOfYear % themes.length;
+    const contentIndex = dayOfYear % content.length;
+    
+    const activeTheme = themes[themeIndex];
+    const activeParagraphs = content[contentIndex];
 
-            function _up() {
-                if (gl > 0) {
-                    pc.classList.add('active');
-                    const o = cr - (Math.min(v, gl) / gl) * cr;
-                    rg.style.strokeDashoffset = o;
-                    rg.style.opacity = v >= gl ? 1 : .3;
-                    rg.style.stroke = v >= gl ? 'var(--accent)' : '#fff'
-                } else pc.classList.remove('active')
-            }
+    // Set Main Hero Title
+    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${activeTheme}</span>`;
+    
+    // Populate the Body Content with illuminated sentence splits
+    document.getElementById("m0").innerHTML = `
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(activeParagraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(activeParagraphs[1])}</p></div>
+      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${activeTheme.toUpperCase()}.</h2></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(activeParagraphs[2])}</p></div>
+    `;
+    
+    updateClockAndStats();
+    
+    // Smooth visibility revealing handler on scroll (IntersectionObserver)
+    const generalObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { 
+        if (entry.isIntersecting) {
+          entry.target.classList.add("za"); 
+        }
+      });
+    }, { threshold: 0.05 });
+    
+    document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
+  };
 
-            function _w() {
-                f.textContent = v.toLocaleString('en-US');
-                f.style.fontWeight = bd ? '700' : '100';
-                if (st > 1) {
-                    sd.textContent = 'Increment: ' + st;
-                    sd.classList.add('v')
-                } else sd.classList.remove('v');
+  window.addEventListener("scroll", () => {
+    const scrollPos = window.scrollY;
+    const nav = document.getElementById("n0");
+    const scrollHint = document.getElementById("sd");
+    
+    // Dynamic Navbar visual blur toggle
+    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
+    if (scrollHint) { 
+      scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; 
+    }
+    
+    // Progressive Sentence Lighting Engine
+    const spans = document.querySelectorAll(".hi");
+    const centerY = window.innerHeight * 0.5;
+    let activeSpan = null;
+    let minDistance = Infinity;
+    
+    spans.forEach(span => {
+      const rect = span.getBoundingClientRect();
+      const dist = Math.abs((rect.top + rect.height / 2) - centerY);
+      if (dist < minDistance) { 
+        minDistance = dist; 
+        activeSpan = span; 
+      }
+    });
+    
+    spans.forEach(span => {
+      if (span === activeSpan && minDistance < window.innerHeight * 0.4) {
+        span.classList.add("active");
+      } else {
+        span.classList.remove("active");
+      }
+    });
+  }, { passive: true });
 
-                if (gl > 0) {
-                    gd.textContent = 'Goal: ' + gl.toLocaleString('en-US');
-                    gd.classList.add('v')
-                } else gd.classList.remove('v');
-                _up()
-            }
-
-            function _x() {
-                localStorage.setItem(k.c, v);
-                localStorage.setItem(k.b, bd);
-                localStorage.setItem(k.s, sn);
-                localStorage.setItem(k.t, st);
-                localStorage.setItem(k.g, gl)
-            }
-
-            function _z(m, du, showBtn = false) {
-                if (rt) clearTimeout(rt);
-                ht.textContent = m;
-                if (showBtn) {
-                    hb.classList.add('visible');
-                    du = 9999999;
-                    isLockout = true;
-                    d.body.classList.add('lockout-active');
-                } else {
-                    hb.classList.remove('visible');
-                }
-                h.classList.add('active');
-                rt = setTimeout(() => {
-                    h.classList.remove('active');
-                    rt = null
-                }, du)
-            }
-
-            mb.onclick = e => {
-                e.stopPropagation();
-                md.classList.toggle('active');
-            };
-
-            d.addEventListener('click', e => {
-                if (!e.target.closest('.a2')) {
-                    md.classList.remove('active');
-                }
-            });
-
-            d.querySelectorAll('.menu-item').forEach(btn => {
-                btn.addEventListener('touchstart', () => {
-                    btn.classList.add('active-touch');
-                }, { passive: true });
-                btn.addEventListener('touchend', () => {
-                    btn.classList.remove('active-touch');
-                }, { passive: true });
-                btn.addEventListener('touchcancel', () => {
-                    btn.classList.remove('active-touch');
-                }, { passive: true });
-            });
-
-            lbMenu.onclick = e => {
-                e.stopPropagation();
-                md.classList.remove('active');
-                lk = true;
-                d.body.classList.add('locked');
-                lo.classList.add('active');
-                if (navigator.vibrate) navigator.vibrate(50)
-            };
-
-            fsMenu.onclick = e => {
-                e.stopPropagation();
-                md.classList.remove('active');
-                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => { });
-                else d.exitFullscreen().catch(() => { })
-            };
-
-            function triggerSetGoal() {
-                const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
-                if (r !== null) {
-                    const n = parseInt(r);
-                    if (!isNaN(n) && n >= 0) {
-                        gl = n;
-                        if (gl > 0) {
-                            v = 0;
-                            _z(`goal set to ${gl}`, 2000);
-                        } else {
-                            _z('goal removed', 2000);
-                        }
-                        _w();
-                        _x();
-                    }
-                }
-            }
-
-            goalMenu.onclick = e => {
-                e.stopPropagation();
-                md.classList.remove('active');
-                triggerSetGoal();
-            };
-
-            let sx = 0, cx = 0;
-            sh.addEventListener('touchstart', e => {
-                sx = e.touches[0].clientX;
-                sh.style.transition = ''
-            });
-
-            sh.addEventListener('touchmove', e => {
-                const dx = e.touches[0].clientX - sx,
-                    mx = lo.offsetWidth - sh.offsetWidth - 16;
-                cx = Math.max(0, Math.min(dx, mx));
-                sh.style.transform = `translateX(${cx}px)`;
-                if (cx >= mx * .98) {
-                    lk = false;
-                    d.body.classList.remove('locked');
-                    lo.classList.remove('active');
-                    sh.style.transform = 'translateX(0)';
-                    if (navigator.vibrate) navigator.vibrate([10, 30, 10])
-                }
-            });
-
-            sh.addEventListener('touchend', () => {
-                if (lk) {
-                    sh.style.transition = 'transform .4s cubic-bezier(.175,.885,.32,1.275)';
-                    sh.style.transform = 'translateX(0)'
-                }
-            });
-
-            f.addEventListener('keydown', e => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    f.blur()
-                }
-            });
-
-            hb.onclick = e => {
-                e.stopPropagation();
-                gl = 0;
-                isLockout = false;
-                d.body.classList.remove('lockout-active');
-                _w();
-                _x();
-                h.classList.remove('active');
-                if (rt) clearTimeout(rt);
-                setTimeout(() => _z('goal removed', 2000), 400);
-            };
-
-            d.body.addEventListener('touchstart', e => {
-                if (lk || isLockout) return;
-                _u();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay')) return;
-                nx = e.touches[0].clientX;
-                ny = e.touches[0].clientY;
-                pt = setTimeout(() => {
-                    sn = !sn;
-                    qf = 1;
-                    if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'voice count off' : 'voice count on', 2000);
-                    _x();
-                }, 800)
-            });
-
-            d.body.addEventListener('touchend', e => {
-                if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay')) return;
-                if (pt) { clearTimeout(pt); pt = null }
-                if (qf) { qf = 0; return }
-                if (f.contentEditable === 'true') { f.blur(); return }
-
-                const dx = nx - e.changedTouches[0].clientX,
-                    dy = ny - e.changedTouches[0].clientY;
-
-                if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    const p = v;
-                    v += st;
-                    _p(v); // Trigger Text-To-Speech layout
-                    if (gl > 0 && p < gl && v >= gl) {
-                        if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-                        _z('goal reached!', 9999999, true);
-                    }
-                    _w();
-                    _x();
-                } else if (Math.abs(dx) > Math.abs(dy)) {
-                    if (dx > 50) {
-                        if (confirm('Reset counter to 0?')) {
-                            if (navigator.vibrate) navigator.vibrate(40);
-                            v = 0; _w(); _x(); _z('counter reset', 2000)
-                        }
-                    } else if (dx < -50) {
-                        const r = prompt('Set Increment (current: ' + st + ')', st);
-                        if (r !== null) {
-                            const n = parseInt(r);
-                            st = (!isNaN(n) && n > 0) ? n : 1;
-                            _z(`increment set to ${st}`, 2000);
-                            _w(); _x()
-                        }
-                    }
-                } else {
-                    if (dy > 50) {
-                        f.contentEditable = 'true';
-                        f.focus();
-                        const r = d.createRange(), s = w.getSelection();
-                        r.selectNodeContents(f); r.collapse(!1);
-                        s.removeAllRanges(); s.addRange(r)
-                    } else if (dy < -50) {
-                        if (v > 0) {
-                            if (confirm(`Subtract ${st} from counter?`)) {
-                                if (navigator.vibrate) navigator.vibrate(40);
-                                v = (v >= st) ? v - st : 0;
-                                _w(); _x(); _z('number subtracted', 2000)
-                            }
-                        }
-                    }
-                }
-            });
-
-            d.addEventListener('fullscreenchange', () => {
-                d.body.classList.toggle('f', !!d.fullscreenElement)
-            });
-
-            f.onblur = () => {
-                f.contentEditable = 'false';
-                let r = f.textContent.replace(/[^\d]/g, '');
-                v = r === '' ? 0 : parseInt(r);
-                _w(); _x(); _u()
-            };
-
-            _w();
-            stt = setTimeout(() => { i.classList.add('v') }, 0)
-        })()
-    </script>
+  window.onload = () => {
+    init();
+    setInterval(updateClockAndStats, 1000);
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
+  };
+})();
+</script>
 </body>
 </html>
