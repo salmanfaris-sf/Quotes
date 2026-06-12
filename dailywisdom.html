@@ -114,11 +114,10 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     const item = data[Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000) % data.length];
     document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${item.theme}</span>`;
     
-    // Kept original font-6xl, font-8xl, and heading font-12rem. Removed paragraphs[2].
+    // Kept the original font classes (text-6xl, md:text-8xl, leading, zi) and removed the secondary heading
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(item.paragraphs[0])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(item.paragraphs[1])}</p></div>
-      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${item.theme.toUpperCase()}.</h2></div>
     `;
     updateClockAndStats();
     const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); }); }, { threshold: 0.05 });
