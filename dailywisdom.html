@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#000000">
 <title>Salman Faris | Daily Wisdom</title>
-<link rel="icon" type="image/png" href="favicon.png">
+<link class="favicon" rel="icon" type="image/png" href="favicon.png">
 
 <meta name="description" content="Master your day with daily wisdom on focus, discipline, high standards and more.">
-
 <meta name="author" content="Salman Faris">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+
 <script>
 tailwind.config={
   theme:{
@@ -24,8 +25,9 @@ tailwind.config={
   }
 }
 </script>
+
 <style>
-html { background-color: #000000; height: 100%; }
+html { background-color: #000000; height: 100%; scroll-behavior: smooth; }
 body { 
   margin: 0; 
   color: #d1d1d1; 
@@ -66,7 +68,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 <main class="relative w-full">
   <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 relative z-10 pt-24">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-[9rem] md:text-[13rem] italic tracking-tighter leading-none z1" style="transition-delay:0.2s"></h1>
+      <h1 id="h0" class="font-f1 text-[7rem] sm:text-[9rem] md:text-[13rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="py-12 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
@@ -92,18 +94,59 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
 <script>
 (function(){
+  // 30 Normal, highly motivational, and responsible self-improvement themes
   const data = [
-    { theme: 'Take Action', paragraphs: ["Waiting for the perfect moment is a trap. The perfect moment doesn't exist. You're losing time while you wait. Take the first step now.", "Your dreams stay as dreams if you don't act. Use the five, four, three, two, one method. Count down and move. Don't think, just do.", "Don't worry about the result yet. Focus only on starting. Action is the only cure for fear."] },
-    { theme: 'Fear None', paragraphs: ["People will judge you or talk about you. Don't let that stop you. Fear of people is a heavy weight that stops your growth.", "The only one who truly matters is God. When you fear only the Creator, you stop fearing small things. You become free to do what is right.", "You're strong because your purpose is honest. Walk with your head held high. Don't let the opinions of others dictate your life path."] },
-    { theme: 'Focus Daily', paragraphs: ["A scattered mind gets nothing done. Pick one main goal for your day. Don't move to the next thing until the first one is finished.", "Turn off the distractions. Your phone and the noise of the world steal your energy. Guard your focus like it's your most valuable treasure.", "Focus is about saying no to good things so you can say yes to the best thing. Keep your eyes on the finish line and don't look around."] }
+    { theme: 'Take Action', paragraphs: ["Five, four, three, two, one. Move. Stop waiting for a perfect moment because it does not exist. The rewards in this life come through actual effort, not through endless planning.", "Hesitation is what kills your potential. Count down to zero, take that first step, and clear your doubts. Sincere action is the only way to build a meaningful path forward."] },
+    { theme: 'Kill Laziness', paragraphs: ["Laziness is a trap that makes you feel safe while you waste your potential. It keeps you comfortable while valuable goals slip away. Stand up and move your body.", "The longer you stay idle, the harder it is to start. Action creates its own energy. Break the cycle right now by starting on your hardest task first."] },
+    { theme: 'Don\'t Waste Time', paragraphs: ["You have exactly 1,440 minutes today. Every single second you spend scrolling or gossiping is a piece of your life you can never get back.", "Treat your hours like a precious blessing. Be careful with where you put your attention. Stop trading your time for things that do not build your future."] },
+    { theme: 'Fear None', paragraphs: ["The opinions of others are temporary and cheap. Do not shrink your goals just to make critics comfortable. Walk with true confidence and clear purpose.", "Fear of people is just a shadow that looks huge until you step directly into it. Face your challenges head-on with courage and watch them disappear."] },
+    { theme: 'Achieve Dreams', paragraphs: ["Your intentions must be backed by absolute effort. Great achievements require massive, consistent labor. Mere wishful thinking is never enough.", "Wake up with a clear goal to make today count. Work hard while others waste their potential. Build your character and your skills step by step."] },
+    { theme: 'Stay Focused', paragraphs: ["A scattered mind cannot achieve great outcomes. Say a firm no to minor distractions so you can focus on your most important responsibilities today.", "Lock your doors, turn off your notifications, and block out the noise of the world. Your focus is your greatest asset. Guard it carefully."] },
+    { theme: 'Obey Discipline', paragraphs: ["Forget motivation. Motivation is a temporary feeling that fades when you are tired or bored. Rely only on a consistent, solid daily discipline.", "Show up on your worst days. Show up when you do not feel like it. True character is built when you execute the necessary work regardless of your mood."] },
+    { theme: 'Set Goals', paragraphs: ["A person without a target is just wandering in the dark. Decide exactly what you want to build and achieve, and write it down clearly.", "Do not aim low just to avoid the risk of failure. Set goals that force you to grow, think bigger, and work harder than ever before."] },
+    { theme: 'Crush Doubts', paragraphs: ["Doubt is a mental block that grows when you sit idle. The only way to destroy your self-doubt is to bury it under focused, productive work.", "Your mind will make up excuses when you do nothing. Stand up, take action, and start executing. Decisive movement dissolves fear immediately."] },
+    { theme: 'Burn the Boats', paragraphs: ["Stop looking back. Burn the bridges to your old habits of comfort and commit fully to the productive path in front of you.", "When your mind knows there is no escape path back to old, lazy routines, it finds a way to focus. Put your back against the wall and move forward."] },
+    { theme: 'No Excuses', paragraphs: ["Your daily outcomes are heavily shaped by your personal choices. Stop blaming your luck, your past, or other people. Blaming others destroys your own drive.", "No one else can do the hard work or make the choices for you. Take absolute responsibility for your actions and change your habits today."] },
+    { theme: 'Stay Hard', paragraphs: ["Constant comfort makes you soft and weak. Do something physically or mentally challenging every single day to keep your discipline sharp.", "Toughen your mind and your body through intentional struggle. When hard times arrive, you will stand tall and strong like an iron pillar."] },
+    { theme: 'Pure Intensity', paragraphs: ["Give one hundred percent of your energy to your efforts or do not start at all. Half-hearted work wastes your time and brings poor results.", "Attack your daily tasks with absolute focus and hunger. Put your whole heart into this day. Leave no effort behind when you go to sleep."] },
+    { theme: 'No Regrets', paragraphs: ["Regret is a complete waste of your energy. You cannot change what happened yesterday, but you can completely own what you choose to do today.", "Stop looking backward. Learn from your mistakes, correct your path, and keep moving. Focus all your strength on this present moment."] },
+    { theme: 'Be Relentless', paragraphs: ["People will doubt you, mock you, or wait for you to quit. Let them watch. A relentless person cannot be stopped by simple critics.", "When you get knocked down, get right back up. Your persistence will outlast their doubts. Keep moving forward until you reach your goal."] },
+    { theme: 'Kill Hesitation', paragraphs: ["Hesitation is the biggest thief of progress. When you pause, you give your doubts time to grow. Act before your mind makes up an excuse.", "Decide quickly and adjust your actions as you go. A solid plan executed with speed beats a perfect plan that never gets started."] },
+    { theme: 'Stand Alone', paragraphs: ["Do not wait for a crowd to walk the path of discipline with you. The road to deep self-improvement is often a lonely one. Trust your path.", "It is much better to walk alone in the right direction than to follow a lost crowd off a cliff. Let your inner drive lead the way."] },
+    { theme: 'Own the Day', paragraphs: ["Do not let the day control you. Design your schedule, manage your hours, and conquer your goals. Wake up with a clear plan.", "Win your morning and you win your day. Set a strong pace early. Complete your hardest task first while the rest of the world is still asleep."] },
+    { theme: 'High Standards', paragraphs: ["Never settle for average. How you do anything is how you do everything. Put your full effort and honesty into every single detail.", "Demand more from yourself than anyone else expects from you. Quality work is not a one-time event; it is a permanent daily habit."] },
+    { theme: 'Build Momentum', paragraphs: ["A slow start is easy to stop, but a fast-moving train can smash through concrete walls. Build your momentum day by day.", "Start fast, finish faster. Do not let your inner fire go cold. When you finish one task, step straight into the next one without pausing."] },
+    { theme: 'Master Yourself', paragraphs: ["You are responsible for your own actions and impulses. If you cannot control your instant desires, you are just a slave to your environment.", "Learn to say no to instant gratification. Controlling your desires is the root of true personal power. Master your mind, master your actions."] },
+    { theme: 'Zero Compromise', paragraphs: ["Do not lower your standards just to make lazy people comfortable. Keep your expectations high and let your results speak for themselves.", "Protect your daily energy. Walk away from gossip, cheap habits, and toxic environments. Focus entirely on the arena of growth."] },
+    { theme: 'Move Faster', paragraphs: ["The world moves fast, and the slow get left behind. Stop over-analyzing and start executing. Speed of effort is your ultimate advantage.", "Fail fast, learn fast, and adapt immediately. Momentum is created by actual movement, not by thinking. Get out of your head and get to work."] },
+    { theme: 'Overcome Limits', paragraphs: ["Your mental and physical limits are often illusions created by fear. When your mind tells you that you are finished, you still have more left in the tank.", "Dig deeper and tap into your willpower. You are capable of enduring and achieving far more than your comfort-loving brain suggests."] },
+    { theme: 'Stay Real', paragraphs: ["Never wear a fake mask to seek approval from people who do not matter. Fake respect is empty. Be authentic, honest, and real.", "Live with absolute integrity. Speak with clean honesty and act with honor. When you live truthfully, you walk through life with no fear."] },
+    { theme: 'Outwork Them', paragraphs: ["Talent is cheap; work ethic is priceless. While others are sleeping, scrolling, or celebrating, you must be working to sharpen your skills.", "Put in the extra effort when nobody is watching. True authority is built in silence and proven in public. Outwork your yesterday."] },
+    { theme: 'Stay Sharp', paragraphs: ["An idle mind gathers rust very quickly. Constantly feed your brain with valuable ideas, beneficial books, and deep knowledge. Never stop learning.", "Train your mind to think clearly and solve difficult problems. Knowledge is a powerful tool. Keep it sharp and use it daily to improve."] },
+    { theme: 'Be Decisive', paragraphs: ["Weak people change their minds constantly but take forever to make a choice. Strong people decide quickly and stand firmly by their choices.", "Trust your judgment. Make the call and accept the results. Any clear decision is better than the paralyzing trap of doing nothing."] },
+    { theme: 'Rise Above', paragraphs: ["Gossip, drama, and petty arguments are for people who have nothing better to do. Keep your eyes on your goals and do not look down.", "Your focus is too valuable to be wasted on small minds. Let them talk while you climb. Save your energy for the high altitude of success."] },
+    { theme: 'No Lifelines', paragraphs: ["Stop waiting for handouts or lucky breaks. There is no shortcut, and no one else is going to step in to do the heavy lifting for you.", "You are responsible for your own path. If you want to achieve your goals and win, put the load on your own shoulders and carry it forward."] }
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
   const updateClockAndStats = () => {
     const now = new Date();
-    document.getElementById("d0").textContent = now.toLocaleDateString("en-US", { month: "long" }).toUpperCase() + " " + now.getFullYear();
-    document.getElementById("t0").textContent = now.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+    
+    // Exact Date for Top-Right (e.g. 13 JUNE 2026)
+    const day = now.getDate();
+    const month = now.toLocaleDateString("en-US", { month: 'long' }).toUpperCase();
+    const year = now.getFullYear();
+    document.getElementById("d0").textContent = `${day} ${month} ${year}`;
+    
+    // Calculates the numeric day of the year (1 - 365/366)
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+    
+    document.getElementById("t0").textContent = `DAY ${dayOfYear}`;
+    
     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     const remaining = 1440 - (now.getHours() * 60 + now.getMinutes());
     const statsEl = document.getElementById('live-stats');
@@ -111,16 +154,27 @@ footer { padding-top: 10px; padding-bottom: 40px; }
   };
 
   const init = () => {
-    const item = data[Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000) % data.length];
-    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${item.theme}</span>`;
+    // Dynamic index based solely on the current day of the year to guarantee a new theme daily
+    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+    const today = new Date();
+    const diffInMs = today - startOfYear;
+    const dayOfYear = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
     
-    // Kept the original font classes (text-6xl, md:text-8xl, leading, zi) and removed the secondary heading
+    const item = data[dayOfYear % data.length];
+    
+    // Set heading to just the clean theme name (straight style, no italics)
+    document.getElementById("h0").textContent = item.theme;
+    
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(item.paragraphs[0])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(item.paragraphs[1])}</p></div>
     `;
     updateClockAndStats();
-    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); }); }, { threshold: 0.05 });
+    
+    const observer = new IntersectionObserver((entries) => { 
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); }); 
+    }, { threshold: 0.05 });
+    
     document.querySelectorAll(".z1").forEach(el => observer.observe(el));
   };
 
