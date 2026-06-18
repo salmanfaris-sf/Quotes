@@ -56,15 +56,6 @@ body {
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; }
 </style>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-1K1TKBQFFK');
-</script>
 </head>
 <body>
 
@@ -76,7 +67,8 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 <main class="relative w-full">
   <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 relative z-10 pt-24">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-[7rem] sm:text-[9rem] md:text-[13rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
+      <!-- Heading size adjusted by 0.5 increment equivalent -->
+      <h1 id="h0" class="font-f1 text-[6.5rem] sm:text-[8.5rem] md:text-[11.5rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="py-12 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
@@ -102,7 +94,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
 <script>
 (function(){
-  // 30 Normal, highly motivational, and responsible self-improvement themes
   const data = [
     { theme: 'Take Action', paragraphs: ["Five, four, three, two, one. Move. Stop waiting for a perfect moment because it does not exist. The rewards in this life come through actual effort, not through endless planning.", "Hesitation is what kills your potential. Count down to zero, take that first step, and clear your doubts. Sincere action is the only way to build a meaningful path forward."] },
     { theme: 'Kill Laziness', paragraphs: ["Laziness is a trap that makes you feel safe while you waste your potential. It keeps you comfortable while valuable goals slip away. Stand up and move your body.", "The longer you stay idle, the harder it is to start. Action creates its own energy. Break the cycle right now by starting on your hardest task first."] },
@@ -141,13 +132,11 @@ footer { padding-top: 10px; padding-bottom: 40px; }
   const updateClockAndStats = () => {
     const now = new Date();
     
-    // Exact Date for Top-Right (e.g. 13 JUNE 2026)
     const day = now.getDate();
     const month = now.toLocaleDateString("en-US", { month: 'long' }).toUpperCase();
     const year = now.getFullYear();
     document.getElementById("d0").textContent = `${day} ${month} ${year}`;
     
-    // Calculates the numeric day of the year (1 - 365/366)
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now - start;
     const oneDay = 1000 * 60 * 60 * 24;
@@ -162,7 +151,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
   };
 
   const init = () => {
-    // Dynamic index based solely on the current day of the year to guarantee a new theme daily
     const startOfYear = new Date(new Date().getFullYear(), 0, 1);
     const today = new Date();
     const diffInMs = today - startOfYear;
@@ -170,7 +158,6 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     
     const item = data[dayOfYear % data.length];
     
-    // Set heading to just the clean theme name (straight style, no italics)
     document.getElementById("h0").textContent = item.theme;
     
     document.getElementById("m0").innerHTML = `
