@@ -107,7 +107,7 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     { theme: 'No Lifelines', paragraphs: ["Stop waiting for handouts or lucky breaks. There is no shortcut, and no one else is going to step in to do the heavy lifting for you.", "You are responsible for your own path. If you want to achieve your goals and win, put the load on your own shoulders and carry it forward."] }
   ];
 
-  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span>`).join(" ");
+  const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span>`).join(" ");
 
   const updateClockAndStats = () => {
     const now = new Date();
