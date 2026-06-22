@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<title>Salman Faris | Daily Wisdom</title>
+<link class="favicon" rel="icon" type="image/png" href="favicon.png">
+<meta name="description" content="Daily wisdom on discipline, focus, action, and personal growth.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
+    }
+  }
+}
+</script>
+<style>
+html { background-color: #000000; scroll-behavior: smooth; overscroll-behavior-y: contain; }
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1.za{opacity:1;transform:none;filter:blur(0)}
+.zi{text-indent:12rem}
+@media(max-width:768px){.zi{text-indent:0}}
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
+.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
+
+/* Quote line font size and styling */
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 2.5vw, 20px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
+
+/* Live stats styling */
+.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3vw, 18px); color: #ffffff; opacity: 0.5; margin-top: 15px; font-weight: 500; }
+
+.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
+footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
+
+/* Custom fade-only transition to prevent layout shift of the footer at the bottom */
+.footer-fade { opacity: 0; transition: opacity 1.8s cubic-bezier(.16,1,.3,1); }
+.footer-fade.za { opacity: 1; }
+</style>
+</head>
+<body>
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
+  <div id="t0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium"></div>
+  <div id="d0" class="text-white/90 text-[10px] uppercase tracking-[0.4em] font-f2 font-medium"></div>
+</nav>
+<main class="relative w-full">
+  <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 relative z-10 pt-24">
+    <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <h1 id="h0" class="font-f1 text-[4.5rem] sm:text-[6.5rem] md:text-[9.5rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
+    </div>
+    <div id="sd" class="py-12 z1" style="transition-delay:0.8s">
+      <div class="zs1 zf">Scroll Down</div>
+    </div>
+  </section>
+  <article id="m0" class="max-w-screen-2xl mx-auto px-6 py-20 relative z-10 space-y-72"></article>
+  <section class="relative z-10">
+    <div class="z1 text-center px-6 quote-wrapper">
+        <div class="quote-container pt-16">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">don't let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
+        </div>
+    </div>
+  </section>
+</main>
+<footer class="w-full flex justify-center px-6 relative z-10 footer-fade">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
+</footer>
+<script>
+(function(){
+  const data = [
+    { theme: 'Take Action', paragraphs: ["Five, four, three, two, one. Move. Stop waiting for a perfect moment because it does not exist. The rewards in this life come through actual effort, not through endless planning.", "Hesitation is what kills your potential. Count down to zero, take that first step, and clear your doubts. Sincere action is the only way to build a meaningful path forward."] },
+    { theme: 'Kill Laziness', paragraphs: ["Laziness is a trap that makes you feel safe while you waste your potential. It keeps you comfortable while valuable goals slip away. Stand up and move your body.", "The longer you stay idle, the harder it is to start. Action creates its own energy. Break the cycle right now by starting on your hardest task first."] },
+    { theme: 'Don\'t Waste Time', paragraphs: ["You have exactly 1,440 minutes today. Every single second you spend scrolling or gossiping is a piece of your life you can never get back.", "Treat your hours like a precious blessing. Be careful with where you put your attention. Stop trading your time for things that do not build your future."] },
+    { theme: 'Fear None', paragraphs: ["The opinions of others are temporary and cheap. Do not shrink your goals just to make critics comfortable. Walk with true confidence and clear purpose.", "Fear of people is just a shadow that looks huge until you step directly into it. Face your challenges head on with courage and watch them disappear."] },
+    { theme: 'Achieve Dreams', paragraphs: ["Your intentions must be backed by absolute effort. Great achievements require massive, consistent labor. Mere wishful thinking is never enough.", "Wake up with a clear goal to make today count. Work hard while others waste their potential. Build your character and your skills step by step."] },
+    { theme: 'Stay Focused', paragraphs: ["A scattered mind cannot achieve great outcomes. Say a firm no to minor distractions so you can focus on your most important responsibilities today.", "Lock your doors, turn off your notifications, and block out the noise of the world. Your focus is your greatest asset. Guard it carefully."] },
+    { theme: 'Obey Discipline', paragraphs: ["Forget motivation. Motivation is a temporary feeling that fades when you are tired or bored. Rely only on a consistent, solid daily discipline.", "Show up on your worst days. Show up when you do not feel like it. True character is built when you execute the necessary work regardless of your mood."] },
+    { theme: 'Set Goals', paragraphs: ["A person without a target is just wandering in the dark. Decide exactly what you want to build and achieve, and write it down clearly.", "Do not aim low just to avoid the risk of failure. Set goals that force you to grow, think bigger, and work harder than ever before."] },
+    { theme: 'Crush Doubts', paragraphs: ["Doubt is a mental block that grows when you sit idle. The only way to destroy your self doubt is to bury it under focused, productive work.", "Your mind will make up excuses when you do nothing. Stand up, take action, and start executing. Decisive movement dissolves fear immediately."] },
+    { theme: 'Burn the Boats', paragraphs: ["Stop looking back. Burn the bridges to your old habits of comfort and commit fully to the productive path in front of you.", "When your mind knows there is no escape path back to old, lazy routines, it finds a way to focus. Put your back against the wall and move forward."] },
+    { theme: 'No Excuses', paragraphs: ["Your daily outcomes are heavily shaped by your personal choices. Stop blaming your luck, your past, or other people. Blaming others destroys your own drive.", "No one else can do the hard work or make the choices for you. Take absolute responsibility for your actions and change your habits today."] },
+    { theme: 'Stay Hard', paragraphs: ["Constant comfort makes you soft and weak. Do something physically or mentally challenging every single day to keep your discipline sharp.", "Toughen your mind and your body through intentional struggle. When hard times arrive, you will stand tall and strong like an iron pillar."] },
+    { theme: 'Pure Intensity', paragraphs: ["Give one hundred percent of your energy to your efforts or do not start at all. Half hearted work wastes your time and brings poor results.", "Attack your daily tasks with absolute focus and hunger. Put your whole heart into this day. Leave no effort behind when you go to sleep."] },
+    { theme: 'Let It Go', paragraphs: ["Let the lesson stay, not the regret. You cannot change what happened yesterday, but you can completely own what you choose to do today.", "Stop looking backward. Learn from your mistakes, correct your path, and keep moving. Focus all your strength on this present moment."] },
+    { theme: 'Be Relentless', paragraphs: ["People will doubt you, mock you, or wait for you to quit. Let them watch. A relentless person cannot be stopped by simple critics.", "When you get knocked down, get right back up. Your persistence will outlast their doubts. Keep moving forward until you reach your goal."] },
+    { theme: 'Kill Hesitation', paragraphs: ["Hesitation is the biggest thief of progress. When you pause, you give your doubts time to grow. Act before your mind makes up an excuse.", "Decide quickly and adjust your actions as you go. A solid plan executed with speed beats a perfect plan that never gets started."] },
+    { theme: 'Stand Alone', paragraphs: ["Do not wait for a crowd to walk the path of discipline with you. The road to deep self improvement is often a lonely one. Trust your path.", "It is much better to walk alone in the right direction than to follow a lost crowd off a cliff. Let your inner drive lead the way."] },
+    { theme: 'Own the Day', paragraphs: ["Do not let the day control you. Design your schedule, manage your hours, and conquer your goals. Wake up with a clear plan.", "Win your morning and you win your day. Set a strong pace early. Complete your hardest task first while the rest of the world is still asleep."] },
+    { theme: 'High Standards', paragraphs: ["Never settle for average. How you do anything is how you do everything. Put your full effort and honesty into every single detail.", "Demand more from yourself than anyone else expects from you. Quality work is not a one time event; it is a permanent daily habit."] },
+    { theme: 'Build Momentum', paragraphs: ["A slow start is easy to stop, but a fast moving train can smash through concrete walls. Build your momentum day by day.", "Start fast, finish faster. Do not let your inner fire go cold. When you finish one task, step straight into the next one without pausing."] },
+    { theme: 'Master Yourself', paragraphs: ["You are responsible for your own actions and impulses. If you cannot control your instant desires, you are just a slave to your environment.", "Learn to say no to instant gratification. Controlling your desires is the root of true personal power. Master your mind, master your actions."] },
+    { theme: 'Zero Compromise', paragraphs: ["Do not lower your standards just to make lazy people comfortable. Keep your expectations high and let your results speak for themselves.", "Protect your daily energy. Walk away from gossip, cheap habits, and toxic environments. Focus entirely on the arena of growth."] },
+    { theme: 'Move Faster', paragraphs: ["The world moves fast, and the slow get left behind. Stop over analyzing and start executing. Speed of effort is your ultimate advantage.", "Fail fast, learn fast, and adapt immediately. Momentum is created by actual movement, not by thinking. Get out of your head and get to work."] },
+    { theme: 'Overcome Limits', paragraphs: ["Your mental and physical limits are often illusions created by fear. When your mind tells you that you are finished, you still have more left in the tank.", "Dig deeper and tap into your willpower. You are capable of enduring and achieving far more than your comfort loving brain suggests."] },
+    { theme: 'Stay Real', paragraphs: ["Never wear a fake mask to seek approval from people who do not matter. Fake respect is empty. Be authentic, honest, and real.", "Live with absolute integrity. Speak with clean honesty and act with honor. When you live truthfully, you walk through life with no fear."] },
+    { theme: 'Outwork Them', paragraphs: ["Talent is cheap; work ethic is priceless. While others are sleeping, scrolling, or celebrating, you must be working to sharpen your skills.", "Put in the extra effort when nobody is watching. True authority is built in silence and proven in public. Outwork your yesterday."] },
+    { theme: 'Stay Sharp', paragraphs: ["An idle mind gathers rust very quickly. Constantly feed your brain with valuable ideas, beneficial books, and deep knowledge. Never stop learning.", "Train your mind to think clearly and solve difficult problems. Knowledge is a powerful tool. Keep it sharp and use it daily to improve."] },
+    { theme: 'Be Decisive', paragraphs: ["Weak people change their minds constantly but take forever to make a choice. Strong people decide quickly and stand firmly by their choices.", "Trust your judgment. Make the call and accept the results. Any clear decision is better than the paralyzing trap of doing nothing."] },
+    { theme: 'Rise Above', paragraphs: ["Gossip, drama, and petty arguments are for people who have nothing better to do. Keep your eyes on your goals and do not look down.", "Your focus is too valuable to be wasted on small minds. Let them talk while you climb. Save your energy for the high altitude of success."] },
+    { theme: 'No Lifelines', paragraphs: ["Stop waiting for handouts or lucky breaks. There is no shortcut, and no one else is going to step in to do the heavy lifting for you.", "You are responsible for your own path. If you want to achieve your goals and win, put the load on your own shoulders and carry it forward."] }
+  ];
+
+  const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span>`).join(" ");
+
+  const updateClockAndStats = () => {
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.toLocaleDateString("en-US", { month: 'long' }).toUpperCase();
+    const year = now.getFullYear();
+    document.getElementById("d0").textContent = `${day} ${month} ${year}`;
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById("t0").textContent = `DAY ${dayOfYear}`;
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const remaining = 1440 - (now.getHours() * 60 + now.getMinutes());
+    const statsEl = document.getElementById('live-stats');
+    if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${remaining} minutes remaining today`;
+  };
+
+  const init = () => {
+    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+    const today = new Date();
+    const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
+    const item = data[dayOfYear % data.length];
+    document.getElementById("h0").textContent = item.theme;
+    document.getElementById("m0").innerHTML = `
+      <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05] zi">${wrapWords(item.paragraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05]">${wrapWords(item.paragraphs[1])}</p></div>
+    `;
+    updateClockAndStats();
+    const observer = new IntersectionObserver((entries) => { 
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); }); 
+    }, { threshold: 0.05 });
+    document.querySelectorAll(".z1, .footer-fade").forEach(el => observer.observe(el));
+  };
+
+  window.addEventListener("scroll", () => {
+    const s = window.scrollY;
+    document.getElementById("n0").classList.toggle("zs", s > 10);
+    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
+    const spans = document.querySelectorAll(".hi");
+    let active = null, min = Infinity;
+    spans.forEach(span => {
+      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
+      if (dist < min) { min = dist; active = span; }
+    });
+    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
+  }, { passive: true });
+  window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
+})();
+</script>
+</body>
+</html>
