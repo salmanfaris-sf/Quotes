@@ -27,7 +27,6 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; min-height: 100vh
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-/* Changed to transform: none to remove any ghost footprint of the animated offset */
 .z1.za{opacity:1;transform:none;filter:blur(0)}
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
@@ -39,9 +38,13 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; min-height: 100vh
 .hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-/* Scaled up the quote typography to maintain dramatic presence on desktop */
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(16px, 3.8vw, 28px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
+
+/* Slightly increased typographic size from previous revision (clamp(12px, 2vw, 16px)) */
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 2.5vw, 20px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
+
+/* Restored original sizing, weight, and brightness (0.5 opacity) */
 .quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3vw, 18px); color: #ffffff; opacity: 0.5; margin-top: 15px; font-weight: 500; }
+
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </style>
@@ -54,7 +57,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 <main class="relative w-full">
   <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 relative z-10 pt-24">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <!-- Adjusted header sizing: reduced by exactly 1rem from original scale (4.5rem mobile, 6.5rem sm, 9.5rem md) -->
       <h1 id="h0" class="font-f1 text-[4.5rem] sm:text-[6.5rem] md:text-[9.5rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="py-12 z1" style="transition-delay:0.8s">
@@ -134,7 +136,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
     const item = data[dayOfYear % data.length];
     document.getElementById("h0").textContent = item.theme;
-    // Scaled up text sizes: text-6xl on mobile, text-8xl on sm, and text-[8.5rem] on desktop to maximize impact
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05] zi">${wrapWords(item.paragraphs[0])}</p></div>
       <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05]">${wrapWords(item.paragraphs[1])}</p></div>
