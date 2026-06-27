@@ -1,402 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>Quotes</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
-    <meta name="theme-color" content="#000">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-1K1TKBQFFK');
-    </script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #000000;
-            --text: #ffffff;
-        }
-
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg);
-            overflow: hidden;
-            touch-action: none;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            user-select: none;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        ._f1 {
-            opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        ._f1.v {
-            opacity: 1;
-        }
-
-        ._c1 {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 600px;
-            width: calc(100% - 48px);
-            text-align: center;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            will-change: transform, opacity;
-        }
-
-        #_q_ {
-            font-family: 'Inter', sans-serif;
-            white-space: pre-wrap;
-            margin-bottom: 12px; 
-            color: #ffffff;
-            display: inline-block;
-            will-change: opacity;
-            transition: opacity 0.35s ease-in-out;
-            font-weight: 400; /* Changed from 300 to 400 for normal thickness */
-            letter-spacing: -0.01em;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        #_st_ {
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            color: #888888;
-            font-weight: 400;
-            letter-spacing: 0.03em;
-            transition: opacity 0.35s ease;
-            line-height: 1.6;
-            margin-bottom: 4px;
-        }
-
-        /* Subtle navigation cues at the bottom */
-        .nav-hint {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            color: #444;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            pointer-events: none;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<title>Salman Faris | Daily Wisdom</title>
+<link class="favicon" rel="icon" type="image/png" href="favicon.png">
+<meta name="description" content="Daily wisdom on discipline, focus, action, and personal growth.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
+    }
+  }
+}
+</script>
+<style>
+html { background-color: #000000; scroll-behavior: smooth; overscroll-behavior-y: contain; }
+body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1.za{opacity:1;transform:none;filter:blur(0)}
+.zi{text-indent:12rem}
+@media(max-width:768px){.zi{text-indent:0}}
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
+.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 2.5vw, 20px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
+.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3vw, 18px); color: #ffffff; opacity: 0.5; margin-top: 15px; font-weight: 500; }
+.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
+footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
+</style>
 </head>
 <body>
-
-    <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
-        <div id="_st_" class="opacity-0"></div>
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
+  <div id="t0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium"></div>
+  <div id="d0" class="text-white/90 text-[10px] uppercase tracking-[0.4em] font-f2 font-medium"></div>
+</nav>
+<main class="relative w-full">
+  <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 relative z-10 pt-24">
+    <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <h1 id="h0" class="font-f1 text-[4.5rem] sm:text-[6.5rem] md:text-[9.5rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
-
-    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
-
+    <div id="sd" class="py-12 z1" style="transition-delay:0.8s">
+      <div class="zs1 zf">Scroll Down</div>
+    </div>
+  </section>
+  <article id="m0" class="max-w-screen-2xl mx-auto px-6 py-20 relative z-10 space-y-72"></article>
+  <section class="relative z-10">
+    <div class="z1 text-center px-6 quote-wrapper">
+        <div class="quote-container pt-16">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">don't let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
+        </div>
+    </div>
+  </section>
+</main>
+<footer class="w-full flex justify-center px-6 relative z-10 z1">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
+</footer>
 <script>
 (function(){
-    const _db = [
-        { t: "Be better than you were yesterday." },
-        { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
-        { t: "Don't waste time. You don't get it back." },
-        { t: "Focus." },
-        { t: "The problem is,\nyou think you have a lot of time to live." },
-        { t: "Live everyday like it's your last day." },
-        { t: "Consistency." },
-        { t: "Big dreams need big sacrifices." },
-        { t: "Practice makes perfect." },
-        { t: "Do it even when you don't feel like it." },
-        { t: "Nothing changes if nothing changes." },
-        { t: "Stay different." },
-        { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
-        { t: "You can't have a million dollar dream with a minimum wage work ethic." },
-        { t: "A real man protects and provides." },
-        { t: "Don't follow the crowd. Follow the truth." },
-        { t: "Never build your happiness on\n someone else's tears." },
-        { t: "Eliminate the 'tomorrow' mindset today." },
-        { t: "The strongest man is he who controls his anger." },
-        { t: "Be a man of your word." },
-        { t: "Your habits define your future self." },
-        { t: "Hate Laziness." },
-        { t: "Always speak the truth." },
-        { t: "Time waits for no one." },
-        { t: "Quality over quantity in everything." },
-        { t: "Knowledge without action is useless." },
-        { t: "Fear Allah. Not people." },
-        { t: "Live with purpose." },
-        { t: "Be a man of your word." },
-        { t: "A real man protects those who are vulnerable." },
-        { t: "Every day is a second chance." },
-        { t: "Now is the time." },
-        { t: "Success is earned, not given." },
-        { t: "Focus on your growth." },
-        { t: "Stay Disciplined." },
-        { t: "A heart connected to Allah is\n never truly broken." },
-        { t: "He who is brave is free." },
-        { t: "Growth begins outside comfort zones." },
-        { t: "This is the way." },
-        { t: "Hard days make strong people." },
-        { t: "Keep showing up." },
-        { t: "Strength is built through repetition." },
-        { t: "Do the boring work well." },
-        { t: "Consistency creates mastery." },
-        { t: "Work now, Relax later." },
-        { t: "Don't look back. You're not going that way."},
-        { t: "Every day counts." },
-        { t: "Habits decide outcomes." },
-        { t: "Growth requires discomfort." },
-        { t: "Sweat more in practice. Bleed less in war." },
-        { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it—it was the result of all the hits that happened before it." },
-        { t: "It always seems impossible until it's done." },
-        { t: "Focus is a superpower in a Distracted world." },
-        { t: "Weakness leaves when discipline enters." },
-        { t: "Strength is built through patience." },
-        { t: "Be strict with yourself." },
-        { t: "Zero Excuses." },
-        { t: "You already know what to do.\nYou just don’t like the cost." },
-        { t: "The brain will invent reasons to avoid pain, even when pain is the only path forward." },
-        { t: "Every wasted year makes the\n next one heavier." },
-        { t: "Do it the moment you remember it." },
-        { t: "Stick to the plan. Not your mood." },
-        { t: "5 4 3 2 1 Take action." },
-        { t: "Indeed Shaytan is ever, to mankind,\na clear enemy.\n[Qur'an 17:53]"},
-        { t: "Prophet Muhammad ﷺ said:\nThere are two blessings that many people are deceived into losing: health and free time.\n[Sahih al-Bukhari 6412]" },
-        { t: "Prophet Muhammad ﷺ said:\nMake things easy for the people, and do not make it difficult for them.\n[Sahih al-Bukhari 6125]" },
-        { t: "Prophet Muhammad ﷺ said:\nDo good deeds properly, sincerely and moderately.\n[Sahih al-Bukhari 6464]" },
-        { t: "Prophet Muhammad ﷺ said:\nSpeak good or remain silent.\n[Riyad as-Salihin 1511]" },
-        { t: "Prophet Muhammad ﷺ said:\nThe most beloved deed to Allah is the most regular and constant even if it were little.\n[Sahih al-Bukhari 6464]" },
-        { t: "Character is who you are when no one is watching." },
-        { t: "Keep moving forward." },
-        { t: "If not now, Then when?" },
-        { t: "Leave a legacy. Let your life be a story of courage, action, and impact." },
-        { t: "NOW.\nWaiting won’t help.\nOverthinking won’t help.\nAction will.\nDo it." },
-        { t: "Lower your gaze, guard your tongue, and protect your heart." },
-        { t: "Your current life is the result of past actions. Your future will be the result of today's actions." },
-        { t: "The man who keeps walking will eventually leave the place he hates." },
-        { t: "A few years of sacrifice can create a lifetime of freedom." },
-        { t: "Your future is built by what you do after a long tiring day." },
-        { t: "Action may not always bring happiness, but there is no happiness without action." },
-        { t: "Stand straight. Speak clearly. Fear none."},
-        { t: "Its what's inside that matters." },
-        { t: "Every pro was once a beginner."},
-        { t: "Weak men wait for courage.\n Strong men create it through action."},
-        { t: "Be the man who acts while others are still thinking."},
-        { t: "Be so disciplined that even your bad days look like progress."},
-        { t: "A strong man doesn’t need motivation.He acts because he decided."},
-        { t: "Pressure reveals the man within."}
-    ];
+  const data = [
+    { theme: 'Take Action', paragraphs: ["Stop thinking and just start. Waiting for the perfect time will never help you.", "Do not wait. Count to three and start right now. Getting things done is the best way to live."] },
+    { theme: 'Stay Active', paragraphs: ["Being too comfortable makes you weak. Get up and move your body.", "The longer you wait to start, the harder it becomes. Do your most difficult task first."] },
+    { theme: 'Value Time', paragraphs: ["You get 1,440 minutes every day. Once they are gone, you cannot get them back.", "Be careful with your time. Do not use it on small things. Focus only on your main goals."] },
+    { theme: 'No Fear', paragraphs: ["What others think of you does not matter. Do not make your dreams smaller just to please people.", "Fear is just a thought. Step forward and you will see that it disappears."] },
+    { theme: 'Work Hard', paragraphs: ["Dreams mean nothing without real work. Success comes from trying every single day.", "Wake up with a plan. While others are sleeping, you should be working on your future."] },
+    { theme: 'Stay Focused', paragraphs: ["You cannot do everything at once. Pick one thing and give it all your attention.", "Turn off your phone and block out the noise. Your focus is your strongest tool."] },
+    { theme: 'Be Consistent', paragraphs: ["Do not rely on feeling motivated. Just do the work because it needs to be done.", "Show up even when you are tired. That is how you build a strong character."] },
+    { theme: 'Set Goals', paragraphs: ["If you do not know where you are going, you will be lost. Decide what you want and write it down.", "Do not be afraid to set big goals. They force you to grow and do your best."] },
+    { theme: 'Stay Confident', paragraphs: ["Doubt comes when you do nothing. The only way to stop doubting is to do your work.", "Your mind will find reasons to quit when you are lazy. Start moving and the doubts will go away."] },
+    { theme: 'Move Forward', paragraphs: ["Stop looking at the past. Forget your old bad habits and focus on what is ahead.", "When you know there is no way back, you will find a way forward. Keep going."] },
+    { theme: 'No Excuses', paragraphs: ["Your life is the result of your choices, not your luck. Stop blaming other people.", "You are the only one who can do the work. Take responsibility for your results today."] },
+    { theme: 'Stay Tough', paragraphs: ["Being too comfortable makes you soft. Do something difficult every single day.", "Train your mind to handle struggle. When things get hard, you will be ready."] },
+    { theme: 'Give Your Best', paragraphs: ["Do not do things halfway. If you start, give it your full effort.", "Work with energy. Put your heart into everything you do and finish strong."] },
+    { theme: 'Move On', paragraphs: ["Learn from mistakes and leave the regret behind. You cannot change yesterday.", "Stop looking backward. Correct your path and keep walking. Focus on what you can do right now."] },
+    { theme: 'Keep Trying', paragraphs: ["People might doubt you, but just keep showing them your results.", "If you get knocked down, get up again. Your persistence is more important than their opinions."] },
+    { theme: 'Start Now', paragraphs: ["Waiting is the biggest mistake you can make. When you pause, you lose time.", "Make a decision and start. It is better to start and learn than to wait for perfection."] },
+    { theme: 'Be Strong', paragraphs: ["Do not wait for others to join you. Trust your own path.", "It is better to walk alone in the right direction than to follow others who are lost."] },
+    { theme: 'Win The Day', paragraphs: ["Control your schedule instead of letting it control you. Have a plan for your day.", "Win your morning and you win your day. Finish your biggest task first."] },
+    { theme: 'Set High Standards', paragraphs: ["Never settle for average. How you do one thing is how you do everything.", "Ask more of yourself than anyone else does. Quality is a habit, not an accident."] },
+    { theme: 'Keep Going', paragraphs: ["A slow start is okay, but keep moving. Build your rhythm day by day.", "Start fast and finish faster. Don't let your energy drop. Keep moving to the next task."] },
+    { theme: 'Self Control', paragraphs: ["You are in charge of your own choices. Learn to say no to things that do not help you.", "Controlling your urges is the path to real power. Master your own mind."] },
+    { theme: 'Stay True', paragraphs: ["Do not lower your standards to make others happy. Keep your quality high.", "Protect your energy. Walk away from gossip and waste. Focus on growth."] },
+    { theme: 'Move Fast', paragraphs: ["The world moves quickly. Stop thinking and start doing. Speed is an advantage.", "Learn as you go. You create progress through movement, not just thinking."] },
+    { theme: 'Push Further', paragraphs: ["Your limits are mostly in your head. When you feel done, you can usually do more.", "Push past your comfort zone. You are stronger than you think."] },
+    { theme: 'Be Honest', paragraphs: ["Never pretend to be someone else to gain approval. Be real and honest.", "Live with integrity. Speak the truth and you will have nothing to fear."] },
+    { theme: 'Outwork Everyone', paragraphs: ["Talent is okay, but hard work is better. While others rest, keep working.", "Work hard when nobody is looking. Real success is proven by what you do."] },
+    { theme: 'Keep Learning', paragraphs: ["A lazy mind gets dull. Constantly read and learn new things.", "Train your mind to solve problems. Knowledge is a tool you can use every day."] },
+    { theme: 'Be Decisive', paragraphs: ["Weak people take too long to decide. Choose quickly and stand by it.", "Trust your own judgment. Any clear decision is better than doing nothing at all."] },
+    { theme: 'Rise Above', paragraphs: ["Gossip and drama are for people with nothing else to do. Keep your eyes on your goals.", "Your time is too valuable to spend on small talk. Let others talk while you move up."] },
+    { theme: 'Take Ownership', paragraphs: ["Stop waiting for a lucky break. No one is coming to do the work for you.", "You are in control of your life. Carry your own weight and make it happen."] }
+  ];
 
-    const _qx = document.getElementById('_q_');
-    const _st = document.getElementById('_st_');
-    const _mc = document.getElementById('_mc_');
-    
-    let _l_i = null;
-    let _startY = 0;
-    let _startX = 0;
-    let _currentY = 0;
-    let _currentX = 0;
-    let _isSwipe = false;
-    let _fsTriggered = false;
+  const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span>`).join(" ");
 
-    // Secure Fisher-Yates array shuffling
-    function _shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
+  const updateClockAndStats = () => {
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.toLocaleDateString("en-US", { month: 'long' }).toUpperCase();
+    const year = now.getFullYear();
+    document.getElementById("d0").textContent = `${day} ${month} ${year}`;
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById("t0").textContent = `DAY ${dayOfYear}`;
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const remaining = 1440 - (now.getHours() * 60 + now.getMinutes());
+    const statsEl = document.getElementById('live-stats');
+    if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${remaining} minutes remaining today`;
+  };
 
-    // Navigation and history tracker pool
-    let _currentPool = [];
-    let _lastQuoteText = null;
-    let _history = [];
-    let _historyIndex = -1;
+  const init = () => {
+    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+    const today = new Date();
+    const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
+    const item = data[dayOfYear % data.length];
+    document.getElementById("h0").textContent = item.theme;
+    document.getElementById("m0").innerHTML = `
+      <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05] zi">${wrapWords(item.paragraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05]">${wrapWords(item.paragraphs[1])}</p></div>
+    `;
+    updateClockAndStats();
+    const observer = new IntersectionObserver((entries) => { 
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); }); 
+    }, { threshold: 0.05 });
+    document.querySelectorAll(".z1").forEach(el => observer.observe(el));
+  };
 
-    function _getNextQuote() {
-        if (_currentPool.length === 0) {
-            let freshList = [..._db];
-            _shuffle(freshList);
-            if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
-                const head = freshList.pop();
-                freshList.unshift(head);
-            }
-            _currentPool = freshList;
-        }
-        const choice = _currentPool.pop();
-        _lastQuoteText = choice.t;
-        return choice;
-    }
-
-    function _gs() {
-        const n = new Date();
-        let h = n.getHours();
-        const m = n.getMinutes().toString().padStart(2, '0');
-        const a = h >= 12 ? 'pm' : 'am';
-        h = h % 12 || 12;
-        const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
-        const d = e - n;
-        const ml = Math.floor(d / 60000);
-        return { t: `${h}:${m} ${a}`, l: ml };
-    }
-
-    function _showQuote(nq) {
-        _st.classList.add('opacity-0');
-        if (_l_i) clearInterval(_l_i);
-
-        // Balanced transition duration set to 0.35s
-        _qx.style.transition = 'opacity 0.35s ease-in-out';
-        _qx.style.opacity = '0';
-
-        setTimeout(() => {
-            _qx.innerText = nq.t;
-
-            if (nq.id === "t_q") {
-                const ux = () => {
-                    const s = _gs();
-                    _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-                };
-                ux();
-                _st.classList.remove('opacity-0');
-                _l_i = setInterval(ux, 30000);
-            } else {
-                _st.innerHTML = "";
-                _st.classList.add('opacity-0');
-            }
-
-            // Balanced transition duration set to 0.35s
-            requestAnimationFrame(() => {
-                _qx.style.transition = 'opacity 0.35s ease-in-out';
-                _qx.style.opacity = '1';
-            });
-        }, 350); // Matches the 0.35s fade-out duration
-    }
-
-    function _next() {
-        if (_historyIndex < _history.length - 1) {
-            _historyIndex++;
-            _showQuote(_history[_historyIndex]);
-        } else {
-            const nq = _getNextQuote();
-            _history.push(nq);
-            _historyIndex = _history.length - 1;
-            _showQuote(nq);
-        }
-    }
-
-    function _prev() {
-        if (_historyIndex > 0) {
-            _historyIndex--;
-            _showQuote(_history[_historyIndex]);
-        }
-    }
-
-    function _enterFullscreen() {
-        const doc = document.documentElement;
-        if (!document.fullscreenElement) {
-            if (doc.requestFullscreen) {
-                doc.requestFullscreen().catch(() => {});
-            } else if (doc.webkitRequestFullscreen) {
-                doc.webkitRequestFullscreen().catch(() => {});
-            } else if (doc.msRequestFullscreen) {
-                doc.msRequestFullscreen().catch(() => {});
-            }
-        }
-    }
-
-    window.onload = () => {
-        const i = _getNextQuote();
-        _history.push(i);
-        _historyIndex = 0;
-        
-        _qx.innerText = i.t;
-        _qx.style.opacity = '1';
-        
-        if (i.id === "t_q") {
-            const s = _gs();
-            _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-            _st.classList.remove('opacity-0');
-        }
-
-        requestAnimationFrame(() => {
-            _mc.classList.add('v');
-        });
-    };
-
-    document.addEventListener('click', () => {
-        if (_isSwipe) return;
-        _next();
+  window.addEventListener("scroll", () => {
+    const s = window.scrollY;
+    document.getElementById("n0").classList.toggle("zs", s > 10);
+    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
+    const spans = document.querySelectorAll(".hi");
+    let active = null, min = Infinity;
+    spans.forEach(span => {
+      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
+      if (dist < min) { min = dist; active = span; }
     });
-
-    document.addEventListener('touchstart', (e) => {
-        _startY = e.touches[0].clientY;
-        _startX = e.touches[0].clientX;
-        _currentY = _startY;
-        _currentX = _startX;
-        _isSwipe = false;
-        _fsTriggered = false;
-    }, { passive: true });
-
-    document.addEventListener('touchmove', (e) => {
-        _currentY = e.touches[0].clientY;
-        _currentX = e.touches[0].clientX;
-        const diffY = _startY - _currentY;
-        const diffX = Math.abs(_startX - _currentX);
-
-        if (diffY > 10 && e.cancelable) {
-            e.preventDefault();
-        }
-
-        if (!_fsTriggered && diffY > 40 && diffX < 25) {
-            _fsTriggered = true;
-            _isSwipe = true;
-            _enterFullscreen();
-        }
-    }, { passive: false });
-
-    document.addEventListener('touchend', () => {
-        const deltaX = _currentX - _startX;
-        const deltaY = _currentY - _startY;
-
-        if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
-            _isSwipe = true;
-            if (deltaX > 50) {
-                _prev(); // Swipe Right -> Previous (Clean Fade)
-            } else if (deltaX < -50) {
-                _next(); // Swipe Left -> Next (Clean Fade)
-            }
-        }
-
-        if (_isSwipe) {
-            setTimeout(() => {
-                _isSwipe = false;
-            }, 150);
-        }
-    }, { passive: true });
-
+    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
+  }, { passive: true });
+  window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
 })();
 </script>
 </body>
