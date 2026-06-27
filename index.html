@@ -38,13 +38,8 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; min-height: 100vh
 .hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
 .hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-
-/* Slightly increased typographic size from previous revision (clamp(12px, 2vw, 16px)) */
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 2.5vw, 20px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
-
-/* Restored original sizing, weight, and brightness (0.5 opacity) */
 .quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3vw, 18px); color: #ffffff; opacity: 0.5; margin-top: 15px; font-weight: 500; }
-
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </style>
@@ -73,13 +68,22 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
         </div>
     </div>
   </section>
+  <section class="py-24 text-center relative z-10">
+    <div class="z1 px-6">
+        <h2 class="text-white font-f1 text-3xl mb-8 opacity-90 italic">Join my Signal group for daily motivation.</h2>
+        <a href="https://signal.group/#CjQKIK1MC-epTwgDITRmElKiUr4QPKu872JdkTsQse0RJK5XEhAlLG8U7tc75wd1LRC0Er3R" target="_blank" 
+           class="inline-block bg-white text-black hover:bg-c2 transition-all duration-500 px-10 py-5 text-[11px] tracking-[0.3em] uppercase font-bold font-f2 hover:scale-[1.02] active:scale-[0.98]">
+           Join Signal Group
+        </a>
+    </div>
+  </section>
 </main>
 <footer class="w-full flex justify-center px-6 relative z-10 z1">
   <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
 </footer>
 <script>
 (function(){
-      const data = [
+  const data = [
     { theme: 'Take Action', paragraphs: ["Stop overthinking. The perfect moment does not exist. If you want results, you have to move right now.", "Hesitation is a thief. Count down to zero and take the first step. Action is the only way to build a life worth living."] },
     { theme: 'Kill Laziness', paragraphs: ["Comfort is a trap that keeps you weak. Stop waiting to feel like it. Get up and move your body.", "The longer you stay idle, the harder it gets to start. Break the cycle by doing your hardest task this second."] },
     { theme: 'Don\'t Waste Time', paragraphs: ["You only get 1,440 minutes today. Once they are gone, they are gone forever. Stop wasting them on things that do not matter.", "Be protective of your hours. Do not trade your life for small distractions. Focus entirely on what moves your future forward."] },
@@ -111,8 +115,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     { theme: 'Rise Above', paragraphs: ["Gossip and drama are for people with nothing better to do. Keep your eyes on your goals and do not look down.", "Your focus is too valuable to be wasted on small minds. Let them talk while you climb to the top."] },
     { theme: 'No Lifelines', paragraphs: ["Stop waiting for handouts or lucky breaks. No one is going to step in to do the heavy lifting for you.", "You are responsible for your own path. If you want to win, put the load on your own shoulders and carry it."] }
   ];
-
-
 
   const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span>`).join(" ");
 
