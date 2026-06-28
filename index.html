@@ -4,21 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>Quotes</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1K1TKBQFFK');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #000000; --text: #ffffff; }
-        html, body { height: 100%; margin: 0; padding: 0; background-color: var(--bg); overflow: hidden; touch-action: none; }
-        body { font-family: 'Inter', sans-serif; color: var(--text); user-select: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        ._f1 { opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        ._f1.v { opacity: 1; }
-        ._c1 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 600px; width: calc(100% - 48px); text-align: center; z-index: 5; display: flex; flex-direction: column; align-items: center; }
-        #_q_ { white-space: pre-wrap; margin-bottom: 12px; transition: opacity 0.35s ease-in-out; font-weight: 300; letter-spacing: -0.01em; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        #_st_ { font-size: 12px; color: #888888; font-weight: 400; transition: opacity 0.35s ease; line-height: 1.6; margin-bottom: 4px; }
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            user-select: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ._f1 {
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        ._f1.v {
+            opacity: 1;
+        }
+
+        ._c1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 600px;
+            width: calc(100% - 48px);
+            text-align: center;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            will-change: transform, opacity;
+        }
+
+        #_q_ {
+            font-family: 'Inter', sans-serif;
+            white-space: pre-wrap;
+            margin-bottom: 12px; 
+            color: #ffffff;
+            display: inline-block;
+            will-change: opacity;
+            transition: opacity 0.35s ease-in-out;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        #_st_ {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: #888888;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            transition: opacity 0.35s ease;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .nav-hint {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #444;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            pointer-events: none;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Moved slightly further down as requested */
         #_hint_ { 
-            position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; 
+            position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
             font-size: 9px; color: #404040; text-transform: uppercase; 
             letter-spacing: 0.25em; transition: opacity 0.5s ease; pointer-events: none; 
         }
@@ -31,6 +120,7 @@
         <div id="_st_" class="opacity-0"></div>
     </div>
 
+    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
     <div id="_hint_">Tap anywhere to view the next quote</div>
 
 <script>
@@ -126,53 +216,193 @@
         { t: "Pressure reveals the man within."}
     ];
 
-    const _qx = document.getElementById('_q_'), _st = document.getElementById('_st_'), _mc = document.getElementById('_mc_'), _hint = document.getElementById('_hint_');
-    let _pool = [..._db], _history = [], _historyIndex = -1, _hintShown = false;
+    const _qx = document.getElementById('_q_');
+    const _st = document.getElementById('_st_');
+    const _mc = document.getElementById('_mc_');
+    const _hint = document.getElementById('_hint_');
+    let _hintShown = false;
+    
+    let _l_i = null;
+    let _startY = 0;
+    let _startX = 0;
+    let _currentY = 0;
+    let _currentX = 0;
+    let _isSwipe = false;
+    let _fsTriggered = false;
 
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
+        return arr;
     }
 
-    function _getNext() {
-        if (_pool.length === 0) { _pool = [..._db]; _shuffle(_pool); }
-        return _pool.pop();
+    let _currentPool = [];
+    let _lastQuoteText = null;
+    let _history = [];
+    let _historyIndex = -1;
+
+    function _getNextQuote() {
+        if (_currentPool.length === 0) {
+            let freshList = [..._db];
+            _shuffle(freshList);
+            if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
+                const head = freshList.pop();
+                freshList.unshift(head);
+            }
+            _currentPool = freshList;
+        }
+        const choice = _currentPool.pop();
+        _lastQuoteText = choice.t;
+        return choice;
+    }
+
+    function _gs() {
+        const n = new Date();
+        let h = n.getHours();
+        const m = n.getMinutes().toString().padStart(2, '0');
+        const a = h >= 12 ? 'pm' : 'am';
+        h = h % 12 || 12;
+        const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
+        const d = e - n;
+        const ml = Math.floor(d / 60000);
+        return { t: `${h}:${m} ${a}`, l: ml };
     }
 
     function _showQuote(nq) {
+        _st.classList.add('opacity-0');
+        if (_l_i) clearInterval(_l_i);
+
+        _qx.style.transition = 'opacity 0.35s ease-in-out';
         _qx.style.opacity = '0';
+
         setTimeout(() => {
             _qx.innerText = nq.t;
+
             if (nq.id === "t_q") {
-                _st.innerText = `Time: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} • ${Math.floor((new Date(new Date().setHours(23,59,59,999)) - new Date()) / 60000)} minutes remaining today`;
+                const ux = () => {
+                    const s = _gs();
+                    _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+                };
+                ux();
                 _st.classList.remove('opacity-0');
-            } else { _st.classList.add('opacity-0'); }
-            _qx.style.opacity = '1';
+                _l_i = setInterval(ux, 30000);
+            } else {
+                _st.innerHTML = "";
+                _st.classList.add('opacity-0');
+            }
+
+            requestAnimationFrame(() => {
+                _qx.style.transition = 'opacity 0.35s ease-in-out';
+                _qx.style.opacity = '1';
+            });
         }, 350);
     }
 
     function _next() {
         if (!_hintShown) { _hint.style.opacity = '0'; _hintShown = true; }
-        _historyIndex++;
-        if (_historyIndex >= _history.length) {
-            const nq = _getNext();
+        if (_historyIndex < _history.length - 1) {
+            _historyIndex++;
+            _showQuote(_history[_historyIndex]);
+        } else {
+            const nq = _getNextQuote();
             _history.push(nq);
+            _historyIndex = _history.length - 1;
+            _showQuote(nq);
         }
-        _showQuote(_history[_historyIndex]);
     }
 
-    document.addEventListener('click', _next);
-    window.onload = () => { 
-        _shuffle(_pool);
-        const i = _getNext();
-        _history.push(i); 
-        _historyIndex = 0; 
-        _qx.innerText = i.t; 
-        _qx.style.opacity = '1'; 
-        _mc.classList.add('v'); 
+    function _prev() {
+        if (_historyIndex > 0) {
+            _historyIndex--;
+            _showQuote(_history[_historyIndex]);
+        }
+    }
+
+    function _enterFullscreen() {
+        const doc = document.documentElement;
+        if (!document.fullscreenElement) {
+            if (doc.requestFullscreen) {
+                doc.requestFullscreen().catch(() => {});
+            } else if (doc.webkitRequestFullscreen) {
+                doc.webkitRequestFullscreen().catch(() => {});
+            } else if (doc.msRequestFullscreen) {
+                doc.msRequestFullscreen().catch(() => {});
+            }
+        }
+    }
+
+    window.onload = () => {
+        const i = _getNextQuote();
+        _history.push(i);
+        _historyIndex = 0;
+        
+        _qx.innerText = i.t;
+        _qx.style.opacity = '1';
+        
+        if (i.id === "t_q") {
+            const s = _gs();
+            _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+            _st.classList.remove('opacity-0');
+        }
+
+        requestAnimationFrame(() => {
+            _mc.classList.add('v');
+        });
     };
+
+    document.addEventListener('click', () => {
+        if (_isSwipe) return;
+        _next();
+    });
+
+    document.addEventListener('touchstart', (e) => {
+        _startY = e.touches[0].clientY;
+        _startX = e.touches[0].clientX;
+        _currentY = _startY;
+        _currentX = _startX;
+        _isSwipe = false;
+        _fsTriggered = false;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+        _currentY = e.touches[0].clientY;
+        _currentX = e.touches[0].clientX;
+        const diffY = _startY - _currentY;
+        const diffX = Math.abs(_startX - _currentX);
+
+        if (diffY > 10 && e.cancelable) {
+            e.preventDefault();
+        }
+
+        if (!_fsTriggered && diffY > 40 && diffX < 25) {
+            _fsTriggered = true;
+            _isSwipe = true;
+            _enterFullscreen();
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+        const deltaX = _currentX - _startX;
+        const deltaY = _currentY - _startY;
+
+        if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            _isSwipe = true;
+            if (deltaX > 50) {
+                _prev();
+            } else if (deltaX < -50) {
+                _next();
+            }
+        }
+
+        if (_isSwipe) {
+            setTimeout(() => {
+                _isSwipe = false;
+            }, 150);
+        }
+    }, { passive: true });
+
 })();
 </script>
 </body>
