@@ -1,133 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#000000">
-<title>Salman Faris | Daily Wisdom</title>
-<link class="favicon" rel="icon" type="image/png" href="favicon.png">
-<meta name="description" content="Daily wisdom on discipline, focus, action, and personal growth.">
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
-<script>
-tailwind.config={theme:{extend:{fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}}}}
-</script>
-<style>
-html { background-color: #000000; scroll-behavior: smooth; overscroll-behavior-y: contain; }
-body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
-.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-.z1.za{opacity:1;transform:none;filter:blur(0)}
-.zi{text-indent:12rem}
-@media(max-width:768px){.zi{text-indent:0}}
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
-.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
-@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
-.zf{animation:flash 2s ease-in-out infinite}
-#sd{transition:opacity 0.5s ease,visibility 0.5s}
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
-.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(14px, 2.5vw, 20px); font-weight: 400; line-height: 1.6; color: #ffffff; opacity: 0.9; margin: 0; }
-.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3vw, 18px); color: #ffffff; opacity: 0.5; margin-top: 15px; font-weight: 500; }
-.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
-footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Quotes</title>
+    <meta name="theme-color" content="#000">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #000000; --text: #ffffff; }
+        html, body { height: 100%; margin: 0; padding: 0; background-color: var(--bg); overflow: hidden; touch-action: none; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); user-select: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        ._f1 { opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        ._f1.v { opacity: 1; }
+        ._c1 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 600px; width: calc(100% - 48px); text-align: center; z-index: 5; display: flex; flex-direction: column; align-items: center; }
+        #_q_ { white-space: pre-wrap; margin-bottom: 12px; transition: opacity 0.35s ease-in-out; font-weight: 300; letter-spacing: -0.01em; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        #_st_ { font-size: 12px; color: #888888; font-weight: 400; transition: opacity 0.35s ease; line-height: 1.6; margin-bottom: 4px; }
+        /* Premium hint styling: smaller, spaced, muted grey */
+        #_hint_ { 
+            position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; 
+            font-size: 9px; color: #404040; text-transform: uppercase; 
+            letter-spacing: 0.25em; transition: opacity 0.5s ease; pointer-events: none; 
+        }
+    </style>
 </head>
 <body>
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <div id="t0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium"></div>
-  <div id="d0" class="text-white/90 text-[10px] uppercase tracking-[0.4em] font-f2 font-medium"></div>
-</nav>
-<main class="relative w-full">
-  <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 relative z-10 pt-24">
-    <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-[4.5rem] sm:text-[6.5rem] md:text-[9.5rem] not-italic tracking-tighter leading-none z1 text-white" style="transition-delay:0.2s"></h1>
+
+    <div class="_c1 _f1" id="_mc_">
+        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
+        <div id="_st_" class="opacity-0"></div>
     </div>
-    <div id="sd" class="py-12 z1" style="transition-delay:0.8s">
-      <div class="zs1 zf">Scroll Down</div>
-    </div>
-  </section>
-  <article id="m0" class="max-w-screen-2xl mx-auto px-6 py-20 relative z-10 space-y-72"></article>
-  <section class="relative z-10">
-    <div class="z1 text-center px-6 quote-wrapper">
-        <div class="quote-container pt-16">
-            <p class="quote-line">You only have 1,440 minutes every day,</p>
-            <p class="quote-line">don't let a single one go to waste.</p>
-            <p id="live-stats" class="quote-stats"></p>
-        </div>
-    </div>
-  </section>
-</main>
-<footer class="w-full flex justify-center px-6 relative z-10 z1">
-  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
-</footer>
+
+    <div id="_hint_">Tap anywhere to view the next quote</div>
+
 <script>
 (function(){
-  const data = [
-    { theme: 'Execution', paragraphs: ["The graveyard is the richest place on earth, full of books never written, companies never built, and lives never lived. Do not join them.", "Success is not a product of luck; it is a violent collision between preparation and relentless execution."] },
-    { theme: 'Discipline', paragraphs: ["Discipline is the bridge between goals and accomplishment. If you aren't paying the toll daily, you aren't crossing.", "Your emotions are irrelevant. If you only move when you feel like it, you are a slave to your own biology."] },
-    { theme: 'Vision', paragraphs: ["If you don't build your own dream, someone will hire you to help build theirs. Decide who you are working for.", "Most people overestimate what they can do in a day but drastically underestimate what they can do in a decade. Play the long game."] },
-    { theme: 'Responsibility', paragraphs: ["You are 100% responsible for your current position in life. Blaming the system, the economy, or your parents is a strategy for the weak.", "When you stop complaining, you start winning. Energy spent on excuse-making is energy stolen from your output."] },
-    { theme: 'Focus', paragraphs: ["You can do anything, but you cannot do everything. To say yes to the mission, you must say no to a thousand distractions.", "Deep work is the new IQ. While the world fights for attention, you must fight for concentration."] },
-    { theme: 'Growth', paragraphs: ["The moment you stop learning, you start dying. A mind that refuses to be stretched will eventually reach its breaking point.", "If you are the smartest person in the room, you are in the wrong room. Seek environments that intimidate you into excellence."] },
-    { theme: 'Ambition', paragraphs: ["Mediocrity is a death sentence. To be average in a world of opportunity is a choice, not a circumstance.", "Do not lower your price to make others feel better about their lack of value. Demand excellence from yourself and settle for nothing less."] },
-    { theme: 'Sacrifice', paragraphs: ["Greatness demands a sacrifice that most people are unwilling to pay. They want the result, but they hate the process.", "What you lose on the way to the top is the price of admission. Ensure the exchange is worth it."] },
-    { theme: 'Reality', paragraphs: ["The world does not care about your intentions; it only cares about your results. Deliver value or get replaced.", "Stop trying to be liked. Start trying to be respected. The former is easy, the latter is earned through relentless performance."] },
-    { theme: 'Courage', paragraphs: ["Fear is just a physiological reaction to something that hasn't happened yet. Walk through it until it becomes boring.", "The greatest risk is not taking any risks at all. In a world that is changing rapidly, the only strategy that is guaranteed to fail is not moving."] }
-  ];
+    const _db = [
+        { t: "Be better than you were yesterday." },
+        { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
+        { t: "Don't waste time. You don't get it back." },
+        { t: "Focus." },
+        { t: "Consistency." },
+        { t: "This is the way." },
+        { t: "Focus is a superpower in a Distracted world." },
+        { t: "5  4  3  2  1\nTake action." },
+        { t: "Speak good or remain silent.\n[Riyad as-Salihin 1511]" },
+        { t: "Be the man who acts while others are still thinking." }
+    ];
 
-  const wrapWords = (text) => text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}</span>`).join(" ");
+    const _qx = document.getElementById('_q_'), _st = document.getElementById('_st_'), _mc = document.getElementById('_mc_'), _hint = document.getElementById('_hint_');
+    let _history = [], _historyIndex = -1, _hintShown = false;
 
-  const updateClockAndStats = () => {
-    const now = new Date();
-    const day = now.getDate();
-    const month = now.toLocaleDateString("en-US", { month: 'long' }).toUpperCase();
-    const year = now.getFullYear();
-    document.getElementById("d0").textContent = `${day} ${month} ${year}`;
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    document.getElementById("t0").textContent = `DAY ${dayOfYear}`;
-    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-    const remaining = 1440 - (now.getHours() * 60 + now.getMinutes());
-    const statsEl = document.getElementById('live-stats');
-    if (statsEl) statsEl.textContent = `Time: ${timeStr} • ${remaining} minutes remaining today`;
-  };
+    function _showQuote(nq) {
+        _qx.style.opacity = '0';
+        setTimeout(() => {
+            _qx.innerText = nq.t;
+            _qx.style.opacity = '1';
+        }, 350);
+    }
 
-  const init = () => {
-    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-    const today = new Date();
-    const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
-    const item = data[dayOfYear % data.length];
-    document.getElementById("h0").textContent = item.theme;
-    document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05] zi">${wrapWords(item.paragraphs[0])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl sm:text-8xl md:text-[8.5rem] leading-[1.05]">${wrapWords(item.paragraphs[1])}</p></div>
-    `;
-    updateClockAndStats();
-    const observer = new IntersectionObserver((entries) => { 
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("za"); }); 
-    }, { threshold: 0.05 });
-    document.querySelectorAll(".z1").forEach(el => observer.observe(el));
-  };
+    function _next() {
+        if (!_hintShown) {
+            _hint.style.opacity = '0';
+            _hintShown = true;
+        }
+        _historyIndex++;
+        if (_historyIndex >= _history.length) {
+            const nq = _db[Math.floor(Math.random() * _db.length)];
+            _history.push(nq);
+        }
+        _showQuote(_history[_historyIndex]);
+    }
 
-  window.addEventListener("scroll", () => {
-    const s = window.scrollY;
-    document.getElementById("n0").classList.toggle("zs", s > 10);
-    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
-    const spans = document.querySelectorAll(".hi");
-    let active = null, min = Infinity;
-    spans.forEach(span => {
-      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
-      if (dist < min) { min = dist; active = span; }
-    });
-    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
-  }, { passive: true });
-  window.onload = () => { init(); setInterval(updateClockAndStats, 1000); };
+    document.addEventListener('click', _next);
+    window.onload = () => { 
+        _history.push(_db[0]); 
+        _historyIndex = 0; 
+        _qx.innerText = _db[0].t; 
+        _qx.style.opacity = '1'; 
+        _mc.classList.add('v'); 
+    };
 })();
 </script>
 </body>
