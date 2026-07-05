@@ -103,7 +103,8 @@
             pointer-events: none;
             opacity: 0;
             will-change: transform, opacity;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Ultra slow smooth transition curves */
+            transition: opacity 2s cubic-bezier(0.25, 1, 0.5, 1), transform 2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .nav-hint.visible {
@@ -126,7 +127,8 @@
             opacity: 0;
             transform: translateY(8px);
             will-change: transform, opacity;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Ultra slow smooth transition curves */
+            transition: opacity 2.5s cubic-bezier(0.25, 1, 0.5, 1), transform 2.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         #_hint_.visible {
@@ -377,7 +379,7 @@
             _mc.classList.add('v');
         });
 
-        // Gently introduce hints after the main container fully fades in (1200ms)
+        // Softly fade indicators in once the main content has loaded
         setTimeout(() => {
             if (!_hintShown) {
                 _hint.classList.add('visible');
