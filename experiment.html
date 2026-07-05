@@ -145,7 +145,7 @@
     </div>
 
     <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
-    <div id="_hint_">Tap anywhere to view the next quote</div>
+    <div id="_hint_">Tap / Long Press for Fullscreen</div>
 
 <script>
 (function(){
@@ -252,7 +252,10 @@
     let _currentY = 0;
     let _currentX = 0;
     let _isSwipe = false;
-    let _fsTriggered = false;
+    
+    // Long Press Variables
+    let _lpTimer = null;
+    let _isLongPress = false;
 
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -389,7 +392,7 @@
     };
 
     document.addEventListener('click', () => {
-        if (_isSwipe) return;
+        if (_isSwipe || _isLongPress) return;
         _next();
     });
 
@@ -399,30 +402,55 @@
         _currentY = _startY;
         _currentX = _startX;
         _isSwipe = false;
-        _fsTriggered = false;
+        _isLongPress = false;
+
+        // Clear any old timer
+        if (_lpTimer) clearTimeout(_lpTimer);
+
+        // Start a long press timer (600ms)
+        _lpTimer = setTimeout(() => {
+            _isLongPress = true;
+            // Provide a light haptic sensation if supported
+            if (navigator.vibrate) navigator.vibrate(50);
+        }, 600);
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
         _currentY = e.touches[0].clientY;
         _currentX = e.touches[0].clientX;
-        const diffY = _startY - _currentY;
+        const diffY = Math.abs(_startY - _currentY);
         const diffX = Math.abs(_startX - _currentX);
 
-        if (diffY > 10 && e.cancelable) {
-            e.preventDefault();
+        // If the user drags significantly, cancel the long press detection
+        if (diffY > 15 || diffX > 15) {
+            if (_lpTimer) {
+                clearTimeout(_lpTimer);
+                _lpTimer = null;
+            }
         }
-
-        if (!_fsTriggered && diffY > 40 && diffX < 25) {
-            _fsTriggered = true;
-            _isSwipe = true;
-            _enterFullscreen();
-        }
-    }, { passive: false });
+    }, { passive: true });
 
     document.addEventListener('touchend', () => {
+        // Clear the long press timer
+        if (_lpTimer) {
+            clearTimeout(_lpTimer);
+            _lpTimer = null;
+        }
+
+        // Handle full screen if long press occurred
+        if (_isLongPress) {
+            _enterFullscreen();
+            // Prevent normal click action from triggering right after long-press release
+            setTimeout(() => {
+                _isLongPress = false;
+            }, 100);
+            return;
+        }
+
         const deltaX = _currentX - _startX;
         const deltaY = _currentY - _startY;
 
+        // Swipe navigation check
         if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
             _isSwipe = true;
             if (deltaX > 50) {
@@ -438,6 +466,11 @@
             }, 150);
         }
     }, { passive: true });
+
+    // Prevent context menu from popping up on mobile devices during a long press hold
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
 
 })();
 </script>
