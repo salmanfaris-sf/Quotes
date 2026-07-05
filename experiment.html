@@ -3,42 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salman Faris</title>
+    <title>Salman Faris | Digital Architect</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using Archivo Black for the massive structural text, Inter for UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #262626; color: #ffffff; }
-        .nav-link { border: 1px solid #525252; border-radius: 50px; padding: 6px 16px; font-size: 12px; }
+        :root {
+            --bg-color: #1e1f1e;
+            --text-accent: #a9b5a8; /* The sage green from your reference */
+            --ui-text: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hide default cursor for custom premium cursor */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--ui-text);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Lock scroll for the hero experience */
+        }
+
+        /* Cinematic Noise Overlay */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 5px; height: 5px;
+            background-color: var(--text-accent);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(169, 181, 168, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Typography */
+        .massive-text {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(6rem, 18vw, 24rem);
+            line-height: 0.8;
+            color: var(--text-accent);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            position: absolute;
+        }
+
+        /* Pill Navigation */
+        .nav-pill {
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-pill:hover {
+            background-color: var(--text-accent);
+            color: var(--bg-color);
+            border-color: var(--text-accent);
+        }
+
+        /* Layering System (The Secret to the Look) */
+        .layer-back { z-index: 1; }
+        .layer-person { z-index: 2; pointer-events: none; }
+        .layer-front { z-index: 3; }
+        .layer-ui { z-index: 4; }
+
+        /* Initial Load Animations */
+        .fade-up { opacity: 0; transform: translateY(40px); transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        
+        .loader {
+            position: fixed; inset: 0; background: var(--bg-color); z-index: 2000;
+            display: flex; justify-content: center; items-center; align-items: center;
+            transition: opacity 1s ease-out;
+        }
     </style>
 </head>
-<body class="h-screen overflow-hidden">
+<body>
 
-    <!-- Navigation -->
-    <nav class="absolute top-8 w-full px-12 flex justify-between z-20">
-        <div class="flex gap-4">
-            <a href="#" class="nav-link">About</a>
-            <a href="#" class="nav-link">Insights</a>
-            <a href="#" class="nav-link">Contact</a>
+    <!-- Cinematic Grain -->
+    <div class="noise"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div class="loader" id="loader">
+        <span class="text-[10px] tracking-[0.3em] uppercase text-[#a9b5a8] animate-pulse">Loading Experience</span>
+    </div>
+
+    <!-- UI Layer -->
+    <nav class="layer-ui absolute top-8 w-full px-6 md:px-12 flex justify-between items-start fade-up">
+        <div class="flex flex-wrap gap-3">
+            <a href="#" class="nav-pill">About Me</a>
+            <a href="#" class="nav-pill">Track Record</a>
+            <a href="#" class="nav-pill">Expertise</a>
         </div>
-        <a href="#" class="nav-link">Get in Touch</a>
+        <a href="#" class="nav-pill">Contact</a>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative h-screen flex items-center justify-center">
-        <!-- Background Portrait (Replace with your own image) -->
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center opacity-60"></div>
+    <div class="layer-ui absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-right hidden md:block fade-up" style="transition-delay: 0.2s;">
+        <p class="text-xs tracking-widest uppercase text-stone-400 mb-1">Entrepreneur,</p>
+        <p class="text-xs tracking-widest uppercase text-stone-400">Advisor & Investor</p>
+    </div>
+
+    <!-- Parallax Hero Stage -->
+    <main class="relative w-full h-screen flex items-center justify-center overflow-hidden" id="parallax-stage">
         
-        <!-- Large Typography -->
-        <div class="relative z-10 flex flex-col items-center select-none">
-            <h1 class="text-[15vw] font-bold tracking-tighter leading-none text-[#A8B3A8]">SALMAN</h1>
-            <h1 class="text-[15vw] font-bold tracking-tighter leading-none text-[#A8B3A8]">FARIS</h1>
+        <!-- BACK TEXT (Moves slightly away from mouse) -->
+        <div class="layer-back absolute inset-0 flex items-center justify-center w-full h-full parallax-target" data-speed="-0.02">
+            <h1 class="massive-text absolute left-[-2vw] top-[35%] md:top-[30%] opacity-90">SALMAN</h1>
         </div>
 
-        <!-- Right Side Tagline -->
-        <div class="absolute right-12 bottom-24 text-right">
-            <p class="text-sm tracking-widest uppercase opacity-80">Explorer, Observer<br>& Digital Architect</p>
+        <!-- THE PORTRAIT (Moves slightly with mouse) -->
+        <!-- Note: To make this look exactly like the reference, you MUST use a transparent PNG of yourself -->
+        <div class="layer-person absolute bottom-0 w-[120%] md:w-[70%] max-w-[900px] parallax-target" data-speed="0.015">
+            <img 
+                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80&ixlib=rb-4.0.3" 
+                alt="Salman Faris" 
+                class="w-full h-auto object-cover object-bottom fade-up mask-image"
+                style="mask-image: linear-gradient(to top, transparent 0%, black 20%); -webkit-mask-image: linear-gradient(to top, transparent 0%, black 20%); filter: contrast(1.1) desaturate(0.2);"
+                id="portrait"
+            >
+            <!-- 
+                CRITICAL INSTRUCTION FOR THE OWNER: 
+                Replace the src above with a high-res, cutout PNG of yourself with a transparent background. 
+                That is what creates the 3D overlapping effect.
+            -->
         </div>
-    </section>
 
+        <!-- FRONT TEXT (Moves faster with mouse, creating 3D depth) -->
+        <div class="layer-front absolute inset-0 flex items-center justify-center w-full h-full pointer-events-none parallax-target" data-speed="0.04">
+            <h1 class="massive-text absolute right-[-2vw] bottom-[20%] md:bottom-[15%]">FARIS</h1>
+        </div>
+
+    </main>
+
+    <script>
+        // Remove loader and trigger entrance animations
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+                }, 1000);
+            }, 500);
+        };
+
+        // Custom Cursor Logic
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let outlineX = mouseX;
+        let outlineY = mouseY;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Instant dot
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+        });
+
+        // Hover effect for links
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursorOutline.style.width = '60px';
+                cursorOutline.style.height = '60px';
+                cursorOutline.style.backgroundColor = 'rgba(169, 181, 168, 0.1)';
+            });
+            link.addEventListener('mouseleave', () => {
+                cursorOutline.style.width = '40px';
+                cursorOutline.style.height = '40px';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // Smooth Parallax Animation Loop
+        const parallaxTargets = document.querySelectorAll('.parallax-target');
+        
+        function animate() {
+            // Smoothly interpolate cursor outline
+            outlineX += (mouseX - outlineX) * 0.15;
+            outlineY += (mouseY - outlineY) * 0.15;
+            cursorOutline.style.left = `${outlineX}px`;
+            cursorOutline.style.top = `${outlineY}px`;
+
+            // Calculate parallax offset based on screen center
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const percentX = (mouseX - centerX) / centerX;
+            const percentY = (mouseY - centerY) / centerY;
+
+            // Apply parallax to targets
+            parallaxTargets.forEach(target => {
+                const speed = parseFloat(target.getAttribute('data-speed'));
+                const moveX = percentX * speed * 1000;
+                const moveY = percentY * speed * 1000;
+                
+                // Using lerp for buttery smooth movement
+                const currentTransform = target.style.transform;
+                target.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
 </body>
 </html>
+
+
