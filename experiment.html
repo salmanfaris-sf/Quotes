@@ -3,83 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALMAN FARIS | Personal Archiv</title>
+    <title>Salman Faris</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@200;300;400&display=swap');
-        
-        body { 
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
-            color: #ededed;
-        }
-        
-        h1, h2 { font-family: 'Playfair Display', serif; }
-        
-        .hero-gradient {
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .section-padding { padding: 120px 0; }
-        
-        .mask-image {
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #262626; color: #ffffff; }
+        .nav-link { border: 1px solid #525252; border-radius: 50px; padding: 6px 16px; font-size: 12px; }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="h-screen overflow-hidden">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-12 py-8 flex justify-between items-center mix-blend-difference">
-        <div class="text-lg font-bold tracking-[0.2em]">SF</div>
-        <div class="flex gap-12 text-[10px] uppercase tracking-[0.3em]">
-            <a href="#" class="hover:opacity-50 transition">Archive</a>
-            <a href="#" class="hover:opacity-50 transition">Philosophy</a>
-            <a href="#" class="hover:opacity-50 transition">Contact</a>
+    <nav class="absolute top-8 w-full px-12 flex justify-between z-20">
+        <div class="flex gap-4">
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Insights</a>
+            <a href="#" class="nav-link">Contact</a>
         </div>
+        <a href="#" class="nav-link">Get in Touch</a>
     </nav>
 
-    <!-- Full Screen Hero -->
-    <section class="h-screen w-full hero-gradient flex flex-col justify-end px-12 pb-24">
-        <div class="max-w-3xl">
-            <h1 class="text-7xl md:text-9xl font-light mb-6">Salman Faris</h1>
-            <p class="text-xl md:text-2xl font-light opacity-80 italic">A digital space for thought, exploration, and quiet observation.</p>
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center">
+        <!-- Background Portrait (Replace with your own image) -->
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center opacity-60"></div>
+        
+        <!-- Large Typography -->
+        <div class="relative z-10 flex flex-col items-center select-none">
+            <h1 class="text-[15vw] font-bold tracking-tighter leading-none text-[#A8B3A8]">SALMAN</h1>
+            <h1 class="text-[15vw] font-bold tracking-tighter leading-none text-[#A8B3A8]">FARIS</h1>
+        </div>
+
+        <!-- Right Side Tagline -->
+        <div class="absolute right-12 bottom-24 text-right">
+            <p class="text-sm tracking-widest uppercase opacity-80">Explorer, Observer<br>& Digital Architect</p>
         </div>
     </section>
-
-    <!-- Immersive Content Sections -->
-    <section class="section-padding px-12 max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-24 items-center">
-            <div>
-                <h2 class="text-5xl mb-8">The Pursuit of Clarity</h2>
-                <p class="text-stone-400 text-lg leading-relaxed font-light">
-                    In a world of constant noise, I curate my digital home to serve as a quiet respite. This isn't a CV, nor a pitch. It is simply a collection of moments, ideas, and the things that catch my eye.
-                </p>
-            </div>
-            <div class="h-[500px] w-full bg-stone-900 rounded-sm">
-                <!-- Placeholder for high-end photography -->
-                <div class="w-full h-full opacity-30 bg-[url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Full Width Feature -->
-    <section class="h-[70vh] w-full bg-stone-900 my-24 flex items-center justify-center text-center px-6">
-        <div class="max-w-2xl">
-            <span class="text-[10px] uppercase tracking-[0.3em] mb-6 block opacity-50">Curiosity</span>
-            <h2 class="text-4xl md:text-6xl mb-12 italic">"The mystery of life isn't a problem to solve, but a reality to experience."</h2>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="px-12 py-24 text-center">
-        <p class="text-4xl mb-12">Let's connect.</p>
-        <a href="mailto:hello@salmanfaris.com" class="text-lg border-b border-stone-600 hover:border-white transition pb-1">hello@salmanfaris.com</a>
-    </footer>
 
 </body>
 </html>
-
