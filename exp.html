@@ -18,7 +18,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
@@ -44,7 +44,7 @@
 
         ._f1 {
             opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         ._f1.v {
@@ -56,7 +56,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 620px;
+            max-width: 600px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 5;
@@ -69,7 +69,7 @@
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 14px; 
+            margin-bottom: 12px; 
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
@@ -77,6 +77,7 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            opacity: 0;
         }
 
         #_st_ {
@@ -88,6 +89,7 @@
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
+            opacity: 0;
         }
 
         .nav-hint {
@@ -96,29 +98,32 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 9px;
-            color: #888; /* Increased brightness from 444 */
-            font-weight: 400;
+            color: #888; 
+            font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             pointer-events: none;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #_hint_ { 
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
-            font-size: 9px; color: #aaa; /* Increased brightness from 666 */ 
+            font-size: 10px; color: #bbb; 
             text-transform: uppercase; 
-            letter-spacing: 0.25em; transition: opacity 0.5s ease; pointer-events: none; 
-            font-weight: 400;
+            letter-spacing: 0.20em; 
+            pointer-events: none; 
+            font-weight: 500; /* Uses solid default thickness for readability */
+            opacity: 0; 
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-[15px] md:text-[17px] lg:text-[19px] leading-relaxed tracking-wide opacity-0"></h1>
-        <div id="_st_" class="opacity-0"></div>
+        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
+        <div id="_st_"></div>
     </div>
 
     <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
@@ -143,7 +148,7 @@
         { t: "You can't have a million dollar dream with a minimum wage work ethic." },
         { t: "A real man protects and provides." },
         { t: "Don't follow the crowd. Follow the truth." },
-        { t: "Never build your happiness on\n some else's tears." },
+        { t: "Never build your happiness on\n someone else's tears." },
         { t: "Eliminate the 'tomorrow' mindset today." },
         { t: "The strongest man is he who controls his anger." },
         { t: "Be a man of your word." },
@@ -221,6 +226,7 @@
     const _mc = document.getElementById('_mc_');
     const _hint = document.getElementById('_hint_');
     let _hintShown = false;
+    let _initialized = false;
     
     let _l_i = null;
     let _startY = 0;
@@ -271,7 +277,7 @@
     }
 
     function _showQuote(nq) {
-        _st.classList.add('opacity-0');
+        _st.style.opacity = '0';
         if (_l_i) clearInterval(_l_i);
 
         _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -286,11 +292,11 @@
                     _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                 };
                 ux();
-                _st.classList.remove('opacity-0');
+                _st.style.opacity = '1';
                 _l_i = setInterval(ux, 30000);
             } else {
                 _st.innerHTML = "";
-                _st.classList.add('opacity-0');
+                _st.style.opacity = '0';
             }
 
             requestAnimationFrame(() => {
@@ -301,7 +307,11 @@
     }
 
     function _next() {
-        if (!_hintShown) { _hint.style.opacity = '0'; _hintShown = true; }
+        if (!_hintShown) { 
+            _hint.style.transition = 'opacity 0.3s ease';
+            _hint.style.opacity = '0'; 
+            _hintShown = true; 
+        }
         if (_historyIndex < _history.length - 1) {
             _historyIndex++;
             _showQuote(_history[_historyIndex]);
@@ -333,7 +343,10 @@
         }
     }
 
-    window.onload = () => {
+    function _init() {
+        if (_initialized) return;
+        _initialized = true;
+
         const i = _getNextQuote();
         _history.push(i);
         _historyIndex = 0;
@@ -344,13 +357,28 @@
         if (i.id === "t_q") {
             const s = _gs();
             _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-            _st.classList.remove('opacity-0');
+            _st.style.opacity = '1';
         }
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
+            
+            setTimeout(() => {
+                const navHint = document.querySelector('.nav-hint');
+                if (navHint) navHint.style.opacity = '0.6';
+                if (!_hintShown) {
+                    _hint.style.opacity = '1';
+                }
+            }, 1200);
         });
-    };
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        _init();
+    } else {
+        document.addEventListener('DOMContentLoaded', _init);
+        window.addEventListener('load', _init);
+    }
 
     document.addEventListener('click', () => {
         if (_isSwipe) return;
