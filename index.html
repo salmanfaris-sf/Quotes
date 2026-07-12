@@ -235,7 +235,6 @@
     let _currentY = 0;
     let _currentX = 0;
     let _isSwipe = false;
-    let _fsTriggered = false;
 
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -331,19 +330,6 @@
         }
     }
 
-    function _enterFullscreen() {
-        const doc = document.documentElement;
-        if (!document.fullscreenElement) {
-            if (doc.requestFullscreen) {
-                doc.requestFullscreen().catch(() => {});
-            } else if (doc.webkitRequestFullscreen) {
-                doc.webkitRequestFullscreen().catch(() => {});
-            } else if (doc.msRequestFullscreen) {
-                doc.msRequestFullscreen().catch(() => {});
-            }
-        }
-    }
-
     function _init() {
         if (_initialized) return;
         _initialized = true;
@@ -366,7 +352,7 @@
             
             setTimeout(() => {
                 const navHint = document.querySelector('.nav-hint');
-                if (navHint) navHint.style.opacity = '0.4'; /* Highly recommended subtle opacity for secondary hints */
+                if (navHint) navHint.style.opacity = '0.4';
                 if (!_hintShown) {
                     _hint.style.opacity = '1';
                 }
@@ -392,25 +378,12 @@
         _currentY = _startY;
         _currentX = _startX;
         _isSwipe = false;
-        _fsTriggered = false;
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
         _currentY = e.touches[0].clientY;
         _currentX = e.touches[0].clientX;
-        const diffY = _startY - _currentY;
-        const diffX = Math.abs(_startX - _currentX);
-
-        if (diffY > 10 && e.cancelable) {
-            e.preventDefault();
-        }
-
-        if (!_fsTriggered && diffY > 40 && diffX < 25) {
-            _fsTriggered = true;
-            _isSwipe = true;
-            _enterFullscreen();
-        }
-    }, { passive: false });
+    }, { passive: true });
 
     document.addEventListener('touchend', () => {
         const deltaX = _currentX - _startX;
