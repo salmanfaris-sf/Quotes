@@ -44,7 +44,7 @@
 
         ._f1 {
             opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         ._f1.v {
@@ -77,7 +77,7 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            opacity: 0; /* Handled programmatically for stability */
+            opacity: 0;
         }
 
         #_st_ {
@@ -89,7 +89,7 @@
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
-            opacity: 0; /* Handled programmatically for stability */
+            opacity: 0;
         }
 
         .nav-hint {
@@ -103,16 +103,19 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
             pointer-events: none;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
+            opacity: 0; /* Starts hidden for sequential animation */
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #_hint_ { 
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
             font-size: 9px; color: #aaa; 
             text-transform: uppercase; 
-            letter-spacing: 0.25em; transition: opacity 0.5s ease; pointer-events: none; 
+            letter-spacing: 0.25em; 
+            pointer-events: none; 
             font-weight: 400;
+            opacity: 0; /* Starts hidden for sequential animation */
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
@@ -304,7 +307,11 @@
     }
 
     function _next() {
-        if (!_hintShown) { _hint.style.opacity = '0'; _hintShown = true; }
+        if (!_hintShown) { 
+            _hint.style.transition = 'opacity 0.3s ease';
+            _hint.style.opacity = '0'; 
+            _hintShown = true; 
+        }
         if (_historyIndex < _history.length - 1) {
             _historyIndex++;
             _showQuote(_history[_historyIndex]);
@@ -336,7 +343,6 @@
         }
     }
 
-    // Bulletproof initialization routine
     function _init() {
         if (_initialized) return;
         _initialized = true;
@@ -355,11 +361,20 @@
         }
 
         requestAnimationFrame(() => {
+            // First, smoothly fade in the quote text container
             _mc.classList.add('v');
+            
+            // Then, gracefully fade in the bottom hints after 1200ms
+            setTimeout(() => {
+                const navHint = document.querySelector('.nav-hint');
+                if (navHint) navHint.style.opacity = '0.6';
+                if (!_hintShown) {
+                    _hint.style.opacity = '1';
+                }
+            }, 1200);
         });
     }
 
-    // Run initialization immediately if DOM is ready, or bind to safe load states
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         _init();
     } else {
