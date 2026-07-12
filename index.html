@@ -77,6 +77,7 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            opacity: 0; /* Handled programmatically for stability */
         }
 
         #_st_ {
@@ -88,6 +89,7 @@
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
+            opacity: 0; /* Handled programmatically for stability */
         }
 
         .nav-hint {
@@ -96,7 +98,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 9px;
-            color: #888; /* Increased brightness from 444 */
+            color: #888; 
             font-weight: 400;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -107,7 +109,7 @@
 
         #_hint_ { 
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
-            font-size: 9px; color: #aaa; /* Increased brightness from 666 */ 
+            font-size: 9px; color: #aaa; 
             text-transform: uppercase; 
             letter-spacing: 0.25em; transition: opacity 0.5s ease; pointer-events: none; 
             font-weight: 400;
@@ -117,8 +119,8 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
-        <div id="_st_" class="opacity-0"></div>
+        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
+        <div id="_st_"></div>
     </div>
 
     <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
@@ -221,6 +223,7 @@
     const _mc = document.getElementById('_mc_');
     const _hint = document.getElementById('_hint_');
     let _hintShown = false;
+    let _initialized = false;
     
     let _l_i = null;
     let _startY = 0;
@@ -271,7 +274,7 @@
     }
 
     function _showQuote(nq) {
-        _st.classList.add('opacity-0');
+        _st.style.opacity = '0';
         if (_l_i) clearInterval(_l_i);
 
         _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -286,11 +289,11 @@
                     _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                 };
                 ux();
-                _st.classList.remove('opacity-0');
+                _st.style.opacity = '1';
                 _l_i = setInterval(ux, 30000);
             } else {
                 _st.innerHTML = "";
-                _st.classList.add('opacity-0');
+                _st.style.opacity = '0';
             }
 
             requestAnimationFrame(() => {
@@ -333,7 +336,11 @@
         }
     }
 
-    window.onload = () => {
+    // Bulletproof initialization routine
+    function _init() {
+        if (_initialized) return;
+        _initialized = true;
+
         const i = _getNextQuote();
         _history.push(i);
         _historyIndex = 0;
@@ -344,13 +351,21 @@
         if (i.id === "t_q") {
             const s = _gs();
             _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-            _st.classList.remove('opacity-0');
+            _st.style.opacity = '1';
         }
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
         });
-    };
+    }
+
+    // Run initialization immediately if DOM is ready, or bind to safe load states
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        _init();
+    } else {
+        document.addEventListener('DOMContentLoaded', _init);
+        window.addEventListener('load', _init);
+    }
 
     document.addEventListener('click', () => {
         if (_isSwipe) return;
@@ -407,3 +422,4 @@
 </script>
 </body>
 </html>
+
