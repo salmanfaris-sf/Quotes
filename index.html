@@ -98,23 +98,24 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 9px;
-            color: #888; 
-            font-weight: 400;
+            color: #737373; /* Recommended professional neutral-500 gray */
+            font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             pointer-events: none;
-            opacity: 0; /* Starts hidden for sequential animation */
+            opacity: 0;
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #_hint_ { 
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
-            font-size: 9px; color: #aaa; 
+            font-size: 10px; 
+            color: #737373; /* Match theme-consistent neutral-500 gray */
             text-transform: uppercase; 
-            letter-spacing: 0.25em; 
+            letter-spacing: 0.20em; 
             pointer-events: none; 
-            font-weight: 400;
-            opacity: 0; /* Starts hidden for sequential animation */
+            font-weight: 500;
+            opacity: 0; 
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
@@ -361,13 +362,11 @@
         }
 
         requestAnimationFrame(() => {
-            // First, smoothly fade in the quote text container
             _mc.classList.add('v');
             
-            // Then, gracefully fade in the bottom hints after 1200ms
             setTimeout(() => {
                 const navHint = document.querySelector('.nav-hint');
-                if (navHint) navHint.style.opacity = '0.6';
+                if (navHint) navHint.style.opacity = '0.4'; /* Highly recommended subtle opacity for secondary hints */
                 if (!_hintShown) {
                     _hint.style.opacity = '1';
                 }
