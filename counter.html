@@ -2,18 +2,17 @@
 <html>
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-P37159WTH1');
-</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P37159WTH1');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
     <meta name="theme-color" content="#000">
     <title>COUNTER</title>
-<link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         :root {
             --b: #000;
@@ -62,12 +61,12 @@
             transition: opacity .4s;
             padding: 10px;
             margin: -10px;
-            pointer-events: none; /* Disabled interaction entirely */
+            pointer-events: none;
         }
 
         .a2 {
             position: fixed;
-            top: 20px; /* Aligns with Counter text */
+            top: 20px;
             right: 25px;
             display: flex;
             z-index: 101;
@@ -101,13 +100,13 @@
             -webkit-backdrop-filter: blur(25px);
             border: none;
             border-radius: 14px;
-            padding: 0; /* Set to 0 so menu items touch the outer edges */
+            padding: 0;
             display: none;
             flex-direction: column;
             min-width: 150px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.6);
             z-index: 200;
-            overflow: hidden; /* Clips the background highlights to the outer border-radius */
+            overflow: hidden;
             animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -124,12 +123,12 @@
             background: none;
             border: none;
             color: var(--s);
-            padding: 14px 20px; /* Perfectly balanced touch areas */
+            padding: 14px 20px;
             font-size: 0.88rem;
             font-weight: 400;
             text-align: left;
             width: 100%;
-            border-radius: 0; /* Edge-to-edge click reaction */
+            border-radius: 0;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -137,7 +136,6 @@
             transition: background 0.1s;
         }
 
-        /* Instant touch active state classes */
         .menu-item:active,
         .menu-item.active-touch {
             background: rgba(255, 255, 255, 0.15);
@@ -266,7 +264,7 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 0;
-            font-size: .8rem;
+            font-size: .78rem;
             font-weight: 500;
             opacity: 0;
             transition: opacity .4s, top .4s;
@@ -278,9 +276,9 @@
             overflow: hidden;
             width: max-content;
             max-width: 85vw;
-            border-radius: 50px;
+            border-radius: 20px;
             border: none;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7)
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6)
         }
 
         .b3.active {
@@ -292,7 +290,7 @@
         .b3 span {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
+            padding: 6px 14px;
             white-space: nowrap
         }
 
@@ -300,8 +298,8 @@
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #fff;
-            padding: 0 16px;
-            font-size: 0.65rem;
+            padding: 0 10px;
+            font-size: 0.62rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.05rem;
@@ -452,7 +450,7 @@
         <span>swipe left: reset</span>
         <span>swipe down: minus</span>
         <span>swipe right: increment</span>
-        <span>long tap: voice</span>
+        <span>hold: voice assist</span>
     </div>
     <div id="lock-overlay">
         <div class="slider-track">
@@ -493,15 +491,13 @@
                 stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
-            // Web Speech API - Text to Speech function
             function _p(textToSpeak) {
-                if (sn) return; // Mute if speech is turned off
+                if (sn) return;
                 if ('speechSynthesis' in w) {
-                    // Instantly cancel any ongoing speaking to prevent speech lag on rapid taps
                     w.speechSynthesis.cancel();
                     
                     const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
-                    utterance.rate = 1.15; // Crisp, slightly fast speech for seamless counting
+                    utterance.rate = 1.15;
                     utterance.pitch = 1.0;
                     utterance.volume = 1.0;
                     
@@ -571,7 +567,6 @@
                 }
             });
 
-            // Instant touch responsiveness for all menu items
             d.querySelectorAll('.menu-item').forEach(btn => {
                 btn.addEventListener('touchstart', () => {
                     btn.classList.add('active-touch');
@@ -697,7 +692,7 @@
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
                     const p = v;
                     v += st;
-                    _p(v); // Speak new value
+                    _p(v);
                     if (gl > 0 && p < gl && v >= gl) {
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
                         _z('goal reached!', 9999999, true);
@@ -730,7 +725,7 @@
                             if (confirm(`Subtract ${st} from counter?`)) {
                                 if (navigator.vibrate) navigator.vibrate(40);
                                 v = (v >= st) ? v - st : 0;
-                                _p(v); // Speak new subtracted value
+                                _p(v);
                                 _w(); _x(); _z('number subtracted', 2000)
                             }
                         }
