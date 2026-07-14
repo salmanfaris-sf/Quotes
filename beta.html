@@ -459,7 +459,7 @@
         <span>swipe left: reset</span>
         <span>swipe down: minus one</span>
         <span>swipe right: increment</span>
-        <span>hold: voice assist</span>
+        <span>hold: tap sound</span>
     </div>
     <div id="lock-overlay">
         <div class="slider-track">
@@ -700,7 +700,7 @@
                     sn = !sn;
                     qf = 1;
                     if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'voice off' : 'voice on', 2000)
+                    _z(sn ? 'Sound off' : 'Sound on', 2000)
                 }, 800)
             });
 
