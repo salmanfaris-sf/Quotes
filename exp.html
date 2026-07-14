@@ -6,12 +6,11 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-P37159WTH1');
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>Quotes</title>
+    <title>Salmanfaris | Quotes</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#000">
@@ -56,7 +55,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 600px;
+            max-width: 650px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 5;
@@ -69,7 +68,7 @@
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 12px; 
+            margin-bottom: 16px; 
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
@@ -94,23 +93,29 @@
 
         .nav-hint {
             position: absolute;
-            bottom: 24px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 9px;
-            color: #525252; /* Premium dark grey */
+            color: #737373; /* Recommended professional neutral-500 gray */
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             pointer-events: none;
             opacity: 0;
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            width: 100%;
         }
 
         #_hint_ { 
-            position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
+            position: absolute; 
+            bottom: 20px; 
+            left: 0; 
+            right: 0; 
+            text-align: center; 
             font-size: 10px; 
-            color: #525252; /* Matching dark grey */
+            color: #737373; /* Match theme-consistent neutral-500 gray */
             text-transform: uppercase; 
             letter-spacing: 0.20em; 
             pointer-events: none; 
@@ -118,50 +123,17 @@
             opacity: 0; 
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        /* Clean & Premium Top Center Text Indicator (No box) */
-        #_popup_ {
-            position: fixed;
-            top: 32px; /* Positioned gracefully at the top center */
-            left: 50%;
-            transform: translate(-50%, 8px); /* Initial slide-up offset */
-            color: #a3a3a3; /* Sophisticated medium-light grey */
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 100;
-            white-space: nowrap;
-            will-change: transform, opacity;
-        }
-
-        /* Slides upward gently and fades in */
-        #_popup_.visible {
-            opacity: 1;
-            transform: translate(-50%, 0);
-        }
-
-        /* Transitions cleanly further upwards while fading out */
-        #_popup_.fade-out-up {
-            opacity: 0;
-            transform: translate(-50%, -8px);
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
     </style>
 </head>
 <body>
 
-    <!-- Minimalist Top Center Text Indicator -->
-    <div id="_popup_">Autoplay on</div>
-
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
+        <!-- Adjusted text size for a balanced, mobile-friendly increase -->
+        <h1 id="_q_" class="text-base md:text-lg lg:text-xl leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
 
-    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
+    <div class="nav-hint hidden md:block">Tap / Swipe left or right or use arrow keys to navigate</div>
     <div id="_hint_">Tap anywhere to view the next quote</div>
 
 <script>
@@ -260,8 +232,6 @@
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
     const _hint = document.getElementById('_hint_');
-    const _popup = document.getElementById('_popup_');
-    
     let _hintShown = false;
     let _initialized = false;
     
@@ -271,17 +241,6 @@
     let _currentY = 0;
     let _currentX = 0;
     let _isSwipe = false;
-
-    // Autoplay states
-    let _autoplayActive = false;
-    let _autoplayTimeout = null;
-    let _popupTimeout = null;
-
-    // Long press states
-    let _pressTimer = null;
-    let _pressStartX = 0;
-    let _pressStartY = 0;
-    let _isLongPress = false;
 
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -327,8 +286,6 @@
         _st.style.opacity = '0';
         if (_l_i) clearInterval(_l_i);
 
-        _clearAutoplayTimer();
-
         _qx.style.transition = 'opacity 0.35s ease-in-out';
         _qx.style.opacity = '0';
 
@@ -351,10 +308,6 @@
             requestAnimationFrame(() => {
                 _qx.style.transition = 'opacity 0.35s ease-in-out';
                 _qx.style.opacity = '1';
-
-                if (_autoplayActive) {
-                    _startAutoplayTimer(nq);
-                }
             });
         }, 350);
     }
@@ -383,82 +336,6 @@
         }
     }
 
-    function _startAutoplayTimer(quoteObj) {
-        _clearAutoplayTimer();
-        if (!_autoplayActive || !quoteObj) return;
-
-        const wordsCount = quoteObj.t.split(/\s+/).length;
-        const autoDelay = Math.min(22000, Math.max(4000, (wordsCount * 380) + 2000));
-
-        _autoplayTimeout = setTimeout(() => {
-            if (_autoplayActive) {
-                _next();
-            }
-        }, autoDelay);
-    }
-
-    function _clearAutoplayTimer() {
-        if (_autoplayTimeout) {
-            clearTimeout(_autoplayTimeout);
-            _autoplayTimeout = null;
-        }
-    }
-
-    // Elegant rise and fade transition focused on top-center alignment
-    function _showPopup(message) {
-        if (_popupTimeout) clearTimeout(_popupTimeout);
-        
-        _popup.classList.remove('fade-out-up', 'visible');
-        
-        // Force layout engine reflow
-        void _popup.offsetWidth; 
-
-        _popup.innerText = message;
-        _popup.classList.add('visible');
-
-        _popupTimeout = setTimeout(() => {
-            _popup.classList.add('fade-out-up');
-            _popupTimeout = setTimeout(() => {
-                _popup.classList.remove('visible', 'fade-out-up');
-            }, 400); 
-        }, 1600);
-    }
-
-    function _toggleAutoplay() {
-        _autoplayActive = !_autoplayActive;
-        if (_autoplayActive) {
-            _showPopup("Autoplay on");
-            _startAutoplayTimer(_history[_historyIndex]);
-        } else {
-            _showPopup("Autoplay off");
-            _clearAutoplayTimer();
-        }
-    }
-
-    function _startPress(x, y) {
-        _pressStartX = x;
-        _pressStartY = y;
-        _isLongPress = false;
-
-        _pressTimer = setTimeout(() => {
-            _isLongPress = true;
-            _toggleAutoplay();
-        }, 600);
-    }
-
-    function _movePress(x, y) {
-        if (Math.hypot(x - _pressStartX, y - _pressStartY) > 15) {
-            _cancelPress();
-        }
-    }
-
-    function _cancelPress() {
-        if (_pressTimer) {
-            clearTimeout(_pressTimer);
-            _pressTimer = null;
-        }
-    }
-
     function _init() {
         if (_initialized) return;
         _initialized = true;
@@ -481,7 +358,7 @@
             
             setTimeout(() => {
                 const navHint = document.querySelector('.nav-hint');
-                if (navHint) navHint.style.opacity = '1'; 
+                if (navHint) navHint.style.opacity = '0.4';
                 if (!_hintShown) {
                     _hint.style.opacity = '1';
                 }
@@ -496,37 +373,34 @@
         window.addEventListener('load', _init);
     }
 
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', () => {
         if (_isSwipe) return;
-        if (_isLongPress) {
-            _isLongPress = false;
-            return;
-        }
         _next();
     });
 
+    // Keyboard navigation support for desktop users
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowRight" || e.key === " ") {
+            _next();
+        } else if (e.key === "ArrowLeft") {
+            _prev();
+        }
+    });
+
     document.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        _startY = touch.clientY;
-        _startX = touch.clientX;
+        _startY = e.touches[0].clientY;
+        _startX = e.touches[0].clientX;
         _currentY = _startY;
         _currentX = _startX;
         _isSwipe = false;
-
-        _startPress(touch.clientX, touch.clientY);
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        _currentY = touch.clientY;
-        _currentX = touch.clientX;
-
-        _movePress(touch.clientX, touch.clientY);
+        _currentY = e.touches[0].clientY;
+        _currentX = e.touches[0].clientX;
     }, { passive: true });
 
-    document.addEventListener('touchend', (e) => {
-        _cancelPress();
-
+    document.addEventListener('touchend', () => {
         const deltaX = _currentX - _startX;
         const deltaY = _currentY - _startY;
 
@@ -546,21 +420,7 @@
         }
     }, { passive: true });
 
-    document.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        _startPress(e.clientX, e.clientY);
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        _movePress(e.clientX, e.clientY);
-    });
-
-    document.addEventListener('mouseup', () => {
-        _cancelPress();
-    });
-
 })();
 </script>
 </body>
 </html>
-
