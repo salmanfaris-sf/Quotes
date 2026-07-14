@@ -6,6 +6,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+
       gtag('config', 'G-P37159WTH1');
     </script>
     <meta charset="UTF-8">
@@ -206,7 +207,8 @@
             outline: none;
             word-break: break-all;
             max-width: 100%;
-            z-index: 5
+            z-index: 5;
+            font-weight: 100;
         }
 
         .b1 {
@@ -409,6 +411,12 @@
         body.lockout-active #x9 {
             pointer-events: none !important;
         }
+
+        /* Global Bold Modifier Class */
+        body.bold-mode,
+        body.bold-mode * {
+            font-weight: 700 !important;
+        }
     </style>
 </head>
 
@@ -426,6 +434,7 @@
             <button class="menu-item" id="fs-btn-menu">Fullscreen</button>
             <button class="menu-item" id="goal-btn-menu">Set Goal</button>
             <button class="menu-item" id="lock-btn-menu">Lock Screen</button>
+            <button class="menu-item" id="weight-btn-menu">Bold Text</button>
         </div>
     </div>
     <div id="x3" class="b3">
@@ -448,9 +457,9 @@
     <div class="b2">
         <span>swipe up: edit</span>
         <span>swipe left: reset</span>
-        <span>swipe down: minus</span>
+        <span>swipe down: minus one</span>
         <span>swipe right: increment</span>
-        <span>hold: voice assist</span>
+        <span>hold: tap sound</span>
     </div>
     <div id="lock-overlay">
         <div class="slider-track">
@@ -471,6 +480,7 @@
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
+                weightMenu = d.getElementById('weight-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
 
             let v = parseInt(localStorage.getItem(k.c)) || 0,
@@ -619,6 +629,21 @@
                 triggerSetGoal();
             };
 
+            weightMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                bd = !bd;
+                if (bd) {
+                    d.body.classList.add('bold-mode');
+                    weightMenu.textContent = 'Default Text';
+                } else {
+                    d.body.classList.remove('bold-mode');
+                    weightMenu.textContent = 'Bold Text';
+                }
+                _w();
+                _x();
+            };
+
             let sx = 0, cx = 0;
             sh.addEventListener('touchstart', e => {
                 sx = e.touches[0].clientX;
@@ -675,7 +700,7 @@
                     sn = !sn;
                     qf = 1;
                     if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'voice off' : 'voice on', 2000)
+                    _z(sn ? 'Sound off' : 'Sound on', 2000)
                 }, 800)
             });
 
@@ -722,9 +747,9 @@
                         s.removeAllRanges(); s.addRange(r)
                     } else if (dy < -50) {
                         if (v > 0) {
-                            if (confirm(`Subtract ${st} from counter?`)) {
+                            if (confirm('Subtract 1 from counter?')) {
                                 if (navigator.vibrate) navigator.vibrate(40);
-                                v = (v >= st) ? v - st : 0;
+                                v = v - 1; // Always decrements by exactly 1
                                 _p(v);
                                 _w(); _x(); _z('number subtracted', 2000)
                             }
@@ -743,6 +768,14 @@
                 v = r === '' ? 0 : parseInt(r);
                 _w(); _x(); _u()
             };
+
+            if (bd) {
+                d.body.classList.add('bold-mode');
+                weightMenu.textContent = 'Default Text';
+            } else {
+                d.body.classList.remove('bold-mode');
+                weightMenu.textContent = 'Bold Text';
+            }
 
             _w();
             stt = setTimeout(() => { i.classList.add('v') }, 0)
