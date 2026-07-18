@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P37159WTH1');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="theme-color" content="#09090b">
+    <title>COUNTER PRO</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            --bg-color: #09090b;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --accent-color: #10b981; /* Premium Emerald */
+            --glass-bg: rgba(24, 24, 27, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            overscroll-behavior-y: contain;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            cursor: pointer;
+            touch-action: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        /* Ambient Glow in Background */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: var(--accent-color);
+            filter: blur(140px);
+            opacity: 0.12;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Navigation Header */
+        .header {
+            position: fixed;
+            top: max(30px, env(safe-area-inset-top));
+            left: 0;
+            width: 100%;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .brand {
+            font-size: 0.8rem;
+            letter-spacing: .2rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            transition: opacity .4s;
+        }
+
+        .menu-container {
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .menu-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.92);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .menu-dropdown {
+            position: absolute;
+            top: 52px;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 6px;
+            display: none;
+            flex-direction: column;
+            min-width: 180px;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.7);
+            z-index: 200;
+            overflow: hidden;
+            animation: dropdownFade 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .menu-dropdown.active {
+            display: flex;
+        }
+
+        .menu-item {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.1s;
+        }
+
+        .menu-item:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Workspace Container */
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: 100%;
+            pointer-events: none;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Circular Goal Tracker */
+        .progress-container {
+            position: absolute;
+            width: 82vw;
+            height: 82vw;
+            max-width: 320px;
+            max-height: 320px;
+            pointer-events: none;
+            display: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-svg {
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.15));
+        }
+
+        .progress-ring-bg {
+            stroke: rgba(255, 255, 255, 0.03);
+        }
+
+        .progress-ring-fill {
+            transition: stroke-dashoffset .4s cubic-bezier(0.1, 0.8, 0.2, 1), stroke 0.3s;
+            transform-origin: 50% 50%;
+            stroke: var(--accent-color);
+        }
+
+        /* Meta Indicator Flags (Step / Goal) */
+        .indicators-row {
+            font-size: .75rem;
+            opacity: .6;
+            letter-spacing: .08rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 5;
+        }
+
+        .badge {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .badge.visible {
+            display: inline-block;
+        }
+
+        /* Primary Counter Display - Highly Scalable */
+        .counter-display {
+            font-size: 26vw;
+            line-height: 0.9;
+            text-align: center;
+            padding: 0 16px;
+            pointer-events: auto;
+            outline: none;
+            word-break: break-all;
+            max-width: 100%;
+            z-index: 5;
+            transition: font-weight 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.1s ease;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        .counter-display:active {
+            transform: scale(0.98);
+        }
+
+        /* Instructions Tip */
+        .instructions-tip {
+            font-size: 0.85rem;
+            letter-spacing: .04rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 28px;
+            opacity: 0;
+            transition: opacity .8s ease-in-out;
+            z-index: 5;
+        }
+
+        .instructions-tip.visible {
+            opacity: 1;
+        }
+
+        /* Bottom Gesture Legend Card */
+        .bottom-legend {
+            position: fixed;
+            bottom: max(30px, env(safe-area-inset-bottom));
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: .62rem;
+            letter-spacing: .02rem;
+            text-transform: lowercase;
+            color: var(--text-secondary);
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 20px;
+            flex-wrap: wrap;
+            font-weight: 600;
+            transition: opacity .4s;
+            z-index: 5;
+        }
+
+        .bottom-legend span {
+            background: var(--glass-bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        /* Glass Toast System */
+        .toast-banner {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0;
+            font-size: .8rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity .4s, top .4s;
+            pointer-events: none;
+            z-index: 3000;
+            color: var(--text-primary);
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+            width: max-content;
+            max-width: 85vw;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .toast-banner.active {
+            pointer-events: auto;
+            opacity: 1;
+            top: 90px;
+        }
+
+        .toast-banner span {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            white-space: nowrap;
+        }
+
+        .toast-banner button {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--text-primary);
+            padding: 0 16px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06rem;
+            transition: background 0.2s;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            display: none;
+        }
+
+        .toast-banner button.visible {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Slide-to-Unlock Overlay */
+        #lock-overlay {
+            position: fixed;
+            bottom: max(40px, env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88vw;
+            max-width: 340px;
+            height: 64px;
+            background: var(--glass-bg);
+            border-radius: 32px;
+            display: none;
+            align-items: center;
+            padding: 6px;
+            z-index: 1000;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        #lock-overlay.active {
+            display: flex;
+        }
+
+        .slider-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-text {
+            font-size: .8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: .6;
+            pointer-events: none;
+            font-weight: 700;
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: .3; }
+            50% { opacity: .8; }
+        }
+
+        .slider-handle {
+            position: absolute;
+            left: 0;
+            width: 52px;
+            height: 52px;
+            background: var(--text-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            touch-action: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .5);
+            z-index: 2;
+        }
+
+        /* App Lock States */
+        body.locked .header,
+        body.locked .bottom-legend,
+        body.locked .instructions-tip {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        body.fullscreen-mode .bottom-legend,
+        body.fullscreen-mode .header,
+        body.fullscreen-mode .instructions-tip {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        body.lockout-active .header,
+        body.lockout-active .bottom-legend,
+        body.lockout-active #lock-overlay,
+        body.lockout-active .progress-container,
+        body.lockout-active .indicators-row,
+        body.lockout-active .instructions-tip {
+            display: none !important;
+            pointer-events: none !important;
+        }
+
+        body.lockout-active #x9 {
+            pointer-events: none !important;
+        }
+
+        /* Font Weight Helper Configurations */
+        body.bold-mode .counter-display {
+            font-weight: 800 !important; /* Extremely high legibility bold */
+        }
+        
+        body.light-mode .counter-display {
+            font-weight: 100 !important; /* Elegant architectural thin style */
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false">
+    
+    <!-- Top Bar Navigation -->
+    <div class="header" id="x1">
+        <span class="brand">Counter</span>
+        <div class="menu-container">
+            <button class="menu-btn" id="menu-btn" aria-label="Settings Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                </svg>
+            </button>
+            <div class="menu-dropdown" id="menu-dropdown">
+                <button class="menu-item" id="fs-btn-menu">Fullscreen</button>
+                <button class="menu-item" id="goal-btn-menu">Set Target Goal</button>
+                <button class="menu-item" id="lock-btn-menu">Lock Screen</button>
+                <button class="menu-item" id="weight-btn-menu">Switch to Ultra-Light</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Toast Alerts -->
+    <div id="x3" class="toast-banner">
+        <span id="x4"></span>
+        <button id="x5">Reset Target</button>
+    </div>
+
+    <!-- Center Interactive Workspace -->
+    <div class="workspace">
+        <div id="x6" class="progress-container">
+            <svg class="progress-svg" width="100%" height="100%" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke-width="2" fill="transparent" r="46" cx="50" cy="50" />
+                <circle class="progress-ring-fill" stroke-width="3.5" stroke-linecap="round" fill="transparent" r="46" cx="50" cy="50" />
+            </svg>
+        </div>
+        
+        <div class="indicators-row">
+            <span id="x7" class="badge"></span>
+            <span id="x8" class="badge"></span>
+        </div>
+        
+        <!-- Editable Active Counter Display -->
+        <div id="x9" class="counter-display" contenteditable="false" inputmode="numeric">0</div>
+        
+        <div id="y1" class="instructions-tip">Tap anywhere to count</div>
+    </div>
+
+    <!-- Bottom Action Legend Guides -->
+    <div class="bottom-legend">
+        <span>swipe up: edit</span>
+        <span>swipe left: reset</span>
+        <span>swipe down: minus 1</span>
+        <span>swipe right: step size</span>
+        <span>hold: toggle voice</span>
+    </div>
+
+    <!-- Lockout Slider Interface -->
+    <div id="lock-overlay">
+        <div class="slider-track">
+            <span class="slider-text">Swipe to unlock</span>
+            <div class="slider-handle" id="slider-handle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const d = document, w = window, k = { c: '_n_c', b: '_n_b', s: '_m_s', t: '_n_step', g: '_n_goal' },
+                f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
+                ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
+                pc = d.getElementById('x6'), rg = d.querySelector('.progress-ring-fill'), 
+                mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
+                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
+                weightMenu = d.getElementById('weight-btn-menu'),
+                lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
+
+            // Default to BOLD mode (true) now for elite premium usability!
+            let v = parseInt(localStorage.getItem(k.c)) || 0,
+                st = parseInt(localStorage.getItem(k.t)) || 1,
+                gl = parseInt(localStorage.getItem(k.g)) || 0,
+                bd = localStorage.getItem(k.b) !== 'false', // Defaults to bold mode true
+                sn = localStorage.getItem(k.s) !== 'false',
+                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
+
+            const rd = rg.r.baseVal.value,
+                cr = rd * 2 * Math.PI;
+
+            rg.style.strokeDasharray = `${cr} ${cr}`;
+
+            function _u() {
+                if (stt) clearTimeout(stt);
+                i.classList.remove('visible');
+                stt = setTimeout(() => { if(!isLockout) i.classList.add('visible') }, 4e3)
+            }
+
+            function _p(textToSpeak) {
+                if (sn) return;
+                if ('speechSynthesis' in w) {
+                    w.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
+                    utterance.rate = 1.2;
+                    w.speechSynthesis.speak(utterance);
+                }
+            }
+
+            function _up() {
+                if (gl > 0) {
+                    pc.classList.add('active');
+                    const progress = Math.min(v, gl) / gl;
+                    const o = cr - progress * cr;
+                    rg.style.strokeDashoffset = o;
+                    
+                    if (v >= gl) {
+                        rg.style.stroke = 'var(--accent-color)';
+                        rg.style.filter = 'drop-shadow(0 0 16px rgba(16, 185, 129, 0.6))';
+                    } else {
+                        rg.style.stroke = 'rgba(255, 255, 255, 0.7)';
+                        rg.style.filter = 'none';
+                    }
+                } else {
+                    pc.classList.remove('active');
+                }
+            }
+
+            function _w() {
+                f.textContent = v.toLocaleString('en-US');
+                
+                // Toggle proper engine class
+                if (bd) {
+                    d.body.classList.add('bold-mode');
+                    d.body.classList.remove('light-mode');
+                    weightMenu.textContent = 'Switch to Ultra-Light';
+                } else {
+                    d.body.classList.add('light-mode');
+                    d.body.classList.remove('bold-mode');
+                    weightMenu.textContent = 'Switch to Bold Text';
+                }
+
+                if (st > 1) {
+                    sd.textContent = 'Step: +' + st;
+                    sd.classList.add('visible');
+                } else {
+                    sd.classList.remove('visible');
+                }
+
+                if (gl > 0) {
+                    gd.textContent = 'Goal: ' + gl.toLocaleString('en-US');
+                    gd.classList.add('visible');
+                } else {
+                    gd.classList.remove('visible');
+                }
+                _up();
+            }
+
+            function _x() {
+                localStorage.setItem(k.c, v);
+                localStorage.setItem(k.b, bd);
+                localStorage.setItem(k.s, sn);
+                localStorage.setItem(k.t, st);
+                localStorage.setItem(k.g, gl);
+            }
+
+            function _z(m, du, showBtn = false) {
+                if (rt) clearTimeout(rt);
+                ht.textContent = m;
+                if (showBtn) {
+                    hb.classList.add('visible');
+                    du = 9999999;
+                    isLockout = true;
+                    d.body.classList.add('lockout-active');
+                } else {
+                    hb.classList.remove('visible');
+                }
+                h.classList.add('active');
+                rt = setTimeout(() => {
+                    h.classList.remove('active');
+                    rt = null;
+                }, du);
+            }
+
+            mb.onclick = e => {
+                e.stopPropagation();
+                md.classList.toggle('active');
+            };
+
+            d.addEventListener('click', e => {
+                if (!e.target.closest('.menu-container')) {
+                    md.classList.remove('active');
+                }
+            });
+
+            lbMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                lk = true;
+                d.body.classList.add('locked');
+                lo.classList.add('active');
+                if (navigator.vibrate) navigator.vibrate(50);
+            };
+
+            fsMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                if (!d.fullscreenElement) {
+                    d.documentElement.requestFullscreen().catch(() => { });
+                } else {
+                    d.exitFullscreen().catch(() => { });
+                }
+            };
+
+            function triggerSetGoal() {
+                const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
+                if (r !== null) {
+                    const n = parseInt(r);
+                    if (!isNaN(n) && n >= 0) {
+                        gl = n;
+                        if (gl > 0) {
+                            v = 0;
+                            _z(`Goal configured to ${gl}`, 2000);
+                        } else {
+                            _z('Goal cleared', 2000);
+                        }
+                        _w();
+                        _x();
+                    }
+                }
+            }
+
+            goalMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                triggerSetGoal();
+            };
+
+            weightMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                bd = !bd;
+                _w();
+                _x();
+                _z(bd ? 'Bold style enabled' : 'Thin style enabled', 1200);
+            };
+
+            // Swipe to unlock handle physics
+            let sx = 0, cx = 0;
+            sh.addEventListener('touchstart', e => {
+                sx = e.touches[0].clientX;
+                sh.style.transition = '';
+            });
+
+            sh.addEventListener('touchmove', e => {
+                const dx = e.touches[0].clientX - sx,
+                    mx = lo.offsetWidth - sh.offsetWidth - 12;
+                cx = Math.max(0, Math.min(dx, mx));
+                sh.style.transform = `translateX(${cx}px)`;
+                if (cx >= mx * .98) {
+                    lk = false;
+                    d.body.classList.remove('locked');
+                    lo.classList.remove('active');
+                    sh.style.transform = 'translateX(0)';
+                    if (navigator.vibrate) navigator.vibrate([15, 30, 15]);
+                }
+            });
+
+            sh.addEventListener('touchend', () => {
+                if (lk) {
+                    sh.style.transition = 'transform .4s cubic-bezier(.175,.885,.32,1.275)';
+                    sh.style.transform = 'translateX(0)';
+                }
+            });
+
+            f.addEventListener('keydown', e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    f.blur();
+                }
+            });
+
+            hb.onclick = e => {
+                e.stopPropagation();
+                gl = 0;
+                isLockout = false;
+                d.body.classList.remove('lockout-active');
+                _w();
+                _x();
+                h.classList.remove('active');
+                if (rt) clearTimeout(rt);
+                setTimeout(() => _z('Goal cleared', 2000), 400);
+            };
+
+            d.body.addEventListener('touchstart', e => {
+                if (lk || isLockout) return;
+                _u();
+                if (e.target.closest('.menu-container') || e.target.closest('.header') || e.target.closest('.toast-banner') || e.target.closest('#lock-overlay')) return;
+                nx = e.touches[0].clientX;
+                ny = e.touches[0].clientY;
+                pt = setTimeout(() => {
+                    sn = !sn;
+                    qf = 1;
+                    if (navigator.vibrate) navigator.vibrate(60);
+                    _z(sn ? 'Speech Guidance Off' : 'Speech Guidance On', 2000);
+                }, 800);
+            });
+
+            d.body.addEventListener('touchend', e => {
+                if (lk || isLockout) return;
+                if (e.target.closest('.menu-container') || e.target.closest('.header') || e.target.closest('.toast-banner') || e.target.closest('#lock-overlay')) return;
+                if (pt) { clearTimeout(pt); pt = null; }
+                if (qf) { qf = 0; return; }
+                if (f.contentEditable === 'true') { f.blur(); return; }
+
+                const dx = nx - e.changedTouches[0].clientX,
+                    dy = ny - e.changedTouches[0].clientY;
+
+                // Tapping workspace
+                if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                    const p = v;
+                    v += st;
+                    _p(v);
+                    
+                    // Simple micro-impact animation
+                    f.style.transform = 'scale(1.08)';
+                    setTimeout(() => f.style.transform = '', 100);
+
+                    if (gl > 0 && p < gl && v >= gl) {
+                        if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]);
+                        _z('Goal Achieved!', 9999999, true);
+                    } else if (navigator.vibrate) {
+                        navigator.vibrate(20);
+                    }
+                    _w();
+                } 
+                // Horizontal Swipe Actions
+                else if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 50) {
+                        // Reset Left swipe
+                        if (confirm('Reset the counter to 0?')) {
+                            if (navigator.vibrate) navigator.vibrate(40);
+                            v = 0; _w(); _x(); _z('Counter reset', 2000);
+                        }
+                    } else if (dx < -50) {
+                        // Set Step Right swipe
+                        const r = prompt('Set Increment Step size (current: ' + st + ')', st);
+                        if (r !== null) {
+                            const n = parseInt(r);
+                            st = (!isNaN(n) && n > 0) ? n : 1;
+                            _z(`Increment set to +${st}`, 2000);
+                            _w(); _x();
+                        }
+                    }
+                } 
+                // Vertical Swipe Actions
+                else {
+                    if (dy > 50) {
+                        // Swipe Up to Edit Counter Value
+                        f.contentEditable = 'true';
+                        f.focus();
+                        const r = d.createRange(), s = w.getSelection();
+                        r.selectNodeContents(f); r.collapse(false);
+                        s.removeAllRanges(); s.addRange(r);
+                    } else if (dy < -50) {
+                        // Swipe Down to Decrement by exactly 1
+                        if (v > 0) {
+                            if (confirm('Subtract 1 from total?')) {
+                                if (navigator.vibrate) navigator.vibrate(30);
+                                v = Math.max(0, v - 1);
+                                _p(v);
+                                _w(); _x(); _z('Subtracted 1', 1500);
+                            }
+                        }
+                    }
+                }
+            });
+
+            d.addEventListener('fullscreenchange', () => {
+                d.body.classList.toggle('fullscreen-mode', !!d.fullscreenElement);
+            });
+
+            f.onblur = () => {
+                f.contentEditable = 'false';
+                let r = f.textContent.replace(/[^\d]/g, '');
+                v = r === '' ? 0 : parseInt(r);
+                _w(); _x(); _u();
+            };
+
+            // Initial load config
+            _w();
+            stt = setTimeout(() => { i.classList.add('visible') }, 100);
+        })();
+    </script>
+</body>
+</html>
