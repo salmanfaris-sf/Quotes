@@ -10,16 +10,16 @@
   gtag('config', 'G-P37159WTH1');
 </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Distance Sign Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #050506;
+            --bg-color: #000000;
             --text-color: #FFD700; 
-            --panel-blur: 50px;
-            --accent-glow: rgba(255, 215, 0, 0.15);
+            --panel-blur: 35px;
+            --accent-glow: rgba(255, 215, 0, 0.25);
         }
 
         body, html {
@@ -64,86 +64,73 @@
             color: var(--text-color);
             line-height: 1;
             font-weight: 900;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.04em;
             display: inline-block;
-            text-shadow: 0 0 20px var(--accent-glow);
+            text-shadow: 0 0 35px var(--accent-glow);
         }
 
         .mirrored {
             transform: scaleX(-1);
         }
 
-        /* Swipe Guide Hook */
-        #swipe-hint {
+        /* Premium Floating Non-Obstructive Menu Trigger */
+        #menu-trigger {
             position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 50;
+            bottom: 25px;
+            right: 25px;
+            z-index: 101;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 6px;
-            opacity: 0.8;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease, background 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             cursor: pointer;
-            pointer-events: auto;
+            opacity: 0; /* Managed dynamically in JS */
         }
 
-        #swipe-hint.fade-out {
-            opacity: 0;
-            pointer-events: none;
-            transform: translate(-50%, 15px);
+        #menu-trigger:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .hint-bar {
-            width: 120px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 99px;
-            box-shadow: 0 1px 10px rgba(0,0,0,0.5);
-            transition: background 0.3s;
-        }
-
-        #swipe-hint:hover .hint-bar {
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        .hint-text {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 700;
-        }
-
-        /* Premium Overlay Panel */
+        /* Frosted Glass Overlay (Blurs moving text behind beautifully) */
         #ui-panel-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(2, 2, 3, 0.4);
-            backdrop-filter: blur(var(--panel-blur));
-            -webkit-backdrop-filter: blur(var(--panel-blur));
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(var(--panel-blur)) saturate(190%);
+            -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(190%);
             display: flex;
             justify-content: center;
             align-items: flex-end;
             z-index: 1000;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, backdrop-filter;
         }
 
         #ui-panel {
-            background: rgba(18, 18, 22, 0.82);
+            background: rgba(15, 15, 18, 0.45);
             width: 100%;
             max-width: 480px;
-            border-top-left-radius: 36px;
-            border-top-right-radius: 36px;
-            padding: 1.75rem 1.5rem 3rem 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.8);
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            padding: 1.5rem 1.5rem 2.75rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.4);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            will-change: transform;
         }
 
         .hidden-panel {
@@ -159,56 +146,87 @@
 
         /* Top Handle on Sheet */
         .sheet-handle {
-            width: 40px;
+            width: 36px;
             height: 4px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 99px;
-            margin: -8px auto 20px auto;
+            margin: -6px auto 20px auto;
         }
 
         .ios-label {
-            display: block; font-size: 11px; font-weight: 800;
-            color: rgba(255, 255, 255, 0.4); margin-bottom: 8px;
-            text-transform: uppercase; letter-spacing: 1.5px;
+            display: block; 
+            font-size: 10px; 
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4); 
+            margin-bottom: 6px;
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+        }
+
+        /* Input Card Styling */
+        .input-group {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
         }
 
         .ios-input {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 16px; padding: 14px 18px;
-            color: white; font-size: 18px; width: 100%;
-            outline: none; font-weight: 600; margin-bottom: 18px;
-            transition: border-color 0.3s, background-color 0.3s;
+            background: transparent;
+            border: none;
+            color: #ffffff; 
+            font-size: 22px; 
+            width: 100%;
+            outline: none; 
+            font-weight: 700; 
+            letter-spacing: -0.01em;
+            padding: 0;
+            margin-top: 4px;
         }
-        .ios-input:focus {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.07);
+        .ios-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
         }
 
+        /* Row Layouts */
         .control-row {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 20px; padding: 14px 16px; margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px; 
+            padding: 12px 16px; 
+            margin-bottom: 12px;
         }
 
+        /* Segmented Mode Selector */
         .mode-pill {
-            flex: 1; padding: 10px; text-align: center;
-            font-size: 13px; font-weight: 700; border-radius: 12px;
+            flex: 1; 
+            padding: 8px 12px; 
+            text-align: center;
+            font-size: 12px; 
+            font-weight: 600; 
+            border-radius: 10px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
-            color: rgba(255,255,255,0.4); cursor: pointer;
+            color: rgba(255, 255, 255, 0.4); 
+            cursor: pointer;
+            letter-spacing: 0.5px;
         }
 
         .mode-pill.active { 
-            background: rgba(255, 255, 255, 0.12); 
-            color: white; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1); 
+            color: #ffffff; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* High-End Colors */
+        /* Premium Minimal Colors */
         .color-dot { 
-            width: 30px; height: 30px; border-radius: 50%; 
-            border: 2px solid transparent; cursor: pointer; 
-            transition: transform 0.2s ease, border-color 0.2s;
+            width: 26px; 
+            height: 26px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
         .color-dot::after {
@@ -220,55 +238,65 @@
             transition: border-color 0.2s;
         }
         .color-dot.active::after { 
-            border-color: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.35);
         }
         .color-dot:active {
-            transform: scale(0.9);
+            transform: scale(0.85);
         }
 
-        .ios-switch { position: relative; display: inline-block; width: 48px; height: 28px; }
+        /* iOS Switch Styles */
+        .ios-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
         .slider-switch {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.12); transition: .3s; border-radius: 34px;
+            background-color: rgba(255, 255, 255, 0.08); transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
         .slider-switch:before {
-            position: absolute; content: ""; height: 24px; width: 24px;
-            left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 1px; bottom: 1px; background-color: #ffffff; transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.35);
         }
         input:checked + .slider-switch { background-color: #34C759; }
         input:checked + .slider-switch:before { transform: translateX(20px); }
 
-        /* Premium Sliders */
+        /* Fine-Tuned Custom Sliders */
         input[type="range"].ios-slider {
-            -webkit-appearance: none; width: 100%; height: 6px;
-            background: rgba(255, 255, 255, 0.08); border-radius: 6px; outline: none;
+            -webkit-appearance: none; width: 100%; height: 4px;
+            background: rgba(255, 255, 255, 0.08); border-radius: 4px; outline: none;
             transition: background 0.3s;
         }
         input[type="range"].ios-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 22px; height: 22px;
-            background: white; border-radius: 50%; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
+            -webkit-appearance: none; width: 20px; height: 20px;
+            background: #ffffff; border-radius: 50%; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
         }
         input[type="range"].ios-slider::-webkit-slider-thumb:active {
-            transform: scale(1.2);
+            transform: scale(1.25);
         }
 
+        /* done button as premium satin pill */
         #done-btn {
-            background: #ffffff; color: #000000; width: 100%; padding: 18px;
-            border-radius: 20px; font-weight: 700; font-size: 16px; margin-top: 10px;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
-            transition: all 0.2s;
+            background: #ffffff; 
+            color: #000000; 
+            width: 100%; 
+            padding: 16px;
+            border-radius: 22px; 
+            font-weight: 600; 
+            font-size: 15px; 
+            margin-top: 14px;
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.3px;
         }
         #done-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
             opacity: 0.9;
         }
 
-        .is-blank #rotation-wrapper, .is-blank #swipe-hint {
+        .is-blank #rotation-wrapper, .is-blank #menu-trigger {
             opacity: 0 !important;
             pointer-events: none !important;
         }
@@ -282,74 +310,79 @@
         </div>
     </div>
 
-    <!-- Swipe / Tap Trigger Guide -->
-    <div id="swipe-hint" onclick="openMenu()">
-        <span class="hint-text">settings</span>
-        <div class="hint-bar"></div>
-    </div>
+    <!-- Semi-transparent non-obstructive gear trigger -->
+    <button id="menu-trigger" title="Open Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+    </button>
 
+    <!-- Liquid glass dynamic bottom sheet options panel -->
     <div id="ui-panel-overlay">
         <div id="ui-panel">
             <div class="sheet-handle"></div>
             
-            <label class="ios-label">Enter Message</label>
-            <textarea id="text-input" class="ios-input" rows="1" placeholder="Type message here...">GO!</textarea>
+            <!-- Message Input Group -->
+            <div class="input-group">
+                <label class="ios-label">Sign Message</label>
+                <input id="text-input" class="ios-input" type="text" placeholder="Type message..." value="GO!" autocomplete="off" spellcheck="false" />
+            </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <!-- Double Column Settings Layout -->
+            <div class="grid grid-cols-2 gap-3 mb-3">
                 <div class="control-row mb-0">
-                    <div class="flex justify-between items-center">
-                        <span class="text-white text-[13px] font-semibold">Blank on Hold</span>
-                        <label class="ios-switch">
-                            <input type="checkbox" id="blank-toggle">
-                            <span class="slider-switch"></span>
-                        </label>
-                    </div>
+                    <span class="text-white/70 text-[13px] font-medium">Blank on Hold</span>
+                    <label class="ios-switch">
+                        <input type="checkbox" id="blank-toggle">
+                        <span class="slider-switch"></span>
+                    </label>
                 </div>
                 <div class="control-row mb-0">
-                    <div class="flex justify-between items-center">
-                        <span class="text-white text-[13px] font-semibold">Mirror Text</span>
-                        <label class="ios-switch">
-                            <input type="checkbox" id="mirror-toggle">
-                            <span class="slider-switch"></span>
-                        </label>
-                    </div>
+                    <span class="text-white/70 text-[13px] font-medium">Mirror Text</span>
+                    <label class="ios-switch">
+                        <input type="checkbox" id="mirror-toggle">
+                        <span class="slider-switch"></span>
+                    </label>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="ios-label">Animation</label>
-                    <div class="flex bg-white/5 rounded-2xl p-1 border border-white/5">
+            <!-- Animation & Color Picker Cards -->
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-3">
+                    <label class="ios-label">Animation Mode</label>
+                    <div class="flex bg-white/5 rounded-xl p-0.5 border border-white/5 mt-1">
                         <div id="m-loop" class="mode-pill active">Loop</div>
                         <div id="m-once" class="mode-pill">Once</div>
                     </div>
                 </div>
-                <div>
-                    <label class="ios-label">Neon Glow Color</label>
-                    <div class="flex justify-between items-center px-2 py-2 bg-white/5 rounded-2xl border border-white/5 h-[46px]" id="color-picker">
+                <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-3">
+                    <label class="ios-label">Color Preset</label>
+                    <div class="flex justify-between items-center px-1.5 mt-2 h-[28px]" id="color-picker">
                         <div class="color-dot bg-white" data-color="#FFFFFF" data-glow="rgba(255, 255, 255, 0.15)"></div>
-                        <div class="color-dot bg-yellow-400 active" data-color="#FFD700" data-glow="rgba(255, 215, 0, 0.15)"></div>
-                        <div class="color-dot bg-red-500" data-color="#FF3B30" data-glow="rgba(255, 59, 48, 0.15)"></div>
-                        <div class="color-dot bg-green-500" data-color="#34C759" data-glow="rgba(52, 199, 89, 0.15)"></div>
-                        <div class="color-dot bg-blue-500" data-color="#007AFF" data-glow="rgba(0, 122, 255, 0.15)"></div>
+                        <div class="color-dot bg-yellow-400 active" data-color="#FFD700" data-glow="rgba(255, 215, 0, 0.25)"></div>
+                        <div class="color-dot bg-red-500" data-color="#FF3B30" data-glow="rgba(255, 59, 48, 0.25)"></div>
+                        <div class="color-dot bg-green-500" data-color="#34C759" data-glow="rgba(52, 199, 89, 0.25)"></div>
+                        <div class="color-dot bg-blue-500" data-color="#007AFF" data-glow="rgba(0, 122, 255, 0.25)"></div>
                     </div>
                 </div>
             </div>
             
-            <div class="control-row mb-4">
+            <!-- Dimensional sliders block -->
+            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[24px] p-4 mb-4">
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <div class="flex justify-between text-[11px] font-bold text-gray-400 mb-2 uppercase tracking-wider"><span>Speed</span></div>
+                        <div class="flex justify-between text-[10px] font-bold text-white/30 mb-2.5 uppercase tracking-widest"><span>Speed</span></div>
                         <input type="range" id="speed-slider" class="ios-slider" min="0" max="100" value="40">
                     </div>
                     <div>
-                        <div class="flex justify-between text-[11px] font-bold text-gray-400 mb-2 uppercase tracking-wider"><span>Size</span></div>
+                        <div class="flex justify-between text-[10px] font-bold text-white/30 mb-2.5 uppercase tracking-widest"><span>Size</span></div>
                         <input type="range" id="size-slider" class="ios-slider" min="10" max="120" value="80">
                     </div>
                 </div>
             </div>
 
-            <button id="done-btn">Done</button>
+            <button id="done-btn">Dismiss Settings</button>
         </div>
     </div>
 
@@ -364,7 +397,7 @@
         const blankToggle = document.getElementById('blank-toggle');
         const mirrorToggle = document.getElementById('mirror-toggle');
         const doneBtn = document.getElementById('done-btn');
-        const swipeHint = document.getElementById('swipe-hint');
+        const menuTrigger = document.getElementById('menu-trigger');
 
         let xPos = window.innerHeight; 
         let speedValue = 40;
@@ -374,26 +407,7 @@
         let isStarted = false;
         let isWaiting = false;
         let textWidth = 0;
-
-        // Auto fade hint UI
-        let hintTimeout;
-        function resetHintTimeout() {
-            if (!overlay.classList.contains('hidden-panel')) return;
-            swipeHint.classList.remove('fade-out');
-            clearTimeout(hintTimeout);
-            hintTimeout = setTimeout(() => {
-                if (isStarted && overlay.classList.contains('hidden-panel')) {
-                    swipeHint.classList.add('fade-out');
-                }
-            }, 3000);
-        }
-
-        // Tap background to briefly show settings handle
-        window.addEventListener('click', (e) => {
-            if (overlay.classList.contains('hidden-panel') && !e.target.closest('#swipe-hint')) {
-                resetHintTimeout();
-            }
-        });
+        let fadeTimer = null;
 
         function updateSettings() {
             scroller.textContent = textInput.value || " ";
@@ -416,10 +430,14 @@
 
         function requestFullScreen() {
             const de = document.documentElement;
-            if (de.requestFullscreen) {
-                de.requestFullscreen();
-            } else if (de.webkitRequestFullscreen) {
-                de.webkitRequestFullscreen();
+            try {
+                if (de.requestFullscreen) {
+                    de.requestFullscreen();
+                } else if (de.webkitRequestFullscreen) {
+                    de.webkitRequestFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request bypassed:", err);
             }
         }
 
@@ -456,77 +474,84 @@
             requestAnimationFrame(animate);
         }
 
-        // Blank on Hold Interaction
+        // Blank display feature (Hold to blank)
         const handleHoldStart = (e) => {
             if (!blankToggle.checked || !isStarted) return;
-            if (e.target.closest('#ui-panel') || !overlay.classList.contains('hidden-panel') || e.target.closest('#swipe-hint')) return;
+            if (e.target.closest('#ui-panel') || !overlay.classList.contains('hidden-panel') || e.target.closest('#menu-trigger')) return;
             isHolding = true;
             document.body.classList.add('is-blank');
         };
 
         const handleHoldEnd = () => {
-            isHolding = false;
-            document.body.classList.remove('is-blank');
+            if (isHolding) {
+                isHolding = false;
+                document.body.classList.remove('is-blank');
+            }
         };
 
         window.addEventListener('touchstart', handleHoldStart, {passive: true});
         window.addEventListener('mousedown', handleHoldStart);
-        window.addEventListener('touchend', handleHoldEnd);
+        window.addEventListener('touchend', handleHoldEnd, {passive: true});
         window.addEventListener('mouseup', handleHoldEnd);
 
-        // Swipe up & Swipe down detection
-        let touchStartY = 0;
-        let touchStartX = 0;
+        // Auto-Hide Menu Trigger Management
+        function showMenuTrigger() {
+            menuTrigger.style.opacity = "1";
+            menuTrigger.style.pointerEvents = "auto";
+            resetFadeTimer();
+        }
 
+        function resetFadeTimer() {
+            clearTimeout(fadeTimer);
+            if (isStarted && overlay.classList.contains('hidden-panel')) {
+                fadeTimer = setTimeout(() => {
+                    menuTrigger.style.opacity = "0";
+                    menuTrigger.style.pointerEvents = "none";
+                }, 2500); // Fades completely away in 2.5 seconds
+            }
+        }
+
+        // Tap/Click anywhere on the background to wake up the menu trigger
         window.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-            touchStartX = e.touches[0].clientX;
+            if (e.target.closest('#ui-panel') || !overlay.classList.contains('hidden-panel')) return;
+            showMenuTrigger();
         }, {passive: true});
 
-        window.addEventListener('touchend', (e) => {
-            const touchEndY = e.changedTouches[0].clientY;
-            const touchEndX = e.changedTouches[0].clientX;
-            const deltaY = touchStartY - touchEndY;
-            const deltaX = Math.abs(touchStartX - touchEndX);
-
-            // Vertical swipe up priority: only check if vertical distance is greater than horizontal
-            if (deltaY > 60 && deltaX < 50) {
-                if (overlay.classList.contains('hidden-panel')) {
-                    openMenu();
-                }
-            }
-            // Swipe down on panel to close it
-            if (deltaY < -60 && !overlay.classList.contains('hidden-panel')) {
-                // Ensure they swipe on the top sheet area or outside the textareas
-                if (e.target.closest('#ui-panel')) {
-                    closeMenu();
-                }
-            }
-        }, {passive: true});
-
-        // Click drag-up emulation for Desktop
-        let mouseStartY = 0;
         window.addEventListener('mousedown', (e) => {
-            mouseStartY = e.clientY;
+            if (e.target.closest('#ui-panel') || !overlay.classList.contains('hidden-panel')) return;
+            showMenuTrigger();
         });
-        window.addEventListener('mouseup', (e) => {
-            const deltaY = mouseStartY - e.clientY;
-            if (deltaY > 60 && overlay.classList.contains('hidden-panel')) {
-                openMenu();
+
+        // Trigger Menu Opening
+        const handleMenuOpen = (e) => {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
-        });
+            openMenu();
+        };
+
+        menuTrigger.addEventListener('click', handleMenuOpen);
+        menuTrigger.addEventListener('touchstart', handleMenuOpen, {passive: false});
 
         function openMenu() {
             overlay.classList.remove('hidden-panel');
-            swipeHint.classList.add('fade-out');
+            menuTrigger.style.opacity = "0";
+            menuTrigger.style.pointerEvents = "none";
+            clearTimeout(fadeTimer);
         }
 
         function closeMenu() {
             overlay.classList.add('hidden-panel');
-            resetHintTimeout();
+            showMenuTrigger();
         }
 
-        doneBtn.onclick = () => {
+        // Premium Instant dismiss action on "Done" / "Dismiss Settings"
+        const handleDoneAction = (e) => {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             requestFullScreen();
             isStarted = true;
             wrapper.style.opacity = "1";
@@ -534,11 +559,14 @@
             updateSettings(); 
         };
 
+        doneBtn.addEventListener('click', handleDoneAction);
+        doneBtn.addEventListener('touchstart', handleDoneAction, {passive: false});
+
         overlay.onclick = (e) => { 
             if(e.target === overlay) closeMenu(); 
         };
 
-        // Animation mode switch
+        // Segmented Switcher Controls
         const modes = {
             'loop': document.getElementById('m-loop'),
             'once': document.getElementById('m-once')
@@ -553,7 +581,7 @@
             }
         });
 
-        // Neon Glow Color Dots
+        // Glowing Preset Dots
         document.querySelectorAll('.color-dot').forEach(dot => {
             dot.onclick = () => {
                 document.querySelector('.color-dot.active').classList.remove('active');
@@ -573,11 +601,10 @@
         mirrorToggle.onchange = () => { updateSettings(); };
         window.addEventListener('resize', updateSettings);
 
-        // Initial setup
+        // Initial launch configuration
         updateSettings();
-        resetHintTimeout();
+        openMenu(); // Show settings panel on launch so user can configure immediately
         requestAnimationFrame(animate);
     </script>
 </body>
 </html>
-
