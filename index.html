@@ -18,7 +18,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Import Google Font: Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --bg: #000000;
@@ -35,7 +39,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             color: var(--text);
             user-select: none;
             cursor: pointer;
@@ -67,7 +71,7 @@
         }
 
         #_q_ {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             white-space: pre-wrap;
             margin-bottom: 12px; 
             color: #ffffff;
@@ -81,7 +85,7 @@
         }
 
         #_st_ {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 12px;
             color: #888888;
             font-weight: 400;
@@ -98,7 +102,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 9px;
-            color: #737373; /* Recommended professional neutral-500 gray */
+            color: #737373;
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -110,7 +114,7 @@
         #_hint_ { 
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
             font-size: 10px; 
-            color: #737373; /* Match theme-consistent neutral-500 gray */
+            color: #737373;
             text-transform: uppercase; 
             letter-spacing: 0.20em; 
             pointer-events: none; 
@@ -123,8 +127,8 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <!-- Changed font size class to text-[14.4px] for mobile/default screens -->
-        <h1 id="_q_" class="text-[14.4px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
+        <!-- Set base font size to 15px for mobile/small screens -->
+        <h1 id="_q_" class="text-[15px] md:text-[18px] lg:text-xl leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
 
