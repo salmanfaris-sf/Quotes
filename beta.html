@@ -18,10 +18,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Import Google Font: Roboto with weight 330 -->
+    <!-- Google Font: Roboto supporting full weight range 100-900 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;330;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -60,7 +60,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 600px;
+            max-width: 800px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 5;
@@ -73,19 +73,18 @@
         #_q_ {
             font-family: 'Roboto', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 12px; 
+            margin-bottom: 16px; 
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 330; /* Updated font thickness to 330 */
+            font-weight: 330; /* Set font weight to 330 */
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             opacity: 0;
         }
 
         #_st_ {
-            font-family: 'Roboto', sans-serif;
             font-size: 12px;
             color: #888888;
             font-weight: 400;
@@ -94,21 +93,6 @@
             line-height: 1.6;
             margin-bottom: 4px;
             opacity: 0;
-        }
-
-        .nav-hint {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: #737373;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #_hint_ { 
@@ -127,12 +111,10 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <!-- Set base font size to 15px for mobile/small screens -->
-        <h1 id="_q_" class="text-[15px] md:text-[18px] lg:text-xl leading-relaxed tracking-wide"></h1>
+        <h1 id="_q_" class="text-[15px] sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl leading-relaxed sm:leading-relaxed md:leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
 
-    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
     <div id="_hint_">Tap anywhere to view the next quote</div>
 
 <script>
@@ -360,8 +342,6 @@
             _mc.classList.add('v');
             
             setTimeout(() => {
-                const navHint = document.querySelector('.nav-hint');
-                if (navHint) navHint.style.opacity = '0.4';
                 if (!_hintShown) {
                     _hint.style.opacity = '1';
                 }
