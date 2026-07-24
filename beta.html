@@ -18,10 +18,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Import Google Font: Roboto with extended weights -->
+    <!-- Import Google Font: Roboto with weight 330 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;350;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;330;400;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -78,7 +78,7 @@
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 350;
+            font-weight: 330; /* Updated font thickness to 330 */
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             opacity: 0;
@@ -177,6 +177,8 @@
         { t: "Hard days make strong people." },
         { t: "Keep showing up." },
         { t: "Strength is built through repetition." },
+        { t: "All in." },
+        { t: "Go all the way." },
         { t: "Do the boring work well." },
         { t: "Consistency creates mastery." },
         { t: "Work now, Relax later." },
@@ -315,7 +317,7 @@
 
     function _next() {
         if (!_hintShown) { 
-            _hint.style.transition = 'opacity 0.33s ease';
+            _hint.style.transition = 'opacity 0.3s ease';
             _hint.style.opacity = '0'; 
             _hintShown = true; 
         }
@@ -416,4 +418,3 @@
 </script>
 </body>
 </html>
-
