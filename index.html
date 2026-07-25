@@ -18,11 +18,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Import Google Font: Roboto Variable Font (Supports 100 to 900 smooth weights) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
@@ -39,7 +35,7 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             color: var(--text);
             user-select: none;
             cursor: pointer;
@@ -71,21 +67,21 @@
         }
 
         #_q_ {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
             margin-bottom: 12px; 
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 350;
+            font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             opacity: 0;
         }
 
         #_st_ {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 12px;
             color: #888888;
             font-weight: 400;
@@ -102,7 +98,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 9px;
-            color: #737373;
+            color: #737373; /* Recommended professional neutral-500 gray */
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -114,7 +110,7 @@
         #_hint_ { 
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
             font-size: 10px; 
-            color: #737373;
+            color: #737373; /* Match theme-consistent neutral-500 gray */
             text-transform: uppercase; 
             letter-spacing: 0.20em; 
             pointer-events: none; 
@@ -127,8 +123,8 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <!-- Set base font size to 15.5px for mobile/small screens -->
-        <h1 id="_q_" class="text-[15.5px] md:text-[18px] lg:text-xl leading-relaxed tracking-wide"></h1>
+        <!-- Changed font size class to text-[14.4px] for mobile/default screens -->
+        <h1 id="_q_" class="text-[14.4px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
 
@@ -177,8 +173,6 @@
         { t: "Hard days make strong people." },
         { t: "Keep showing up." },
         { t: "Strength is built through repetition." },
-        { t: "All in." },
-        { t: "Go all the way." },
         { t: "Do the boring work well." },
         { t: "Consistency creates mastery." },
         { t: "Work now, Relax later." },
@@ -418,4 +412,3 @@
 </script>
 </body>
 </html>
-
