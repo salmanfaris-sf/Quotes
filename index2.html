@@ -18,7 +18,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg: #000000;
@@ -35,7 +38,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             color: var(--text);
             user-select: none;
             cursor: pointer;
@@ -56,7 +59,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 600px;
+            max-width: 650px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 5;
@@ -67,21 +70,21 @@
         }
 
         #_q_ {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             white-space: pre-wrap;
             margin-bottom: 12px; 
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 300;
+            font-weight: 900;
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             opacity: 0;
         }
 
         #_st_ {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 12px;
             color: #888888;
             font-weight: 400;
@@ -105,6 +108,7 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Roboto', sans-serif;
         }
 
         #_hint_ { 
@@ -117,14 +121,14 @@
             font-weight: 500;
             opacity: 0; 
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Roboto', sans-serif;
         }
     </style>
 </head>
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <!-- Changed font size class to text-[15px] for mobile/default screens -->
-        <h1 id="_q_" class="text-[15px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
+        <h1 id="_q_" class="font-black text-base md:text-lg lg:text-xl leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
 
@@ -347,7 +351,7 @@
         if (i.id === "t_q") {
             const s = _gs();
             _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-            _st.opacity = '1';
+            _st.style.opacity = '1';
         }
 
         requestAnimationFrame(() => {
@@ -412,4 +416,3 @@
 </script>
 </body>
 </html>
-
