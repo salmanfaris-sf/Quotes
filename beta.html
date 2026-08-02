@@ -20,7 +20,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -73,68 +73,109 @@
             font-family: 'Roboto', sans-serif;
             white-space: pre-wrap;
             margin-bottom: 12px; 
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.92);
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 700;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: normal; /* Default font letter spacing */
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            letter-spacing: 0.08em;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
             opacity: 0;
         }
 
         #_st_ {
             font-family: 'Roboto', sans-serif;
-            font-size: 11px;
-            color: #888888;
-            font-weight: 400;
-            letter-spacing: normal;
+            font-size: 10px;
+            color: #737373;
+            font-weight: 500;
+            letter-spacing: 0.12em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
             opacity: 0;
+            text-transform: uppercase;
         }
 
-        .nav-hint {
+        .hint-container {
             position: absolute;
-            bottom: 24px;
+            bottom: 28px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 9px;
-            color: #737373;
-            font-weight: 500;
-            letter-spacing: normal;
-            text-transform: uppercase;
             pointer-events: none;
-            opacity: 0;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'Roboto', sans-serif;
+            z-index: 10;
         }
 
         #_hint_ { 
-            position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
-            font-size: 10px; 
-            color: #737373; 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-size: 9px; 
+            color: rgba(255, 255, 255, 0.45); 
             text-transform: uppercase; 
-            letter-spacing: normal; 
-            pointer-events: none; 
+            letter-spacing: 0.18em; 
             font-weight: 500;
             opacity: 0; 
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
             font-family: 'Roboto', sans-serif;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .dot-indicator {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            position: relative;
+        }
+
+        .dot-indicator::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="uppercase font-bold text-[15px] md:text-sm lg:text-base leading-relaxed tracking-normal"></h1>
+        <h1 id="_q_" class="uppercase font-medium text-[12px] md:text-[13px] lg:text-[14px] leading-relaxed tracking-[0.08em]"></h1>
         <div id="_st_"></div>
     </div>
 
-    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
-    <div id="_hint_">Tap anywhere to view the next quote</div>
+    <div class="hint-container">
+        <div id="_hint_">
+            <span class="dot-indicator"></span>
+            <span>Tap anywhere to continue</span>
+        </div>
+    </div>
 
 <script>
 (function(){
@@ -316,8 +357,9 @@
 
     function _next() {
         if (!_hintShown) { 
-            _hint.style.transition = 'opacity 0.3s ease';
+            _hint.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
             _hint.style.opacity = '0'; 
+            _hint.style.transform = 'scale(0.95)';
             _hintShown = true; 
         }
         if (_historyIndex < _history.length - 1) {
@@ -359,8 +401,6 @@
             _mc.classList.add('v');
             
             setTimeout(() => {
-                const navHint = document.querySelector('.nav-hint');
-                if (navHint) navHint.style.opacity = '0.4';
                 if (!_hintShown) {
                     _hint.style.opacity = '1';
                 }
