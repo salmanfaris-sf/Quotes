@@ -8,13 +8,13 @@
     <meta name="theme-color" content="#000000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg: #000000;
             --text: #ffffff;
-            --subtext: #777777;
+            --subtext: #666666;
         }
 
         * {
@@ -39,41 +39,30 @@
         .container {
             text-align: center;
             padding: 0 24px;
-            max-width: 500px;
         }
 
         .title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--text);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .divider {
-            width: 32px;
+            width: 24px;
             height: 1px;
-            background-color: #333333;
-            margin: 0 auto 24px auto;
+            background-color: #222222;
+            margin: 0 auto 20px auto;
         }
 
         .status {
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.12em;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--subtext);
-            line-height: 1.8;
-            margin-bottom: 16px;
-        }
-
-        .time-remaining {
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            color: #555555;
-            text-transform: uppercase;
         }
     </style>
 </head>
@@ -82,25 +71,8 @@
     <div class="container">
         <div class="title">SALMANFARIS.COM</div>
         <div class="divider"></div>
-        <div class="status">REDESIGN IN PROGRESS.<br>STAY DISCIPLINED.</div>
-        <div class="time-remaining" id="time-el">--:-- -- • -- MINUTES REMAINING TODAY</div>
+        <div class="status">REDESIGN IN PROGRESS</div>
     </div>
 
-    <script>
-        function updateTime() {
-            const n = new Date();
-            let h = n.getHours();
-            const m = n.getMinutes().toString().padStart(2, '0');
-            const a = h >= 12 ? 'pm' : 'am';
-            h = h % 12 || 12;
-            const endOfDay = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
-            const remainingMinutes = Math.floor((endOfDay - n) / 60000);
-            
-            document.getElementById('time-el').innerText = `${h}:${m} ${a} • ${remainingMinutes} MINUTES REMAINING TODAY`;
-        }
-
-        updateTime();
-        setInterval(updateTime, 30000);
-    </script>
 </body>
 </html>
