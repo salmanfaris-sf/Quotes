@@ -1,402 +1,106 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SALMANFARIS.COM — System Upgrade</title>
+    <title>SALMANFARIS.COM</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <meta name="description" content="FORGE AN UNBREAKABLE MIND. WE ARE EVOLVING. STAY DISCIPLINED.">
     <meta name="theme-color" content="#000000">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            glow: '#ffd700',
-                        },
-                        dark: {
-                            base: '#050505',
-                            card: '#0a0a0c',
-                            border: '#1e1e24',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 3s infinite ease-in-out',
-                        'float': 'float 6s infinite ease-in-out',
-                        'shimmer': 'shimmer 2.5s infinite linear',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-                            '50%': { opacity: 0.6, transform: 'scale(1.05)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-8px)' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-200% 0' },
-                            '100%': { backgroundPosition: '200% 0' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #030304;
-            color: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --subtext: #777777;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Glassmorphism card effects */
-        .glass-card {
-            background: rgba(12, 12, 15, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        .container {
+            text-align: center;
+            padding: 0 24px;
+            max-width: 500px;
         }
 
-        .glass-badge {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text);
+            margin-bottom: 24px;
         }
 
-        /* Metallic text style */
-        .text-gold-gradient {
-            background: linear-gradient(135deg, #FFF 0%, #D4AF37 50%, #8A6D3B 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .divider {
+            width: 32px;
+            height: 1px;
+            background-color: #333333;
+            margin: 0 auto 24px auto;
         }
 
-        .text-silver-gradient {
-            background: linear-gradient(180deg, #FFFFFF 0%, #888888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .status {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--subtext);
+            line-height: 1.8;
+            margin-bottom: 16px;
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #222;
-            border-radius: 3px;
-        }
-
-        /* Subtle grid background pattern */
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        .time-remaining {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: #555555;
+            text-transform: uppercase;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative bg-grid selection:bg-yellow-500/30 selection:text-yellow-200">
+<body>
 
-    <!-- Ambient Glow Background Canvas -->
-    <canvas id="canvas-bg" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
-
-    <!-- Radial Ambient Spotlights -->
-    <div class="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none animate-pulse-glow z-0"></div>
-    <div class="fixed bottom-10 right-10 w-[350px] h-[350px] bg-yellow-600/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
-
-    <!-- MAIN HEADER -->
-    <header class="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-yellow-600 to-amber-300 p-[1px] flex items-center justify-center shadow-lg shadow-amber-500/20">
-                <div class="w-full h-full bg-black rounded-[7px] flex items-center justify-center">
-                    <span class="font-extrabold text-xs text-amber-400 tracking-tighter">SF</span>
-                </div>
-            </div>
-            <span class="font-extrabold text-sm sm:text-base tracking-[0.25em] text-white">SALMANFARIS.COM</span>
-        </div>
-
-        <div class="glass-badge px-3.5 py-1.5 rounded-full flex items-center gap-2 border border-emerald-500/20 bg-emerald-500/5">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span class="text-[11px] font-mono tracking-wider text-emerald-400 font-medium uppercase">SYSTEM UPGRADE IN PROGRESS</span>
-        </div>
-    </header>
-
-    <!-- MAIN CONTENT CONTENT CONTAINER -->
-    <main class="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 my-auto py-10 flex flex-col items-center text-center">
-        
-        <!-- Main Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-badge mb-6 border-white/10 animate-float">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span class="text-xs uppercase font-medium tracking-widest text-neutral-300">A New Aesthetic Realm Is Being Crafted</span>
-        </div>
-
-        <!-- Headline -->
-        <h1 class="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-white leading-[1.1] mb-6 max-w-3xl">
-            FORGING A GREATER <br>
-            <span class="text-gold-gradient">VISUAL EXPERIENCE.</span>
-        </h1>
-
-        <!-- Subheading -->
-        <p class="text-neutral-400 text-sm sm:text-base max-w-xl leading-relaxed mb-10 font-normal">
-            The quote platform is currently undergoing a complete architectural and aesthetic overhaul. Stay disciplined. Time waits for no one.
-        </p>
-
-        <!-- LIVE FEATURE PREVIEW CONTAINER (GLASS CARD) -->
-        <div class="w-full glass-card rounded-2xl p-6 sm:p-8 mb-10 border border-white/10 text-left relative overflow-hidden group">
-            
-            <!-- Glow Accent Bar Top -->
-            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
-
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/5">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="terminal" class="w-4 h-4 text-amber-400"></i>
-                    <span class="text-xs font-mono tracking-wider text-neutral-400 uppercase">PREVIEW // ROTATING DISCIPLINE SYSTEM</span>
-                </div>
-                <div id="live-timer-badge" class="text-[11px] font-mono text-neutral-400 bg-white/5 px-3 py-1 rounded-md border border-white/5 flex items-center gap-2">
-                    <i data-lucide="clock" class="w-3 h-3 text-amber-400"></i>
-                    <span id="timer-text">CALCULATING TIME...</span>
-                </div>
-            </div>
-
-            <!-- Animated Quote Preview Box -->
-            <div class="min-h-[100px] flex flex-col justify-center my-2">
-                <p id="preview-quote" class="text-lg sm:text-xl font-medium text-neutral-100 uppercase tracking-wide leading-relaxed transition-opacity duration-500 opacity-100">
-                    "BE SO DISCIPLINED THAT EVEN YOUR BAD DAYS LOOK LIKE PROGRESS."
-                </p>
-                <div class="flex items-center justify-between mt-4">
-                    <span class="text-xs font-mono text-amber-400/80 tracking-widest uppercase" id="quote-counter">QUOTE 01 / 88</span>
-                    <button id="next-preview-btn" class="text-xs text-neutral-400 hover:text-white flex items-center gap-1.5 transition-colors py-1 px-2 rounded hover:bg-white/5">
-                        <span>TAP NEXT PREVIEW</span>
-                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROGRESS & STATUS BAR -->
-        <div class="w-full max-w-md mb-10">
-            <div class="flex justify-between items-center text-xs font-mono mb-2">
-                <span class="text-neutral-400 uppercase tracking-wider">UPGRADE COMPLETION</span>
-                <span class="text-amber-400 font-bold">85%</span>
-            </div>
-            <div class="w-full h-2 bg-neutral-900 rounded-full overflow-hidden p-[1px] border border-white/5">
-                <div class="h-full bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-300 rounded-full transition-all duration-1000 w-[85%] relative">
-                    <div class="absolute inset-0 bg-white/20 animate-shimmer" style="background-size: 200% 100%;"></div>
-                </div>
-            </div>
-            <div class="flex justify-between text-[10px] font-mono text-neutral-500 mt-2">
-                <span>PHASE 1: DESIGN SYSTEM [DONE]</span>
-                <span>PHASE 2: DEPLOYMENT [PENDING]</span>
-            </div>
-        </div>
-
-        <!-- EMAIL NOTIFICATION FORM -->
-        <div class="w-full max-w-md">
-            <form id="notify-form" class="flex flex-col sm:flex-row gap-2">
-                <div class="relative flex-1">
-                    <i data-lucide="mail" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                    <input 
-                        type="email" 
-                        required
-                        placeholder="Enter email to get notified when live" 
-                        class="w-full bg-neutral-900/80 text-white placeholder-neutral-500 text-xs sm:text-sm pl-10 pr-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:border-amber-500/50 transition-colors"
-                    >
-                </div>
-                <button 
-                    type="submit" 
-                    class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-xs sm:text-sm px-6 py-3 rounded-xl transition-all shadow-lg shadow-amber-500/10 active:scale-[0.98] whitespace-nowrap flex items-center justify-center gap-2"
-                >
-                    <span>NOTIFY ME</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </form>
-            <p class="text-[11px] text-neutral-500 mt-2">Zero spam. Only notified when the new platform launches.</p>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-500 font-mono">
-        <div>
-            &copy; <span id="year-el">2026</span> SALMANFARIS.COM. ALL RIGHTS RESERVED.
-        </div>
-        
-        <div class="flex items-center gap-6">
-            <span class="hover:text-neutral-300 transition-colors">DISCIPLINE OVER MOTIVATION</span>
-            <span>•</span>
-            <span class="hover:text-neutral-300 transition-colors">THE WAY</span>
-        </div>
-    </footer>
-
-    <!-- SUCCESS NOTIFICATION TOAST CONTAINER -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="glass-card border border-emerald-500/30 bg-black/90 p-4 rounded-xl flex items-center gap-3 shadow-2xl">
-            <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-            </div>
-            <div>
-                <h4 class="text-xs font-bold text-white uppercase">You're on the list</h4>
-                <p class="text-[11px] text-neutral-400">We will inform you immediately upon release.</p>
-            </div>
-        </div>
+    <div class="container">
+        <div class="title">SALMANFARIS.COM</div>
+        <div class="divider"></div>
+        <div class="status">REDESIGN IN PROGRESS.<br>STAY DISCIPLINED.</div>
+        <div class="time-remaining" id="time-el">--:-- -- • -- MINUTES REMAINING TODAY</div>
     </div>
 
-    <!-- SCRIPT LOGIC -->
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Dynamic Year
-        document.getElementById('year-el').innerText = new Date().getFullYear();
-
-        // Sample quotes bank from the original dataset for previewing
-        const sampleQuotes = [
-            "Be so disciplined that even your bad days look like progress.",
-            "You only have 1,440 minutes every day, don’t let a single one go to waste.",
-            "Stick to the plan. Not your mood.",
-            "A few years of sacrifice can create a lifetime of freedom.",
-            "Sweat more in practice. Bleed less in war.",
-            "Weak men wait for courage. Strong men create it through action.",
-            "Zero Excuses.",
-            "Focus is a superpower in a distracted world.",
-            "Growth begins outside comfort zones.",
-            "Work now, Relax later."
-        ];
-
-        let currentQuoteIndex = 0;
-        const quoteEl = document.getElementById('preview-quote');
-        const counterEl = document.getElementById('quote-counter');
-        const nextBtn = document.getElementById('next-preview-btn');
-
-        function updateQuote(index) {
-            quoteEl.style.opacity = '0';
-            setTimeout(() => {
-                quoteEl.innerText = `"${sampleQuotes[index].toUpperCase()}"`;
-                counterEl.innerText = `QUOTE ${String(index + 1).padStart(2, '0')} / ${sampleQuotes.length}`;
-                quoteEl.style.opacity = '1';
-            }, 300);
-        }
-
-        nextBtn.addEventListener('click', () => {
-            currentQuoteIndex = (currentQuoteIndex + 1) % sampleQuotes.length;
-            updateQuote(currentQuoteIndex);
-        });
-
-        // Auto rotate quotes every 6 seconds
-        setInterval(() => {
-            currentQuoteIndex = (currentQuoteIndex + 1) % sampleQuotes.length;
-            updateQuote(currentQuoteIndex);
-        }, 6000);
-
-        // Daily Time Calculator (Preserved feature from original script)
-        function updateRemainingTime() {
+        function updateTime() {
             const n = new Date();
             let h = n.getHours();
             const m = n.getMinutes().toString().padStart(2, '0');
-            const a = h >= 12 ? 'PM' : 'AM';
+            const a = h >= 12 ? 'pm' : 'am';
             h = h % 12 || 12;
             const endOfDay = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
             const remainingMinutes = Math.floor((endOfDay - n) / 60000);
             
-            const timerText = document.getElementById('timer-text');
-            if (timerText) {
-                timerText.innerText = `${h}:${m} ${a} • ${remainingMinutes} MINS LEFT TODAY`;
-            }
+            document.getElementById('time-el').innerText = `${h}:${m} ${a} • ${remainingMinutes} MINUTES REMAINING TODAY`;
         }
-        updateRemainingTime();
-        setInterval(updateRemainingTime, 30000);
 
-        // Form Submit Toast Handler (Replacing browser alerts)
-        const notifyForm = document.getElementById('notify-form');
-        const toast = document.getElementById('toast');
-
-        notifyForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Show toast
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            
-            notifyForm.reset();
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 4000);
-        });
-
-        // Interactive Particle Canvas Background
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-
-        const particles = Array.from({ length: 45 }, () => ({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            radius: Math.random() * 1.5 + 0.5,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            alpha: Math.random() * 0.5 + 0.2
-        }));
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, width, height);
-
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0) p.x = width;
-                if (p.x > width) p.x = 0;
-                if (p.y < 0) p.y = height;
-                if (p.y > height) p.y = 0;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
-                ctx.fill();
-            });
-
-            requestAnimationFrame(animateCanvas);
-        }
-        animateCanvas();
+        updateTime();
+        setInterval(updateTime, 30000);
     </script>
 </body>
 </html>
-
