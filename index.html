@@ -95,7 +95,7 @@
     <div class="container">
         <div class="title">REDESIGN IN PROGRESS</div>
         <div class="divider"></div>
-        <div class="status">LAUNCHING AUGUST 13</div>
+        <div class="status">LAUNCHING AUGUST 14</div>
         <div class="timer" id="countdown">00D 00H 00M 00S</div>
     </div>
 
@@ -141,14 +141,14 @@
             requestAnimationFrame(animate);
         }
 
-        // Live countdown to August 13
+        // Live countdown to August 14
         function updateTimer() {
             const now = new Date();
             let targetYear = now.getFullYear();
-            let target = new Date(`August 13, ${targetYear} 00:00:00`);
+            let target = new Date(`August 14, ${targetYear} 00:00:00`);
 
             if (now > target) {
-                target = new Date(`August 13, ${targetYear + 1} 00:00:00`);
+                target = new Date(`August 14, ${targetYear + 1} 00:00:00`);
             }
 
             const diff = target - now;
@@ -168,3 +168,4 @@
     </script>
 </body>
 </html>
+
