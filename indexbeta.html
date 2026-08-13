@@ -111,8 +111,7 @@
             position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
             font-size: 10px; 
             color: #737373; /* Match theme-consistent neutral-500 gray */
-            text-transform: uppercase; 
-            letter-spacing: 0.20em; 
+            letter-spacing: 0.05em; 
             pointer-events: none; 
             font-weight: 500;
             opacity: 0; 
@@ -309,12 +308,16 @@
         }, 350);
     }
 
-    function _next() {
+    function _hideHint() {
         if (!_hintShown) { 
-            _hint.style.transition = 'opacity 0.3s ease';
+            _hint.style.transition = 'opacity 0.8s ease';
             _hint.style.opacity = '0'; 
             _hintShown = true; 
         }
+    }
+
+    function _next() {
+        _hideHint();
         if (_historyIndex < _history.length - 1) {
             _historyIndex++;
             _showQuote(_history[_historyIndex]);
@@ -327,6 +330,7 @@
     }
 
     function _prev() {
+        _hideHint();
         if (_historyIndex > 0) {
             _historyIndex--;
             _showQuote(_history[_historyIndex]);
@@ -358,6 +362,11 @@
                 if (navHint) navHint.style.opacity = '0.4';
                 if (!_hintShown) {
                     _hint.style.opacity = '1';
+                    
+                    // Auto-fade the hint after 3 seconds of inactivity
+                    setTimeout(() => {
+                        _hideHint();
+                    }, 3000);
                 }
             }, 1200);
         });
@@ -412,3 +421,8 @@
 </script>
 </body>
 </html>
+```eof
+
+### Key Changes:
+- **Auto-Hide Timer:** Added a `setTimeout` inside `_init()` to invoke `_hideHint()` automatically after 3 seconds (3000ms).
+- **Smoother Transition:** Adjusted the `_hideHint()` opacity transition from `0.3s` to `0.8s ease` so the text fades out naturally without jarring the user.
