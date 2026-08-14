@@ -20,7 +20,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -43,6 +43,8 @@
             user-select: none;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             letter-spacing: normal;
         }
 
@@ -60,7 +62,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 600px;
+            max-width: 580px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 5;
@@ -80,21 +82,22 @@
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 500;
+            font-weight: 300;
             text-transform: uppercase;
-            letter-spacing: normal !important;
-            word-spacing: normal !important;
+            letter-spacing: 0.05em !important;
+            word-spacing: 0.08em !important;
             font-kerning: normal;
             opacity: 0;
+            line-height: 1.6;
         }
 
         #_st_ {
             font-family: 'Roboto', sans-serif;
-            font-size: 11px;
-            color: #a0a0a0;
-            font-weight: 500;
+            font-size: 10px;
+            color: #888888;
+            font-weight: 100;
             text-transform: uppercase;
-            letter-spacing: 0.08em !important;
+            letter-spacing: 0.12em !important;
             transition: opacity 0.35s ease;
             line-height: 1.5;
             margin-top: 4px;
@@ -108,12 +111,12 @@
             left: 0; 
             right: 0; 
             text-align: center; 
-            font-size: 10px; 
-            color: #888888; 
+            font-size: 9px; 
+            color: #666666; 
             text-transform: uppercase; 
-            letter-spacing: 0.22em; 
+            letter-spacing: 0.25em; 
             pointer-events: none; 
-            font-weight: 500;
+            font-weight: 300;
             opacity: 0; 
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Roboto', sans-serif;
@@ -123,7 +126,7 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="uppercase font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-relaxed"></h1>
+        <h1 id="_q_" class="uppercase text-[12px] sm:text-[13px] md:text-[14px]"></h1>
         <div id="_st_"></div>
     </div>
 
@@ -410,3 +413,4 @@
 </script>
 </body>
 </html>
+
