@@ -91,44 +91,14 @@
             margin-bottom: 4px;
             opacity: 0;
         }
-
-        .nav-hint {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: #737373; /* Recommended professional neutral-500 gray */
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #_hint_ { 
-            position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
-            font-size: 10px; 
-            color: #737373; /* Match theme-consistent neutral-500 gray */
-            letter-spacing: 0.05em; 
-            pointer-events: none; 
-            font-weight: 500;
-            opacity: 0; 
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
     </style>
 </head>
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <!-- Changed font size class to text-[14.4px] for mobile/default screens -->
         <h1 id="_q_" class="text-[14.4px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
-
-    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
-    <div id="_hint_">Tap anywhere to view the next quote</div>
 
 <script>
 (function(){
@@ -227,8 +197,6 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
-    const _hint = document.getElementById('_hint_');
-    let _hintShown = false;
     let _initialized = false;
     
     let _l_i = null;
@@ -309,11 +277,6 @@
     }
 
     function _next() {
-        if (!_hintShown) { 
-            _hint.style.transition = 'opacity 0.3s ease';
-            _hint.style.opacity = '0'; 
-            _hintShown = true; 
-        }
         if (_historyIndex < _history.length - 1) {
             _historyIndex++;
             _showQuote(_history[_historyIndex]);
@@ -351,14 +314,6 @@
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
-            
-            setTimeout(() => {
-                const navHint = document.querySelector('.nav-hint');
-                if (navHint) navHint.style.opacity = '0.4';
-                if (!_hintShown) {
-                    _hint.style.opacity = '1';
-                }
-            }, 1200);
         });
     }
 
@@ -411,4 +366,3 @@
 </script>
 </body>
 </html>
-
