@@ -56,7 +56,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 600px;
+            max-width: 650px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 5;
@@ -69,36 +69,72 @@
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 12px; 
+            margin-bottom: 16px; 
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
             font-weight: 300;
-            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             opacity: 0;
         }
 
         #_st_ {
             font-family: 'Inter', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             color: #888888;
             font-weight: 400;
-            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
             opacity: 0;
+        }
+
+        .nav-hint {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #737373;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #_hint_ { 
+            position: absolute; 
+            bottom: 20px; 
+            left: 0; 
+            right: 0; 
+            text-align: center; 
+            font-size: 10px; 
+            color: #737373; 
+            letter-spacing: 0.15em; 
+            text-transform: uppercase;
+            pointer-events: none; 
+            font-weight: 500;
+            opacity: 0; 
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-[14.4px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
+        <h1 id="_q_" class="text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[15px] lg:text-base leading-relaxed font-light uppercase tracking-[0.18em] text-white"></h1>
         <div id="_st_"></div>
     </div>
+
+    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
+    <div id="_hint_">Tap anywhere to view the next quote</div>
 
 <script>
 (function(){
@@ -197,6 +233,8 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
+    const _hint = document.getElementById('_hint_');
+    let _hintShown = false;
     let _initialized = false;
     
     let _l_i = null;
@@ -277,6 +315,11 @@
     }
 
     function _next() {
+        if (!_hintShown) { 
+            _hint.style.transition = 'opacity 0.3s ease';
+            _hint.style.opacity = '0'; 
+            _hintShown = true; 
+        }
         if (_historyIndex < _history.length - 1) {
             _historyIndex++;
             _showQuote(_history[_historyIndex]);
@@ -314,6 +357,14 @@
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
+            
+            setTimeout(() => {
+                const navHint = document.querySelector('.nav-hint');
+                if (navHint) navHint.style.opacity = '0.4';
+                if (!_hintShown) {
+                    _hint.style.opacity = '1';
+                }
+            }, 1200);
         });
     }
 
@@ -366,3 +417,4 @@
 </script>
 </body>
 </html>
+
