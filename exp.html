@@ -18,7 +18,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
@@ -35,7 +35,7 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text);
             user-select: none;
             cursor: pointer;
@@ -67,7 +67,7 @@
         }
 
         #_q_ {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             white-space: pre-wrap;
             margin-bottom: 12px; 
             color: #ffffff;
@@ -75,18 +75,18 @@
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
             font-weight: 400;
-            letter-spacing: -0.01em;
+            letter-spacing: 0.15em;
+            line-height: 1.7;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             opacity: 0;
             text-transform: uppercase;
         }
 
         #_st_ {
-            font-family: 'Roboto', sans-serif;
-            font-size: 11px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: #888888;
             font-weight: 400;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.12em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
@@ -95,13 +95,13 @@
 
         #_hint_ {
             position: absolute;
-            bottom: 36px;
+            bottom: 32px;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: #666666;
             font-weight: 400;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.18em;
             opacity: 0;
             transition: opacity 0.35s ease-in-out;
             pointer-events: none;
@@ -115,11 +115,11 @@
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-[13px] md:text-[14.5px] lg:text-base leading-relaxed tracking-wide"></h1>
-        <div id="_st_"></div>
+        <h1 id="_q_" class="text-[12px] md:text-[14px] lg:text-[15px]"></h1>
+        <div id="_st_" class="text-[10px] md:text-[11px]"></div>
     </div>
 
-    <div id="_hint_" class="text-[10px] md:text-[11px] leading-relaxed">TAP ANYWHERE TO VIEW THE NEXT QUOTE</div>
+    <div id="_hint_" class="text-[9px] md:text-[10px] leading-relaxed">TAP ANYWHERE TO VIEW THE NEXT QUOTE</div>
 
 <script>
 (function(){
