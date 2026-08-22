@@ -91,6 +91,23 @@
             margin-bottom: 4px;
             opacity: 0;
         }
+
+        #_hint_ {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            color: #888888;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transition: opacity 0.35s ease-in-out;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 5;
+            will-change: opacity;
+        }
     </style>
 </head>
 <body>
@@ -99,6 +116,8 @@
         <h1 id="_q_" class="text-[14.4px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
         <div id="_st_"></div>
     </div>
+
+    <div id="_hint_" class="text-xs md:text-sm leading-relaxed tracking-wide">Tap anywhere to view the next quote</div>
 
 <script>
 (function(){
@@ -197,7 +216,9 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
+    const _hint = document.getElementById('_hint_');
     let _initialized = false;
+    let _hintDismissed = false;
     
     let _l_i = null;
     let _startY = 0;
@@ -218,6 +239,14 @@
     let _lastQuoteText = null;
     let _history = [];
     let _historyIndex = -1;
+
+    function _dismissHint() {
+        if (_hintDismissed) return;
+        _hintDismissed = true;
+        if (_hint) {
+            _hint.style.opacity = '0';
+        }
+    }
 
     function _getNextQuote() {
         if (_currentPool.length === 0) {
@@ -247,6 +276,7 @@
     }
 
     function _showQuote(nq) {
+        _dismissHint();
         _st.style.opacity = '0';
         if (_l_i) clearInterval(_l_i);
 
@@ -314,6 +344,9 @@
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
+            if (_hint) {
+                _hint.style.opacity = '1';
+            }
         });
     }
 
@@ -366,3 +399,4 @@
 </script>
 </body>
 </html>
+
