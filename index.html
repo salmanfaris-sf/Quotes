@@ -7,12 +7,12 @@
 <title>Salman Faris | Daily Wisdom</title>
 
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K1TKBQFFK"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-1K1TKBQFFK');
+  gtag('config', 'G-P37159WTH1');
 </script>
 
 <meta name="description" content="Raw thoughts on discipline, focus, and the hard path.">
@@ -32,21 +32,26 @@ tailwind.config={
 }
 </script>
 <style>
-html, body { 
+html { 
   background-color: #000000; 
-  scroll-behavior: auto; 
-  overflow-x: hidden;
-  width: 100%;
-  position: relative;
-  touch-action: pan-y; 
+  scroll-behavior: smooth; 
+  overscroll-behavior-y: contain; 
 }
 
-body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
+body { 
+  margin: 0; 
+  color: #d1d1d1; 
+  font-smoothing: antialiased; 
+  min-height: 100vh;
+  overflow-x: hidden; 
+  -webkit-overflow-scrolling: touch; 
+  overscroll-behavior-y: contain; 
+}
 
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
 .z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
 .z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-.z1.za{opacity:1;transform:translateY(0);filter:blur(0)}
+.z1.za{opacity:1;transform:none;filter:blur(0)}
 
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
@@ -63,23 +68,33 @@ body { margin: 0; color: #d1d1d1; font-smoothing: antialiased; }
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
-.quote-stats { font-family: 'Inter', sans-serif; font-size: clamp(10px, 3vw, 14px); color: #ffffff; opacity: 0.5; margin-top: 10px; font-weight: 500; }
+.quote-stats { 
+  font-family: 'Inter', sans-serif; 
+  font-size: clamp(10px, 3vw, 14px); 
+  color: #ffffff; 
+  opacity: 0.5; 
+  margin-top: 10px; 
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  -webkit-font-feature-settings: "tnum";
+}
 
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
-footer { padding-top: 10px; padding-bottom: 40px; }
+footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </style>
 </head>
 <body oncontextmenu="return false;">
 
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">DAY 000</div>
+  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
 </nav>
 
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-9xl md:text-[16rem] italic tracking-tighter leading-tight md:leading-none z1" style="transition-delay:0.2s"></h1>
+      <h1 id="h0" class="font-f1 text-7xl sm:text-8xl md:text-[13rem] tracking-tighter leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
@@ -105,37 +120,197 @@ footer { padding-top: 10px; padding-bottom: 40px; }
 
 <script>
 (function(){
-  const themes = ['Zero Excuses', 'Hard Truths', 'Full Focus', 'No Retreat', 'Pure Action'];
-  
-  const content = [
-    [
-      "You know what must be done. You just hate the work. Your mind tells you to wait. It tells you to rest. These are lies. The hard path is the only way to become a man of value. Every day you waste makes the next day harder. Do the work now. Do not wait for a better mood. Your mood does not matter. Only your actions matter. Stick to the plan.",
-      "Time is your only enemy. You have one thousand four hundred and forty minutes today. If you waste them, they never come back. Most people are weak and distracted. They choose comfort over growth. You must be different. Discipline is not a burden. It is the tool that sets you free. Be hard on yourself today so your future self can stand tall.",
-      "Real strength is built when no one is looking. It is built in the early mornings and late nights. Success is not a gift. It is earned through sweat and pain. Stop looking for an easy way. There is no easy way. There is only the work. Do the boring work. Do it well. Do it every single day until it is done."
-    ],
-    [
-      "Nothing changes if you do nothing. You cannot dream big and work small. Your habits show who you really are. A man who cannot control himself cannot control his life. Stop talking about what you want to do. Start doing it. Hate laziness like it is a disease. Always speak the truth. Stand straight and face your fears.",
-      "Knowledge is nothing without action. Fear nothing but a life of regret. Live with a clear goal. A real man protects his family. He provides for those he loves. He does not follow the crowd. He follows the truth. Every morning is a new chance to fix your life. The time to start is right now. Do not look back.",
-      "When life gets hard, do not quit. Think of a man breaking a rock. He hits it a hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit. It was all the hits before it. This is how success works. Every small step counts. Keep moving forward. Never stop hitting the rock."
-    ],
-    [
-      "Waiting will not save you. Thinking too much will only slow you down. Action is the only answer. Lower your gaze from distractions. Guard your heart from weak thoughts. Your life today is the result of what you did yesterday. Your life tomorrow depends on what you do right now. Be the man your ancestors would respect.",
-      "The man who keeps walking will eventually win. A few years of hard work can give you a lifetime of power. But you must be willing to pay the price. Your future is built after a long day of work. Speak clearly. Stand firm. Fear no man. Only fear wasting the life you were given. This is the way of the strong.",
-      "Every second is a war against your own weakness. You must win this war. Do not let your family down. Be the one who changed the history of your name. Discipline is how you show love to yourself. It is how you build a life worth living. Stop making excuses. Get up and get to work."
-    ]
+  const dailyThemes = [
+    {
+      theme: 'Be Relentless',
+      paragraphs: [
+        "A strong man never gives up when he feels tired. He stops only when the job is completely finished. When hard problems stand in your way, push through them with full power. Life will test your mind, but hard work beats every obstacle.",
+        "Keep your fire burning every single day. Anyone can work hard when they feel happy, but true power is working hard when you feel tired. Turn every hard moment into fuel for your growth.",
+        "To be relentless means to hold yourself to the highest standards. Move forward with calm mind and real strength. Victory always belongs to the man who refuses to quit."
+      ]
+    },
+    {
+      theme: 'Zero Excuses',
+      paragraphs: [
+        "You know what you must do today. Your mind will try to make excuses to sit back and rest. Do not listen. Weak men make excuses, but strong men get the job done. The hard path is the only real way to win.",
+        "Stop blaming your hard life or bad days. Nobody is coming to fix your life for you. You are the leader of your own future. Stand tall, clean your mind, and work hard without complaining.",
+        "Real power is built in quiet rooms when no one is watching you. It is built in early mornings and late nights. Discipline is your shield against future regrets. Work hard today so your future self can walk with pride."
+      ]
+    },
+    {
+      theme: 'Hard Truths',
+      paragraphs: [
+        "The world does not care about your big talk or wishes. It only cares about what you build and deliver. Having big dreams with lazy habits is a lie to yourself. Let your daily actions show who you really are.",
+        "Time flies fast every second. You get 1,440 minutes today. Once they are gone, they never come back. Most people choose easy fun over real progress. Be different. Choose the hard path today.",
+        "Fear nothing in this life except wasted years and laziness. Protect your family, keep your promises, and stand firm in truth. Walk through this life with clear purpose."
+      ]
+    },
+    {
+      theme: 'Stay Focused',
+      paragraphs: [
+        "Turn off the noise of the world. Stop looking at cheap things that waste your mind and energy. Guard your focus like your life depends on it, because your future really does.",
+        "If you try to do everything at once, you will do nothing well. Choose your main goal and hit it hard every day. Do the boring work that others run away from until you win.",
+        "Learn to say no to small pleasures. Build a daily habit that protects your mind and sharpens your strength. Move forward every day like an unstoppable train."
+      ]
+    },
+    {
+      theme: 'Never Give Up',
+      paragraphs: [
+        "When life gets heavy and you feel tired, quitting is not an option. Think of a man breaking a rock with a hammer. He hits it one hundred times and nothing happens. On the next hit, it breaks. It was not just the last hit, but every hit before it.",
+        "A few years of hard work and sacrifice will give you a full life of freedom and success. Pay the price today. Stand strong when hard times come and face your fears with eyes open.",
+        "Every morning is a battle against your own weakness. Win this battle inside your mind first. Protect your name, handle the pain, and keep moving until the work is done."
+      ]
+    },
+    {
+      theme: 'Take Action',
+      paragraphs: [
+        "Thinking too much will only slow you down and create fear. Real action is the best answer to all your problems. Stop looking for easy tricks. There are no shortcuts—only hard work.",
+        "Where you are today comes from what you did yesterday. Where you will be tomorrow depends on what you do right now. Do not wait until you feel ready. Move now and build your strength.",
+        "Words are cheap and promises mean nothing without results. Get off the bench, put your head down, stop complaining, and do the real work today."
+      ]
+    },
+    {
+      theme: 'Live Everyday',
+      paragraphs: [
+        "Live today like it is your very last day on earth. Give your full heart and energy to everything you do right now. Do not waste a single hour on small anger or useless worries.",
+        "Tomorrow is never promised to anyone. Every morning you wake up is a gift to change your life and grow stronger. Treat your time today with deep respect.",
+        "When you go to bed tonight, make sure you used every minute well. Leave nothing unfinished. Give your total best to your life today."
+      ]
+    },
+    {
+      theme: 'Believe In Yourself',
+      paragraphs: [
+        "You are capable of doing great things if you put your mind to work. Do not let small thoughts or fear tell you that you cannot win. You have deep power inside you.",
+        "Your mind will believe what you tell it. Stop doubting your strength and start building your skills. Every great leader was once a beginner who refused to give up.",
+        "Stand proud and trust your ability to learn and adapt. Push past your comfort zone and show yourself how strong you can truly become."
+      ]
+    },
+    {
+      theme: 'Do Not Waste Time',
+      paragraphs: [
+        "Time is the most valuable gift you own. Once a minute passes, no money in the world can ever buy it back. Treat every single hour like pure gold.",
+        "Cut out useless habits that steal your time. Scrolling without reason and chasing cheap fun will keep you weak. Use your quiet hours to build your mind and body.",
+        "Organize your day with clear goals. Start early, finish your tasks, and end your day with a victory. A man who respects his time respects his life."
+      ]
+    },
+    {
+      theme: 'Build Your Mind',
+      paragraphs: [
+        "Your mind is your ultimate weapon. Feed it with good ideas, deep focus, and strong principles. A strong mind can conquer any physical struggle.",
+        "Do not let negative opinions or easy drama enter your head. Keep your mental house clean and quiet. What you focus on is what you become.",
+        "Control your thoughts so they do not control you. When hard times hit, stay calm and logical. A clear mind always finds a way to win."
+      ]
+    },
+    {
+      theme: 'Strong Character',
+      paragraphs: [
+        "Real character is shown when life gets hard, not when things are easy. Anyone can smile when everything is good, but true strength shines in the storm.",
+        "Always tell the truth and keep your promises. A man whose word is strong will always earn real respect from good people.",
+        "Walk with quiet confidence and self-control. You do not need to shout to show your strength. Let your work and character speak for you."
+      ]
+    },
+    {
+      theme: 'Quiet Strength',
+      paragraphs: [
+        "The loudest man in the room is often the weakest. Learn to listen more and talk less. Silence gives you time to observe, think, and plan.",
+        "Work on your goals in secret without telling everyone your plans. Build your success quietly and let your results make all the noise.",
+        "Keep your calm when chaos is around you. Control your anger, slow your breath, and make wise moves with absolute precision."
+      ]
+    },
+    {
+      theme: 'Do Your Duty',
+      paragraphs: [
+        "Duty means doing what is right for your family and your life, even when you do not feel like it. It is your shield of honor as a man.",
+        "Feelings come and go quickly, but your duty remains. Rise above your mood today and finish your responsibilities with full pride.",
+        "There is deep peace in doing your work well. When you take care of your responsibilities, you build a foundation that no one can break."
+      ]
+    },
+    {
+      theme: 'Master Yourself',
+      paragraphs: [
+        "Before you try to lead others, you must learn to master yourself. Control your body, control your speech, and master your daily habits.",
+        "Resist short-term fun for long-term power. The ability to say no to temptation is the key factor that separates success from failure.",
+        "Take complete ownership of your life. When you master your own mind and body, you become the ruler of your own fate."
+      ]
+    },
+    {
+      theme: 'Embrace Pain',
+      paragraphs: [
+        "Pain is not your enemy; pain is your best teacher. The pressure you feel today is carving away your weakness and building real muscle.",
+        "Do not run away from hard work or difficult challenges. Step into the fire willingly, because that is where true strength is born.",
+        "When you learn to embrace discomfort, nothing in life can scare you. You become stronger through every test life throws at you."
+      ]
+    },
+    {
+      theme: 'Clear Goals',
+      paragraphs: [
+        "A man without a goal is like a ship without a steering wheel. He floats around and gets lost in the ocean. Define your goal clearly.",
+        "Write down what you want to achieve and break it down into simple daily steps. Focus all your energy on taking one good step at a time.",
+        "Keep your eyes fixed on the prize. Do not get distracted by side roads. Move straight toward your goal until you touch it."
+      ]
+    },
+    {
+      theme: 'Continuous Growth',
+      paragraphs: [
+        "Never settle for being average. Aim to grow one percent better every single day in your mind, body, and spirit.",
+        "Read good books, learn new skills, and train your body hard. Stagnation is death; growth is life. Keep expanding your knowledge.",
+        "Compare yourself only to who you were yesterday. As long as you are growing every day, you are winning at the game of life."
+      ]
+    },
+    {
+      theme: 'Unshakable Peace',
+      paragraphs: [
+        "Build a calm heart that external troubles cannot break. You cannot control everything outside, but you can control how you react.",
+        "Do not waste your emotional energy on small things that will not matter in five years. Save your energy for important battles.",
+        "Find peace in working hard and living right. When your conscience is clean and your effort is high, your heart will remain calm."
+      ]
+    },
+    {
+      theme: 'Be The Example',
+      paragraphs: [
+        "Be the man you want your children and family to look up to. Lead by your actions, not just by preaching words to others.",
+        "Set a high standard for your work, your health, and your discipline. Show the world what a focused and dedicated man looks like.",
+        "When others see your consistency and strength, they will be inspired to grow. Your hard work lifts everyone around you."
+      ]
+    },
+    {
+      theme: 'Overcome Fear',
+      paragraphs: [
+        "Fear is just a thought in your mind. The moment you step directly toward the thing you fear, the fear starts to vanish.",
+        "Courage is not feeling zero fear; courage is taking action even when your hands are shaking. Be brave and take the leap.",
+        "Every time you conquer a fear, you gain new freedom. Break out of your comfort zone and expand your world today."
+      ]
+    },
+    {
+      theme: 'Be Grateful',
+      paragraphs: [
+        "Be thankful for the breath in your lungs, the energy in your body, and the new day before you. Many did not wake up today.",
+        "Gratitude gives you power and clarity. Instead of complaining about what you lack, use everything you have right now to win.",
+        "Approach every morning with a hungry heart and a grateful spirit. Work hard, stay humble, and make your life legendary."
+      ]
+    }
   ];
 
   const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
 
   const updateClockAndStats = () => {
     const now = new Date();
+    
+    // Top-left Day of the week (e.g., MONDAY, TUESDAY)
+    const dayName = now.toLocaleDateString("en-US", { weekday: 'long' }).toUpperCase();
+    document.getElementById("d0").textContent = dayName;
+
+    // Top-right Date format
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
-    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    
+    // Time with seconds for the bottom section
+    const timeWithSeconds = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+    
     const totalMinutesInDay = 1440;
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const remainingMinutes = totalMinutesInDay - currentMinutes;
     const statsEl = document.getElementById('live-stats');
-    if (statsEl) { statsEl.textContent = `Time: ${timeStr} • ${remainingMinutes} minutes remaining today`; }
+    if (statsEl) { statsEl.textContent = `Time: ${timeWithSeconds} • ${remainingMinutes} minutes remaining today`; }
   };
 
   const init = () => {
@@ -144,16 +319,16 @@ footer { padding-top: 10px; padding-bottom: 40px; }
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
     
-    document.getElementById("d0").textContent = `DAY ${String(dayOfYear).padStart(3, "0")}`;
-    document.getElementById("h0").innerHTML = `The <span class="text-white not-italic">${themes[dayOfYear % 5]}</span>`;
+    const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
     
-    const setIdx = dayOfYear % content.length;
+    // Set clean heading without "The"
+    document.getElementById("h0").textContent = currentTopic.theme;
     
+    // Render content paragraphs without the second duplicate title in the middle
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][0])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(content[setIdx][1])}</p></div>
-      <div class="py-24 text-center z1"><h2 class="font-f1 text-8xl md:text-[12rem] italic zb">${themes[dayOfYear % 5].toUpperCase()}.</h2></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(content[setIdx][2])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(currentTopic.paragraphs[1])}</p></div>
+      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
     `;
     updateClockAndStats();
     
@@ -164,33 +339,25 @@ footer { padding-top: 10px; padding-bottom: 40px; }
   };
 
   window.addEventListener("scroll", () => {
-    const scrollPos = window.scrollY;
-    const nav = document.getElementById("n0");
-    const scrollHint = document.getElementById("sd");
-    scrollPos > 10 ? nav.classList.add("zs") : nav.classList.remove("zs");
-    if (scrollHint) { scrollHint.style.opacity = scrollPos > 20 ? "0" : "1"; }
+    const s = window.scrollY;
+    document.getElementById("n0").classList.toggle("zs", s > 10);
+    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
     
     const spans = document.querySelectorAll(".hi");
-    const centerY = window.innerHeight * 0.5;
-    let activeSpan = null;
-    let minDistance = Infinity;
+    let active = null, min = Infinity;
     spans.forEach(span => {
-      const rect = span.getBoundingClientRect();
-      const dist = Math.abs((rect.top + rect.height / 2) - centerY);
-      if (dist < minDistance) { minDistance = dist; activeSpan = span; }
+      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
+      if (dist < min) { min = dist; active = span; }
     });
-    spans.forEach(span => {
-      if (span === activeSpan && minDistance < window.innerHeight * 0.4) span.classList.add("active");
-      else span.classList.remove("active");
-    });
+    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
   }, { passive: true });
 
   window.onload = () => {
     init();
     setInterval(updateClockAndStats, 1000);
-    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 150);
   };
 })();
 </script>
 </body>
 </html>
+
