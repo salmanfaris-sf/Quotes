@@ -19,12 +19,15 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
     extend:{
-      fontFamily:{f1:['"Cormorant Garamond"','serif'],f2:['Inter','sans-serif']},
+      fontFamily:{
+        f1:['Inter','sans-serif'],
+        f2:['Inter','sans-serif']
+      },
       colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
     }
   }
@@ -40,11 +43,22 @@ html {
 body { 
   margin: 0; 
   color: #d1d1d1; 
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
   font-smoothing: antialiased; 
   min-height: 100vh;
   overflow-x: hidden; 
   -webkit-overflow-scrolling: touch; 
   overscroll-behavior-y: contain;
+}
+
+/* Custom class to force straight rendering for hyphens */
+.st-hyphen {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  font-weight: 400 !important;
+  display: inline-block;
+  transform: scaleX(1.05);
+  vertical-align: baseline;
 }
 
 .z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
@@ -55,15 +69,15 @@ body {
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
 
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff}
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff;font-weight:600}
 .zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
 .zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
 @keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
 .zf{animation:flash 2s ease-in-out infinite}
 #sd{transition:opacity 0.5s ease,visibility 0.5s}
 
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.15;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 15px rgba(255,255,255,0.4) !important}
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.2;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 20px rgba(255,255,255,0.5) !important}
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
@@ -87,13 +101,13 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
-  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2">LOADING...</div>
+  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2 font-medium">LOADING...</div>
 </nav>
 
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 text-7xl sm:text-8xl md:text-[13rem] tracking-tighter leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
+      <h1 id="h0" class="font-f1 font-bold text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tight leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
     <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
@@ -133,7 +147,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       paragraphs: [
         "You know what duties you have to do today. Your mind will try to find easy ways to sit back and rest, but discipline means rising above comfort. An honest person accepts work and finishes it well.",
         "Stop blaming bad days or hard life for your lack of progress. You are responsible for your own choices and actions. Stand tall, make clean plans, and work hard without complaining to anyone.",
-        "Good character is built in quiet times when no one is watching you. It is built in early mornings and quiet work hours. Self control protects you from future regret. Work hard today so you can rest with a clean heart."
+        "Good character is built in quiet times when no one is watching you. It is built in early mornings and quiet work hours. Self-control protects you from future regret. Work hard today so you can rest with a clean heart."
       ]
     },
     {
@@ -149,14 +163,14 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       paragraphs: [
         "Turn off the extra noise of the world. Stay away from useless things that waste your mind and energy. Guard your focus with care, because your future depends on what you pay attention to.",
         "Trying to do too many things at once leads to poor results in everything. Choose your main task and do it steadily every day. Learn to love the quiet, daily work that builds real skill.",
-        "Learn to say no to quick fun for the sake of long term health and peace. Build simple daily habits that keep your mind clear and your heart strong. Move forward every day with calm strength."
+        "Learn to say no to quick fun for the sake of long-term health and peace. Build simple daily habits that keep your mind clear and your heart strong. Move forward every day with calm strength."
       ]
     },
     {
       theme: 'Never Give Up',
       paragraphs: [
         "When life gets heavy and you feel tired, quitting your duty is not an option. Think of a worker breaking a rock with a tool. He hits it many times and nothing happens, but every small hit prepares the final break.",
-        "Steady effort and temporary hard work give you long term peace and real success. Accept the necessary effort today. Face hard times with patience and solve your problems with courage.",
+        "Steady effort and temporary hard work give you long-term peace and real success. Accept the necessary effort today. Face hard times with patience and solve your problems with courage.",
         "Every morning gives you a new chance to win over your own weak habits. Win the quiet battle inside your mind first. Keep your good name, handle pain with patience, and keep working until the duty is done."
       ]
     },
@@ -179,7 +193,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     {
       theme: 'Believe In Yourself',
       paragraphs: [
-        "You have the power to do good things if you guide your mind properly. Do not let fear or doubts tell you that progress is impossible. You have patience inside you.",
+        "You have the power to do good things if you guide your mind properly. Do not let fear or self-doubt tell you that progress is impossible. You have patience inside you.",
         "Your mind will grow based on what you feed it every day. Replace bad thoughts with useful knowledge and good skills. Every wise person started as a beginner who kept trying.",
         "Walk with humility and trust your power to learn. Move out of your easy comfort zone, because strength grows when you handle hard tests well."
       ]
@@ -205,13 +219,13 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       paragraphs: [
         "Real character is seen when life gets hard, not when things are easy. Being good when everything is easy is simple, but true honesty shines during hard storms.",
         "Always speak the truth softly and keep your promises faithfully. A person whose word is true earns real respect from everyone around them.",
-        "Walk with calm confidence, humility, and self control. You do not need to shout to show strength; let your good work speak for you."
+        "Walk with calm confidence, humility, and self-control. You do not need to shout to show strength; let your good work speak for you."
       ]
     },
     {
       theme: 'Quiet Strength',
       paragraphs: [
-        "True power is often quiet and soft spoken. Learn to listen well and speak with thought instead of rushing. Silence gives you time to think and learn.",
+        "True power is often quiet and soft-spoken. Learn to listen well and speak with thought instead of rushing. Silence gives you time to think and learn.",
         "Work on your good goals quietly without asking for praise from others. Build useful things in peace and let the good results speak for themselves.",
         "Keep your heart peaceful when everything around you looks messy. Control your temper, breathe slowly, and make wise choices with kindness."
       ]
@@ -228,8 +242,8 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       theme: 'Master Yourself',
       paragraphs: [
         "Before you try to guide other people, you must learn to master yourself. Control your body, watch your words, and choose good daily habits.",
-        "Say no to quick fun for the sake of long term health and peace. The power to control your desires is the key to living a good life.",
-        "Take complete responsibility for your path. When you control your own actions, you live with real freedom and true self respect."
+        "Say no to quick fun for the sake of long-term health and peace. The power to control your desires is the key to living a good life.",
+        "Take complete responsibility for your path. When you control your own actions, you live with real freedom and true self-respect."
       ]
     },
     {
@@ -245,7 +259,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       paragraphs: [
         "A life without clear goals is like a boat without a steering wheel, drifting in the water with no direction. Know what you want to achieve and seek what is good.",
         "Write down your goals and break them into simple daily steps. Focus your energy on completing one simple task at a time with good quality.",
-        "Keep your eyes on what is good and long lasting. Do not get distracted by small things, and move steadily toward your clean purpose."
+        "Keep your eyes on what is good and long-lasting. Do not get distracted by small things, and move steadily toward your clean purpose."
       ]
     },
     {
@@ -290,7 +304,13 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     }
   ];
 
-  const wrapWords = (text) => text.split(/\.\s*/).filter(s => s.trim().length > 0).map(s => `<span class="hi">${s.trim()}.</span> `).join("");
+  // Wrap sentence parts and ensure hyphens render completely straight
+  const wrapWords = (text) => {
+    return text.split(/\.\s*/).filter(s => s.trim().length > 0).map(sentence => {
+      const cleanSentence = sentence.trim().replace(/-/g, '<span class="st-hyphen">-</span>');
+      return `<span class="hi">${cleanSentence}.</span> `;
+    }).join("");
+  };
 
   const updateClockAndStats = () => {
     const now = new Date();
@@ -323,11 +343,11 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     // Set clean heading
     document.getElementById("h0").textContent = currentTopic.theme;
     
-    // Render content paragraphs
+    // Render content paragraphs with large font sizes and bold Inter styling
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05]">${wrapWords(currentTopic.paragraphs[1])}</p></div>
-      <div class="z1"><p class="font-f1 text-6xl md:text-8xl leading-[1.05] zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
+      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight">${wrapWords(currentTopic.paragraphs[1])}</p></div>
+      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
     `;
     updateClockAndStats();
     
@@ -359,4 +379,3 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </script>
 </body>
 </html>
-
