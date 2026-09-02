@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="theme-color" content="#000000">
+<title>Salman Faris | Daily Wisdom</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-P37159WTH1');
+</script>
+
+<meta name="description" content="Build strong discipline. Keep your word. Do not waste time. Stay honest. Live with purpose.">
+<meta name="author" content="Salman Faris">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{
+        f1:['Inter','sans-serif'],
+        f2:['Inter','sans-serif']
+      },
+      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
+    }
+  }
+}
+</script>
+<style>
+html { 
+  background-color: #000000; 
+  scroll-behavior: smooth; 
+  overscroll-behavior-y: contain; 
+}
+
+body { 
+  margin: 0; 
+  color: #d1d1d1; 
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-smoothing: antialiased; 
+  min-height: 100vh;
+  overflow-x: hidden; 
+  -webkit-overflow-scrolling: touch; 
+  overscroll-behavior-y: contain;
+}
+
+/* Custom class to force straight rendering for hyphens */
+.st-hyphen {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  font-weight: 400 !important;
+  display: inline-block;
+  transform: scaleX(1.05);
+  vertical-align: baseline;
+}
+
+.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
+.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
+.z1.za{opacity:1;transform:none;filter:blur(0)}
+
+.zi{text-indent:12rem}
+@media(max-width:768px){.zi{text-indent:0}}
+
+.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff;font-weight:600}
+.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
+.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
+#sd{transition:opacity 0.5s ease,visibility 0.5s}
+
+.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.2;color:#B8B8B0;display:inline-block}
+.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 20px rgba(255,255,255,0.5) !important}
+
+.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
+.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
+.quote-stats { 
+  font-family: 'Inter', sans-serif; 
+  font-size: clamp(10px, 3vw, 14px); 
+  color: #ffffff; 
+  opacity: 0.5; 
+  margin-top: 10px; 
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  -webkit-font-feature-settings: "tnum";
+}
+
+.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
+footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
+
+/* Pulse animation for TTS Playing state */
+@keyframes audioPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.audio-playing {
+  animation: audioPulse 1.5s ease-in-out infinite;
+  color: #C5A059 !important;
+  border-color: #C5A059 !important;
+}
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-6 md:px-8 flex justify-between items-center border-b border-transparent">
+  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
+  
+  <!-- Audio Controls -->
+  <button id="tts-btn" onclick="toggleAudio()" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-[10px] uppercase tracking-[0.2em] font-f2 transition-all duration-300 backdrop-blur-md cursor-pointer">
+    <svg id="tts-icon" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
+    <span id="tts-text">Listen</span>
+  </button>
+
+  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2 font-medium">LOADING...</div>
+</nav>
+
+<main class="relative w-full">
+  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
+    <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <h1 id="h0" class="font-f1 font-extrabold text-5xl sm:text-7xl md:text-[9rem] lg:text-[12rem] tracking-tight leading-tight md:leading-none z1 text-white uppercase" style="transition-delay:0.2s"></h1>
+    </div>
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
+      <div class="zs1 zf">Scroll Down</div>
+    </div>
+  </section>
+
+  <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
+
+  <section class="relative z-10">
+    <div class="z1 text-center px-6 quote-wrapper">
+        <div class="quote-container">
+            <p class="quote-line">You only have 1,440 minutes every day,</p>
+            <p class="quote-line">do not let a single one go to waste.</p>
+            <p id="live-stats" class="quote-stats"></p>
+        </div>
+    </div>
+  </section>
+</main>
+
+<footer class="w-full flex justify-center px-6 relative z-10 z1">
+  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
+</footer>
+
+<script>
+(function(){
+  // Gemini API Key handles automatically at runtime
+  const apiKey = "";
+  let audioPlayer = null;
+  let isPlaying = false;
+  let isLoadingAudio = false;
+  let currentFullText = "";
+
+  // Dynamic, Punchy, High-Impact Quotes and Themes
+  const dailyThemes = [
+    {
+      theme: 'Relentless',
+      paragraphs: [
+        "Excuses change nothing. Daily relentless effort builds empires.",
+        "Comfort is a slow death. Embrace the friction, dominate the quiet hours, and crush hesitation.",
+        "Refuse to back down. Stand firm, execute with precision, and outwork everyone in silence."
+      ]
+    },
+    {
+      theme: 'Zero Excuses',
+      paragraphs: [
+        "Nobody is coming to save you. Take full ownership of every single hour.",
+        "Discipline is doing what must be done, regardless of how you feel inside.",
+        "Cut the noise. Stop rationalizing weakness. Show up, produce, and conquer your day."
+      ]
+    },
+    {
+      theme: 'Raw Power',
+      paragraphs: [
+        "Words are cheap. Unstoppable results are the only currency that matters.",
+        "Time bleeds away every second. Stop planning your life and start attacking it.",
+        "Fear disappears when action begins. Move now with uncompromising speed and purpose."
+      ]
+    },
+    {
+      theme: 'Lethal Focus',
+      paragraphs: [
+        "Distraction is the enemy of greatness. Lock in on your target with absolute intensity.",
+        "Say no to shallow pleasures. Build a laser-sharp mind that cannot be shaken.",
+        "Master the mundane details in private, and the public victory will take care of itself."
+      ]
+    },
+    {
+      theme: 'Iron Will',
+      paragraphs: [
+        "When you hit the wall, break through it. Pain is temporary; regret lasts forever.",
+        "Keep hammering until the obstruction breaks. Every strike brings you closer to dominance.",
+        "Win the battle inside your head first. Once self-doubt dies, nothing can stop you."
+      ]
+    },
+    {
+      theme: 'Execute Now',
+      paragraphs: [
+        "Overthinking breeds paralysis. Action destroys anxiety in seconds flat.",
+        "Your future is forged right now, not tomorrow. Do the hard work today.",
+        "Stop waiting for ideal conditions. Create your momentum and build momentum by doing."
+      ]
+    },
+    {
+      theme: 'No Retreat',
+      paragraphs: [
+        "Burn the boats behind you. Victory is your only remaining option.",
+        "Attack each day with ferocious clarity. Leave zero room for hesitation or retreat.",
+        "Give maximum effort today so you can look in the mirror with zero regrets."
+      ]
+    },
+    {
+      theme: 'Unshakable',
+      paragraphs: [
+        "Build a mind made of steel. Let outside chaos crash harmlessly against your composure.",
+        "Replace doubt with undeniable proof forged through relentless physical and mental work.",
+        "Step boldly out of comfort zone boundaries. Strength only grows under severe pressure."
+      ]
+    },
+    {
+      theme: 'Time Dominance',
+      paragraphs: [
+        "Time is your most valuable asset. Stop giving it away to useless distractions.",
+        "Every hour wasted is an opportunity handed directly to your competition.",
+        "Wake up early, demand perfection from yourself, and treat every minute like pure gold."
+      ]
+    },
+    {
+      theme: 'Mastery',
+      paragraphs: [
+        "Sharpen your intellect daily. A quiet, trained mind wields immense real-world power.",
+        "Filter out petty gossip and cheap outrage. Protect your mental energy at all costs.",
+        "Control your temper, speak with absolute intent, and move with steady confidence."
+      ]
+    },
+    {
+      theme: 'Pure Integrity',
+      paragraphs: [
+        "Character is forged when no one is watching. Keep your standards impeccably high.",
+        "Speak truth with calm authority and always deliver on your promises without fail.",
+        "Let your relentless work ethic make the noise. Greatness needs no loud announcement."
+      ]
+    },
+    {
+      theme: 'Quiet Fury',
+      paragraphs: [
+        "True strength is calm and calculated. Operate quietly while building immense impact.",
+        "Work in absolute silence. Let your undeniable progress shock everyone around you.",
+        "Keep your focus razor-sharp when chaos surrounds you. Choose wisdom over emotional noise."
+      ]
+    },
+    {
+      theme: 'Duty Above All',
+      paragraphs: [
+        "Fulfill your obligations with honor, regardless of your personal mood.",
+        "Emotions fluctuate wildly, but duty remains absolute. Stand tall and deliver consistently.",
+        "There is immense pride in execution. Handle your responsibilities with unyielding excellence."
+      ]
+    },
+    {
+      theme: 'Self Mastery',
+      paragraphs: [
+        "If you cannot control yourself, you will never control your destiny.",
+        "Conquer your immediate impulses to build lasting peace and absolute independence.",
+        "Own every outcome. Total responsibility yields true power over your life."
+      ]
+    },
+    {
+      theme: 'Embrace Heat',
+      paragraphs: [
+        "Hardship is a forge. It burns away weakness and refines your character into steel.",
+        "Lean into difficult tasks willingly. Comfort breeds weakness; friction creates elite strength.",
+        "Endure short-term discomfort with patience. You are building an unyielding spirit."
+      ]
+    },
+    {
+      theme: 'Absolute Clarity',
+      paragraphs: [
+        "A life without direction is a tragedy. Define your ultimate goals clearly.",
+        "Break massive objectives down into relentless daily action steps.",
+        "Ignore meaningless temptations. Keep your eyes locked on the ultimate prize."
+      ]
+    },
+    {
+      theme: 'Evolve Daily',
+      paragraphs: [
+        "Stagnation is failure. Strive to grow physically, mentally, and spiritually every day.",
+        "Acquire high-value skills and elevate your standards continuously.",
+        "Compare yourself only to who you were yesterday. Keep ascending relentlessly."
+      ]
+    },
+    {
+      theme: 'Unstoppable Peace',
+      paragraphs: [
+        "Cultivate an inner sanctuary of calm that external chaos can never breach.",
+        "Refuse to waste energy on things outside your direct control. Focus on action.",
+        "Live with pure intent and high discipline. Deep inner peace follows naturally."
+      ]
+    },
+    {
+      theme: 'Lead By Action',
+      paragraphs: [
+        "Lead through undeniable personal standards, not empty motivational speeches.",
+        "Set the bar ridiculously high in discipline, work rate, and character.",
+        "Inspire those around you by demonstrating what relentless dedication actually looks like."
+      ]
+    },
+    {
+      theme: 'Fearless',
+      paragraphs: [
+        "Fear is an illusion created by hesitation. Charge forward and watch it evaporate.",
+        "Courage is not the absence of fear—it is taking decisive action in its presence.",
+        "Conquer internal doubts daily. Every victory over fear expands your horizon."
+      ]
+    },
+    {
+      theme: 'Relentless Drive',
+      paragraphs: [
+        "Be fiercely grateful for today's opportunity, then attack it with everything you have.",
+        "Channel every breath into purpose. Turn potential energy into unstoppable execution.",
+        "Live boldly, act with honor, and leave a legacy of unyielding strength."
+      ]
+    }
+  ];
+
+  // Helper to wrap sentence parts for dynamic interactive glowing line effects
+  const wrapWords = (text) => {
+    return text.split(/\.\s*/).filter(s => s.trim().length > 0).map(sentence => {
+      const cleanSentence = sentence.trim().replace(/-/g, '<span class="st-hyphen">-</span>');
+      return `<span class="hi">${cleanSentence}.</span> `;
+    }).join("");
+  };
+
+  const updateClockAndStats = () => {
+    const now = new Date();
+    
+    // Top-left Day of the week
+    const dayName = now.toLocaleDateString("en-US", { weekday: 'long' }).toUpperCase();
+    document.getElementById("d0").textContent = dayName;
+
+    // Top-right Date format
+    document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
+    
+    // Time with seconds for the bottom section
+    const timeWithSeconds = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+    
+    const totalMinutesInDay = 1440;
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const remainingMinutes = totalMinutesInDay - currentMinutes;
+    const statsEl = document.getElementById('live-stats');
+    if (statsEl) { statsEl.textContent = `Time: ${timeWithSeconds} • ${remainingMinutes} minutes remaining today`; }
+  };
+
+  // Convert raw PCM 16-bit audio data into standard WAV blob for browser playback
+  function pcmToWav(pcmData, sampleRate = 24000) {
+    const numChannels = 1;
+    const bitsPerSample = 16;
+    const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
+    const blockAlign = (numChannels * bitsPerSample) / 8;
+    const dataSize = pcmData.length;
+    const chunkSize = 36 + dataSize;
+    
+    const buffer = new ArrayBuffer(44 + dataSize);
+    const view = new DataView(buffer);
+
+    function writeString(offset, string) {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+    /* RIFF header */
+    writeString(0, 'RIFF');
+    view.setUint32(4, chunkSize, true);
+    writeString(8, 'WAVE');
+    /* fmt chunk */
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true); // PCM format
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, byteRate, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitsPerSample, true);
+    /* data chunk */
+    writeString(36, 'data');
+    view.setUint32(40, dataSize, true);
+
+    // Copy PCM bytes into View
+    const pcmBytes = new Uint8Array(buffer, 44, dataSize);
+    pcmBytes.set(pcmData);
+
+    return new Blob([buffer], { type: 'audio/wav' });
+  }
+
+  // Fetch TTS from Gemini TTS endpoint with retry logic
+  async function fetchSpeech(text) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{
+        parts: [{ text: `Say with deep power, confidence, and wisdom: ${text}` }]
+      }],
+      generationConfig: {
+        responseModalities: ["AUDIO"],
+        speechConfig: {
+          voiceConfig: {
+            prebuiltVoiceConfig: { voiceName: "Kore" }
+          }
+        }
+      }
+    };
+
+    let attempts = 0;
+    const maxRetries = 5;
+    let delay = 1000;
+
+    while (attempts < maxRetries) {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error ${response.status}`);
+        }
+
+        const data = await response.json();
+        const candidate = data.candidates?.[0];
+        const inlineData = candidate?.content?.parts?.[0]?.inlineData;
+
+        if (inlineData && inlineData.data) {
+          const rawBinary = atob(inlineData.data);
+          const bytes = new Uint8Array(rawBinary.length);
+          for (let i = 0; i < rawBinary.length; i++) {
+            bytes[i] = rawBinary.charCodeAt(i);
+          }
+          
+          // Parse sample rate from mimeType if available (e.g., audio/L16;rate=24000)
+          let sampleRate = 24000;
+          if (inlineData.mimeType) {
+            const match = inlineData.mimeType.match(/rate=(\d+)/);
+            if (match) sampleRate = parseInt(match[1], 10);
+          }
+
+          const wavBlob = pcmToWav(bytes, sampleRate);
+          return URL.createObjectURL(wavBlob);
+        }
+        throw new Error("No audio payload returned.");
+      } catch (err) {
+        attempts++;
+        if (attempts >= maxRetries) throw err;
+        await new Promise(r => setTimeout(r, delay));
+        delay *= 2;
+      }
+    }
+  }
+
+  // Audio Playback toggle function
+  window.toggleAudio = async function() {
+    const btn = document.getElementById('tts-btn');
+    const textEl = document.getElementById('tts-text');
+    const iconEl = document.getElementById('tts-icon');
+
+    if (isLoadingAudio) return;
+
+    if (isPlaying && audioPlayer) {
+      audioPlayer.pause();
+      isPlaying = false;
+      btn.classList.remove('audio-playing');
+      textEl.textContent = 'Listen';
+      iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      return;
+    }
+
+    if (audioPlayer && audioPlayer.src) {
+      audioPlayer.play();
+      isPlaying = true;
+      btn.classList.add('audio-playing');
+      textEl.textContent = 'Pause';
+      iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+      return;
+    }
+
+    // Load fresh TTS audio
+    try {
+      isLoadingAudio = true;
+      textEl.textContent = 'Loading...';
+      btn.style.opacity = '0.6';
+
+      const audioUrl = await fetchSpeech(currentFullText);
+      audioPlayer = new Audio(audioUrl);
+
+      audioPlayer.onended = () => {
+        isPlaying = false;
+        btn.classList.remove('audio-playing');
+        textEl.textContent = 'Listen';
+        iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      };
+
+      audioPlayer.play();
+      isPlaying = true;
+      isLoadingAudio = false;
+      btn.style.opacity = '1';
+      btn.classList.add('audio-playing');
+      textEl.textContent = 'Pause';
+      iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    } catch (err) {
+      isLoadingAudio = false;
+      btn.style.opacity = '1';
+      textEl.textContent = 'Error';
+      setTimeout(() => { textEl.textContent = 'Listen'; }, 2000);
+    }
+  };
+
+  const init = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
+    
+    // Set clean heading
+    document.getElementById("h0").textContent = currentTopic.theme;
+    
+    // Render content paragraphs with large font sizes and bold Inter styling
+    document.getElementById("m0").innerHTML = `
+      <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight">${wrapWords(currentTopic.paragraphs[1])}</p></div>
+      <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
+    `;
+
+    // Construct full narrative string for TTS
+    currentFullText = `${currentTopic.theme}. ${currentTopic.paragraphs.join(" ")}`;
+
+    updateClockAndStats();
+    
+    const generalObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
+    }, { threshold: 0.05 });
+    document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
+  };
+
+  window.addEventListener("scroll", () => {
+    const s = window.scrollY;
+    document.getElementById("n0").classList.toggle("zs", s > 10);
+    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
+    
+    const spans = document.querySelectorAll(".hi");
+    let active = null, min = Infinity;
+    spans.forEach(span => {
+      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
+      if (dist < min) { min = dist; active = span; }
+    });
+    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
+  }, { passive: true });
+
+  window.onload = () => {
+    init();
+    setInterval(updateClockAndStats, 1000);
+  };
+})();
+</script>
+</body>
+</html>
+
