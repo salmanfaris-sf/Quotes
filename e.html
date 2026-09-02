@@ -2,475 +2,378 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <meta name="theme-color" content="#000000">
-<title>Salman Faris | Daily Wisdom</title>
+<title>Salman Faris | Command Center</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-P37159WTH1');
-</script>
-
-<meta name="description" content="Build strong discipline. Keep your word. Do not waste time. Stay honest. Live with purpose.">
-<meta name="author" content="Salman Faris">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <script>
 tailwind.config={
   theme:{
     extend:{
       fontFamily:{
-        f1:['Inter','sans-serif'],
-        f2:['Inter','sans-serif']
+        serif:['Cinzel', 'serif'],
+        sans:['Inter', 'sans-serif']
       },
-      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
+      colors:{
+        gold: '#C5A059',
+        'gold-light': '#E5C17C',
+        'dark-bg': '#000000',
+        'card-bg': '#0A0A0C',
+        'border-glow': 'rgba(197, 160, 89, 0.2)'
+      }
     }
   }
 }
 </script>
+
 <style>
-html { 
-  background-color: #000000; 
-  scroll-behavior: smooth; 
-  overscroll-behavior-y: contain; 
+html { background-color: #000000; scroll-behavior: smooth; }
+body { color: #d1d1d1; font-family: 'Inter', sans-serif; background-color: #000000; min-height: 100vh; }
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF 20%, #C5A059 70%, #E5C17C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-body { 
-  margin: 0; 
-  color: #d1d1d1; 
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-smoothing: antialiased; 
-  min-height: 100vh;
-  overflow-x: hidden; 
-  -webkit-overflow-scrolling: touch; 
-  overscroll-behavior-y: contain;
+.gold-border { border: 1px solid rgba(197, 160, 89, 0.2); }
+.gold-border-glow:hover { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 20px rgba(197, 160, 89, 0.15); }
+
+.glass-panel {
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-/* Custom class to force straight rendering for hyphens */
-.st-hyphen {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
-  font-weight: 400 !important;
-  display: inline-block;
-  transform: scaleX(1.05);
-  vertical-align: baseline;
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s ease-in-out;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }
 
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
-.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-.z1.za{opacity:1;transform:none;filter:blur(0)}
-
-.zi{text-indent:12rem}
-@media(max-width:768px){.zi{text-indent:0}}
-
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff;font-weight:600}
-.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
-.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
-@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
-.zf{animation:flash 2s ease-in-out infinite}
-#sd{transition:opacity 0.5s ease,visibility 0.5s}
-
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.2;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 20px rgba(255,255,255,0.5) !important}
-
-.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
-.quote-stats { 
-  font-family: 'Inter', sans-serif; 
-  font-size: clamp(10px, 3vw, 14px); 
-  color: #ffffff; 
-  opacity: 0.5; 
-  margin-top: 10px; 
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-  -webkit-font-feature-settings: "tnum";
-}
-
-.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
-footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
-
-/* Pulse animation for native speech state */
-@keyframes audioPulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.audio-playing {
-  animation: audioPulse 1.5s ease-in-out infinite;
-  color: #C5A059 !important;
-  border-color: #C5A059 !important;
-}
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #000; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 2px; }
 </style>
 </head>
-<body oncontextmenu="return false;">
+<body class="selection:bg-gold selection:text-black">
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-6 md:px-8 flex justify-between items-center border-b border-transparent">
-  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
-  
-  <!-- Native Phone Text-To-Speech Controls -->
-  <button id="tts-btn" onclick="toggleNativeSpeech()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-[10px] uppercase tracking-[0.2em] font-f2 transition-all duration-300 backdrop-blur-md cursor-pointer">
-    <svg id="tts-icon" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-      <path d="M8 5v14l11-7z"/>
-    </svg>
-    <span id="tts-text">Listen</span>
-  </button>
-
-  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2 font-medium">LOADING...</div>
-</nav>
-
-<main class="relative w-full">
-  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
-    <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 font-extrabold text-5xl sm:text-7xl md:text-[9rem] lg:text-[12rem] tracking-tight leading-tight md:leading-none z1 text-white uppercase" style="transition-delay:0.2s"></h1>
+  <!-- Header Navigation -->
+  <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/10 px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-gold animate-ping"></span>
+      <span class="font-serif font-bold text-lg tracking-widest text-white">SALMAN FARIS</span>
     </div>
-    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
-      <div class="zs1 zf">Scroll Down</div>
-    </div>
-  </section>
+    <div id="live-time" class="text-xs uppercase tracking-[0.3em] font-mono text-gold font-semibold">00:00:00</div>
+  </nav>
 
-  <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
-
-  <section class="relative z-10">
-    <div class="z1 text-center px-6 quote-wrapper">
-        <div class="quote-container">
-            <p class="quote-line">You only have 1,440 minutes every day,</p>
-            <p class="quote-line">do not let a single one go to waste.</p>
-            <p id="live-stats" class="quote-stats"></p>
+  <!-- Hero Section: Daily Time Audit -->
+  <main class="max-w-7xl mx-auto px-6 pt-32 pb-20 space-y-20">
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- Time Visualizer Ring -->
+      <div class="lg:col-span-5 flex flex-col items-center justify-center p-8 rounded-3xl glass-panel gold-border relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent pointer-events-none"></div>
+        <div class="relative w-64 h-64 flex items-center justify-center">
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <circle class="text-white/10" stroke-width="6" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50"/>
+            <circle id="progress-circle" class="text-gold progress-ring-circle" stroke-width="6" stroke-dasharray="263.89" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50"/>
+          </svg>
+          <div class="absolute text-center flex flex-col items-center">
+            <span id="remaining-mins" class="font-serif text-5xl font-bold text-white">0</span>
+            <span class="text-[10px] uppercase tracking-[0.3em] text-white/50 mt-1">Mins Remaining Today</span>
+          </div>
         </div>
-    </div>
-  </section>
-</main>
+        <div class="w-full mt-6 grid grid-cols-2 gap-4 text-center border-t border-white/10 pt-4">
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-white/40">Day Elapsed</div>
+            <div id="day-percent" class="text-xl font-bold text-gold font-mono">0%</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-white/40">Total Capacity</div>
+            <div class="text-xl font-bold text-white font-mono">1,440 Mins</div>
+          </div>
+        </div>
+      </div>
 
-<footer class="w-full flex justify-center px-6 relative z-10 z1">
-  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
-</footer>
+      <!-- Hero Action Protocol -->
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gold/30 bg-gold/10 text-gold text-xs uppercase tracking-widest">
+          ⚡ Today's Imperative
+        </div>
+        <h1 class="font-serif text-4xl sm:text-6xl font-bold text-white leading-tight">
+          DON'T THINK. <br><span class="gold-gradient-text">JUST EXECUTE NOW.</span>
+        </h1>
+        <p class="text-white/70 text-base leading-relaxed max-w-xl">
+          Thinking creates friction. Hesitation creates weakness. Count down 5 seconds and initiate the task before your mind fabricates an excuse.
+        </p>
+
+        <!-- Countdown Initiator Engine -->
+        <div class="p-6 rounded-2xl glass-panel gold-border space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-xs uppercase tracking-widest text-white/60">5-Second Action Countdown</span>
+            <span id="countdown-display" class="font-mono text-2xl font-bold text-gold">05.00</span>
+          </div>
+          <div class="flex gap-3">
+            <button id="start-btn" onclick="startExecutionCountdown()" class="flex-1 bg-gold hover:bg-gold-light text-black font-semibold text-xs uppercase tracking-[0.2em] py-3.5 rounded-xl transition-all duration-300">
+              Launch Action Protocol
+            </button>
+            <button onclick="resetExecutionCountdown()" class="px-5 border border-white/20 hover:border-white/50 text-white text-xs uppercase tracking-widest rounded-xl transition-all">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Habit Execution Matrix -->
+    <section class="space-y-6">
+      <div class="flex justify-between items-end">
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-white">Daily Non-Negotiables</h2>
+          <p class="text-xs text-white/50 tracking-wider uppercase mt-1">Zero excuses • Execute or fail</p>
+        </div>
+        <button onclick="addCustomHabit()" class="text-xs text-gold hover:underline uppercase tracking-widest">+ Add Objective</button>
+      </div>
+
+      <div id="habits-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Built-in Core Protocols -->
+      </div>
+    </section>
+
+    <!-- Deep Work Pomodoro Focus Engine -->
+    <section class="p-8 rounded-3xl glass-panel gold-border gold-border-glow transition-all duration-500 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-[10px] uppercase tracking-[0.3em] text-gold font-semibold">Focus Engine</span>
+          <h2 class="font-serif text-2xl font-bold text-white mt-0.5">Deep Work Sprint</h2>
+        </div>
+        <div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-xl border border-white/10">
+          <button onclick="setFocusTime(25)" class="px-3 py-1.5 text-xs rounded-lg text-white/70 hover:text-white">25M</button>
+          <button onclick="setFocusTime(50)" class="px-3 py-1.5 text-xs rounded-lg text-gold bg-gold/10 font-bold">50M</button>
+          <button onclick="setFocusTime(90)" class="px-3 py-1.5 text-xs rounded-lg text-white/70 hover:text-white">90M</button>
+        </div>
+      </div>
+
+      <div class="text-center py-6">
+        <div id="timer-display" class="font-mono text-6xl sm:text-8xl font-extrabold text-white tracking-widest">50:00</div>
+        <p id="timer-status" class="text-xs uppercase tracking-[0.4em] text-white/40 mt-3">Ready For Deep Work</p>
+      </div>
+
+      <div class="flex justify-center gap-4">
+        <button id="pomo-toggle" onclick="togglePomodoro()" class="px-10 py-4 bg-gold hover:bg-gold-light text-black font-bold text-xs uppercase tracking-[0.3em] rounded-xl transition-all">
+          Initiate Sprint
+        </button>
+        <button onclick="resetPomodoro()" class="px-8 py-4 border border-white/20 hover:border-white text-white text-xs uppercase tracking-[0.2em] rounded-xl transition-all">
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <!-- Curated Action Protocols Vault -->
+    <section class="space-y-6">
+      <h2 class="font-serif text-2xl font-bold text-white">Discipline Protocols</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="p-6 rounded-2xl glass-panel gold-border space-y-3">
+          <div class="text-gold text-xs font-bold uppercase tracking-widest">Protocol 01</div>
+          <h3 class="font-bold text-white">The 5-Second Rule</h3>
+          <p class="text-xs text-white/60 leading-relaxed">When you feel an impulse to act on a goal, count 5-4-3-2-1 and physically move immediately.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl glass-panel gold-border space-y-3">
+          <div class="text-gold text-xs font-bold uppercase tracking-widest">Protocol 02</div>
+          <h3 class="font-bold text-white">Eat The Frog First</h3>
+          <p class="text-xs text-white/60 leading-relaxed">Tackle your most demanding task in the first 90 minutes of the day with zero tab switching.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl glass-panel gold-border space-y-3">
+          <div class="text-gold text-xs font-bold uppercase tracking-widest">Protocol 03</div>
+          <h3 class="font-bold text-white">Zero Decision Friction</h3>
+          <p class="text-xs text-white/60 leading-relaxed">Prepare your work tools the night before. Eliminate choice fatigue before your morning begins.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl glass-panel gold-border space-y-3">
+          <div class="text-gold text-xs font-bold uppercase tracking-widest">Protocol 04</div>
+          <h3 class="font-bold text-white">Monk Mode Lock</h3>
+          <p class="text-xs text-white/60 leading-relaxed">Mute all communications for 4 uninterrupted hours daily to produce high-value creative output.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="w-full border-t border-white/10 py-8 px-6 text-center text-xs uppercase tracking-[0.4em] text-white/30">
+    SALMAN FARIS • COMMAND CENTER
+  </footer>
 
 <script>
-(function(){
-  let isSpeaking = false;
-  let currentFullText = "";
-  let speechUtterance = null;
+// Time Engine
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-time').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+  
+  const totalMinsInDay = 1440;
+  const passedMins = now.getHours() * 60 + now.getMinutes();
+  const remainingMins = totalMinsInDay - passedMins;
+  const percentUsed = ((passedMins / totalMinsInDay) * 100).toFixed(1);
 
-  // Dynamic, Punchy, High-Impact Quotes and Themes
-  const dailyThemes = [
-    {
-      theme: 'Relentless',
-      paragraphs: [
-        "Excuses change nothing. Daily relentless effort builds empires.",
-        "Comfort is a slow death. Embrace the friction, dominate the quiet hours, and crush hesitation.",
-        "Refuse to back down. Stand firm, execute with precision, and outwork everyone in silence."
-      ]
-    },
-    {
-      theme: 'Zero Excuses',
-      paragraphs: [
-        "Nobody is coming to save you. Take full ownership of every single hour.",
-        "Discipline is doing what must be done, regardless of how you feel inside.",
-        "Cut the noise. Stop rationalizing weakness. Show up, produce, and conquer your day."
-      ]
-    },
-    {
-      theme: 'Raw Power',
-      paragraphs: [
-        "Words are cheap. Unstoppable results are the only currency that matters.",
-        "Time bleeds away every second. Stop planning your life and start attacking it.",
-        "Fear disappears when action begins. Move now with uncompromising speed and purpose."
-      ]
-    },
-    {
-      theme: 'Lethal Focus',
-      paragraphs: [
-        "Distraction is the enemy of greatness. Lock in on your target with absolute intensity.",
-        "Say no to shallow pleasures. Build a laser-sharp mind that cannot be shaken.",
-        "Master the mundane details in private, and the public victory will take care of itself."
-      ]
-    },
-    {
-      theme: 'Iron Will',
-      paragraphs: [
-        "When you hit the wall, break through it. Pain is temporary; regret lasts forever.",
-        "Keep hammering until the obstruction breaks. Every strike brings you closer to dominance.",
-        "Win the battle inside your head first. Once self-doubt dies, nothing can stop you."
-      ]
-    },
-    {
-      theme: 'Execute Now',
-      paragraphs: [
-        "Overthinking breeds paralysis. Action destroys anxiety in seconds flat.",
-        "Your future is forged right now, not tomorrow. Do the hard work today.",
-        "Stop waiting for ideal conditions. Create your momentum and build strength by doing."
-      ]
-    },
-    {
-      theme: 'No Retreat',
-      paragraphs: [
-        "Burn the boats behind you. Victory is your only remaining option.",
-        "Attack each day with ferocious clarity. Leave zero room for hesitation or retreat.",
-        "Give maximum effort today so you can look in the mirror with zero regrets."
-      ]
-    },
-    {
-      theme: 'Unshakable',
-      paragraphs: [
-        "Build a mind made of steel. Let outside chaos crash harmlessly against your composure.",
-        "Replace doubt with undeniable proof forged through relentless physical and mental work.",
-        "Step boldly out of comfort zone boundaries. Strength only grows under severe pressure."
-      ]
-    },
-    {
-      theme: 'Time Dominance',
-      paragraphs: [
-        "Time is your most valuable asset. Stop giving it away to useless distractions.",
-        "Every hour wasted is an opportunity handed directly to your competition.",
-        "Wake up early, demand perfection from yourself, and treat every minute like pure gold."
-      ]
-    },
-    {
-      theme: 'Mastery',
-      paragraphs: [
-        "Sharpen your intellect daily. A quiet, trained mind wields immense real-world power.",
-        "Filter out petty gossip and cheap outrage. Protect your mental energy at all costs.",
-        "Control your temper, speak with absolute intent, and move with steady confidence."
-      ]
-    },
-    {
-      theme: 'Pure Integrity',
-      paragraphs: [
-        "Character is forged when no one is watching. Keep your standards impeccably high.",
-        "Speak truth with calm authority and always deliver on your promises without fail.",
-        "Let your relentless work ethic make the noise. Greatness needs no loud announcement."
-      ]
-    },
-    {
-      theme: 'Quiet Fury',
-      paragraphs: [
-        "True strength is calm and calculated. Operate quietly while building immense impact.",
-        "Work in absolute silence. Let your undeniable progress shock everyone around you.",
-        "Keep your focus razor-sharp when chaos surrounds you. Choose wisdom over emotional noise."
-      ]
-    },
-    {
-      theme: 'Duty Above All',
-      paragraphs: [
-        "Fulfill your obligations with honor, regardless of your personal mood.",
-        "Emotions fluctuate wildly, but duty remains absolute. Stand tall and deliver consistently.",
-        "There is immense pride in execution. Handle your responsibilities with unyielding excellence."
-      ]
-    },
-    {
-      theme: 'Self Mastery',
-      paragraphs: [
-        "If you cannot control yourself, you will never control your destiny.",
-        "Conquer your immediate impulses to build lasting peace and absolute independence.",
-        "Own every outcome. Total responsibility yields true power over your life."
-      ]
-    },
-    {
-      theme: 'Embrace Heat',
-      paragraphs: [
-        "Hardship is a forge. It burns away weakness and refines your character into steel.",
-        "Lean into difficult tasks willingly. Comfort breeds weakness; friction creates elite strength.",
-        "Endure short-term discomfort with patience. You are building an unyielding spirit."
-      ]
-    },
-    {
-      theme: 'Absolute Clarity',
-      paragraphs: [
-        "A life without direction is a tragedy. Define your ultimate goals clearly.",
-        "Break massive objectives down into relentless daily action steps.",
-        "Ignore meaningless temptations. Keep your eyes locked on the ultimate prize."
-      ]
-    },
-    {
-      theme: 'Evolve Daily',
-      paragraphs: [
-        "Stagnation is failure. Strive to grow physically, mentally, and spiritually every day.",
-        "Acquire high-value skills and elevate your standards continuously.",
-        "Compare yourself only to who you were yesterday. Keep ascending relentlessly."
-      ]
-    },
-    {
-      theme: 'Unstoppable Peace',
-      paragraphs: [
-        "Cultivate an inner sanctuary of calm that external chaos can never breach.",
-        "Refuse to waste energy on things outside your direct control. Focus on action.",
-        "Live with pure intent and high discipline. Deep inner peace follows naturally."
-      ]
-    },
-    {
-      theme: 'Lead By Action',
-      paragraphs: [
-        "Lead through undeniable personal standards, not empty motivational speeches.",
-        "Set the bar ridiculously high in discipline, work rate, and character.",
-        "Inspire those around you by demonstrating what relentless dedication actually looks like."
-      ]
-    },
-    {
-      theme: 'Fearless',
-      paragraphs: [
-        "Fear is an illusion created by hesitation. Charge forward and watch it evaporate.",
-        "Courage is not the absence of fear—it is taking decisive action in its presence.",
-        "Conquer internal doubts daily. Every victory over fear expands your horizon."
-      ]
-    },
-    {
-      theme: 'Relentless Drive',
-      paragraphs: [
-        "Be fiercely grateful for today's opportunity, then attack it with everything you have.",
-        "Channel every breath into purpose. Turn potential energy into unstoppable execution.",
-        "Live boldly, act with honor, and leave a legacy of unyielding strength."
-      ]
+  document.getElementById('remaining-mins').textContent = remainingMins;
+  document.getElementById('day-percent').textContent = `${percentUsed}%`;
+
+  const circle = document.getElementById('progress-circle');
+  const circumference = 2 * Math.PI * 42; // r=42
+  const offset = circumference - (passedMins / totalMinsInDay) * circumference;
+  circle.style.strokeDasharray = `${circumference}`;
+  circle.style.strokeDashoffset = offset;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// 5-Second Rule Countdown Timer
+let countdownTimer = null;
+let countdownVal = 5.0;
+
+function startExecutionCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownVal = 5.0;
+  const btn = document.getElementById('start-btn');
+  btn.disabled = true;
+  btn.classList.add('opacity-50');
+
+  countdownTimer = setInterval(() => {
+    countdownVal -= 0.05;
+    if (countdownVal <= 0) {
+      clearInterval(countdownTimer);
+      document.getElementById('countdown-display').textContent = "GO NOW!";
+      btn.disabled = false;
+      btn.classList.remove('opacity-50');
+    } else {
+      document.getElementById('countdown-display').textContent = countdownVal.toFixed(2);
     }
-  ];
+  }, 50);
+}
 
-  // Helper to wrap sentence parts for dynamic interactive glowing line effects
-  const wrapWords = (text) => {
-    return text.split(/\.\s*/).filter(s => s.trim().length > 0).map(sentence => {
-      const cleanSentence = sentence.trim().replace(/-/g, '<span class="st-hyphen">-</span>');
-      return `<span class="hi">${cleanSentence}.</span> `;
-    }).join("");
-  };
+function resetExecutionCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  document.getElementById('countdown-display').textContent = "05.00";
+  const btn = document.getElementById('start-btn');
+  btn.disabled = false;
+  btn.classList.remove('opacity-50');
+}
 
-  const updateClockAndStats = () => {
-    const now = new Date();
-    
-    // Top-left Day of the week
-    const dayName = now.toLocaleDateString("en-US", { weekday: 'long' }).toUpperCase();
-    document.getElementById("d0").textContent = dayName;
+// Interactive Habits Engine
+let defaultHabits = [
+  { id: 1, title: 'Cold Execution First Thing', streak: 4, done: false },
+  { id: 2, title: '90-Min Deep Work Block', streak: 12, done: false },
+  { id: 3, title: 'Zero Social Media Scrolling', streak: 7, done: false }
+];
 
-    // Top-right Date format
-    document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
-    
-    // Time with seconds for the bottom section
-    const timeWithSeconds = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
-    
-    const totalMinutesInDay = 1440;
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const remainingMinutes = totalMinutesInDay - currentMinutes;
-    const statsEl = document.getElementById('live-stats');
-    if (statsEl) { statsEl.textContent = `Time: ${timeWithSeconds} • ${remainingMinutes} minutes remaining today`; }
-  };
+function renderHabits() {
+  const container = document.getElementById('habits-container');
+  container.innerHTML = defaultHabits.map(h => `
+    <div onclick="toggleHabit(${h.id})" class="p-5 rounded-2xl glass-panel gold-border gold-border-glow cursor-pointer transition-all flex justify-between items-center ${h.done ? 'bg-gold/10 border-gold' : ''}">
+      <div class="space-y-1">
+        <h4 class="font-medium text-sm ${h.done ? 'line-through text-white/50' : 'text-white'}">${h.title}</h4>
+        <div class="text-[10px] uppercase tracking-widest text-gold font-mono">Streak: ${h.streak} Days</div>
+      </div>
+      <div class="w-6 h-6 rounded-full border border-gold/40 flex items-center justify-center ${h.done ? 'bg-gold text-black' : ''}">
+        ${h.done ? '✓' : ''}
+      </div>
+    </div>
+  `).join('');
+}
 
-  // Uses the Phone / Device's Built-In Speech Synthesis Engine
-  window.toggleNativeSpeech = function() {
-    const btn = document.getElementById('tts-btn');
-    const textEl = document.getElementById('tts-text');
-    const iconEl = document.getElementById('tts-icon');
-
-    if (!('speechSynthesis' in window)) {
-      alert("Text-to-speech is not supported on this browser.");
-      return;
+function toggleHabit(id) {
+  defaultHabits = defaultHabits.map(h => {
+    if (h.id === id) {
+      const doneState = !h.done;
+      return { ...h, done: doneState, streak: doneState ? h.streak + 1 : h.streak - 1 };
     }
+    return h;
+  });
+  renderHabits();
+}
 
-    // If currently playing or paused, stop it
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      isSpeaking = false;
-      btn.classList.remove('audio-playing');
-      textEl.textContent = 'Listen';
-      iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      return;
-    }
-
-    // Initialize phone's built-in speech utterance
-    speechUtterance = new SpeechSynthesisUtterance(currentFullText);
-    speechUtterance.rate = 0.95; // Slightly slower pace for emphasis
-    speechUtterance.pitch = 0.9;  // Slightly deeper tone
-
-    // Choose the default or preferred native English voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Enhanced') || v.default));
-    if (preferredVoice) {
-      speechUtterance.voice = preferredVoice;
-    }
-
-    speechUtterance.onstart = () => {
-      isSpeaking = true;
-      btn.classList.add('audio-playing');
-      textEl.textContent = 'Stop';
-      iconEl.innerHTML = '<path d="M6 19h12V5H6v14z"/>';
-    };
-
-    speechUtterance.onend = () => {
-      isSpeaking = false;
-      btn.classList.remove('audio-playing');
-      textEl.textContent = 'Listen';
-      iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
-    };
-
-    speechUtterance.onerror = () => {
-      isSpeaking = false;
-      btn.classList.remove('audio-playing');
-      textEl.textContent = 'Listen';
-      iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
-    };
-
-    window.speechSynthesis.speak(speechUtterance);
-  };
-
-  const init = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
-    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
-    const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
-    
-    // Set clean heading
-    document.getElementById("h0").textContent = currentTopic.theme;
-    
-    // Render content paragraphs with large font sizes and bold Inter styling
-    document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
-      <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight">${wrapWords(currentTopic.paragraphs[1])}</p></div>
-      <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
-    `;
-
-    // Construct full text for the phone's native speech synthesizer
-    currentFullText = `${currentTopic.theme}. ${currentTopic.paragraphs.join(" ")}`;
-
-    updateClockAndStats();
-    
-    const generalObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
-    }, { threshold: 0.05 });
-    document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
-  };
-
-  window.addEventListener("scroll", () => {
-    const s = window.scrollY;
-    document.getElementById("n0").classList.toggle("zs", s > 10);
-    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
-    
-    const spans = document.querySelectorAll(".hi");
-    let active = null, min = Infinity;
-    spans.forEach(span => {
-      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
-      if (dist < min) { min = dist; active = span; }
-    });
-    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
-  }, { passive: true });
-
-  // Ensure native voices are pre-loaded by mobile browsers
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.getVoices();
-    };
+function addCustomHabit() {
+  const title = prompt('Enter your daily non-negotiable objective:');
+  if (title) {
+    defaultHabits.push({ id: Date.now(), title, streak: 1, done: false });
+    renderHabits();
   }
+}
+renderHabits();
 
-  window.onload = () => {
-    init();
-    setInterval(updateClockAndStats, 1000);
-  };
-})();
+// Deep Work Sprint Timer Engine
+let pomoMinutes = 50;
+let pomoSeconds = 0;
+let pomoInterval = null;
+let isRunning = false;
+
+function setFocusTime(mins) {
+  if (isRunning) resetPomodoro();
+  pomoMinutes = mins;
+  pomoSeconds = 0;
+  updatePomoDisplay();
+}
+
+function updatePomoDisplay() {
+  const m = String(pomoMinutes).padStart(2, '0');
+  const s = String(pomoSeconds).padStart(2, '0');
+  document.getElementById('timer-display').textContent = `${m}:${s}`;
+}
+
+function togglePomodoro() {
+  const btn = document.getElementById('pomo-toggle');
+  const status = document.getElementById('timer-status');
+
+  if (!isRunning) {
+    isRunning = true;
+    btn.textContent = "Pause Session";
+    status.textContent = "Focus Engine Active • Zero Distractions";
+    status.classList.add('text-gold');
+    
+    pomoInterval = setInterval(() => {
+      if (pomoSeconds === 0) {
+        if (pomoMinutes === 0) {
+          clearInterval(pomoInterval);
+          isRunning = false;
+          alert('Sprint Completed! Take 10 minutes rest.');
+          resetPomodoro();
+          return;
+        }
+        pomoMinutes--;
+        pomoSeconds = 59;
+      } else {
+        pomoSeconds--;
+      }
+      updatePomoDisplay();
+    }, 1000);
+  } else {
+    clearInterval(pomoInterval);
+    isRunning = false;
+    btn.textContent = "Resume Sprint";
+    status.textContent = "Session Paused";
+    status.classList.remove('text-gold');
+  }
+}
+
+function resetPomodoro() {
+  if (pomoInterval) clearInterval(pomoInterval);
+  isRunning = false;
+  pomoMinutes = 50;
+  pomoSeconds = 0;
+  document.getElementById('pomo-toggle').textContent = "Initiate Sprint";
+  document.getElementById('timer-status').textContent = "Ready For Deep Work";
+  document.getElementById('timer-status').classList.remove('text-gold');
+  updatePomoDisplay();
+}
 </script>
 </body>
 </html>
-
