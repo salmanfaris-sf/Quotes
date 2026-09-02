@@ -96,10 +96,10 @@ body {
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 
-/* Pulse animation for TTS Playing state */
+/* Pulse animation for native speech state */
 @keyframes audioPulse {
   0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.15); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 0.7; }
   100% { transform: scale(1); opacity: 1; }
 }
 .audio-playing {
@@ -114,8 +114,8 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 <nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-6 md:px-8 flex justify-between items-center border-b border-transparent">
   <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
   
-  <!-- Audio Controls -->
-  <button id="tts-btn" onclick="toggleAudio()" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-[10px] uppercase tracking-[0.2em] font-f2 transition-all duration-300 backdrop-blur-md cursor-pointer">
+  <!-- Native Phone Text-To-Speech Controls -->
+  <button id="tts-btn" onclick="toggleNativeSpeech()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-[10px] uppercase tracking-[0.2em] font-f2 transition-all duration-300 backdrop-blur-md cursor-pointer">
     <svg id="tts-icon" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
       <path d="M8 5v14l11-7z"/>
     </svg>
@@ -154,12 +154,9 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 
 <script>
 (function(){
-  // Gemini API Key handles automatically at runtime
-  const apiKey = "";
-  let audioPlayer = null;
-  let isPlaying = false;
-  let isLoadingAudio = false;
+  let isSpeaking = false;
   let currentFullText = "";
+  let speechUtterance = null;
 
   // Dynamic, Punchy, High-Impact Quotes and Themes
   const dailyThemes = [
@@ -208,7 +205,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       paragraphs: [
         "Overthinking breeds paralysis. Action destroys anxiety in seconds flat.",
         "Your future is forged right now, not tomorrow. Do the hard work today.",
-        "Stop waiting for ideal conditions. Create your momentum and build momentum by doing."
+        "Stop waiting for ideal conditions. Create your momentum and build strength by doing."
       ]
     },
     {
@@ -361,167 +358,61 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     if (statsEl) { statsEl.textContent = `Time: ${timeWithSeconds} • ${remainingMinutes} minutes remaining today`; }
   };
 
-  // Convert raw PCM 16-bit audio data into standard WAV blob for browser playback
-  function pcmToWav(pcmData, sampleRate = 24000) {
-    const numChannels = 1;
-    const bitsPerSample = 16;
-    const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
-    const blockAlign = (numChannels * bitsPerSample) / 8;
-    const dataSize = pcmData.length;
-    const chunkSize = 36 + dataSize;
-    
-    const buffer = new ArrayBuffer(44 + dataSize);
-    const view = new DataView(buffer);
-
-    function writeString(offset, string) {
-      for (let i = 0; i < string.length; i++) {
-        view.setUint8(offset + i, string.charCodeAt(i));
-      }
-    }
-
-    /* RIFF header */
-    writeString(0, 'RIFF');
-    view.setUint32(4, chunkSize, true);
-    writeString(8, 'WAVE');
-    /* fmt chunk */
-    writeString(12, 'fmt ');
-    view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true); // PCM format
-    view.setUint16(22, numChannels, true);
-    view.setUint32(24, sampleRate, true);
-    view.setUint32(28, byteRate, true);
-    view.setUint16(32, blockAlign, true);
-    view.setUint16(34, bitsPerSample, true);
-    /* data chunk */
-    writeString(36, 'data');
-    view.setUint32(40, dataSize, true);
-
-    // Copy PCM bytes into View
-    const pcmBytes = new Uint8Array(buffer, 44, dataSize);
-    pcmBytes.set(pcmData);
-
-    return new Blob([buffer], { type: 'audio/wav' });
-  }
-
-  // Fetch TTS from Gemini TTS endpoint with retry logic
-  async function fetchSpeech(text) {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-    const payload = {
-      contents: [{
-        parts: [{ text: `Say with deep power, confidence, and wisdom: ${text}` }]
-      }],
-      generationConfig: {
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: "Kore" }
-          }
-        }
-      }
-    };
-
-    let attempts = 0;
-    const maxRetries = 5;
-    let delay = 1000;
-
-    while (attempts < maxRetries) {
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP Error ${response.status}`);
-        }
-
-        const data = await response.json();
-        const candidate = data.candidates?.[0];
-        const inlineData = candidate?.content?.parts?.[0]?.inlineData;
-
-        if (inlineData && inlineData.data) {
-          const rawBinary = atob(inlineData.data);
-          const bytes = new Uint8Array(rawBinary.length);
-          for (let i = 0; i < rawBinary.length; i++) {
-            bytes[i] = rawBinary.charCodeAt(i);
-          }
-          
-          // Parse sample rate from mimeType if available (e.g., audio/L16;rate=24000)
-          let sampleRate = 24000;
-          if (inlineData.mimeType) {
-            const match = inlineData.mimeType.match(/rate=(\d+)/);
-            if (match) sampleRate = parseInt(match[1], 10);
-          }
-
-          const wavBlob = pcmToWav(bytes, sampleRate);
-          return URL.createObjectURL(wavBlob);
-        }
-        throw new Error("No audio payload returned.");
-      } catch (err) {
-        attempts++;
-        if (attempts >= maxRetries) throw err;
-        await new Promise(r => setTimeout(r, delay));
-        delay *= 2;
-      }
-    }
-  }
-
-  // Audio Playback toggle function
-  window.toggleAudio = async function() {
+  // Uses the Phone / Device's Built-In Speech Synthesis Engine
+  window.toggleNativeSpeech = function() {
     const btn = document.getElementById('tts-btn');
     const textEl = document.getElementById('tts-text');
     const iconEl = document.getElementById('tts-icon');
 
-    if (isLoadingAudio) return;
+    if (!('speechSynthesis' in window)) {
+      alert("Text-to-speech is not supported on this browser.");
+      return;
+    }
 
-    if (isPlaying && audioPlayer) {
-      audioPlayer.pause();
-      isPlaying = false;
+    // If currently playing or paused, stop it
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
       btn.classList.remove('audio-playing');
       textEl.textContent = 'Listen';
       iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
       return;
     }
 
-    if (audioPlayer && audioPlayer.src) {
-      audioPlayer.play();
-      isPlaying = true;
-      btn.classList.add('audio-playing');
-      textEl.textContent = 'Pause';
-      iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-      return;
+    // Initialize phone's built-in speech utterance
+    speechUtterance = new SpeechSynthesisUtterance(currentFullText);
+    speechUtterance.rate = 0.95; // Slightly slower pace for emphasis
+    speechUtterance.pitch = 0.9;  // Slightly deeper tone
+
+    // Choose the default or preferred native English voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Enhanced') || v.default));
+    if (preferredVoice) {
+      speechUtterance.voice = preferredVoice;
     }
 
-    // Load fresh TTS audio
-    try {
-      isLoadingAudio = true;
-      textEl.textContent = 'Loading...';
-      btn.style.opacity = '0.6';
-
-      const audioUrl = await fetchSpeech(currentFullText);
-      audioPlayer = new Audio(audioUrl);
-
-      audioPlayer.onended = () => {
-        isPlaying = false;
-        btn.classList.remove('audio-playing');
-        textEl.textContent = 'Listen';
-        iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      };
-
-      audioPlayer.play();
-      isPlaying = true;
-      isLoadingAudio = false;
-      btn.style.opacity = '1';
+    speechUtterance.onstart = () => {
+      isSpeaking = true;
       btn.classList.add('audio-playing');
-      textEl.textContent = 'Pause';
-      iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-    } catch (err) {
-      isLoadingAudio = false;
-      btn.style.opacity = '1';
-      textEl.textContent = 'Error';
-      setTimeout(() => { textEl.textContent = 'Listen'; }, 2000);
-    }
+      textEl.textContent = 'Stop';
+      iconEl.innerHTML = '<path d="M6 19h12V5H6v14z"/>';
+    };
+
+    speechUtterance.onend = () => {
+      isSpeaking = false;
+      btn.classList.remove('audio-playing');
+      textEl.textContent = 'Listen';
+      iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    };
+
+    speechUtterance.onerror = () => {
+      isSpeaking = false;
+      btn.classList.remove('audio-playing');
+      textEl.textContent = 'Listen';
+      iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    };
+
+    window.speechSynthesis.speak(speechUtterance);
   };
 
   const init = () => {
@@ -542,7 +433,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       <div class="z1"><p class="font-f1 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.25] tracking-tight zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
     `;
 
-    // Construct full narrative string for TTS
+    // Construct full text for the phone's native speech synthesizer
     currentFullText = `${currentTopic.theme}. ${currentTopic.paragraphs.join(" ")}`;
 
     updateClockAndStats();
@@ -566,6 +457,13 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     });
     spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
   }, { passive: true });
+
+  // Ensure native voices are pre-loaded by mobile browsers
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.getVoices();
+    };
+  }
 
   window.onload = () => {
     init();
