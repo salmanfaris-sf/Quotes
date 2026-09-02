@@ -1,381 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-<meta name="theme-color" content="#000000">
-<title>Salman Faris | Daily Wisdom</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-P37159WTH1');
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SALMANFARIS.COM</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="theme-color" content="#000000">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-<meta name="description" content="Build strong discipline. Keep your word. Do not waste time. Stay honest. Live with purpose.">
-<meta name="author" content="Salman Faris">
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script>
-tailwind.config={
-  theme:{
-    extend:{
-      fontFamily:{
-        f1:['Inter','sans-serif'],
-        f2:['Inter','sans-serif']
-      },
-      colors:{c1:'#000000',c2:'#C5A059',eye:'#B8B8B0'}
-    }
-  }
-}
-</script>
-<style>
-html { 
-  background-color: #000000; 
-  scroll-behavior: smooth; 
-  overscroll-behavior-y: contain; 
-}
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --subtext: #666666;
+        }
 
-body { 
-  margin: 0; 
-  color: #d1d1d1; 
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-smoothing: antialiased; 
-  min-height: 100vh;
-  overflow-x: hidden; 
-  -webkit-overflow-scrolling: touch; 
-  overscroll-behavior-y: contain;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-/* Custom class to force straight rendering for hyphens */
-.st-hyphen {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
-  font-weight: 400 !important;
-  display: inline-block;
-  transform: scaleX(1.05);
-  vertical-align: baseline;
-}
+        html, body {
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.z0{transition:background-color .4s,backdrop-filter .4s,border-color .4s}
-.z0.zs{background-color:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
-.z1{opacity:0;transform:translateY(40px);filter:blur(15px);transition:all 1.8s cubic-bezier(.16,1,.3,1)}
-.z1.za{opacity:1;transform:none;filter:blur(0)}
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-.zi{text-indent:12rem}
-@media(max-width:768px){.zi{text-indent:0}}
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 24px;
+        }
 
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff;font-weight:600}
-.zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
-.zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
-@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
-.zf{animation:flash 2s ease-in-out infinite}
-#sd{transition:opacity 0.5s ease,visibility 0.5s}
+        .title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
 
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.2;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 20px rgba(255,255,255,0.5) !important}
+        .divider {
+            width: 24px;
+            height: 1px;
+            background-color: #222222;
+            margin: 0 auto 20px auto;
+        }
 
-.quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
-.quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
-.quote-stats { 
-  font-family: 'Inter', sans-serif; 
-  font-size: clamp(10px, 3vw, 14px); 
-  color: #ffffff; 
-  opacity: 0.5; 
-  margin-top: 10px; 
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-  -webkit-font-feature-settings: "tnum";
-}
-
-.quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
-footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
-</style>
+        .status {
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--subtext);
+        }
+    </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
-  <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2 font-medium">LOADING...</div>
-</nav>
+    <canvas id="sparkles"></canvas>
 
-<main class="relative w-full">
-  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
-    <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 font-bold text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tight leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
+    <div class="container">
+        <div class="title">REDESIGN IN PROGRESS</div>
+        <div class="divider"></div>
+        <div class="status">LAUNCHING SOON</div>
     </div>
-    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
-      <div class="zs1 zf">Scroll Down</div>
-    </div>
-  </section>
 
-  <article id="m0" class="max-w-screen-2xl mx-auto px-6 pt-40 pb-20 relative z-10 space-y-72"></article>
+    <script>
+        const canvas = document.getElementById('sparkles');
+        const ctx = canvas.getContext('2d');
 
-  <section class="relative z-10">
-    <div class="z1 text-center px-6 quote-wrapper">
-        <div class="quote-container">
-            <p class="quote-line">You only have 1,440 minutes every day,</p>
-            <p class="quote-line">do not let a single one go to waste.</p>
-            <p id="live-stats" class="quote-stats"></p>
-        </div>
-    </div>
-  </section>
-</main>
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
 
-<footer class="w-full flex justify-center px-6 relative z-10 z1">
-  <div class="text-[9px] uppercase tracking-[0.8em] font-f2 text-white font-medium opacity-30">BY SALMAN FARIS</div>
-</footer>
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
 
-<script>
-(function(){
-  const dailyThemes = [
-    {
-      theme: 'Be Relentless',
-      paragraphs: [
-        "Real strength is not about avoiding problems, but staying calm and patient when life gets hard. When hard problems come, face them with continuous effort and patience. Life will test you, but honest work wins over every difficulty.",
-        "Keep your focus clear every single day. Anyone can work hard when things are easy, but real maturity is working hard when you feel tired. Turn every hard moment into a chance to grow into a better person.",
-        "To be relentless means to hold yourself to good habits and honest values. Move forward with a peaceful mind and steady power. True success always belongs to the person who refuses to leave the path of truth."
-      ]
-    },
-    {
-      theme: 'Zero Excuses',
-      paragraphs: [
-        "You know what duties you have to do today. Your mind will try to find easy ways to sit back and rest, but discipline means rising above comfort. An honest person accepts work and finishes it well.",
-        "Stop blaming bad days or hard life for your lack of progress. You are responsible for your own choices and actions. Stand tall, make clean plans, and work hard without complaining to anyone.",
-        "Good character is built in quiet times when no one is watching you. It is built in early mornings and quiet work hours. Self-control protects you from future regret. Work hard today so you can rest with a clean heart."
-      ]
-    },
-    {
-      theme: 'Hard Truths',
-      paragraphs: [
-        "The world rewards real action and honesty, not big talk or wishes. Having big goals with lazy habits is a lie to yourself. Let your daily work show who you really are.",
-        "Time moves fast every second without stopping. You get a limited chance each day to do good things. Once time passes, it never comes back. Choose clean progress over cheap fun.",
-        "Fear nothing in life except wasted time, dishonest ways, and neglecting your duties. Protect your family, keep your promises, and stand strong on what is right. Walk through every day with clean purpose."
-      ]
-    },
-    {
-      theme: 'Stay Focused',
-      paragraphs: [
-        "Turn off the extra noise of the world. Stay away from useless things that waste your mind and energy. Guard your focus with care, because your future depends on what you pay attention to.",
-        "Trying to do too many things at once leads to poor results in everything. Choose your main task and do it steadily every day. Learn to love the quiet, daily work that builds real skill.",
-        "Learn to say no to quick fun for the sake of long-term health and peace. Build simple daily habits that keep your mind clear and your heart strong. Move forward every day with calm strength."
-      ]
-    },
-    {
-      theme: 'Never Give Up',
-      paragraphs: [
-        "When life gets heavy and you feel tired, quitting your duty is not an option. Think of a worker breaking a rock with a tool. He hits it many times and nothing happens, but every small hit prepares the final break.",
-        "Steady effort and temporary hard work give you long-term peace and real success. Accept the necessary effort today. Face hard times with patience and solve your problems with courage.",
-        "Every morning gives you a new chance to win over your own weak habits. Win the quiet battle inside your mind first. Keep your good name, handle pain with patience, and keep working until the duty is done."
-      ]
-    },
-    {
-      theme: 'Take Action',
-      paragraphs: [
-        "Thinking too much creates fear and doubt. Doing real work is the best cure for fear. Do not look for easy tricks or shortcuts; good work takes real effort.",
-        "Where you are today comes from choices you made yesterday. Where you will be tomorrow depends on what you do right now. Do not wait for a perfect moment. Start now and build your strength by doing.",
-        "Words are light and promises mean nothing without real results. Step forward, put your head down, stop complaining, and do your work with a humble heart."
-      ]
-    },
-    {
-      theme: 'Live Everyday',
-      paragraphs: [
-        "Give your full heart and attention to today. Use your energy for good things right now, and leave no room for small anger or useless worry.",
-        "Tomorrow is never promised to anyone. Every morning you wake up is a gift—a chance to fix your mistakes, help others, and grow stronger. Treat your time today with great respect.",
-        "When the night comes, make sure you used your hours for good purpose. Leave nothing important unfinished, and give your best effort to your life today."
-      ]
-    },
-    {
-      theme: 'Believe In Yourself',
-      paragraphs: [
-        "You have the power to do good things if you guide your mind properly. Do not let fear or self-doubt tell you that progress is impossible. You have patience inside you.",
-        "Your mind will grow based on what you feed it every day. Replace bad thoughts with useful knowledge and good skills. Every wise person started as a beginner who kept trying.",
-        "Walk with humility and trust your power to learn. Move out of your easy comfort zone, because strength grows when you handle hard tests well."
-      ]
-    },
-    {
-      theme: 'Do Not Waste Time',
-      paragraphs: [
-        "Time is one of the most precious gifts given to you. Once an hour passes, no money in the world can ever buy it back. Treat every part of your day like gold.",
-        "Remove useless habits that steal your time without giving any good return. Mindless scrolling and chasing easy fun keep you weak. Use quiet hours to make your mind and body strong.",
-        "Organize your day with clear and good goals. Wake up early, finish your duties, and end your day in peace. A person who respects time shows respect for life."
-      ]
-    },
-    {
-      theme: 'Build Your Mind',
-      paragraphs: [
-        "Your mind is your best tool in life. Feed it with good wisdom, quiet thinking, and honest values. A clean mind helps you walk through physical and emotional pain.",
-        "Keep your mind safe from useless talk, bad rumors, and unnecessary fights. Keep your inner house clean and peaceful. What you listen to will shape your thoughts.",
-        "Control your anger so it does not control your actions. When hard times hit, stay calm and speak clearly. A quiet and wise mind always finds a good way forward."
-      ]
-    },
-    {
-      theme: 'Strong Character',
-      paragraphs: [
-        "Real character is seen when life gets hard, not when things are easy. Being good when everything is easy is simple, but true honesty shines during hard storms.",
-        "Always speak the truth softly and keep your promises faithfully. A person whose word is true earns real respect from everyone around them.",
-        "Walk with calm confidence, humility, and self-control. You do not need to shout to show strength; let your good work speak for you."
-      ]
-    },
-    {
-      theme: 'Quiet Strength',
-      paragraphs: [
-        "True power is often quiet and soft-spoken. Learn to listen well and speak with thought instead of rushing. Silence gives you time to think and learn.",
-        "Work on your good goals quietly without asking for praise from others. Build useful things in peace and let the good results speak for themselves.",
-        "Keep your heart peaceful when everything around you looks messy. Control your temper, breathe slowly, and make wise choices with kindness."
-      ]
-    },
-    {
-      theme: 'Do Your Duty',
-      paragraphs: [
-        "Duty means doing what is right for your family, friends, and life, even when you do not feel like doing it. Fulfilling your duties builds true honor.",
-        "Feelings come and go quickly, but duty and truth stay forever. Rise above your temporary mood and finish your daily work with honesty.",
-        "There is deep peace in doing your work well. When you take care of your responsibilities, you build a life on solid ground."
-      ]
-    },
-    {
-      theme: 'Master Yourself',
-      paragraphs: [
-        "Before you try to guide other people, you must learn to master yourself. Control your body, watch your words, and choose good daily habits.",
-        "Say no to quick fun for the sake of long-term health and peace. The power to control your desires is the key to living a good life.",
-        "Take complete responsibility for your path. When you control your own actions, you live with real freedom and true self-respect."
-      ]
-    },
-    {
-      theme: 'Embrace Pain',
-      paragraphs: [
-        "Hardship is not your enemy; it is a powerful teacher. The problems you face today make your heart strong and clean away pride and weakness.",
-        "Do not run away from hard work or difficult tasks. Step into effort willingly, because good character grows through standing firm in hard times.",
-        "When you learn to bear hard work with patience, small troubles lose their power to make you sad. You grow wiser through every test life gives you."
-      ]
-    },
-    {
-      theme: 'Clear Goals',
-      paragraphs: [
-        "A life without clear goals is like a boat without a steering wheel, drifting in the water with no direction. Know what you want to achieve and seek what is good.",
-        "Write down your goals and break them into simple daily steps. Focus your energy on completing one simple task at a time with good quality.",
-        "Keep your eyes on what is good and long-lasting. Do not get distracted by small things, and move steadily toward your clean purpose."
-      ]
-    },
-    {
-      theme: 'Continuous Growth',
-      paragraphs: [
-        "Never settle for staying lazy or careless. Try to make your character, mind, health, and heart a little bit better every single day.",
-        "Learn good knowledge, build helpful skills, and keep your body healthy. Stopping growth makes life dull, but learning new things brings real energy.",
-        "Compare yourself only to who you were yesterday. As long as you grow in good values and skills daily, you are fulfilling your purpose."
-      ]
-    },
-    {
-      theme: 'Unshakable Peace',
-      paragraphs: [
-        "Build a peaceful heart that outside problems cannot easily break. You cannot control everything outside, but you can control how you react.",
-        "Do not waste your mental energy on small matters that will not count in the long run. Save your strength for what truly matters.",
-        "Find peace in honest work, good living, and clean intentions. When your heart is clean, peaceful rest comes naturally."
-      ]
-    },
-    {
-      theme: 'Be The Example',
-      paragraphs: [
-        "Try to be a source of safety, kindness, and help for your family and neighbors. Lead through good actions rather than long speeches.",
-        "Keep high standards for your work, health, truth, and discipline. Show people around you what an honest and reliable person looks like.",
-        "When others see your steady work and kindness, they feel inspired to do good too. Good living helps the whole community."
-      ]
-    },
-    {
-      theme: 'Overcome Fear',
-      paragraphs: [
-        "Fear is often just a scary thought in your mind. When you take a step forward with trust and effort toward what is right, fear starts to go away.",
-        "Courage is not feeling zero fear; courage is doing the right thing even when you feel nervous. Act with faith and take necessary action.",
-        "Every time you win over a fear with patience, you gain new strength. Step out of your easy comfort zone and make your world bigger."
-      ]
-    },
-    {
-      theme: 'Be Grateful',
-      paragraphs: [
-        "Be deeply thankful for your health, the breath you take, and the gift of a new morning. Many people did not get this day.",
-        "Gratitude opens your heart and gives you clarity. Instead of complaining about what you do not have, use what you have today to do good.",
-        "Start every morning with humility and a thankful heart. Live honestly, treat everyone with justice, and leave a good name behind."
-      ]
-    }
-  ];
+        // Subtle floating background particles
+        const particles = Array.from({ length: 35 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 1.2 + 0.3,
+            vx: (Math.random() - 0.5) * 0.2,
+            vy: -Math.random() * 0.3 - 0.1,
+            alpha: Math.random() * 0.5 + 0.1
+        }));
 
-  // Wrap sentence parts and ensure hyphens render completely straight
-  const wrapWords = (text) => {
-    return text.split(/\.\s*/).filter(s => s.trim().length > 0).map(sentence => {
-      const cleanSentence = sentence.trim().replace(/-/g, '<span class="st-hyphen">-</span>');
-      return `<span class="hi">${cleanSentence}.</span> `;
-    }).join("");
-  };
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
 
-  const updateClockAndStats = () => {
-    const now = new Date();
-    
-    // Top-left Day of the week
-    const dayName = now.toLocaleDateString("en-US", { weekday: 'long' }).toUpperCase();
-    document.getElementById("d0").textContent = dayName;
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
 
-    // Top-right Date format
-    document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
-    
-    // Time with seconds for the bottom section
-    const timeWithSeconds = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
-    
-    const totalMinutesInDay = 1440;
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const remainingMinutes = totalMinutesInDay - currentMinutes;
-    const statsEl = document.getElementById('live-stats');
-    if (statsEl) { statsEl.textContent = `Time: ${timeWithSeconds} • ${remainingMinutes} minutes remaining today`; }
-  };
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
 
-  const init = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
-    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
-    const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
-    
-    // Set clean heading
-    document.getElementById("h0").textContent = currentTopic.theme;
-    
-    // Render content paragraphs with large font sizes and bold Inter styling
-    document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
-      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight">${wrapWords(currentTopic.paragraphs[1])}</p></div>
-      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
-    `;
-    updateClockAndStats();
-    
-    const generalObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
-    }, { threshold: 0.05 });
-    document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
-  };
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+            });
 
-  window.addEventListener("scroll", () => {
-    const s = window.scrollY;
-    document.getElementById("n0").classList.toggle("zs", s > 10);
-    if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
-    
-    const spans = document.querySelectorAll(".hi");
-    let active = null, min = Infinity;
-    spans.forEach(span => {
-      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
-      if (dist < min) { min = dist; active = span; }
-    });
-    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
-  }, { passive: true });
+            requestAnimationFrame(animate);
+        }
 
-  window.onload = () => {
-    init();
-    setInterval(updateClockAndStats, 1000);
-  };
-})();
-</script>
+        animate();
+    </script>
 </body>
 </html>
+
