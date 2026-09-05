@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-      gtag('config', 'G-P37159WTH1');
-    </script>
+  gtag('config', 'G-P37159WTH1');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>salmanfaris.com</title>
+    <title>The Creed</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <meta name="description" content="Forge an unbreakable mind. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
+    <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --bg: #000000;
@@ -45,7 +45,7 @@
 
         ._f1 {
             opacity: 0;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         ._f1.v {
@@ -78,7 +78,6 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            opacity: 0;
         }
 
         #_st_ {
@@ -90,41 +89,60 @@
             transition: opacity 0.35s ease;
             line-height: 1.6;
             margin-bottom: 4px;
-            opacity: 0;
         }
 
-        #_hint_ {
+        /* Subtle navigation cues at the bottom */
+        .nav-hint {
             position: absolute;
-            bottom: 16px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Inter', sans-serif;
-            color: #888888;
-            font-weight: 300;
-            letter-spacing: -0.01em;
-            opacity: 0;
-            transition: opacity 0.6s ease-in-out;
+            font-size: 10px;
+            color: #444;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             pointer-events: none;
-            white-space: nowrap;
-            z-index: 5;
-            will-change: opacity;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        #autoplay-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px) scale(0.95);
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #autoplay-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
         }
     </style>
 </head>
 <body>
 
-    <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-[14.4px] md:text-base lg:text-lg leading-relaxed tracking-wide"></h1>
-        <div id="_st_"></div>
+    <!-- Autoplay Notification Popup -->
+    <div id="autoplay-toast" class="flex items-center justify-center px-3 py-1 rounded-full bg-neutral-900/90 border border-neutral-800/80 backdrop-blur-md shadow-lg">
+        <span id="toast-text" class="text-[10px] font-normal tracking-wide text-neutral-300">Autoplay on</span>
     </div>
 
-    <div id="_hint_" class="text-xs md:text-sm leading-relaxed tracking-wide">Tap anywhere to view the next quote</div>
+    <div class="_c1 _f1" id="_mc_">
+        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
+        <div id="_st_" class="opacity-0"></div>
+    </div>
+
+    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
 
 <script>
 (function(){
     const _db = [
         { t: "Be better than you were yesterday." },
-        { t: "Race one another in good deeds." },
+        { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
         { t: "Don't waste time. You don't get it back." },
         { t: "Focus." },
         { t: "The problem is,\nyou think you have a lot of time to live." },
@@ -139,7 +157,6 @@
         { t: "You can't have a million dollar dream with a minimum wage work ethic." },
         { t: "A real man protects and provides." },
         { t: "Don't follow the crowd. Follow the truth." },
-        { t: "Be the change that you wish to see in the world." },
         { t: "Never build your happiness on\n someone else's tears." },
         { t: "Eliminate the 'tomorrow' mindset today." },
         { t: "The strongest man is he who controls his anger." },
@@ -150,19 +167,23 @@
         { t: "Time waits for no one." },
         { t: "Quality over quantity in everything." },
         { t: "Knowledge without action is useless." },
+        { t: "Fear Allah. Not people." },
         { t: "Live with purpose." },
+        { t: "Be a man of your word." },
         { t: "A real man protects those who are vulnerable." },
         { t: "Every day is a second chance." },
         { t: "Now is the time." },
         { t: "Success is earned, not given." },
         { t: "Focus on your growth." },
         { t: "Stay Disciplined." },
+        { t: "A heart connected to Allah is\n never truly broken." },
         { t: "He who is brave is free." },
         { t: "Growth begins outside comfort zones." },
         { t: "This is the way." },
         { t: "Hard days make strong people." },
         { t: "Keep showing up." },
         { t: "Strength is built through repetition." },
+        { t: "Be the change that you wish to see in the world." },
         { t: "Do the boring work well." },
         { t: "Consistency creates mastery." },
         { t: "Work now, Relax later." },
@@ -171,7 +192,8 @@
         { t: "Habits decide outcomes." },
         { t: "Growth requires discomfort." },
         { t: "Sweat more in practice. Bleed less in war." },
-        { t: "When you feel like nothing is going your way, look at a person breaking a rock. They can hit a big rock 100 times and it won’t even move. But with the hit at 101, it suddenly breaks into two pieces. It wasn’t just that last hit that broke it; it was the result of all the hits that happened before it." },
+        { t: "do it scared.\ndo it tired.\ndo it anyway." },
+        { t: "When you feel like nothing is going your way, look at a person breaking a stone. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it,it was the result of all the hits that happened before it." },
         { t: "It always seems impossible until it's done." },
         { t: "Focus is a superpower in a distracted world." },
         { t: "Weakness leaves when discipline enters." },
@@ -183,11 +205,14 @@
         { t: "Every wasted year makes the\n next one heavier." },
         { t: "Do it the moment you remember it." },
         { t: "Stick to the plan. Not your mood." },
-        { t: "5,4,3,2,1. Act now." },
-        { t: "There are two blessings that many people are deceived into losing: health and free time." },
-        { t: "Make things easy for the people, and do not make it difficult for them." },
-        { t: "Do good deeds properly, sincerely and moderately." },
-        { t: "Speak good or remain silent." },
+        { t: "Be the change that you wish to see in the world." },
+        { t: "5,4,3,2,1. Act Now." },
+        { t: "Indeed Shaitan is ever, to mankind,\na clear enemy.\n[Qur'an 17:53]"},
+        { t: "Prophet Muhammad ﷺ said:\nThere are two blessings that many people are deceived into losing: health and free time.\n[Sahih al-Bukhari 6412]" },
+        { t: "Prophet Muhammad ﷺ said:\nMake things easy for the people, and do not make it difficult for them.\n[Sahih al-Bukhari 6125]" },
+        { t: "Prophet Muhammad ﷺ said:\nDo good deeds properly, sincerely and moderately.\n[Sahih al-Bukhari 6464]" },
+        { t: "Prophet Muhammad ﷺ said:\nSpeak good or remain silent.\n[Riyad as-Salihin 1511]" },
+        { t: "Prophet Muhammad ﷺ said:\nThe most beloved deed to Allah is the most regular and constant even if it were little.\n[Sahih al-Bukhari 6464]" },
         { t: "Character is who you are when no one is watching." },
         { t: "Keep moving forward." },
         { t: "If not now, Then when?" },
@@ -196,7 +221,7 @@
         { t: "Lower your gaze, guard your tongue, and protect your heart." },
         { t: "Your current life is the result of past actions. Your future will be the result of today's actions." },
         { t: "The man who keeps walking will eventually leave the place he hates." },
-        { t: "A few years of sacrifice can create a\nlifetime of freedom." },
+        { t: "A few years of sacrifice can create a lifetime of freedom." },
         { t: "Your future is built by what you do after a long tiring day." },
         { t: "Action may not always bring happiness, but there is no happiness without action." },
         { t: "Stand straight. Speak clearly. Fear none."},
@@ -204,12 +229,6 @@
         { t: "Every pro was once a beginner."},
         { t: "Weak men wait for courage.\n Strong men create it through action."},
         { t: "Be the man who acts while others are still thinking."},
-        { t: "Do what is right, not what is easy."},
-        { t: "Make your intentions pure. Your actions will follow."},
-        { t: "One day or day one. You decide."},
-        { t: "Rise."},
-        { t: "Be relentless."},
-        { t:"The best time to start was yesterday. The next best time is now."},
         { t: "Be so disciplined that even your bad days look like progress."},
         { t: "A strong man doesn’t need motivation.\nHe acts because he decided."},
         { t: "Pressure reveals the man within."}
@@ -218,9 +237,8 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
-    const _hint = document.getElementById('_hint_');
-    let _initialized = false;
-    let _hintDismissed = false;
+    const toastEl = document.getElementById('autoplay-toast');
+    const toastText = document.getElementById('toast-text');
     
     let _l_i = null;
     let _startY = 0;
@@ -228,7 +246,18 @@
     let _currentY = 0;
     let _currentX = 0;
     let _isSwipe = false;
+    let _fsTriggered = false;
 
+    // Autoplay & Long press state control
+    let _autoplayActive = false;
+    let _autoplayInterval = null;
+    let _longPressTimer = null;
+    let _isLongPress = false;
+    let _toastTimeout = null;
+    const LONG_PRESS_DURATION = 500; // ms required for long press
+    const AUTOPLAY_SPEED = 5000; // 5s interval
+
+    // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -241,14 +270,6 @@
     let _lastQuoteText = null;
     let _history = [];
     let _historyIndex = -1;
-
-    function _dismissHint() {
-        if (_hintDismissed) return;
-        _hintDismissed = true;
-        if (_hint) {
-            _hint.style.opacity = '0';
-        }
-    }
 
     function _getNextQuote() {
         if (_currentPool.length === 0) {
@@ -278,8 +299,7 @@
     }
 
     function _showQuote(nq) {
-        _dismissHint();
-        _st.style.opacity = '0';
+        _st.classList.add('opacity-0');
         if (_l_i) clearInterval(_l_i);
 
         _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -294,11 +314,11 @@
                     _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                 };
                 ux();
-                _st.style.opacity = '1';
+                _st.classList.remove('opacity-0');
                 _l_i = setInterval(ux, 30000);
             } else {
                 _st.innerHTML = "";
-                _st.style.opacity = '0';
+                _st.classList.add('opacity-0');
             }
 
             requestAnimationFrame(() => {
@@ -318,6 +338,7 @@
             _historyIndex = _history.length - 1;
             _showQuote(nq);
         }
+        _resetAutoplayTimer();
     }
 
     function _prev() {
@@ -325,12 +346,88 @@
             _historyIndex--;
             _showQuote(_history[_historyIndex]);
         }
+        _resetAutoplayTimer();
     }
 
-    function _init() {
-        if (_initialized) return;
-        _initialized = true;
+    function _showToast(text, isOn) {
+        if (_toastTimeout) clearTimeout(_toastTimeout);
+        
+        toastText.innerText = text;
+        if (isOn) {
+    function _showToast(text) {
+        if (_toastTimeout) clearTimeout(_toastTimeout);
+        
+        toastText.innerText = text;
+        
+        toastEl.classList.add('show');
+        _toastTimeout = setTimeout(() => {
+            toastEl.classList.remove('show');
+        }, 1800);
+    }
 
+    function _toggleAutoplay() {
+        _autoplayActive = !_autoplayActive;
+        if (navigator.vibrate) {
+            try { navigator.vibrate(40); } catch(e) {}
+        }
+        if (_autoplayActive) {
+            _showToast('Autoplay on');
+            _startAutoplay();
+        } else {
+            _showToast('Autoplay off');
+            _stopAutoplay();
+        }
+    }
+
+    function _startAutoplay() {
+        _stopAutoplay();
+        _autoplayInterval = setInterval(() => {
+            _next();
+        }, AUTOPLAY_SPEED);
+    }
+
+    function _stopAutoplay() {
+        if (_autoplayInterval) {
+            clearInterval(_autoplayInterval);
+            _autoplayInterval = null;
+        }
+    }
+
+    function _resetAutoplayTimer() {
+        if (_autoplayActive) {
+            _startAutoplay();
+        }
+    }
+
+    function _startLongPressTimer() {
+        _cancelLongPressTimer();
+        _longPressTimer = setTimeout(() => {
+            _isLongPress = true;
+            _toggleAutoplay();
+        }, LONG_PRESS_DURATION);
+    }
+
+    function _cancelLongPressTimer() {
+        if (_longPressTimer) {
+            clearTimeout(_longPressTimer);
+            _longPressTimer = null;
+        }
+    }
+
+    function _enterFullscreen() {
+        const doc = document.documentElement;
+        if (!document.fullscreenElement) {
+            if (doc.requestFullscreen) {
+                doc.requestFullscreen().catch(() => {});
+            } else if (doc.webkitRequestFullscreen) {
+                doc.webkitRequestFullscreen().catch(() => {});
+            } else if (doc.msRequestFullscreen) {
+                doc.msRequestFullscreen().catch(() => {});
+            }
+        }
+    }
+
+    window.onload = () => {
         const i = _getNextQuote();
         _history.push(i);
         _historyIndex = 0;
@@ -341,48 +438,59 @@
         if (i.id === "t_q") {
             const s = _gs();
             _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-            _st.style.opacity = '1';
+            _st.classList.remove('opacity-0');
         }
 
         requestAnimationFrame(() => {
-            // Trigger main container fade-in (takes 1.5 seconds)
             _mc.classList.add('v');
-            
-            // Delay the hint so it fades in smoothly AFTER the quote has appeared
-            setTimeout(() => {
-                if (!_hintDismissed && _hint) {
-                    _hint.style.opacity = '1';
-                }
-            }, 1400);
         });
-    }
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        _init();
-    } else {
-        document.addEventListener('DOMContentLoaded', _init);
-        window.addEventListener('load', _init);
-    }
+    };
 
     document.addEventListener('click', () => {
         if (_isSwipe) return;
+        if (_isLongPress) {
+            _isLongPress = false;
+            return;
+        }
         _next();
     });
 
+    // Touch Event Listeners
     document.addEventListener('touchstart', (e) => {
         _startY = e.touches[0].clientY;
         _startX = e.touches[0].clientX;
         _currentY = _startY;
         _currentX = _startX;
         _isSwipe = false;
+        _fsTriggered = false;
+        _isLongPress = false;
+        
+        _startLongPressTimer();
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
         _currentY = e.touches[0].clientY;
         _currentX = e.touches[0].clientX;
-    }, { passive: true });
+        const diffY = _startY - _currentY;
+        const diffX = Math.abs(_startX - _currentX);
+
+        if (Math.abs(_currentX - _startX) > 10 || Math.abs(_currentY - _startY) > 10) {
+            _cancelLongPressTimer();
+        }
+
+        if (diffY > 10 && e.cancelable) {
+            e.preventDefault();
+        }
+
+        if (!_fsTriggered && diffY > 40 && diffX < 25) {
+            _fsTriggered = true;
+            _isSwipe = true;
+            _enterFullscreen();
+        }
+    }, { passive: false });
 
     document.addEventListener('touchend', () => {
+        _cancelLongPressTimer();
         const deltaX = _currentX - _startX;
         const deltaY = _currentY - _startY;
 
@@ -401,6 +509,26 @@
             }, 150);
         }
     }, { passive: true });
+
+    document.addEventListener('touchcancel', () => {
+        _cancelLongPressTimer();
+    });
+
+    // Mouse Event Listeners for Desktop Long-Press support
+    document.addEventListener('mousedown', () => {
+        _isLongPress = false;
+        _startLongPressTimer();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (_longPressTimer) {
+            _cancelLongPressTimer();
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        _cancelLongPressTimer();
+    });
 
 })();
 </script>
