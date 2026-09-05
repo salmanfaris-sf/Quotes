@@ -17,9 +17,9 @@
     <meta name="theme-color" content="#000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg: #000000;
@@ -91,7 +91,6 @@
             margin-bottom: 4px;
         }
 
-        /* Subtle navigation cues at the bottom */
         .nav-hint {
             position: absolute;
             bottom: 24px;
@@ -254,8 +253,8 @@
     let _longPressTimer = null;
     let _isLongPress = false;
     let _toastTimeout = null;
-    const LONG_PRESS_DURATION = 500; // ms required for long press
-    const AUTOPLAY_SPEED = 5000; // 5s interval
+    const LONG_PRESS_DURATION = 500;
+    const AUTOPLAY_SPEED = 5000;
 
     // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
@@ -349,11 +348,6 @@
         _resetAutoplayTimer();
     }
 
-    function _showToast(text, isOn) {
-        if (_toastTimeout) clearTimeout(_toastTimeout);
-        
-        toastText.innerText = text;
-        if (isOn) {
     function _showToast(text) {
         if (_toastTimeout) clearTimeout(_toastTimeout);
         
