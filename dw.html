@@ -19,7 +19,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -100,6 +100,13 @@ body {
 
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
+
+/* Styling individual stacked title words */
+.title-word {
+  display: block;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
 </style>
 </head>
 <body oncontextmenu="return false;">
@@ -110,11 +117,11 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </nav>
 
 <main class="relative w-full">
-  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
-    <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <h1 id="h0" class="font-f1 font-bold text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tight leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
+  <section class="min-h-screen py-32 flex flex-col items-center justify-center px-6 relative z-10">
+    <div class="text-center flex-grow flex flex-col justify-center items-center my-auto">
+      <h1 id="h0" class="font-f1 font-extrabold text-6xl sm:text-8xl md:text-[10rem] lg:text-[12rem] xl:text-[14rem] tracking-tight z1 text-white uppercase flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 select-none" style="transition-delay:0.2s"></h1>
     </div>
-    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
+    <div id="sd" class="pt-12 pb-12 md:pb-16 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
@@ -341,10 +348,15 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     
     const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
     
-    // Set clean heading
-    document.getElementById("h0").textContent = currentTopic.theme;
+    // Split theme title into stacked single words line-by-line
+    const stackedWords = currentTopic.theme
+      .split(' ')
+      .map(word => `<span class="title-word">${word}</span>`)
+      .join('');
     
-    // Render content paragraphs plain without text-highlighting elements
+    document.getElementById("h0").innerHTML = stackedWords;
+    
+    // Render content paragraphs
     document.getElementById("m0").innerHTML = `
       <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${formatText(currentTopic.paragraphs[0])}</p></div>
       <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight">${formatText(currentTopic.paragraphs[1])}</p></div>
