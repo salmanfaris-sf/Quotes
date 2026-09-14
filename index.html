@@ -69,22 +69,8 @@ body {
 .zi{text-indent:12rem}
 @media(max-width:768px){.zi{text-indent:0}}
 
-.zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff;font-weight:600}
 .zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
 .zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
-
-/* Fast keyframe animation set to 3 quick blinks */
-@keyframes flash{
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: 0.7; }
-}
-.zf {
-  animation: flash 0.7s ease-in-out 3 forwards;
-}
-
-#sd {
-  transition: opacity 0.3s ease, visibility 0.3s;
-}
 
 .hi{color:#fff;display:inline-block}
 
@@ -117,9 +103,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
       <h1 id="h0" class="font-f1 font-bold text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tight leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
-    </div>
-    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
-      <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
 
@@ -321,8 +304,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     }).join("");
   };
 
-  let sdExpired = false;
-
   const updateClockAndStats = () => {
     const now = new Date();
     
@@ -366,28 +347,11 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
     document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
-
-    // Handle rapid disappearance of scroll indicator after 3rd fast blink
-    const zfEl = document.querySelector(".zf");
-    const sdEl = document.getElementById("sd");
-    if (zfEl && sdEl) {
-      zfEl.addEventListener("animationend", () => {
-        sdExpired = true;
-        sdEl.style.opacity = "0";
-        setTimeout(() => {
-          sdEl.style.visibility = "hidden";
-        }, 300);
-      });
-    }
   };
 
   window.addEventListener("scroll", () => {
     const s = window.scrollY;
     document.getElementById("n0").classList.toggle("zs", s > 10);
-    const sd = document.getElementById("sd");
-    if (sd && !sdExpired) {
-      sd.style.opacity = s > 20 ? "0" : "1";
-    }
   }, { passive: true });
 
   window.onload = () => {
