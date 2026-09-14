@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-P37159WTH1');
-</script>
+      gtag('config', 'G-P37159WTH1');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>The Creed</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
-    <meta name="theme-color" content="#000">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -106,17 +105,37 @@
             opacity: 0.6;
             transition: opacity 0.3s ease;
         }
+
+        /* Autoplay Status Text (Plain dark text at bottom with quote fade effect) */
+        #_ap_status_ {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #555555;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+            white-space: nowrap;
+            transition: opacity 0.35s ease-in-out;
+        }
     </style>
 </head>
 <body>
 
     <div class="_c1 _f1" id="_mc_">
-        <!-- Decreased size: from (text-lg md:text-xl lg:text-2xl) to (text-sm md:text-base lg:text-lg) -->
         <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </div>
 
-    <div class="nav-hint hidden md:block">Tap / Swipe left or right to navigate</div>
+    <!-- Navigation Hint -->
+    <div class="nav-hint hidden md:block">Tap / Swipe to navigate • Hold for Autoplay</div>
+
+    <!-- Autoplay Status Text -->
+    <div id="_ap_status_"></div>
 
 <script>
 (function(){
@@ -217,6 +236,7 @@
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
+    const _apStatus = document.getElementById('_ap_status_');
     
     let _l_i = null;
     let _startY = 0;
@@ -225,6 +245,15 @@
     let _currentX = 0;
     let _isSwipe = false;
     let _fsTriggered = false;
+
+    // Autoplay & Long Press State
+    let _isAutoplay = false;
+    let _autoplayInterval = null;
+    let _longPressTimer = null;
+    let _isLongPress = false;
+    let _statusTimeout = null;
+    const AUTOPLAY_INTERVAL_MS = 20000;
+    const LONG_PRESS_DELAY_MS = 550;
 
     // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
@@ -272,7 +301,6 @@
         _st.classList.add('opacity-0');
         if (_l_i) clearInterval(_l_i);
 
-        // Balanced transition duration set to 0.35s
         _qx.style.transition = 'opacity 0.35s ease-in-out';
         _qx.style.opacity = '0';
 
@@ -292,12 +320,11 @@
                 _st.classList.add('opacity-0');
             }
 
-            // Balanced transition duration set to 0.35s
             requestAnimationFrame(() => {
                 _qx.style.transition = 'opacity 0.35s ease-in-out';
                 _qx.style.opacity = '1';
             });
-        }, 350); // Matches the 0.35s fade-out duration
+        }, 350);
     }
 
     function _next() {
@@ -319,6 +346,44 @@
         }
     }
 
+    function _showStatus(text) {
+        if (_statusTimeout) clearTimeout(_statusTimeout);
+        
+        _apStatus.style.transition = 'opacity 0.35s ease-in-out';
+        _apStatus.style.opacity = '0';
+
+        setTimeout(() => {
+            _apStatus.innerText = text;
+            requestAnimationFrame(() => {
+                _apStatus.style.opacity = '1';
+            });
+        }, 350);
+
+        _statusTimeout = setTimeout(() => {
+            _apStatus.style.opacity = '0';
+        }, 2200);
+    }
+
+    function _toggleAutoplay() {
+        _isAutoplay = !_isAutoplay;
+        
+        if (_isAutoplay) {
+            _showStatus("Autoplay on");
+            
+            if (_autoplayInterval) clearInterval(_autoplayInterval);
+            _autoplayInterval = setInterval(() => {
+                _next();
+            }, AUTOPLAY_INTERVAL_MS);
+        } else {
+            _showStatus("Autoplay off");
+            
+            if (_autoplayInterval) {
+                clearInterval(_autoplayInterval);
+                _autoplayInterval = null;
+            }
+        }
+    }
+
     function _enterFullscreen() {
         const doc = document.documentElement;
         if (!document.fullscreenElement) {
@@ -329,6 +394,25 @@
             } else if (doc.msRequestFullscreen) {
                 doc.msRequestFullscreen().catch(() => {});
             }
+        }
+    }
+
+    function _startLongPressTimer() {
+        _cancelLongPressTimer();
+        _longPressTimer = setTimeout(() => {
+            _isLongPress = true;
+            _toggleAutoplay();
+            // Provide gentle haptic feedback if supported on device
+            if (window.navigator && window.navigator.vibrate) {
+                try { window.navigator.vibrate(35); } catch(e){}
+            }
+        }, LONG_PRESS_DELAY_MS);
+    }
+
+    function _cancelLongPressTimer() {
+        if (_longPressTimer) {
+            clearTimeout(_longPressTimer);
+            _longPressTimer = null;
         }
     }
 
@@ -351,18 +435,26 @@
         });
     };
 
-    document.addEventListener('click', () => {
-        if (_isSwipe) return;
+    // Click navigation (ignored if click was part of swipe or long press)
+    document.addEventListener('click', (e) => {
+        if (_isSwipe || _isLongPress) {
+            _isLongPress = false;
+            return;
+        }
         _next();
     });
 
+    // Touch events setup
     document.addEventListener('touchstart', (e) => {
         _startY = e.touches[0].clientY;
         _startX = e.touches[0].clientX;
         _currentY = _startY;
         _currentX = _startX;
         _isSwipe = false;
+        _isLongPress = false;
         _fsTriggered = false;
+
+        _startLongPressTimer();
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
@@ -370,6 +462,11 @@
         _currentX = e.touches[0].clientX;
         const diffY = _startY - _currentY;
         const diffX = Math.abs(_startX - _currentX);
+
+        // Cancel long press if user moves finger beyond small threshold
+        if (Math.abs(diffY) > 10 || diffX > 10) {
+            _cancelLongPressTimer();
+        }
 
         if (diffY > 10 && e.cancelable) {
             e.preventDefault();
@@ -383,15 +480,17 @@
     }, { passive: false });
 
     document.addEventListener('touchend', () => {
+        _cancelLongPressTimer();
+
         const deltaX = _currentX - _startX;
         const deltaY = _currentY - _startY;
 
         if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
             _isSwipe = true;
             if (deltaX > 50) {
-                _prev(); // Swipe Right -> Previous (Clean Fade)
+                _prev(); // Swipe Right -> Previous
             } else if (deltaX < -50) {
-                _next(); // Swipe Left -> Next (Clean Fade)
+                _next(); // Swipe Left -> Next
             }
         }
 
@@ -401,6 +500,40 @@
             }, 150);
         }
     }, { passive: true });
+
+    // Desktop Mouse support for long press toggle
+    document.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return; // Only primary click
+        _startX = e.clientX;
+        _startY = e.clientY;
+        _isLongPress = false;
+        _startLongPressTimer();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (_longPressTimer) {
+            const moveX = Math.abs(e.clientX - _startX);
+            const moveY = Math.abs(e.clientY - _startY);
+            if (moveX > 8 || moveY > 8) {
+                _cancelLongPressTimer();
+            }
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        _cancelLongPressTimer();
+    });
+
+    // Keyboard navigation support
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'ArrowRight') {
+            _next();
+        } else if (e.code === 'ArrowLeft') {
+            _prev();
+        } else if (e.code === 'KeyA') {
+            _toggleAutoplay();
+        }
+    });
 
 })();
 </script>
