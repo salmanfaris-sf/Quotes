@@ -19,7 +19,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -72,17 +72,13 @@ body {
 .zs1{font-size:11px;letter-spacing:.8em;text-transform:uppercase;font-family:Inter,sans-serif;opacity:0.4;color:#fff;font-weight:600}
 .zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
 .zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
-@keyframes flash3 {
-  0% { opacity: 0; }
-  16% { opacity: 0.7; }
-  33% { opacity: 0.1; }
-  50% { opacity: 0.7; }
-  66% { opacity: 0.1; }
-  83% { opacity: 0.7; }
-  100% { opacity: 0; }
-}
-.zf { animation: flash3 4.5s ease-in-out forwards; }
+@keyframes flash{0%,100%{opacity:0.1}50%{opacity:0.7}}
+.zf{animation:flash 2s ease-in-out infinite}
 #sd{transition:opacity 0.5s ease,visibility 0.5s}
+
+/* Smooth highlighting transitions */
+.hi{transition:color 0.8s ease,text-shadow 0.8s ease,opacity 0.8s ease;opacity:0.18;color:#B8B8B0;display:inline;cursor:pointer}
+.hi.active{opacity:1 !important;color:#ffffff !important;text-shadow:0 0 25px rgba(255,255,255,0.6) !important}
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
@@ -100,13 +96,6 @@ body {
 
 .quote-wrapper { padding-top: 100px; padding-bottom: 60px; }
 footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
-
-/* Styling individual stacked title words */
-.title-word {
-  display: block;
-  line-height: 0.88;
-  letter-spacing: -0.04em;
-}
 </style>
 </head>
 <body oncontextmenu="return false;">
@@ -117,11 +106,11 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </nav>
 
 <main class="relative w-full">
-  <section class="min-h-screen py-32 flex flex-col items-center justify-center px-6 relative z-10">
-    <div class="text-center flex-grow flex flex-col justify-center items-center my-auto">
-      <h1 id="h0" class="font-f1 font-extrabold text-6xl sm:text-8xl md:text-[10rem] lg:text-[12rem] xl:text-[14rem] tracking-tight z1 text-white uppercase flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 select-none" style="transition-delay:0.2s"></h1>
+  <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
+    <div class="text-center flex-grow flex flex-col justify-center items-center">
+      <h1 id="h0" class="font-f1 font-bold text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tight leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
     </div>
-    <div id="sd" class="pt-12 pb-12 md:pb-16 z1" style="transition-delay:0.8s">
+    <div id="sd" class="pb-40 md:pb-24 z1" style="transition-delay:0.8s">
       <div class="zs1 zf">Scroll Down</div>
     </div>
   </section>
@@ -316,8 +305,11 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     }
   ];
 
-  const formatText = (text) => {
-    return text.replace(/-/g, '<span class="st-hyphen">-</span>');
+  const wrapWords = (text) => {
+    return text.split(/\.\s*/).filter(s => s.trim().length > 0).map(sentence => {
+      const cleanSentence = sentence.trim().replace(/-/g, '<span class="st-hyphen">-</span>');
+      return `<span class="hi">${cleanSentence}.</span> `;
+    }).join("");
   };
 
   const updateClockAndStats = () => {
@@ -340,6 +332,57 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     if (statsEl) { statsEl.textContent = `Time: ${timeWithSeconds} • ${remainingMinutes} minutes remaining today`; }
   };
 
+  let autoReadTimer = null;
+  let currentSentenceIndex = -1;
+  let sentences = [];
+
+  const highlightAndScrollToSentence = (index) => {
+    if (!sentences.length) return;
+    
+    if (index >= sentences.length) {
+      // Finished all wisdom sentences - scroll to quote section
+      document.querySelector('.quote-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    currentSentenceIndex = index;
+    
+    sentences.forEach((span, i) => {
+      if (i === currentSentenceIndex) {
+        span.classList.add("active");
+        span.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        span.classList.remove("active");
+      }
+    });
+
+    // Calculate reading duration based on word count (minimum 3.2 seconds per sentence)
+    const text = sentences[currentSentenceIndex].textContent || "";
+    const wordCount = text.trim().split(/\s+/).length;
+    const displayDuration = Math.max(3200, wordCount * 380);
+
+    clearTimeout(autoReadTimer);
+    autoReadTimer = setTimeout(() => {
+      highlightAndScrollToSentence(currentSentenceIndex + 1);
+    }, displayDuration);
+  };
+
+  const initAutoReader = () => {
+    sentences = Array.from(document.querySelectorAll(".hi"));
+    
+    // Allow tapping any sentence to jump straight to it
+    sentences.forEach((span, idx) => {
+      span.addEventListener('click', () => {
+        highlightAndScrollToSentence(idx);
+      });
+    });
+
+    // Start auto reading after initial title display delay
+    setTimeout(() => {
+      highlightAndScrollToSentence(0);
+    }, 2800);
+  };
+
   const init = () => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
@@ -348,19 +391,14 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     
     const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
     
-    // Split theme title into stacked single words line-by-line
-    const stackedWords = currentTopic.theme
-      .split(' ')
-      .map(word => `<span class="title-word">${word}</span>`)
-      .join('');
+    // Set clean heading
+    document.getElementById("h0").textContent = currentTopic.theme;
     
-    document.getElementById("h0").innerHTML = stackedWords;
-    
-    // Render content paragraphs
+    // Render content paragraphs with large font sizes and bold Inter styling
     document.getElementById("m0").innerHTML = `
-      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${formatText(currentTopic.paragraphs[0])}</p></div>
-      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight">${formatText(currentTopic.paragraphs[1])}</p></div>
-      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${formatText(currentTopic.paragraphs[2])}</p></div>
+      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${wrapWords(currentTopic.paragraphs[0])}</p></div>
+      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight">${wrapWords(currentTopic.paragraphs[1])}</p></div>
+      <div class="z1"><p class="font-f1 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.2] tracking-tight zi">${wrapWords(currentTopic.paragraphs[2])}</p></div>
     `;
     updateClockAndStats();
     
@@ -368,6 +406,8 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("za"); });
     }, { threshold: 0.05 });
     document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
+
+    initAutoReader();
   };
 
   window.addEventListener("scroll", () => {
