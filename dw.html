@@ -19,7 +19,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
 tailwind.config={
   theme:{
@@ -106,8 +106,8 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 <main class="relative w-full">
   <section class="h-screen flex flex-col items-center justify-center px-6 relative z-10">
     <div class="text-center flex-grow flex flex-col justify-center items-center">
-      <!-- Day Counter above heading -->
-      <div id="day-counter" class="zd text-[11px] sm:text-[13px] uppercase tracking-[0.6em] font-f2 font-semibold mb-6 z1" style="transition-delay:0.1s"></div>
+      <!-- Thin, small Day label above heading -->
+      <div id="day-counter" class="zd text-[9px] sm:text-[11px] uppercase tracking-[0.6em] font-f2 font-light opacity-80 mb-4 z1" style="transition-delay:0.1s"></div>
       
       <!-- Main Heading -->
       <h1 id="h0" class="font-f1 font-bold text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tight leading-tight md:leading-none z1 text-white" style="transition-delay:0.2s"></h1>
@@ -339,13 +339,9 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
-    // Calculate total days in the current year (365 or 366 for leap years)
-    const year = now.getFullYear();
-    const totalDaysInYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0) ? 366 : 365;
 
-    // Set Day Counter text (e.g., DAY 257 OF 365)
-    document.getElementById("day-counter").textContent = `DAY ${dayOfYear} OF ${totalDaysInYear}`;
+    // Set simple "DAY X" label dynamically
+    document.getElementById("day-counter").textContent = `DAY ${dayOfYear}`;
 
     const currentTopic = dailyThemes[dayOfYear % dailyThemes.length];
     
