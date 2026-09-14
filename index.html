@@ -98,7 +98,8 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </head>
 <body oncontextmenu="return false;">
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-end items-center border-b border-transparent">
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
+  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2 font-medium">LOADING...</div>
 </nav>
 
@@ -312,6 +313,10 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 
   const updateClockAndStats = () => {
     const now = new Date();
+    
+    // Top-left Day of the week
+    const dayName = now.toLocaleDateString("en-US", { weekday: 'long' }).toUpperCase();
+    document.getElementById("d0").textContent = dayName;
 
     // Top-right Date format
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
