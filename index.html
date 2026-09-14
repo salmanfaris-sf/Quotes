@@ -73,17 +73,17 @@ body {
 .zb{color:#C5A059;opacity:0.9;text-shadow:0 0 30px rgba(197,160,89,0.3)}
 .zd{color:#C5A059;text-shadow:0 0 15px rgba(197,160,89,0.5)}
 
-/* Keyframe animation set to exactly 3 blinks before fading out completely */
+/* Fast keyframe animation set to 3 quick blinks */
 @keyframes flash{
   0%, 100% { opacity: 0.1; }
   50% { opacity: 0.7; }
 }
 .zf {
-  animation: flash 2s ease-in-out 3 forwards;
+  animation: flash 0.7s ease-in-out 3 forwards;
 }
 
 #sd {
-  transition: opacity 0.8s ease, visibility 0.8s;
+  transition: opacity 0.3s ease, visibility 0.3s;
 }
 
 .hi{color:#fff;display:inline-block}
@@ -367,7 +367,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     }, { threshold: 0.05 });
     document.querySelectorAll(".z1").forEach(el => generalObserver.observe(el));
 
-    // Handle disappearance of scroll indicator after 3rd blinking animation completes
+    // Handle rapid disappearance of scroll indicator after 3rd fast blink
     const zfEl = document.querySelector(".zf");
     const sdEl = document.getElementById("sd");
     if (zfEl && sdEl) {
@@ -376,7 +376,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
         sdEl.style.opacity = "0";
         setTimeout(() => {
           sdEl.style.visibility = "hidden";
-        }, 800);
+        }, 300);
       });
     }
   };
