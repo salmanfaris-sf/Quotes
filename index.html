@@ -76,8 +76,7 @@ body {
 .zf{animation:flash 2s ease-in-out infinite}
 #sd{transition:opacity 0.5s ease,visibility 0.5s}
 
-.hi{transition:color 0.6s ease,text-shadow 0.6s ease,opacity 0.6s ease;opacity:0.2;color:#B8B8B0;display:inline-block}
-.hi.active{opacity:1 !important;color:#fff !important;text-shadow:0 0 20px rgba(255,255,255,0.5) !important}
+.hi{color:#fff;display:inline-block}
 
 .quote-container { width: 100%; max-width: 90vw; margin: 0 auto; text-align: center; }
 .quote-line { font-family: 'Inter', sans-serif; font-size: clamp(12px, 3.8vw, 17px); font-weight: 400; line-height: 1.5; color: #ffffff; opacity: 0.9; margin: 0; }
@@ -99,8 +98,7 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </head>
 <body oncontextmenu="return false;">
 
-<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-between items-center border-b border-transparent">
-  <div id="d0" class="zd text-[10px] uppercase tracking-[0.4em] font-f2 font-medium">MONDAY</div>
+<nav id="n0" class="z0 fixed top-0 w-full z-50 py-4 px-8 flex justify-end items-center border-b border-transparent">
   <div id="t0" class="text-[10px] uppercase tracking-[0.4em] text-white/80 font-f2 font-medium">LOADING...</div>
 </nav>
 
@@ -314,10 +312,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 
   const updateClockAndStats = () => {
     const now = new Date();
-    
-    // Top-left Day of the week
-    const dayName = now.toLocaleDateString("en-US", { weekday: 'long' }).toUpperCase();
-    document.getElementById("d0").textContent = dayName;
 
     // Top-right Date format
     document.getElementById("t0").textContent = `${now.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} ${now.toLocaleDateString("en-US",{day:"2-digit"})} / ${now.getFullYear()}`;
@@ -361,14 +355,6 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
     const s = window.scrollY;
     document.getElementById("n0").classList.toggle("zs", s > 10);
     if(document.getElementById("sd")) document.getElementById("sd").style.opacity = s > 20 ? "0" : "1";
-    
-    const spans = document.querySelectorAll(".hi");
-    let active = null, min = Infinity;
-    spans.forEach(span => {
-      const dist = Math.abs((span.getBoundingClientRect().top + span.getBoundingClientRect().height / 2) - (window.innerHeight * 0.5));
-      if (dist < min) { min = dist; active = span; }
-    });
-    spans.forEach(span => { span === active && min < window.innerHeight * 0.4 ? span.classList.add("active") : span.classList.remove("active"); });
   }, { passive: true });
 
   window.onload = () => {
@@ -379,4 +365,3 @@ footer { padding-top: 10px; padding-bottom: 40px; position: relative; }
 </script>
 </body>
 </html>
-
