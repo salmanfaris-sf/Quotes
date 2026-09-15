@@ -107,7 +107,7 @@
             transition: opacity 0.33s ease;
         }
 
-        /* Autoplay Status Text (Positioned subtly at the top) */
+        /* Autoplay Status Text (Positioned top center) */
         #_ap_status_ {
             position: absolute;
             top: 24px;
@@ -123,20 +123,52 @@
             white-space: nowrap;
             transition: opacity 0.35s ease-in-out;
         }
+
+        /* Topic Item Button Custom Styling */
+        .topic-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s ease;
+        }
+        .topic-btn:hover, .topic-btn:active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .topic-btn.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Main Content Container -->
     <div class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </div>
 
     <!-- Navigation Hint -->
-    <div class="nav-hint hidden md:block">Tap / Swipe to navigate • Hold for Autoplay</div>
+    <div class="nav-hint hidden md:block">Swipe Up for Topics • Hold for Autoplay</div>
 
-    <!-- Autoplay Status Text -->
+    <!-- Autoplay & Category Status Toast -->
     <div id="_ap_status_"></div>
+
+    <!-- Topics Modal Overlay -->
+    <div id="_topics_modal_" class="fixed inset-0 bg-black/85 backdrop-blur-md z-30 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+        <div class="w-full max-w-xs sm:max-w-sm px-6 text-center" onclick="event.stopPropagation()">
+            <h2 class="text-xs uppercase tracking-widest text-neutral-400 mb-6 font-medium">Select Topic</h2>
+            
+            <div id="_topics_list_" class="flex flex-col gap-2.5">
+                <!-- Topic buttons generated via JavaScript -->
+            </div>
+
+            <button id="_close_modal_btn_" class="mt-7 text-xs text-neutral-500 hover:text-neutral-300 tracking-widest transition-colors py-2 px-4 uppercase font-light">
+                Close
+            </button>
+        </div>
+    </div>
 
 <script>
 (function(){
@@ -234,10 +266,46 @@
         { t: "Pressure reveals the man within."}
     ];
 
+    const _topics = [
+        { id: "all", label: "All Quotes" },
+        { id: "quran_sunnah", label: "Qur'an & Sunnah" },
+        { id: "laziness", label: "Overcoming Laziness & Time" },
+        { id: "brave", label: "Be Brave & Strong" },
+        { id: "action", label: "Take Action & Work Hard" },
+        { id: "focus", label: "Focus & Discipline" }
+    ];
+
+    let _selectedTopicId = "all";
+
+    function _matchesTopic(q, topicId) {
+        if (topicId === "all") return true;
+        const text = q.t.toLowerCase();
+
+        if (topicId === "quran_sunnah") {
+            return /qur'an|prophet|sahih|riyad|allah|shaitan|gaze|anger|deeds/i.test(q.t);
+        }
+        if (topicId === "laziness") {
+            return /laziness|tomorrow|waste|time|1,440|waiting|overthinking|minutes|year|relax|boredom/i.test(q.t);
+        }
+        if (topicId === "brave") {
+            return /brave|courage|pressure|fear|scared|hard days|stone|strength|vulnerable|free|man within|protect/i.test(q.t);
+        }
+        if (topicId === "action") {
+            return /act|action|do it|work|now|walk|walks|beginner|pro|sweat|repeat|excuses|cost|done|now\./i.test(q.t);
+        }
+        if (topicId === "focus") {
+            return /focus|consistency|habits|discipline|mind|mastery|goal|plan|progress|learning|character/i.test(q.t);
+        }
+        return true;
+    }
+
     const _qx = document.getElementById('_q_');
     const _st = document.getElementById('_st_');
     const _mc = document.getElementById('_mc_');
     const _apStatus = document.getElementById('_ap_status_');
+    const _modal = document.getElementById('_topics_modal_');
+    const _topicsListEl = document.getElementById('_topics_list_');
+    const _closeBtn = document.getElementById('_close_modal_btn_');
     
     let _l_i = null;
     let _startY = 0;
@@ -245,7 +313,7 @@
     let _currentY = 0;
     let _currentX = 0;
     let _isSwipe = false;
-    let _fsTriggered = false;
+    let _isModalOpen = false;
 
     // Autoplay & Long Press State
     let _isAutoplay = false;
@@ -256,7 +324,6 @@
     const AUTOPLAY_INTERVAL_MS = 20000;
     const LONG_PRESS_DELAY_MS = 550;
 
-    // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -265,7 +332,6 @@
         return arr;
     }
 
-    // Navigation and history tracker pool
     let _currentPool = [];
     let _lastQuoteText = null;
     let _history = [];
@@ -273,7 +339,8 @@
 
     function _getNextQuote() {
         if (_currentPool.length === 0) {
-            let freshList = [..._db];
+            let freshList = _db.filter(q => _matchesTopic(q, _selectedTopicId));
+            if (freshList.length === 0) freshList = [..._db]; // fallback safety
             _shuffle(freshList);
             if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
                 const head = freshList.pop();
@@ -282,8 +349,8 @@
             _currentPool = freshList;
         }
         const choice = _currentPool.pop();
-        _lastQuoteText = choice.t;
-        return choice;
+        if (choice) _lastQuoteText = choice.t;
+        return choice || { t: "Stay Disciplined." };
     }
 
     function _gs() {
@@ -385,17 +452,48 @@
         }
     }
 
-    function _enterFullscreen() {
-        const doc = document.documentElement;
-        if (!document.fullscreenElement) {
-            if (doc.requestFullscreen) {
-                doc.requestFullscreen().catch(() => {});
-            } else if (doc.webkitRequestFullscreen) {
-                doc.webkitRequestFullscreen().catch(() => {});
-            } else if (doc.msRequestFullscreen) {
-                doc.msRequestFullscreen().catch(() => {});
-            }
-        }
+    function _renderTopics() {
+        _topicsListEl.innerHTML = "";
+        _topics.forEach(topic => {
+            const btn = document.createElement('button');
+            const isActive = topic.id === _selectedTopicId;
+            btn.className = `topic-btn w-full py-3.5 px-5 rounded-xl text-xs text-left font-normal flex items-center justify-between tracking-wide ${isActive ? 'active' : 'text-neutral-300'}`;
+            
+            btn.innerHTML = `
+                <span>${topic.label}</span>
+                ${isActive ? '<span class="text-xs text-neutral-400">✓</span>' : ''}
+            `;
+
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                _selectTopic(topic.id, topic.label);
+            };
+
+            _topicsListEl.appendChild(btn);
+        });
+    }
+
+    function _openTopicsModal() {
+        _renderTopics();
+        _isModalOpen = true;
+        _modal.classList.remove('pointer-events-none', 'opacity-0');
+        _modal.classList.add('opacity-100');
+    }
+
+    function _closeTopicsModal() {
+        _isModalOpen = false;
+        _modal.classList.remove('opacity-100');
+        _modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function _selectTopic(topicId, topicLabel) {
+        _selectedTopicId = topicId;
+        _closeTopicsModal();
+        _showStatus(`Topic: ${topicLabel}`);
+        _currentPool = [];
+        _history = [];
+        _historyIndex = -1;
+        _next();
     }
 
     function _startLongPressTimer() {
@@ -432,8 +530,18 @@
         });
     };
 
-    // Click navigation (ignored if click was part of swipe or long press)
+    _modal.onclick = () => {
+        _closeTopicsModal();
+    };
+
+    _closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        _closeTopicsModal();
+    };
+
+    // Click navigation (ignored if modal is open, or click was part of swipe or long press)
     document.addEventListener('click', (e) => {
+        if (_isModalOpen) return;
         if (_isSwipe || _isLongPress) {
             _isLongPress = false;
             return;
@@ -449,9 +557,10 @@
         _currentX = _startX;
         _isSwipe = false;
         _isLongPress = false;
-        _fsTriggered = false;
 
-        _startLongPressTimer();
+        if (!_isModalOpen) {
+            _startLongPressTimer();
+        }
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
@@ -460,19 +569,12 @@
         const diffY = _startY - _currentY;
         const diffX = Math.abs(_startX - _currentX);
 
-        // Cancel long press if user moves finger beyond small threshold
         if (Math.abs(diffY) > 10 || diffX > 10) {
             _cancelLongPressTimer();
         }
 
         if (diffY > 10 && e.cancelable) {
             e.preventDefault();
-        }
-
-        if (!_fsTriggered && diffY > 40 && diffX < 25) {
-            _fsTriggered = true;
-            _isSwipe = true;
-            _enterFullscreen();
         }
     }, { passive: false });
 
@@ -482,12 +584,24 @@
         const deltaX = _currentX - _startX;
         const deltaY = _currentY - _startY;
 
-        if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
             _isSwipe = true;
-            if (deltaX > 50) {
-                _prev(); // Swipe Right -> Previous
-            } else if (deltaX < -50) {
-                _next(); // Swipe Left -> Next
+            if (!_isModalOpen) {
+                if (deltaX > 40) {
+                    _prev(); // Swipe Right -> Previous
+                } else if (deltaX < -40) {
+                    _next(); // Swipe Left -> Next
+                }
+            }
+        } else if (deltaY < -40 && Math.abs(deltaY) > Math.abs(deltaX)) {
+            _isSwipe = true;
+            if (!_isModalOpen) {
+                _openTopicsModal(); // Swipe Up -> Open Topics Selector
+            }
+        } else if (deltaY > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
+            if (_isModalOpen) {
+                _isSwipe = true;
+                _closeTopicsModal(); // Swipe Down -> Close Modal
             }
         }
 
@@ -500,7 +614,7 @@
 
     // Desktop Mouse support for long press toggle
     document.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return; // Only primary click
+        if (_isModalOpen || e.button !== 0) return;
         _startX = e.clientX;
         _startY = e.clientY;
         _isLongPress = false;
@@ -523,10 +637,18 @@
 
     // Keyboard navigation support
     document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape') {
+            _closeTopicsModal();
+            return;
+        }
+        if (_isModalOpen) return;
+
         if (e.code === 'Space' || e.code === 'ArrowRight') {
             _next();
         } else if (e.code === 'ArrowLeft') {
             _prev();
+        } else if (e.code === 'ArrowUp' || e.code === 'KeyT') {
+            _openTopicsModal();
         } else if (e.code === 'KeyA') {
             _toggleAutoplay();
         }
