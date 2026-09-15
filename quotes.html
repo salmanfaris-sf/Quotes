@@ -107,10 +107,10 @@
             transition: opacity 0.33s ease;
         }
 
-        /* Autoplay Status Text (Slightly brighter subtle text at bottom) */
+        /* Autoplay Status Text (Positioned subtly at the top) */
         #_ap_status_ {
             position: absolute;
-            bottom: 24px;
+            top: 24px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 11px;
@@ -403,10 +403,6 @@
         _longPressTimer = setTimeout(() => {
             _isLongPress = true;
             _toggleAutoplay();
-            // Provide gentle haptic feedback if supported on device
-            if (window.navigator && window.navigator.vibrate) {
-                try { window.navigator.vibrate(35); } catch(e){}
-            }
         }, LONG_PRESS_DELAY_MS);
     }
 
