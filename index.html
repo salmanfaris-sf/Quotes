@@ -9,12 +9,17 @@
       gtag('config', 'G-P37159WTH1');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>salmanfaris.com</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
-    <meta name="theme-color" content="#161617">
+    
+    <!-- Pure Black Address Bar & Status Bar Controls -->
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="msapplication-navbutton-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -33,11 +38,25 @@
             padding: 0;
             background-color: var(--bg);
             overflow: hidden;
-            touch-action: none;
+            touch-action: manipulation;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Respect safe areas for notched devices */
+        #top-header {
+            padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+            padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
+        }
+
+        #tap-hint {
+            bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+        }
+
+        #_ap_status_ {
+            top: calc(1.75rem + env(safe-area-inset-top, 0px));
         }
 
         /* Apple Overlay Menu Container */
@@ -53,6 +72,8 @@
             visibility: hidden;
             pointer-events: none;
             will-change: clip-path, opacity;
+            padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
         }
 
         /* Mode 1: Top-Right Circular Radial Wave (When clicking "Topics") */
@@ -141,7 +162,6 @@
 
         #_ap_status_ {
             position: absolute;
-            top: 28px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 12px;
@@ -164,6 +184,7 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
+    <!-- Top Right Header Navigation Button -->
     <header id="top-header" class="fixed top-0 right-0 z-40 flex justify-end items-center px-6 py-5 opacity-0 transition-opacity duration-1000">
         <button id="btn-open-menu" class="text-xs font-medium text-[#86868b] hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none bg-transparent border-none outline-none cursor-pointer">
             <span>Topics</span>
@@ -173,7 +194,8 @@
         </button>
     </header>
 
-    <div id="apple-menu-overlay" class="fixed inset-0 z-50 pt-5 px-8 sm:px-16 pb-12 flex flex-col justify-start overflow-y-auto">
+    <!-- Overlay Navigation Menu -->
+    <div id="apple-menu-overlay" class="fixed inset-0 z-50 px-8 sm:px-16 flex flex-col justify-start overflow-y-auto">
         <!-- Close Button Header (Thin stroke ✕ icon) -->
         <div class="w-full max-w-lg mx-auto flex justify-end items-center mb-6 sm:mb-8">
             <button id="btn-close-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none" aria-label="Close Menu">
@@ -197,8 +219,8 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <!-- Tap Hint at Bottom -->
-    <div id="tap-hint" class="fixed bottom-7 left-1/2 -translate-x-1/2 text-[11px] font-normal tracking-widest text-[#86868b] uppercase pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+    <!-- Tap Hint at Bottom (Updated to match top right topics color: #86868b) -->
+    <div id="tap-hint" class="fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
 
@@ -547,7 +569,7 @@
             setTimeout(() => {
                 if (!_hasTapped && _tapHint) {
                     _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-70');
+                    _tapHint.classList.add('opacity-90');
                 }
             }, 900);
 
