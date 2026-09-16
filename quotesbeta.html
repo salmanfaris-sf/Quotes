@@ -53,10 +53,10 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            /* Extra slow, cinematic circular expansion transition */
-            transition: clip-path 1.85s cubic-bezier(0.16, 1, 0.3, 1), 
-                        opacity 0.35s ease, 
-                        visibility 1.85s ease;
+            /* Ultra-slow, cinematic circular expansion transition */
+            transition: clip-path 2.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 0.45s ease, 
+                        visibility 2.8s ease;
             will-change: clip-path;
         }
 
@@ -70,8 +70,8 @@
         .apple-menu-item {
             opacity: 0;
             transform: translateY(-28px) scale(0.95);
-            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+            transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), 
                         color 0.2s ease;
             will-change: transform, opacity;
         }
@@ -481,8 +481,8 @@
                     isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
                 }`;
                 
-                // Extra slow, rhythmic delayed sequence matching the 1.85s wave expansion
-                btn.style.transitionDelay = `${0.65 + (idx * 0.15)}s`;
+                // Ultra slow, rhythmic delayed sequence matching the 2.8s wave expansion
+                btn.style.transitionDelay = `${1.0 + (idx * 0.22)}s`;
                 
                 btn.innerHTML = `
                     <span>${topic.label}</span>
