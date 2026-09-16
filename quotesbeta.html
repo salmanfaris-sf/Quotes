@@ -16,9 +16,7 @@
     <meta name="theme-color" content="#161617">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -42,7 +40,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Apple Style Dropdown - Clip-path curtain sweep where bottom edge unrolls downward */
+        /* Circular Reveal Android/Water-Drop Style Overlay */
         #apple-menu-overlay {
             position: fixed;
             top: 0;
@@ -51,30 +49,29 @@
             bottom: 0;
             z-index: 50;
             background-color: var(--apple-dark);
-            /* Clip path curtain: top stays pinned while bottom edge expands downward */
-            clip-path: inset(0 0 100% 0);
+            clip-path: circle(0px at var(--ripple-x, 90vw) var(--ripple-y, 30px));
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: clip-path 0.52s cubic-bezier(0.32, 0.72, 0, 1), 
-                        opacity 0.38s ease, 
-                        visibility 0.52s ease;
-            will-change: clip-path, opacity;
+            /* Smooth circular expansion transition */
+            transition: clip-path 0.75s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        opacity 0.15s ease, 
+                        visibility 0.75s ease;
+            will-change: clip-path;
         }
 
         #apple-menu-overlay.menu-open {
-            clip-path: inset(0 0 0 0);
+            clip-path: circle(160vmax at var(--ripple-x, 90vw) var(--ripple-y, 30px));
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
         }
 
-        /* Sequential Cascading Stagger for Individual Menu Options */
         .apple-menu-item {
             opacity: 0;
-            transform: translateY(-22px) scale(0.97);
-            transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), 
+            transform: translateY(-24px) scale(0.96);
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
                         color 0.2s ease;
             will-change: transform, opacity;
         }
@@ -84,7 +81,6 @@
             transform: translateY(0) scale(1);
         }
 
-        /* Quotes Content Fade Animation */
         ._f1 {
             opacity: 0;
             transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -132,7 +128,6 @@
             line-height: 1.6;
         }
 
-        /* Toast Notification Box */
         #_ap_status_ {
             position: absolute;
             top: 28px;
@@ -158,9 +153,8 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <header class="fixed top-0 left-0 right-0 z-40 flex justify-between items-center px-6 py-5">
-        <span class="text-xs font-semibold tracking-widest text-[#86868b] uppercase">The Creed</span>
-        <button id="btn-open-menu" class="text-xs font-medium text-[#86868b] hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none">
+    <header id="top-header" class="fixed top-0 right-0 z-40 flex justify-end items-center px-6 py-5 opacity-0 transition-opacity duration-1000">
+        <button id="btn-open-menu" class="text-xs font-medium text-[#86868b] hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none py-1.5 px-3 rounded-full hover:bg-white/5">
             <span>Topics</span>
             <svg class="w-3.5 h-3.5 fill-current opacity-70" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -181,7 +175,7 @@
         <!-- Topics Navigation Area -->
         <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
             <nav id="apple-topics-nav" class="flex flex-col space-y-3 sm:space-y-4 text-left">
-                <!-- Topic options with staggered entry injected dynamically -->
+                <!-- Topic options dynamically rendered with cascading animation delays -->
             </nav>
         </div>
     </div>
@@ -190,6 +184,11 @@
         <h1 id="_q_" class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light leading-relaxed tracking-tight opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
+
+    <!-- Tap Hint at Bottom (Initially hidden for staggered sequence) -->
+    <div id="tap-hint" class="fixed bottom-7 left-1/2 -translate-x-1/2 text-[11px] font-normal tracking-widest text-[#86868b] uppercase pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+        Tap anywhere to view the next quote
+    </div>
 
     <!-- Status Toast Notification -->
     <div id="_ap_status_"></div>
@@ -209,7 +208,7 @@
             { t: "Do it even when you don't feel like it." },
             { t: "Nothing changes if nothing changes." },
             { t: "Stay different." },
-            { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
+            { t: "You only have 1,440 minutes every day,\ndon’let a single one go to waste.", id: "t_q" },
             { t: "You can't have a million dollar dream with a minimum wage work ethic." },
             { t: "A real man protects and provides." },
             { t: "Don't follow the crowd. Follow the truth." },
@@ -297,6 +296,7 @@
 
         let _selectedTopicId = "all";
         let _isMenuOpen = false;
+        let _hasTapped = false;
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -318,10 +318,13 @@
             return true;
         }
 
+        // DOM Element references
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
         const _apStatus = document.getElementById('_ap_status_');
+        const _tapHint = document.getElementById('tap-hint');
+        const _topHeader = document.getElementById('top-header');
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _topicsNav = document.getElementById('apple-topics-nav');
         const _openMenuBtn = document.getElementById('btn-open-menu');
@@ -406,7 +409,20 @@
             }, 350);
         }
 
+        function _hideTapHint() {
+            if (!_hasTapped && _tapHint) {
+                _hasTapped = true;
+                _tapHint.style.opacity = '0';
+                setTimeout(() => {
+                    if (_tapHint && _tapHint.parentNode) {
+                        _tapHint.parentNode.removeChild(_tapHint);
+                    }
+                }, 1000);
+            }
+        }
+
         function _next() {
+            _hideTapHint();
             if (_historyIndex < _history.length - 1) {
                 _historyIndex++;
                 _showQuote(_history[_historyIndex]);
@@ -419,6 +435,7 @@
         }
 
         function _prev() {
+            _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
@@ -446,18 +463,28 @@
             }, 2400);
         }
 
+        function _updateRippleOrigin(element) {
+            if (!element) return;
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            _menuOverlay.style.setProperty('--ripple-x', `${x}px`);
+            _menuOverlay.style.setProperty('--ripple-y', `${y}px`);
+        }
+
         function _renderAppleMenuTopics() {
             _topicsNav.innerHTML = "";
             _topics.forEach((topic, idx) => {
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
                 
-                // Bold typography & staggered delay step (0.055s increment per item starting after initial curtain sweep)
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1.5 flex items-center justify-between ${
+                // Staggered delay starts as the dark circle expands across the screen
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-2 flex items-center justify-between ${
                     isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
                 }`;
                 
-                btn.style.transitionDelay = `${0.12 + (idx * 0.055)}s`;
+                // Delay topic item reveal until the dark ripple fills the screen (0.30s start + 0.08s step)
+                btn.style.transitionDelay = `${0.30 + (idx * 0.08)}s`;
                 
                 btn.innerHTML = `
                     <span>${topic.label}</span>
@@ -466,34 +493,37 @@
 
                 btn.onclick = (e) => {
                     e.stopPropagation();
-                    _selectTopic(topic.id, topic.label);
+                    _selectTopic(topic.id, topic.label, btn);
                 };
 
                 _topicsNav.appendChild(btn);
             });
         }
 
-        function _openAppleMenu() {
+        function _openAppleMenu(triggerEl) {
             _isMenuOpen = true;
+            _updateRippleOrigin(triggerEl || _openMenuBtn);
             _renderAppleMenuTopics();
 
-            // Force browser layout reflow to register initial opacity:0 & translateY before adding class
+            // Force layout reflow to ensure smooth transition trigger
             void _topicsNav.offsetWidth;
 
             _menuOverlay.classList.add('menu-open');
         }
 
-        function _closeAppleMenu() {
+        function _closeAppleMenu(triggerEl) {
             _isMenuOpen = false;
-            // Clear item delays when closing for immediate collapse
+            if (triggerEl) {
+                _updateRippleOrigin(triggerEl);
+            }
             const items = _topicsNav.querySelectorAll('.apple-menu-item');
             items.forEach(el => el.style.transitionDelay = '0s');
             _menuOverlay.classList.remove('menu-open');
         }
 
-        function _selectTopic(topicId, topicLabel) {
+        function _selectTopic(topicId, topicLabel, triggerEl) {
             _selectedTopicId = topicId;
-            _closeAppleMenu();
+            _closeAppleMenu(triggerEl);
             _showStatus(`Topic: ${topicLabel}`);
             _currentPool = [];
             _history = [];
@@ -515,21 +545,38 @@
                 _st.classList.remove('opacity-0');
             }
 
+            // Step 1: Immediately reveal quotes
             requestAnimationFrame(() => {
                 _mc.classList.add('v');
             });
+
+            // Step 2: Reveal bottom tap hint after quote load
+            setTimeout(() => {
+                if (!_hasTapped && _tapHint) {
+                    _tapHint.classList.remove('opacity-0');
+                    _tapHint.classList.add('opacity-70');
+                }
+            }, 900);
+
+            // Step 3: Reveal top right "Topics" button last
+            setTimeout(() => {
+                if (_topHeader) {
+                    _topHeader.classList.remove('opacity-0');
+                    _topHeader.classList.add('opacity-100');
+                }
+            }, 1700);
 
             _renderAppleMenuTopics();
         };
 
         _openMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            _openAppleMenu();
+            _openAppleMenu(_openMenuBtn);
         });
 
         _closeMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            _closeAppleMenu();
+            _closeAppleMenu(_closeMenuBtn);
         });
 
         _menuOverlay.addEventListener('click', (e) => {
@@ -545,7 +592,7 @@
             _next();
         });
 
-        // Touch event handlers for swiping navigation and menu gestures
+        // Touch event handlers for navigation and swipe menu gestures
         document.addEventListener('touchstart', (e) => {
             _startY = e.touches[0].clientY;
             _startX = e.touches[0].clientX;
@@ -561,14 +608,14 @@
 
         document.addEventListener('touchend', () => {
             const deltaX = _currentX - _startX;
-            const deltaY = _currentY - _startY; // Positive = Swipe Down, Negative = Swipe Up
+            const deltaY = _currentY - _startY;
 
             if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
                 _isSwipe = true;
                 if (deltaY > 40 && !_isMenuOpen) {
-                    _openAppleMenu();
+                    _openAppleMenu(_openMenuBtn);
                 } else if (deltaY < -40 && _isMenuOpen) {
-                    _closeAppleMenu();
+                    _closeAppleMenu(_closeMenuBtn);
                 }
             } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
                 _isSwipe = true;
@@ -588,20 +635,20 @@
             }
         }, { passive: true });
 
-        // Keyboard shortcuts
+        // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Escape') {
-                _closeAppleMenu();
+                _closeAppleMenu(_closeMenuBtn);
                 return;
             }
 
             if (e.code === 'KeyM' || e.code === 'ArrowDown') {
-                if (!_isMenuOpen) _openAppleMenu();
+                if (!_isMenuOpen) _openAppleMenu(_openMenuBtn);
                 return;
             }
 
             if (e.code === 'ArrowUp' && _isMenuOpen) {
-                _closeAppleMenu();
+                _closeAppleMenu(_closeMenuBtn);
                 return;
             }
 
