@@ -52,7 +52,7 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            will-change: transform, clip-path, opacity;
+            will-change: clip-path, opacity;
         }
 
         /* Mode 1: Top-Right Circular Radial Wave (When clicking "Topics") */
@@ -71,9 +71,9 @@
             pointer-events: auto;
         }
 
-        /* Mode 2: Top-Center Circular Radial Wave (When swiping down) */
+        /* Mode 2: Straight Downward Wave (When swiping down anywhere) */
         #apple-menu-overlay.mode-swipe {
-            clip-path: circle(0px at 50vw 0px);
+            clip-path: ellipse(180% 0% at 50% 0%);
             transform: none;
             transition: clip-path 2.8s cubic-bezier(0.16, 1, 0.3, 1), 
                         opacity 0.45s ease, 
@@ -81,7 +81,7 @@
         }
 
         #apple-menu-overlay.mode-swipe.menu-open {
-            clip-path: circle(170vmax at 50vw 0px);
+            clip-path: ellipse(180% 180% at 50% 0%);
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
@@ -220,7 +220,7 @@
             { t: "Do it even when you don't feel like it." },
             { t: "Nothing changes if nothing changes." },
             { t: "Stay different." },
-            { t: "You only have 1,440 minutes every day,\ndon’let a single one go to waste.", id: "t_q" },
+            { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
             { t: "You can't have a million dollar dream with a minimum wage work ethic." },
             { t: "A real man protects and provides." },
             { t: "Don't follow the crowd. Follow the truth." },
