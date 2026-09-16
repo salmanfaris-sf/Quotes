@@ -10,7 +10,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Creed</title>
+    <title>salmanfaris.com</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#161617">
@@ -186,7 +186,7 @@
         <!-- Topics Navigation Area -->
         <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
             <nav id="apple-topics-nav" class="flex flex-col space-y-3 sm:space-y-4 text-left">
-                <!-- Topic options dynamically rendered without delays -->
+                <!-- Topic options dynamically rendered with quote items -->
             </nav>
         </div>
     </div>
@@ -297,12 +297,13 @@
             { t: "Pressure reveals the man within."}
         ];
 
+        // Using actual quotes as topic representations in the menu
         const _topics = [
-            { id: "all", label: "All Creeds" },
-            { id: "laziness", label: "Time & Laziness" },
-            { id: "brave", label: "Courage & Strength" },
-            { id: "action", label: "Action & Hard Work" },
-            { id: "focus", label: "Focus & Discipline" }
+            { id: "all", label: "“Be better than you were yesterday.”" },
+            { id: "laziness", label: "“Time waits for no one.”" },
+            { id: "brave", label: "“He who is brave is free.”" },
+            { id: "action", label: "“5,4,3,2,1. Act Now.”" },
+            { id: "focus", label: "“Focus is a superpower.”" }
         ];
 
         let _selectedTopicId = "all";
@@ -477,13 +478,13 @@
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-2 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                btn.className = `apple-menu-item text-left text-lg sm:text-2xl font-light tracking-tight transition-colors py-3 flex items-center justify-between gap-4 border-b border-white/5 ${
+                    isActive ? 'text-white font-normal' : 'text-[#86868b] hover:text-white'
                 }`;
                 
                 btn.innerHTML = `
                     <span>${topic.label}</span>
-                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
+                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full shrink-0">Active</span>' : ''}
                 `;
 
                 btn.onclick = (e) => {
@@ -522,7 +523,7 @@
         function _selectTopic(topicId, topicLabel) {
             _selectedTopicId = topicId;
             _closeAppleMenu();
-            _showStatus(`Topic: ${topicLabel}`);
+            _showStatus(`Selected: ${topicLabel}`);
             _currentPool = [];
             _history = [];
             _historyIndex = -1;
