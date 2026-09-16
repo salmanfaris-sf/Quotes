@@ -13,7 +13,7 @@
     <title>The Creed</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#161617">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Tailwind CSS CDN -->
@@ -25,7 +25,7 @@
         :root {
             --bg: #000000;
             --text: #f5f5f7;
-            --apple-dark: #161617;
+            --apple-dark: #161617; /* Apple signature dark gray menu background */
             --apple-muted: #86868b;
         }
 
@@ -42,7 +42,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Apple Style Fullscreen Overlay - Smooth Dropdown From Top */
+        /* Apple Style Dropdown - Clip-path curtain sweep where bottom edge unrolls downward */
         #apple-menu-overlay {
             position: fixed;
             top: 0;
@@ -50,51 +50,39 @@
             right: 0;
             bottom: 0;
             z-index: 50;
-            background-color: rgba(0, 0, 0, 0.94);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            transform: translateY(-100%);
+            background-color: var(--apple-dark);
+            /* Clip path curtain: top stays pinned while bottom edge expands downward */
+            clip-path: inset(0 0 100% 0);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, visibility 0.45s ease;
-        }
-
-        #apple-menu-overlay.menu-closed {
-            transform: translateY(-100%);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+            transition: clip-path 0.52s cubic-bezier(0.32, 0.72, 0, 1), 
+                        opacity 0.38s ease, 
+                        visibility 0.52s ease;
+            will-change: clip-path, opacity;
         }
 
         #apple-menu-overlay.menu-open {
-            transform: translateY(0);
+            clip-path: inset(0 0 0 0);
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
         }
 
-        /* Staggered Links Animation inside dropdown */
-        .menu-item {
+        /* Sequential Cascading Stagger for Individual Menu Options */
+        .apple-menu-item {
             opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+            transform: translateY(-22px) scale(0.97);
+            transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), 
+                        color 0.2s ease;
+            will-change: transform, opacity;
         }
 
-        .menu-open .menu-item {
+        .menu-open .apple-menu-item {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
-
-        /* Dynamic Stagger Delays on Reveal */
-        .menu-open .menu-item:nth-child(1) { transition-delay: 0.12s; }
-        .menu-open .menu-item:nth-child(2) { transition-delay: 0.16s; }
-        .menu-open .menu-item:nth-child(3) { transition-delay: 0.20s; }
-        .menu-open .menu-item:nth-child(4) { transition-delay: 0.24s; }
-        .menu-open .menu-item:nth-child(5) { transition-delay: 0.28s; }
-        .menu-open .menu-item:nth-child(6) { transition-delay: 0.32s; }
-        .menu-open .menu-item:nth-child(7) { transition-delay: 0.36s; }
-        .menu-open .menu-item:nth-child(8) { transition-delay: 0.40s; }
 
         /* Quotes Content Fade Animation */
         ._f1 {
@@ -144,22 +132,6 @@
             line-height: 1.6;
         }
 
-        /* Navigation Hint at Bottom */
-        .nav-hint {
-            position: absolute;
-            bottom: 28px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 11px;
-            color: #55555e;
-            font-weight: 400;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            pointer-events: none;
-            opacity: 0.7;
-            transition: opacity 0.33s ease;
-        }
-
         /* Toast Notification Box */
         #_ap_status_ {
             position: absolute;
@@ -186,45 +158,31 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Apple Style Fullscreen Dropdown Overlay -->
-    <div id="apple-menu-overlay" class="menu-closed fixed inset-0 z-50 pt-16 px-8 sm:px-16 pb-12 flex flex-col justify-between overflow-y-auto">
-        <div class="max-w-xl w-full mx-auto flex flex-col pt-6">
-            <!-- Swipe indicator line at top of menu -->
-            <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-8 menu-item"></div>
+    <header class="fixed top-0 left-0 right-0 z-40 flex justify-between items-center px-6 py-5">
+        <span class="text-xs font-semibold tracking-widest text-[#86868b] uppercase">The Creed</span>
+        <button id="btn-open-menu" class="text-xs font-medium text-[#86868b] hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none">
+            <span>Topics</span>
+            <svg class="w-3.5 h-3.5 fill-current opacity-70" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </header>
 
-            <!-- Category Header -->
-            <p class="menu-item text-xs font-semibold tracking-widest uppercase text-[#86868b] mb-6">
-                Topics & Categories
-            </p>
-
-            <!-- Large Bold Left-Aligned Menu Options (Apple Style) -->
-            <nav id="apple-topics-nav" class="flex flex-col gap-4 sm:gap-5 text-left">
-                <!-- Javascript will insert items here -->
-            </nav>
-
-            <div class="w-full h-[1px] bg-white/10 my-8 menu-item"></div>
-
-            <!-- Additional Controls Section -->
-            <p class="menu-item text-xs font-semibold tracking-widest uppercase text-[#86868b] mb-4">
-                Preferences & Controls
-            </p>
-            <div class="flex flex-col gap-3.5 text-left">
-                <button id="btn-toggle-autoplay" class="menu-item group text-left flex items-center justify-between text-base font-medium text-[#e5e5e7] hover:text-white transition-colors">
-                    <span>Autoplay Mode</span>
-                    <span id="autoplay-indicator" class="text-xs px-2.5 py-1 rounded-full bg-white/10 text-neutral-400 group-hover:bg-white/20 transition-all">Off</span>
-                </button>
-                <button id="btn-random-quote" class="menu-item text-left text-base font-medium text-[#e5e5e7] hover:text-white transition-colors">
-                    Shuffle Next Quote
-                </button>
-            </div>
+    <div id="apple-menu-overlay" class="fixed inset-0 z-50 pt-5 px-8 sm:px-16 pb-12 flex flex-col justify-start overflow-y-auto">
+        <!-- Close Button Header -->
+        <div class="w-full max-w-lg mx-auto flex justify-end items-center mb-6 sm:mb-8">
+            <button id="btn-close-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none" aria-label="Close Menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
 
-        <!-- Apple Menu Footer Info -->
-        <div class="max-w-xl w-full mx-auto pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs text-[#86868b]">
-            <span class="font-normal tracking-wide">Swipe Up to Close Menu</span>
-            <button id="btn-dismiss-menu" class="text-xs text-[#86868b] hover:text-white transition-colors uppercase tracking-wider font-semibold">
-                Dismiss ✕
-            </button>
+        <!-- Topics Navigation Area -->
+        <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
+            <nav id="apple-topics-nav" class="flex flex-col space-y-3 sm:space-y-4 text-left">
+                <!-- Topic options with staggered entry injected dynamically -->
+            </nav>
         </div>
     </div>
 
@@ -232,9 +190,6 @@
         <h1 id="_q_" class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light leading-relaxed tracking-tight opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
-
-    <!-- Bottom Navigation Cue -->
-    <div class="nav-hint hidden md:block">Swipe Down for Menu • Tap for Next • Hold for Autoplay</div>
 
     <!-- Status Toast Notification -->
     <div id="_ap_status_"></div>
@@ -334,7 +289,7 @@
         const _topics = [
             { id: "all", label: "All Creeds" },
             { id: "quran_sunnah", label: "Qur'an & Sunnah" },
-            { id: "laziness", label: "Overcoming Laziness & Time" },
+            { id: "laziness", label: "Time & Laziness" },
             { id: "brave", label: "Courage & Strength" },
             { id: "action", label: "Action & Hard Work" },
             { id: "focus", label: "Focus & Discipline" }
@@ -363,17 +318,14 @@
             return true;
         }
 
-        // DOM References
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
         const _apStatus = document.getElementById('_ap_status_');
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _topicsNav = document.getElementById('apple-topics-nav');
-        const _autoplayToggleBtn = document.getElementById('btn-toggle-autoplay');
-        const _autoplayIndicator = document.getElementById('autoplay-indicator');
-        const _randomQuoteBtn = document.getElementById('btn-random-quote');
-        const _dismissMenuBtn = document.getElementById('btn-dismiss-menu');
+        const _openMenuBtn = document.getElementById('btn-open-menu');
+        const _closeMenuBtn = document.getElementById('btn-close-menu');
 
         let _l_i = null;
         let _startY = 0;
@@ -381,15 +333,7 @@
         let _currentY = 0;
         let _currentX = 0;
         let _isSwipe = false;
-
-        // Autoplay & Long Press State
-        let _isAutoplay = false;
-        let _autoplayInterval = null;
-        let _longPressTimer = null;
-        let _isLongPress = false;
         let _statusTimeout = null;
-        const AUTOPLAY_INTERVAL_MS = 18000;
-        const LONG_PRESS_DELAY_MS = 550;
 
         function _shuffle(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -502,42 +446,22 @@
             }, 2400);
         }
 
-        function _toggleAutoplay() {
-            _isAutoplay = !_isAutoplay;
-            
-            if (_isAutoplay) {
-                _showStatus("Autoplay Enabled");
-                _autoplayIndicator.innerText = "On";
-                _autoplayIndicator.className = "text-xs px-2.5 py-1 rounded-full bg-white text-black font-semibold transition-all";
-                
-                if (_autoplayInterval) clearInterval(_autoplayInterval);
-                _autoplayInterval = setInterval(() => {
-                    _next();
-                }, AUTOPLAY_INTERVAL_MS);
-            } else {
-                _showStatus("Autoplay Disabled");
-                _autoplayIndicator.innerText = "Off";
-                _autoplayIndicator.className = "text-xs px-2.5 py-1 rounded-full bg-white/10 text-neutral-400 transition-all";
-                
-                if (_autoplayInterval) {
-                    clearInterval(_autoplayInterval);
-                    _autoplayInterval = null;
-                }
-            }
-        }
-
         function _renderAppleMenuTopics() {
             _topicsNav.innerHTML = "";
-            _topics.forEach((topic) => {
+            _topics.forEach((topic, idx) => {
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
-                btn.className = `menu-item text-left font-bold tracking-tight text-2xl sm:text-3xl transition-colors flex items-center justify-between ${
-                    isActive ? 'text-white font-semibold' : 'text-[#86868b] hover:text-[#f5f5f7]'
+                
+                // Bold typography & staggered delay step (0.055s increment per item starting after initial curtain sweep)
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1.5 flex items-center justify-between ${
+                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
                 }`;
+                
+                btn.style.transitionDelay = `${0.12 + (idx * 0.055)}s`;
                 
                 btn.innerHTML = `
                     <span>${topic.label}</span>
-                    ${isActive ? '<span class="text-xs tracking-normal font-normal text-white bg-white/10 px-3 py-1 rounded-full">Active</span>' : ''}
+                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
                 `;
 
                 btn.onclick = (e) => {
@@ -552,22 +476,19 @@
         function _openAppleMenu() {
             _isMenuOpen = true;
             _renderAppleMenuTopics();
-            _menuOverlay.classList.remove('menu-closed');
+
+            // Force browser layout reflow to register initial opacity:0 & translateY before adding class
+            void _topicsNav.offsetWidth;
+
             _menuOverlay.classList.add('menu-open');
         }
 
         function _closeAppleMenu() {
             _isMenuOpen = false;
+            // Clear item delays when closing for immediate collapse
+            const items = _topicsNav.querySelectorAll('.apple-menu-item');
+            items.forEach(el => el.style.transitionDelay = '0s');
             _menuOverlay.classList.remove('menu-open');
-            _menuOverlay.classList.add('menu-closed');
-        }
-
-        function _toggleAppleMenu() {
-            if (_isMenuOpen) {
-                _closeAppleMenu();
-            } else {
-                _openAppleMenu();
-            }
         }
 
         function _selectTopic(topicId, topicLabel) {
@@ -580,22 +501,6 @@
             _next();
         }
 
-        function _startLongPressTimer() {
-            _cancelLongPressTimer();
-            _longPressTimer = setTimeout(() => {
-                _isLongPress = true;
-                _toggleAutoplay();
-            }, LONG_PRESS_DELAY_MS);
-        }
-
-        function _cancelLongPressTimer() {
-            if (_longPressTimer) {
-                clearTimeout(_longPressTimer);
-                _longPressTimer = null;
-            }
-        }
-
-        // Initialize App
         window.onload = () => {
             const i = _getNextQuote();
             _history.push(i);
@@ -617,78 +522,52 @@
             _renderAppleMenuTopics();
         };
 
-        _autoplayToggleBtn.addEventListener('click', (e) => {
+        _openMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            _toggleAutoplay();
+            _openAppleMenu();
         });
 
-        _randomQuoteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            _next();
-            _closeAppleMenu();
-        });
-
-        _dismissMenuBtn.addEventListener('click', (e) => {
+        _closeMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             _closeAppleMenu();
         });
 
-        // Click outside menu options closes menu
         _menuOverlay.addEventListener('click', (e) => {
             if (e.target === _menuOverlay) {
                 _closeAppleMenu();
             }
         });
 
-        // Global Canvas Click Event (Ignored if menu open or swipe/long-press)
+        // Global Canvas Click Event
         document.addEventListener('click', () => {
             if (_isMenuOpen) return;
-            
-            if (_isSwipe || _isLongPress) {
-                _isLongPress = false;
-                return;
-            }
+            if (_isSwipe) return;
             _next();
         });
 
-        // Touch event handlers for mobile gestures
+        // Touch event handlers for swiping navigation and menu gestures
         document.addEventListener('touchstart', (e) => {
             _startY = e.touches[0].clientY;
             _startX = e.touches[0].clientX;
             _currentY = _startY;
             _currentX = _startX;
             _isSwipe = false;
-            _isLongPress = false;
-
-            if (!_isMenuOpen) {
-                _startLongPressTimer();
-            }
         }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
             _currentY = e.touches[0].clientY;
             _currentX = e.touches[0].clientX;
-            const diffY = _currentY - _startY; // Positive for down swipe
-            const diffX = Math.abs(_startX - _currentX);
-
-            if (Math.abs(diffY) > 10 || diffX > 10) {
-                _cancelLongPressTimer();
-            }
         }, { passive: true });
 
         document.addEventListener('touchend', () => {
-            _cancelLongPressTimer();
-
             const deltaX = _currentX - _startX;
             const deltaY = _currentY - _startY; // Positive = Swipe Down, Negative = Swipe Up
 
             if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
                 _isSwipe = true;
                 if (deltaY > 40 && !_isMenuOpen) {
-                    // SWIPE DOWN opens menu smoothly from top
                     _openAppleMenu();
                 } else if (deltaY < -40 && _isMenuOpen) {
-                    // SWIPE UP inside menu closes menu
                     _closeAppleMenu();
                 }
             } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -709,30 +588,7 @@
             }
         }, { passive: true });
 
-        // Desktop mouse support for long press toggle & swipe simulation
-        document.addEventListener('mousedown', (e) => {
-            if (_isMenuOpen || e.button !== 0) return;
-            _startX = e.clientX;
-            _startY = e.clientY;
-            _isLongPress = false;
-            _startLongPressTimer();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (_longPressTimer) {
-                const moveX = Math.abs(e.clientX - _startX);
-                const moveY = Math.abs(e.clientY - _startY);
-                if (moveX > 8 || moveY > 8) {
-                    _cancelLongPressTimer();
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            _cancelLongPressTimer();
-        });
-
-        // Keyboard navigation support
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Escape') {
                 _closeAppleMenu();
@@ -740,7 +596,7 @@
             }
 
             if (e.code === 'KeyM' || e.code === 'ArrowDown') {
-                _toggleAppleMenu();
+                if (!_isMenuOpen) _openAppleMenu();
                 return;
             }
 
@@ -755,8 +611,6 @@
                 _next();
             } else if (e.code === 'ArrowLeft') {
                 _prev();
-            } else if (e.code === 'KeyA') {
-                _toggleAutoplay();
             }
         });
 
