@@ -102,7 +102,7 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             opacity: 0;
-            transition: opacity 0.35s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
             pointer-events: none;
             white-space: nowrap;
             z-index: 5;
@@ -313,19 +313,24 @@
         const i = _getNextQuote();
         
         _qx.innerText = i.t;
-        _qx.style.opacity = '1';
         
         if (i.id === "t_q") {
             const s = _gs();
             _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-            _st.style.opacity = '1';
         }
 
         requestAnimationFrame(() => {
             _mc.classList.add('v');
-            if (_hint) {
-                _hint.style.opacity = '1';
+            _qx.style.opacity = '1';
+            if (i.id === "t_q") {
+                _st.style.opacity = '1';
             }
+
+            setTimeout(() => {
+                if (_hint && !_hintDismissed) {
+                    _hint.style.opacity = '1';
+                }
+            }, 1500);
         });
     }
 
