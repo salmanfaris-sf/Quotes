@@ -164,15 +164,6 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <header id="top-header" class="fixed top-0 right-0 z-40 flex justify-end items-center px-6 py-5 opacity-0 transition-opacity duration-1000">
-        <button id="btn-open-menu" class="text-xs font-medium text-[#86868b] hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none bg-transparent border-none outline-none cursor-pointer">
-            <span>Topics</span>
-            <svg class="w-3.5 h-3.5 fill-current opacity-70" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </button>
-    </header>
-
     <div id="apple-menu-overlay" class="fixed inset-0 z-50 pt-5 px-8 sm:px-16 pb-12 flex flex-col justify-start overflow-y-auto">
         <!-- Close Button Header (Thin stroke ✕ icon) -->
         <div class="w-full max-w-lg mx-auto flex justify-end items-center mb-6 sm:mb-8">
@@ -196,11 +187,6 @@
         <h1 id="_q_" class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light leading-relaxed tracking-tight opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
-
-    <!-- Tap Hint at Bottom -->
-    <div id="tap-hint" class="fixed bottom-7 left-1/2 -translate-x-1/2 text-[11px] font-normal tracking-widest text-[#86868b] uppercase pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
-        Tap anywhere to view the next quote
-    </div>
 
     <!-- Status Toast Notification -->
     <div id="_ap_status_"></div>
@@ -308,7 +294,6 @@
 
         let _selectedTopicId = "all";
         let _isMenuOpen = false;
-        let _hasTapped = false;
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -335,11 +320,8 @@
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
         const _apStatus = document.getElementById('_ap_status_');
-        const _tapHint = document.getElementById('tap-hint');
-        const _topHeader = document.getElementById('top-header');
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _topicsNav = document.getElementById('apple-topics-nav');
-        const _openMenuBtn = document.getElementById('btn-open-menu');
         const _closeMenuBtn = document.getElementById('btn-close-menu');
 
         let _l_i = null;
@@ -421,20 +403,7 @@
             }, 350);
         }
 
-        function _hideTapHint() {
-            if (!_hasTapped && _tapHint) {
-                _hasTapped = true;
-                _tapHint.style.opacity = '0';
-                setTimeout(() => {
-                    if (_tapHint && _tapHint.parentNode) {
-                        _tapHint.parentNode.removeChild(_tapHint);
-                    }
-                }, 1000);
-            }
-        }
-
         function _next() {
-            _hideTapHint();
             if (_historyIndex < _history.length - 1) {
                 _historyIndex++;
                 _showQuote(_history[_historyIndex]);
@@ -447,7 +416,6 @@
         }
 
         function _prev() {
-            _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
@@ -499,7 +467,7 @@
             });
         }
 
-        function _openAppleMenu(source = 'button') {
+        function _openAppleMenu(source = 'swipe') {
             _isMenuOpen = true;
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
             
@@ -547,34 +515,13 @@
                 _st.classList.remove('opacity-0');
             }
 
-            // Step 1: Immediately reveal quotes
+            // Reveal quotes immediately
             requestAnimationFrame(() => {
                 _mc.classList.add('v');
             });
 
-            // Step 2: Reveal bottom tap hint after quote load
-            setTimeout(() => {
-                if (!_hasTapped && _tapHint) {
-                    _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-70');
-                }
-            }, 900);
-
-            // Step 3: Reveal top right "Topics" button last
-            setTimeout(() => {
-                if (_topHeader) {
-                    _topHeader.classList.remove('opacity-0');
-                    _topHeader.classList.add('opacity-100');
-                }
-            }, 1700);
-
             _renderAppleMenuTopics();
         };
-
-        _openMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            _openAppleMenu('button');
-        });
 
         _closeMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
