@@ -71,17 +71,17 @@
             pointer-events: auto;
         }
 
-        /* Mode 2: Top-to-Bottom Slide Dropdown (When swiping down) */
-        #apple-menu-overlay.mode-slide {
-            clip-path: none;
-            transform: translateY(-100%);
-            transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
-                        opacity 0.4s ease, 
-                        visibility 0.85s ease;
+        /* Mode 2: Top-Center Circular Radial Wave (When swiping down) */
+        #apple-menu-overlay.mode-swipe {
+            clip-path: circle(0px at 50vw 0px);
+            transform: none;
+            transition: clip-path 2.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 0.45s ease, 
+                        visibility 2.8s ease;
         }
 
-        #apple-menu-overlay.mode-slide.menu-open {
-            transform: translateY(0);
+        #apple-menu-overlay.mode-swipe.menu-open {
+            clip-path: circle(170vmax at 50vw 0px);
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
@@ -501,10 +501,10 @@
 
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
-            _menuOverlay.classList.remove('mode-ripple', 'mode-slide');
+            _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
             
             if (source === 'swipe') {
-                _menuOverlay.classList.add('mode-slide');
+                _menuOverlay.classList.add('mode-swipe');
             } else {
                 _menuOverlay.classList.add('mode-ripple');
             }
