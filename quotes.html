@@ -10,8 +10,8 @@
       gtag('config', 'G-P37159WTH1');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>The Creed</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>Salmanfaris.com</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Obey Allah. Obey His Messenger. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     <meta name="theme-color" content="#000000">
@@ -33,14 +33,14 @@
             background-color: var(--bg);
             overflow: hidden;
             touch-action: none;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            user-select: none;
             cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
         }
 
         ._f1 {
@@ -94,7 +94,7 @@
         /* Subtle navigation cues at the bottom */
         .nav-hint {
             position: absolute;
-            bottom: 24px;
+            bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
             left: 50%;
             transform: translateX(-50%);
             font-size: 10px;
@@ -107,25 +107,35 @@
             transition: opacity 0.33s ease;
         }
 
-        /* Autoplay Status Text (Positioned subtly at the top) */
+        /* Pop-up Status Toast Styling (No Border) */
         #_ap_status_ {
-            position: absolute;
-            top: 24px;
+            position: fixed;
+            top: calc(1.75rem + env(safe-area-inset-top, 0px));
             left: 50%;
             transform: translateX(-50%);
-            font-size: 11px;
-            color: #888888;
+            font-size: 12px;
+            background: rgba(30, 30, 35, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: none;
+            color: #e5e5e7;
+            padding: 6px 16px;
+            border-radius: 9999px;
             font-weight: 400;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
             pointer-events: none;
             opacity: 0;
-            z-index: 10;
+            z-index: 60;
             white-space: nowrap;
-            transition: opacity 0.35s ease-in-out;
+            transition: opacity 0.35s ease-in-out, transform 0.35s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
 <body>
+
+    <!-- Autoplay Status Toast -->
+    <div id="_ap_status_"></div>
 
     <div class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
@@ -134,9 +144,6 @@
 
     <!-- Navigation Hint -->
     <div class="nav-hint hidden md:block">Tap / Swipe to navigate • Hold for Autoplay</div>
-
-    <!-- Autoplay Status Text -->
-    <div id="_ap_status_"></div>
 
 <script>
 (function(){
@@ -153,7 +160,7 @@
         { t: "Do it even when you don't feel like it." },
         { t: "Nothing changes if nothing changes." },
         { t: "Stay different." },
-        { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
+        { t: "You only have 1,440 minutes every day,\ndon’let a single one go to waste.", id: "t_q" },
         { t: "You can't have a million dollar dream with a minimum wage work ethic." },
         { t: "A real man protects and provides." },
         { t: "Don't follow the crowd. Follow the truth." },
@@ -347,36 +354,40 @@
         }
     }
 
+    /* Status Toast function implementation */
     function _showStatus(text) {
         if (_statusTimeout) clearTimeout(_statusTimeout);
         
-        _apStatus.style.transition = 'opacity 0.35s ease-in-out';
+        _apStatus.style.transition = 'opacity 0.35s ease-in-out, transform 0.35s ease';
         _apStatus.style.opacity = '0';
+        _apStatus.style.transform = 'translate(-50%, -6px)';
 
         setTimeout(() => {
             _apStatus.innerText = text;
             requestAnimationFrame(() => {
                 _apStatus.style.opacity = '1';
+                _apStatus.style.transform = 'translate(-50%, 0)';
             });
-        }, 350);
+        }, 300);
 
         _statusTimeout = setTimeout(() => {
             _apStatus.style.opacity = '0';
-        }, 2200);
+            _apStatus.style.transform = 'translate(-50%, -6px)';
+        }, 2400);
     }
 
     function _toggleAutoplay() {
         _isAutoplay = !_isAutoplay;
         
         if (_isAutoplay) {
-            _showStatus("Autoplay on");
+            _showStatus("Autoplay Enabled");
             
             if (_autoplayInterval) clearInterval(_autoplayInterval);
             _autoplayInterval = setInterval(() => {
                 _next();
             }, AUTOPLAY_INTERVAL_MS);
         } else {
-            _showStatus("Autoplay off");
+            _showStatus("Autoplay Disabled");
             
             if (_autoplayInterval) {
                 clearInterval(_autoplayInterval);
