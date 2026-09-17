@@ -49,6 +49,7 @@
         #top-header {
             padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
             padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
+            padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
         }
 
         #tap-hint {
@@ -76,7 +77,7 @@
             padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
         }
 
-        /* Mode 1: Top-Right Circular Radial Wave (When clicking "Topics") */
+        /* Mode 1: Top-Right Circular Radial Wave (When clicking Menu) */
         #apple-menu-overlay.mode-ripple {
             clip-path: circle(0px at 100vw 0px);
             transform: none;
@@ -110,7 +111,11 @@
 
         .apple-menu-item {
             opacity: 1;
-            transition: color 0.2s ease;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        
+        .apple-menu-item:active {
+            transform: scale(0.98);
         }
 
         ._f1 {
@@ -144,10 +149,21 @@
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
-            transition: opacity 0.35s ease-in-out;
+            transition: opacity 0.35s ease-in-out, font-size 0.3s ease;
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Text Size Variants */
+        #_q_.size-standard {
+            font-size: clamp(1.125rem, 3.5vw, 1.875rem);
+            line-height: 1.5;
+        }
+
+        #_q_.size-medium {
+            font-size: clamp(0.95rem, 2.8vw, 1.45rem);
+            line-height: 1.55;
         }
 
         #_st_ {
@@ -165,9 +181,9 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 12px;
-            background: rgba(30, 30, 35, 0.85);
+            background: rgba(30, 30, 35, 0.9);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #e5e5e7;
             padding: 6px 16px;
             border-radius: 9999px;
@@ -180,46 +196,167 @@
             transition: opacity 0.35s ease-in-out, transform 0.35s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
+
+        /* Menu View Transitions */
+        .menu-view {
+            display: none;
+            animation: fadeInView 0.25s ease-out forwards;
+        }
+
+        .menu-view.active {
+            display: flex;
+        }
+
+        @keyframes fadeInView {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Menu Button Icon Morph Animation (2-Bar to Close X) */
+        .menu-line {
+            transform-origin: 12px 12px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-line-top {
+            transform: translateY(-4px) rotate(0deg);
+        }
+
+        .menu-line-bottom {
+            transform: translateY(4px) rotate(0deg);
+        }
+
+        #btn-open-menu.menu-active .menu-line-top {
+            transform: translateY(0px) rotate(45deg);
+        }
+
+        #btn-open-menu.menu-active .menu-line-bottom {
+            transform: translateY(0px) rotate(-45deg);
+        }
     </style>
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Top Right Header Navigation Button -->
-    <header id="top-header" class="fixed top-0 right-0 z-40 flex justify-end items-center px-6 py-5 opacity-0 transition-opacity duration-1000">
-        <button id="btn-open-menu" class="text-xs font-medium text-[#86868b] hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none bg-transparent border-none outline-none cursor-pointer">
-            <span>Topics</span>
-            <svg class="w-3.5 h-3.5 fill-current opacity-70" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+    <!-- Top Header Navigation Bar (Edges of screen like apple.com) -->
+    <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
+        <!-- Left Edge: Back Button (<) -->
+        <button id="btn-back-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+        </button>
+
+        <!-- Right Edge: Morphing Menu / Close Toggle Button -->
+        <button id="btn-open-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <line class="menu-line menu-line-top" x1="4" y1="12" x2="20" y2="12" />
+                <line class="menu-line menu-line-bottom" x1="4" y1="12" x2="20" y2="12" />
             </svg>
         </button>
     </header>
 
     <!-- Overlay Navigation Menu -->
-    <div id="apple-menu-overlay" class="fixed inset-0 z-50 px-8 sm:px-16 flex flex-col justify-start overflow-y-auto">
-        <!-- Close Button Header (Thin stroke ✕ icon) -->
-        <div class="w-full max-w-lg mx-auto flex justify-end items-center mb-6 sm:mb-8">
-            <button id="btn-close-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none" aria-label="Close Menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Topics Navigation Area -->
+    <div id="apple-menu-overlay" class="fixed inset-0 z-50 px-8 sm:px-16 flex flex-col justify-start overflow-y-auto pt-20 sm:pt-24">
+        <!-- Menu Container for Views -->
         <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
-            <nav id="apple-topics-nav" class="flex flex-col space-y-3 sm:space-y-4 text-left">
-                <!-- Topic options dynamically rendered without delays -->
-            </nav>
+            
+            <!-- VIEW 1: Main Menu -->
+            <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
+                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white hover:text-white/80 transition-colors py-1 flex items-center justify-between">
+                    <span>Topics</span>
+                </button>
+
+                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                    <span>Autoplay</span>
+                    <span id="badge-autoplay-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
+                </button>
+
+                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                    <span>Previous Quote</span>
+                </button>
+
+                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                    <span>Size</span>
+                </button>
+
+                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                    <span>Touch Gestures</span>
+                    <span id="badge-gestures-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
+                </button>
+            </div>
+
+            <!-- VIEW 2: Topics Sub-Menu -->
+            <div id="view-topics-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
+                <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left">
+                    <!-- Topic options dynamically rendered -->
+                </nav>
+            </div>
+
+            <!-- VIEW 3: Autoplay Speed Options -->
+            <div id="view-autoplay-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
+                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Autoplay Interval</div>
+                <nav id="apple-autoplay-nav" class="flex flex-col space-y-1 text-left">
+                    <!-- Autoplay options rendered dynamically -->
+                </nav>
+            </div>
+
+            <!-- VIEW 4: Text Size Options -->
+            <div id="view-size-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
+                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Quote Text Size</div>
+                <nav id="apple-size-nav" class="flex flex-col space-y-1 text-left">
+                    <!-- Size options rendered dynamically -->
+                </nav>
+            </div>
+
+            <!-- VIEW 5: Touch Gestures Options -->
+            <div id="view-gestures-menu" class="menu-view flex-col space-y-3 text-left">
+                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Touch Gestures</div>
+                
+                <nav id="apple-gestures-nav" class="flex flex-col space-y-1 text-left">
+                    <!-- Gesture options rendered dynamically -->
+                </nav>
+
+                <!-- Gesture Instructions & Explanation Guide -->
+                <div class="pt-4 mt-2 border-t border-white/10 text-xs text-[#86868b] space-y-2.5">
+                    <div class="text-[11px] font-medium uppercase tracking-wider text-white/60">How Gestures Work</div>
+                    <div class="grid grid-cols-1 gap-1.5 text-white/80">
+                        <div class="flex items-center justify-between py-0.5">
+                            <span class="font-medium text-white/90">Swipe Down</span>
+                            <span class="text-[#86868b]">Open Menu</span>
+                        </div>
+                        <div class="flex items-center justify-between py-0.5">
+                            <span class="font-medium text-white/90">Swipe Up</span>
+                            <span class="text-[#86868b]">Close Menu</span>
+                        </div>
+                        <div class="flex items-center justify-between py-0.5">
+                            <span class="font-medium text-white/90">Swipe Left</span>
+                            <span class="text-[#86868b]">Previous Quote</span>
+                        </div>
+                        <div class="flex items-center justify-between py-0.5">
+                            <span class="font-medium text-white/90">Swipe Right / Tap</span>
+                            <span class="text-[#86868b]">Next Quote</span>
+                        </div>
+                        <div class="flex items-center justify-between py-0.5">
+                            <span class="font-medium text-white/90">Long Press</span>
+                            <span class="text-[#86868b]">Toggle Autoplay</span>
+                        </div>
+                    </div>
+                    <p class="text-[11.5px] leading-relaxed text-[#86868b] pt-1">
+                        When enabled, the top-right menu button hides automatically for an uninterrupted full-screen experience.
+                    </p>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- Main Content Display -->
     <main class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light leading-relaxed tracking-tight opacity-0"></h1>
+        <h1 id="_q_" class="size-standard font-light leading-relaxed tracking-tight opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <!-- Tap Hint at Bottom (Updated to match top right topics color: #86868b) -->
+    <!-- Tap Hint at Bottom -->
     <div id="tap-hint" class="fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
@@ -242,7 +379,7 @@
             { t: "Do it even when you don't feel like it." },
             { t: "Nothing changes if nothing changes." },
             { t: "Stay different." },
-            { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
+            { t: "You only have 1,440 minutes every day,\ndon’let a single one go to waste.", id: "t_q" },
             { t: "You can't have a million dollar dream with a minimum wage work ethic." },
             { t: "A real man protects and provides." },
             { t: "Don't follow the crowd. Follow the truth." },
@@ -322,9 +459,64 @@
             { id: "focus", label: "Focus & Discipline" }
         ];
 
+        const _sizeOptions = [
+            { id: "standard", label: "Large", class: "size-standard" },
+            { id: "medium", label: "Regular", class: "size-medium" }
+        ];
+
+        const _autoplayOptions = [
+            { sec: 0, label: "Off" },
+            { sec: 5, label: "5 Seconds" },
+            { sec: 30, label: "30 Seconds" },
+            { sec: 60, label: "1 Minute" },
+            { sec: 3600, label: "1 Hour" }
+        ];
+
+        const _gesturesOptions = [
+            { enabled: false, label: "Off" },
+            { enabled: true, label: "On" }
+        ];
+
         let _selectedTopicId = "all";
+        let _currentSizeId = "standard";
+        let _autoplayIntervalSec = 0;
+        let _swipeGesturesEnabled = false;
+        let _autoplayTimer = null;
         let _isMenuOpen = false;
+        let _activeMenuView = "main";
         let _hasTapped = false;
+
+        let _l_i = null;
+        let _startY = 0;
+        let _startX = 0;
+        let _currentY = 0;
+        let _currentX = 0;
+        let _isSwipe = false;
+        let _isLongPress = false;
+        let _longPressTimer = null;
+        let _statusTimeout = null;
+
+        let _currentPool = [];
+        let _lastQuoteText = null;
+        let _history = [];
+        let _historyIndex = -1;
+
+        // DOM Element references
+        const _qx = document.getElementById('_q_');
+        const _st = document.getElementById('_st_');
+        const _mc = document.getElementById('_mc_');
+        const _apStatus = document.getElementById('_ap_status_');
+        const _tapHint = document.getElementById('tap-hint');
+        const _topHeader = document.getElementById('top-header');
+        const _menuOverlay = document.getElementById('apple-menu-overlay');
+        const _openMenuBtn = document.getElementById('btn-open-menu');
+        const _backMenuBtn = document.getElementById('btn-back-menu');
+        const _badgeAutoplay = document.getElementById('badge-autoplay-status');
+        const _badgeGestures = document.getElementById('badge-gestures-status');
+        const _topicsNav = document.getElementById('apple-topics-nav');
+        const _autoplayNav = document.getElementById('apple-autoplay-nav');
+        const _sizeNav = document.getElementById('apple-size-nav');
+        const _gesturesNav = document.getElementById('apple-gestures-nav');
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -343,26 +535,6 @@
             return true;
         }
 
-        // DOM Element references
-        const _qx = document.getElementById('_q_');
-        const _st = document.getElementById('_st_');
-        const _mc = document.getElementById('_mc_');
-        const _apStatus = document.getElementById('_ap_status_');
-        const _tapHint = document.getElementById('tap-hint');
-        const _topHeader = document.getElementById('top-header');
-        const _menuOverlay = document.getElementById('apple-menu-overlay');
-        const _topicsNav = document.getElementById('apple-topics-nav');
-        const _openMenuBtn = document.getElementById('btn-open-menu');
-        const _closeMenuBtn = document.getElementById('btn-close-menu');
-
-        let _l_i = null;
-        let _startY = 0;
-        let _startX = 0;
-        let _currentY = 0;
-        let _currentX = 0;
-        let _isSwipe = false;
-        let _statusTimeout = null;
-
         function _shuffle(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -370,11 +542,6 @@
             }
             return arr;
         }
-
-        let _currentPool = [];
-        let _lastQuoteText = null;
-        let _history = [];
-        let _historyIndex = -1;
 
         function _getNextQuote() {
             if (_currentPool.length === 0) {
@@ -457,13 +624,46 @@
                 _historyIndex = _history.length - 1;
                 _showQuote(nq);
             }
+            _resetAutoplayTimer();
         }
 
-        function _prev() {
+        function _prev(fromMenu = false) {
             _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
+                if (fromMenu) {
+                    _showStatus("Previous Quote");
+                }
+            } else {
+                if (fromMenu) {
+                    _showStatus("Start of quotes");
+                }
+            }
+            _resetAutoplayTimer();
+        }
+
+        function _startAutoplay() {
+            _stopAutoplay();
+            if (_autoplayIntervalSec > 0) {
+                _autoplayTimer = setInterval(() => {
+                    if (!_isMenuOpen) {
+                        _next();
+                    }
+                }, _autoplayIntervalSec * 1000);
+            }
+        }
+
+        function _stopAutoplay() {
+            if (_autoplayTimer) {
+                clearInterval(_autoplayTimer);
+                _autoplayTimer = null;
+            }
+        }
+
+        function _resetAutoplayTimer() {
+            if (_autoplayIntervalSec > 0) {
+                _startAutoplay();
             }
         }
 
@@ -488,13 +688,36 @@
             }, 2400);
         }
 
+        function _switchMenuView(viewName) {
+            _activeMenuView = viewName;
+            const views = ['main', 'topics', 'autoplay', 'size', 'gestures'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}-menu`);
+                if (el) {
+                    if (v === viewName) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+            });
+
+            if (viewName === 'main' || !_isMenuOpen) {
+                _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
+                _backMenuBtn.classList.remove('pointer-events-auto');
+            } else {
+                _backMenuBtn.classList.remove('opacity-0', 'pointer-events-none');
+                _backMenuBtn.classList.add('pointer-events-auto');
+            }
+        }
+
         function _renderAppleMenuTopics() {
             _topicsNav.innerHTML = "";
             _topics.forEach((topic) => {
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-2 flex items-center justify-between ${
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
                     isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
                 }`;
                 
@@ -512,8 +735,81 @@
             });
         }
 
+        function _renderAutoplayOptions() {
+            _autoplayNav.innerHTML = "";
+            _autoplayOptions.forEach((opt) => {
+                const isActive = opt.sec === _autoplayIntervalSec;
+                const btn = document.createElement('button');
+                
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
+                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                }`;
+                
+                btn.innerHTML = `
+                    <span>${opt.label}</span>
+                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
+                `;
+
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    _selectAutoplay(opt.sec, opt.label);
+                };
+
+                _autoplayNav.appendChild(btn);
+            });
+        }
+
+        function _renderSizeOptions() {
+            _sizeNav.innerHTML = "";
+            _sizeOptions.forEach((opt) => {
+                const isActive = opt.id === _currentSizeId;
+                const btn = document.createElement('button');
+                
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
+                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                }`;
+                
+                btn.innerHTML = `
+                    <span>${opt.label}</span>
+                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
+                `;
+
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    _selectSize(opt);
+                };
+
+                _sizeNav.appendChild(btn);
+            });
+        }
+
+        function _renderGesturesOptions() {
+            _gesturesNav.innerHTML = "";
+            _gesturesOptions.forEach((opt) => {
+                const isActive = opt.enabled === _swipeGesturesEnabled;
+                const btn = document.createElement('button');
+                
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
+                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                }`;
+                
+                btn.innerHTML = `
+                    <span>${opt.label}</span>
+                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
+                `;
+
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    _selectGestures(opt.enabled, opt.label);
+                };
+
+                _gesturesNav.appendChild(btn);
+            });
+        }
+
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
+            _openMenuBtn.classList.add('menu-active');
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
             
             if (source === 'swipe') {
@@ -522,10 +818,13 @@
                 _menuOverlay.classList.add('mode-ripple');
             }
 
+            _switchMenuView("main");
             _renderAppleMenuTopics();
+            _renderAutoplayOptions();
+            _renderSizeOptions();
+            _renderGesturesOptions();
 
             // Force layout reflow
-            void _topicsNav.offsetWidth;
             void _menuOverlay.offsetWidth;
 
             _menuOverlay.classList.add('menu-open');
@@ -533,7 +832,13 @@
 
         function _closeAppleMenu() {
             _isMenuOpen = false;
+            _openMenuBtn.classList.remove('menu-active');
+            _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
+            _backMenuBtn.classList.remove('pointer-events-auto');
             _menuOverlay.classList.remove('menu-open');
+            setTimeout(() => {
+                _switchMenuView("main");
+            }, 400);
         }
 
         function _selectTopic(topicId, topicLabel) {
@@ -544,6 +849,73 @@
             _history = [];
             _historyIndex = -1;
             _next();
+        }
+
+        function _selectAutoplay(sec, label) {
+            _autoplayIntervalSec = sec;
+            _renderAutoplayOptions();
+            
+            if (_badgeAutoplay) {
+                if (sec > 0) {
+                    _badgeAutoplay.innerText = label;
+                    _badgeAutoplay.classList.remove('hidden');
+                } else {
+                    _badgeAutoplay.innerText = "Off";
+                    _badgeAutoplay.classList.add('hidden');
+                }
+            }
+
+            if (_isMenuOpen) {
+                _closeAppleMenu();
+            }
+
+            if (sec > 0) {
+                _showStatus(`Autoplay Enabled (${label})`);
+                _startAutoplay();
+            } else {
+                _showStatus(`Autoplay Disabled`);
+                _stopAutoplay();
+            }
+        }
+
+        function _selectSize(opt) {
+            _currentSizeId = opt.id;
+            _qx.classList.remove('size-standard', 'size-medium');
+            _qx.classList.add(opt.class);
+            _closeAppleMenu();
+            _showStatus(`Text Size: ${opt.label}`);
+        }
+
+        function _selectGestures(enabled, label) {
+            _swipeGesturesEnabled = enabled;
+            _renderGesturesOptions();
+
+            if (_badgeGestures) {
+                if (enabled) {
+                    _badgeGestures.innerText = "On";
+                    _badgeGestures.classList.remove('hidden');
+                } else {
+                    _badgeGestures.innerText = "Off";
+                    _badgeGestures.classList.add('hidden');
+                }
+            }
+
+            // Hide/Show top right menu button based on Touch Gestures state
+            if (_swipeGesturesEnabled) {
+                _openMenuBtn.classList.add('opacity-0', 'pointer-events-none');
+                _openMenuBtn.classList.remove('opacity-100', 'pointer-events-auto');
+            } else {
+                _openMenuBtn.classList.remove('opacity-0', 'pointer-events-none');
+                _openMenuBtn.classList.add('opacity-100', 'pointer-events-auto');
+            }
+
+            _closeAppleMenu();
+
+            if (enabled) {
+                _showStatus(`Touch Gestures Enabled`);
+            } else {
+                _showStatus(`Touch Gestures Disabled`);
+            }
         }
 
         window.onload = () => {
@@ -573,7 +945,7 @@
                 }
             }, 900);
 
-            // Step 3: Reveal top right "Topics" button last
+            // Step 3: Reveal top header last (if gestures off, show menu button)
             setTimeout(() => {
                 if (_topHeader) {
                     _topHeader.classList.remove('opacity-0');
@@ -582,16 +954,50 @@
             }, 1700);
 
             _renderAppleMenuTopics();
+            _renderAutoplayOptions();
+            _renderSizeOptions();
+            _renderGesturesOptions();
+        };
+
+        // Main Menu Button Bindings
+        document.getElementById('menu-item-topics').onclick = (e) => {
+            e.stopPropagation();
+            _switchMenuView("topics");
+        };
+
+        document.getElementById('menu-item-autoplay').onclick = (e) => {
+            e.stopPropagation();
+            _switchMenuView("autoplay");
+        };
+
+        document.getElementById('menu-item-prev').onclick = (e) => {
+            e.stopPropagation();
+            _closeAppleMenu();
+            _prev(true);
+        };
+
+        document.getElementById('menu-item-size').onclick = (e) => {
+            e.stopPropagation();
+            _switchMenuView("size");
+        };
+
+        document.getElementById('menu-item-gestures').onclick = (e) => {
+            e.stopPropagation();
+            _switchMenuView("gestures");
         };
 
         _openMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            _openAppleMenu('button');
+            if (_isMenuOpen) {
+                _closeAppleMenu();
+            } else {
+                _openAppleMenu('button');
+            }
         });
 
-        _closeMenuBtn.addEventListener('click', (e) => {
+        _backMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            _closeAppleMenu();
+            _switchMenuView("main");
         });
 
         _menuOverlay.addEventListener('click', (e) => {
@@ -603,7 +1009,7 @@
         // Global Canvas Click Event
         document.addEventListener('click', () => {
             if (_isMenuOpen) return;
-            if (_isSwipe) return;
+            if (_isSwipe || _isLongPress) return;
             _next();
         });
 
@@ -614,46 +1020,87 @@
             _currentY = _startY;
             _currentX = _startX;
             _isSwipe = false;
+            _isLongPress = false;
+
+            if (_longPressTimer) clearTimeout(_longPressTimer);
+
+            // Start Long Press Timer (0.5s) if Touch Gestures are Enabled
+            if (_swipeGesturesEnabled && !_isMenuOpen) {
+                _longPressTimer = setTimeout(() => {
+                    _isLongPress = true;
+                    _isSwipe = true; // Prevent click trigger
+                    if (navigator.vibrate) {
+                        try { navigator.vibrate(50); } catch(err){}
+                    }
+                    // Toggle Autoplay
+                    if (_autoplayIntervalSec > 0) {
+                        _selectAutoplay(0, "Off");
+                    } else {
+                        _selectAutoplay(5, "5 Seconds");
+                    }
+                }, 500);
+            }
         }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
             _currentY = e.touches[0].clientY;
             _currentX = e.touches[0].clientX;
+
+            // Cancel Long Press if user moves finger more than 10px
+            if (Math.abs(_currentX - _startX) > 10 || Math.abs(_currentY - _startY) > 10) {
+                if (_longPressTimer) clearTimeout(_longPressTimer);
+            }
         }, { passive: true });
 
         document.addEventListener('touchend', () => {
+            if (_longPressTimer) clearTimeout(_longPressTimer);
+
             const deltaX = _currentX - _startX;
             const deltaY = _currentY - _startY;
 
-            if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
-                _isSwipe = true;
-                if (deltaY > 40 && !_isMenuOpen) {
-                    _openAppleMenu('swipe');
-                } else if (deltaY < -40 && _isMenuOpen) {
-                    _closeAppleMenu();
-                }
-            } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
-                _isSwipe = true;
-                if (!_isMenuOpen) {
-                    if (deltaX > 45) {
-                        _prev();
-                    } else if (deltaX < -45) {
-                        _next();
+            // Handle Swipes ONLY if Touch Gestures is TURNED ON
+            if (_swipeGesturesEnabled && !_isLongPress) {
+                if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
+                    _isSwipe = true;
+                    if (deltaY > 40 && !_isMenuOpen) {
+                        // Swipe Down -> Open Menu
+                        _openAppleMenu('swipe');
+                    } else if (deltaY < -40 && _isMenuOpen) {
+                        // Swipe Up -> Close Menu
+                        _closeAppleMenu();
+                    }
+                } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                    _isSwipe = true;
+                    if (!_isMenuOpen) {
+                        if (deltaX < -45) {
+                            // Swipe Left -> Previous Quote
+                            _prev(false);
+                        } else if (deltaX > 45) {
+                            // Swipe Right -> Next Quote
+                            _next();
+                        }
                     }
                 }
             }
 
-            if (_isSwipe) {
+            if (_isSwipe || _isLongPress) {
                 setTimeout(() => {
                     _isSwipe = false;
-                }, 150);
+                    _isLongPress = false;
+                }, 200);
             }
         }, { passive: true });
 
         // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Escape') {
-                _closeAppleMenu();
+                if (_isMenuOpen) {
+                    if (_activeMenuView !== "main") {
+                        _switchMenuView("main");
+                    } else {
+                        _closeAppleMenu();
+                    }
+                }
                 return;
             }
 
@@ -672,7 +1119,7 @@
             if (e.code === 'Space' || e.code === 'ArrowRight') {
                 _next();
             } else if (e.code === 'ArrowLeft') {
-                _prev();
+                _prev(false);
             }
         });
 
