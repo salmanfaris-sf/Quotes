@@ -53,7 +53,7 @@
         }
 
         #tap-hint {
-            bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+            bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
         }
 
         #_ap_status_ {
@@ -240,14 +240,14 @@
     <!-- Top Header Navigation Bar (Edges of screen like apple.com) -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
         <!-- Left Edge: Back Button (<) -->
-        <button id="btn-back-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
+        <button id="btn-back-menu" class="p-2 text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
             <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
             </svg>
         </button>
 
         <!-- Right Edge: Morphing Menu / Close Toggle Button -->
-        <button id="btn-open-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
+        <button id="btn-open-menu" class="p-2 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
             <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                 <line class="menu-line menu-line-top" x1="4" y1="12" x2="20" y2="12" />
                 <line class="menu-line menu-line-bottom" x1="4" y1="12" x2="20" y2="12" />
@@ -262,8 +262,9 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
-                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white hover:text-white/80 transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
                     <span>Topics</span>
+                    <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
                 </button>
 
                 <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
@@ -329,11 +330,11 @@
                             <span class="text-[#86868b]">Close Menu</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Left</span>
+                            <span class="font-medium text-white/90">Swipe Right</span>
                             <span class="text-[#86868b]">Previous Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Right / Tap</span>
+                            <span class="font-medium text-white/90">Swipe Left / Tap</span>
                             <span class="text-[#86868b]">Next Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
@@ -511,6 +512,7 @@
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _openMenuBtn = document.getElementById('btn-open-menu');
         const _backMenuBtn = document.getElementById('btn-back-menu');
+        const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
         const _badgeGestures = document.getElementById('badge-gestures-status');
         const _topicsNav = document.getElementById('apple-topics-nav');
@@ -632,13 +634,9 @@
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
-                if (fromMenu) {
-                    _showStatus("Previous Quote");
-                }
+                _showStatus("Previous Quote");
             } else {
-                if (fromMenu) {
-                    _showStatus("Start of quotes");
-                }
+                _showStatus("Start of quotes");
             }
             _resetAutoplayTimer();
         }
@@ -843,6 +841,9 @@
 
         function _selectTopic(topicId, topicLabel) {
             _selectedTopicId = topicId;
+            if (_badgeTopics) {
+                _badgeTopics.innerText = topicLabel;
+            }
             _closeAppleMenu();
             _showStatus(`Topic: ${topicLabel}`);
             _currentPool = [];
@@ -1072,11 +1073,11 @@
                 } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     _isSwipe = true;
                     if (!_isMenuOpen) {
-                        if (deltaX < -45) {
-                            // Swipe Left -> Previous Quote
-                            _prev(false);
-                        } else if (deltaX > 45) {
-                            // Swipe Right -> Next Quote
+                        if (deltaX > 45) {
+                            // Swipe Right -> Previous Quote
+                            _prev(true);
+                        } else if (deltaX < -45) {
+                            // Swipe Left -> Next Quote
                             _next();
                         }
                     }
