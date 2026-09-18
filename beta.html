@@ -53,7 +53,7 @@
         }
 
         #tap-hint {
-            bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+            bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
         }
 
         #_ap_status_ {
@@ -219,11 +219,11 @@
         }
 
         .menu-line-top {
-            transform: translateY(-4px) rotate(0deg);
+            transform: translateY(-2.5px) rotate(0deg);
         }
 
         .menu-line-bottom {
-            transform: translateY(4px) rotate(0deg);
+            transform: translateY(2.5px) rotate(0deg);
         }
 
         #btn-open-menu.menu-active .menu-line-top {
@@ -240,14 +240,14 @@
     <!-- Top Header Navigation Bar (Edges of screen like apple.com) -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
         <!-- Left Edge: Back Button (<) -->
-        <button id="btn-back-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
+        <button id="btn-back-menu" class="p-2 text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
             <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
             </svg>
         </button>
 
         <!-- Right Edge: Morphing Menu / Close Toggle Button -->
-        <button id="btn-open-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
+        <button id="btn-open-menu" class="p-2 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
             <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                 <line class="menu-line menu-line-top" x1="4" y1="12" x2="20" y2="12" />
                 <line class="menu-line menu-line-bottom" x1="4" y1="12" x2="20" y2="12" />
@@ -262,8 +262,9 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
-                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white hover:text-white/80 transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
                     <span>Topics</span>
+                    <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
                 </button>
 
                 <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
@@ -284,8 +285,8 @@
                     <span id="badge-gestures-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-helps" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
-                    <span>How It Helps</span>
+                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                    <span>How This Site Helps You</span>
                 </button>
             </div>
 
@@ -333,11 +334,11 @@
                             <span class="text-[#86868b]">Close Menu</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Left</span>
+                            <span class="font-medium text-white/90">Swipe Right</span>
                             <span class="text-[#86868b]">Previous Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Right / Tap</span>
+                            <span class="font-medium text-white/90">Swipe Left / Tap</span>
                             <span class="text-[#86868b]">Next Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
@@ -351,24 +352,23 @@
                 </div>
             </div>
 
-            <!-- VIEW 6: How It Helps Explanation -->
-            <div id="view-helps-menu" class="menu-view flex-col space-y-3 text-left">
+            <!-- VIEW 6: How This Site Benefits You -->
+            <div id="view-benefits-menu" class="menu-view flex-col space-y-3.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
                 
-                <div class="space-y-3 text-xs text-[#86868b] leading-relaxed">
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
-                        <div class="font-semibold text-white text-sm">Reset Mindset When Lazy or Afraid</div>
-                        <p class="text-white/70">Visit whenever you feel lazy, unmotivated, overwhelmed, or afraid. Reading short, uncompromising truths cuts through overthinking and gives you immediate clarity to take action.</p>
+                <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                        <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
+                        <p class="text-[#86868b]">
+                            Visit whenever you feel bored, lazy, afraid, or trapped in self-doubt. Read direct, unvarnished truths to quiet overthinking, regain perspective, and take immediate action.
+                        </p>
                     </div>
 
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
-                        <div class="font-semibold text-white text-sm">Ambient Desk Companion</div>
-                        <p class="text-white/70">Enable Autoplay, set your interval, and place your phone or tablet on your desk while working or studying. Every time you glance over, get motivated to stay focused and keep going.</p>
-                    </div>
-
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
-                        <div class="font-semibold text-white text-sm">Time Urgency Counter</div>
-                        <p class="text-white/70">Track the exact remaining minutes left in the day to maintain healthy urgency and never let valuable hours slip away unnoticed.</p>
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                        <div class="font-medium text-white text-sm">Ambient Focus While Studying or Working</div>
+                        <p class="text-[#86868b]">
+                            Turn on <span class="text-white font-medium">Autoplay</span> and keep this page visible on your screen while studying or working. Every time you glance over when you feel like giving up, get an instant spark of motivation to keep going.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -508,6 +508,7 @@
         let _autoplayIntervalSec = 0;
         let _swipeGesturesEnabled = false;
         let _autoplayTimer = null;
+        let _wakeLock = null;
         let _isMenuOpen = false;
         let _activeMenuView = "main";
         let _hasTapped = false;
@@ -537,12 +538,39 @@
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _openMenuBtn = document.getElementById('btn-open-menu');
         const _backMenuBtn = document.getElementById('btn-back-menu');
+        const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
         const _badgeGestures = document.getElementById('badge-gestures-status');
         const _topicsNav = document.getElementById('apple-topics-nav');
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
         const _gesturesNav = document.getElementById('apple-gestures-nav');
+
+        // Screen Wake Lock API to prevent device screen timeout
+        async function _requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    _wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                // Ignore wake lock request errors (e.g. low battery mode)
+            }
+        }
+
+        function _releaseWakeLock() {
+            if (_wakeLock !== null) {
+                _wakeLock.release().then(() => {
+                    _wakeLock = null;
+                }).catch(() => {});
+            }
+        }
+
+        // Re-apply wake lock when tab regains visibility
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible') {
+                await _requestWakeLock();
+            }
+        });
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -653,16 +681,16 @@
             _resetAutoplayTimer();
         }
 
-        function _prev(fromMenu = false) {
+        function _prev(fromGestureOrMenu = false) {
             _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
-                if (fromMenu) {
+                if (fromGestureOrMenu) {
                     _showStatus("Previous Quote");
                 }
             } else {
-                if (fromMenu) {
+                if (fromGestureOrMenu) {
                     _showStatus("Start of quotes");
                 }
             }
@@ -716,7 +744,7 @@
 
         function _switchMenuView(viewName) {
             _activeMenuView = viewName;
-            const views = ['main', 'topics', 'autoplay', 'size', 'gestures', 'helps'];
+            const views = ['main', 'topics', 'autoplay', 'size', 'gestures', 'benefits'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}-menu`);
                 if (el) {
@@ -869,6 +897,9 @@
 
         function _selectTopic(topicId, topicLabel) {
             _selectedTopicId = topicId;
+            if (_badgeTopics) {
+                _badgeTopics.innerText = topicLabel;
+            }
             _closeAppleMenu();
             _showStatus(`Topic: ${topicLabel}`);
             _currentPool = [];
@@ -945,6 +976,9 @@
         }
 
         window.onload = () => {
+            // Request wake lock to keep screen awake
+            _requestWakeLock();
+
             const i = _getNextQuote();
             _history.push(i);
             _historyIndex = 0;
@@ -1012,9 +1046,9 @@
             _switchMenuView("gestures");
         };
 
-        document.getElementById('menu-item-helps').onclick = (e) => {
+        document.getElementById('menu-item-benefits').onclick = (e) => {
             e.stopPropagation();
-            _switchMenuView("helps");
+            _switchMenuView("benefits");
         };
 
         _openMenuBtn.addEventListener('click', (e) => {
@@ -1039,6 +1073,7 @@
 
         // Global Canvas Click Event
         document.addEventListener('click', () => {
+            _requestWakeLock();
             if (_isMenuOpen) return;
             if (_isSwipe || _isLongPress) return;
             _next();
@@ -1046,6 +1081,7 @@
 
         // Touch event handlers for mobile gestures
         document.addEventListener('touchstart', (e) => {
+            _requestWakeLock();
             _startY = e.touches[0].clientY;
             _startX = e.touches[0].clientX;
             _currentY = _startY;
@@ -1103,11 +1139,11 @@
                 } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     _isSwipe = true;
                     if (!_isMenuOpen) {
-                        if (deltaX < -45) {
-                            // Swipe Left -> Previous Quote
-                            _prev(false);
-                        } else if (deltaX > 45) {
-                            // Swipe Right -> Next Quote
+                        if (deltaX > 45) {
+                            // Swipe Right -> Previous Quote
+                            _prev(true);
+                        } else if (deltaX < -45) {
+                            // Swipe Left -> Next Quote
                             _next();
                         }
                     }
@@ -1124,6 +1160,7 @@
 
         // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
+            _requestWakeLock();
             if (e.code === 'Escape') {
                 if (_isMenuOpen) {
                     if (_activeMenuView !== "main") {
