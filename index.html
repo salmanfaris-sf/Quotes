@@ -284,6 +284,10 @@
                     <span>Touch Gestures</span>
                     <span id="badge-gestures-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
+
+                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                    <span>How This Site Helps You</span>
+                </button>
             </div>
 
             <!-- VIEW 2: Topics Sub-Menu -->
@@ -345,6 +349,27 @@
                     <p class="text-[11.5px] leading-relaxed text-[#86868b] pt-1">
                         When enabled, the top-right menu button hides automatically for an uninterrupted full-screen experience.
                     </p>
+                </div>
+            </div>
+
+            <!-- VIEW 6: How This Site Benefits You -->
+            <div id="view-benefits-menu" class="menu-view flex-col space-y-3.5 text-left">
+                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
+                
+                <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                        <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
+                        <p class="text-[#86868b]">
+                            Visit whenever you feel bored, lazy, afraid, or trapped in self-doubt. Read direct, unvarnished truths to quiet overthinking, regain perspective, and take immediate action.
+                        </p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                        <div class="font-medium text-white text-sm">Ambient Focus While Studying or Working</div>
+                        <p class="text-[#86868b]">
+                            Turn on <span class="text-white font-medium">Autoplay</span> and keep this page visible on your screen while studying or working. Every time you glance over when you feel like giving up, get an instant spark of motivation to keep going.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -483,6 +508,7 @@
         let _autoplayIntervalSec = 0;
         let _swipeGesturesEnabled = false;
         let _autoplayTimer = null;
+        let _wakeLock = null;
         let _isMenuOpen = false;
         let _activeMenuView = "main";
         let _hasTapped = false;
@@ -519,6 +545,32 @@
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
         const _gesturesNav = document.getElementById('apple-gestures-nav');
+
+        // Screen Wake Lock API to prevent device screen timeout
+        async function _requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    _wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                // Ignore wake lock request errors (e.g. low battery mode)
+            }
+        }
+
+        function _releaseWakeLock() {
+            if (_wakeLock !== null) {
+                _wakeLock.release().then(() => {
+                    _wakeLock = null;
+                }).catch(() => {});
+            }
+        }
+
+        // Re-apply wake lock when tab regains visibility
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible') {
+                await _requestWakeLock();
+            }
+        });
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -629,14 +681,18 @@
             _resetAutoplayTimer();
         }
 
-        function _prev(fromMenu = false) {
+        function _prev(fromGestureOrMenu = false) {
             _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
-                _showStatus("Previous Quote");
+                if (fromGestureOrMenu) {
+                    _showStatus("Previous Quote");
+                }
             } else {
-                _showStatus("Start of quotes");
+                if (fromGestureOrMenu) {
+                    _showStatus("Start of quotes");
+                }
             }
             _resetAutoplayTimer();
         }
@@ -688,7 +744,7 @@
 
         function _switchMenuView(viewName) {
             _activeMenuView = viewName;
-            const views = ['main', 'topics', 'autoplay', 'size', 'gestures'];
+            const views = ['main', 'topics', 'autoplay', 'size', 'gestures', 'benefits'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}-menu`);
                 if (el) {
@@ -920,6 +976,9 @@
         }
 
         window.onload = () => {
+            // Request wake lock to keep screen awake
+            _requestWakeLock();
+
             const i = _getNextQuote();
             _history.push(i);
             _historyIndex = 0;
@@ -987,6 +1046,11 @@
             _switchMenuView("gestures");
         };
 
+        document.getElementById('menu-item-benefits').onclick = (e) => {
+            e.stopPropagation();
+            _switchMenuView("benefits");
+        };
+
         _openMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (_isMenuOpen) {
@@ -1009,6 +1073,7 @@
 
         // Global Canvas Click Event
         document.addEventListener('click', () => {
+            _requestWakeLock();
             if (_isMenuOpen) return;
             if (_isSwipe || _isLongPress) return;
             _next();
@@ -1016,6 +1081,7 @@
 
         // Touch event handlers for mobile gestures
         document.addEventListener('touchstart', (e) => {
+            _requestWakeLock();
             _startY = e.touches[0].clientY;
             _startX = e.touches[0].clientX;
             _currentY = _startY;
@@ -1094,6 +1160,7 @@
 
         // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
+            _requestWakeLock();
             if (e.code === 'Escape') {
                 if (_isMenuOpen) {
                     if (_activeMenuView !== "main") {
