@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-black" data-theme="dark">
+<html lang="en" class="h-full" data-theme="dark">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
     <script>
@@ -37,6 +37,7 @@
             --badge-text: #ffffff;
             --header-icon-color: #86868b;
             --guide-header: rgba(255, 255, 255, 0.6);
+            --quote-font-weight: 300;
         }
 
         html[data-theme="light"] {
@@ -51,6 +52,7 @@
             --badge-text: #1d1d1f;
             --header-icon-color: #6e6e73;
             --guide-header: rgba(0, 0, 0, 0.6);
+            --quote-font-weight: 500;
         }
 
         html, body {
@@ -189,8 +191,8 @@
             color: var(--text);
             display: inline-block;
             will-change: opacity;
-            transition: opacity 0.35s ease-in-out, font-size 0.3s ease, color 0.4s ease;
-            font-weight: 300;
+            transition: opacity 0.35s ease-in-out, font-size 0.3s ease, color 0.4s ease, font-weight 0.4s ease;
+            font-weight: var(--quote-font-weight, 300);
             letter-spacing: -0.01em;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
@@ -286,7 +288,7 @@
         }
     </style>
 </head>
-<body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
+<body class="relative flex flex-col h-full overflow-hidden">
 
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
         <!-- Left Edge: Back Button -->
@@ -429,7 +431,7 @@
     </div>
 
     <main class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="size-standard font-light leading-relaxed tracking-tight opacity-0"></h1>
+        <h1 id="_q_" class="size-standard leading-relaxed tracking-tight opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
 
