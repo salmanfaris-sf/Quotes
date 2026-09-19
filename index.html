@@ -207,28 +207,56 @@
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Smooth Icon Transition for Header Menu Button */
+        #btn-open-menu #menu-icon-arrow,
+        #btn-open-menu #menu-icon-close {
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+
+        #btn-open-menu #menu-icon-arrow {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        #btn-open-menu #menu-icon-close {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.65);
+        }
+
+        #btn-open-menu.is-open #menu-icon-arrow {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.65);
+        }
+
+        #btn-open-menu.is-open #menu-icon-close {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
     </style>
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
     <!-- Top Header Navigation Bar -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <!-- Left Edge: Back Button (<) -->
+        <!-- Left Edge: Back Button (Normal Arrow with Shaft) -->
         <button id="btn-back-menu" class="p-2 text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
             <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
         </button>
 
-        <!-- Right Edge: Menu + Down Arrow / Close Button Toggle (No hover color change) -->
-        <button id="btn-open-menu" class="p-2 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500 flex items-center gap-1.5 text-sm sm:text-base font-medium tracking-tight select-none" aria-label="Toggle Menu">
-            <span id="menu-btn-label">Menu</span>
-            <svg id="menu-icon-arrow" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-            </svg>
-            <svg id="menu-icon-close" class="w-6 h-6 sm:w-7 sm:h-7 hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+        <!-- Right Edge: Left Arrow / Close Button Toggle (Icon Only with Smooth Rotation/Fade Transition) -->
+        <button id="btn-open-menu" class="p-2 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500 relative flex items-center justify-center w-10 h-10 select-none" aria-label="Toggle Menu">
+            <div class="relative w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center">
+                <svg id="menu-icon-arrow" class="w-6 h-6 sm:w-7 sm:h-7 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                </svg>
+                <svg id="menu-icon-close" class="w-6 h-6 sm:w-7 sm:h-7 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </div>
         </button>
     </header>
 
@@ -515,9 +543,6 @@
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _openMenuBtn = document.getElementById('btn-open-menu');
         const _backMenuBtn = document.getElementById('btn-back-menu');
-        const _menuBtnLabel = document.getElementById('menu-btn-label');
-        const _menuIconArrow = document.getElementById('menu-icon-arrow');
-        const _menuIconClose = document.getElementById('menu-icon-close');
         
         const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
@@ -844,10 +869,8 @@
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
             
-            // Hide menu label text and arrow when open; show close icon with matching stroke and size
-            if (_menuBtnLabel) _menuBtnLabel.classList.add('hidden');
-            if (_menuIconArrow) _menuIconArrow.classList.add('hidden');
-            if (_menuIconClose) _menuIconClose.classList.remove('hidden');
+            // Add open state class for smooth icon morphing animation
+            if (_openMenuBtn) _openMenuBtn.classList.add('is-open');
 
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
             
@@ -872,10 +895,8 @@
         function _closeAppleMenu() {
             _isMenuOpen = false;
 
-            // Show menu label and arrow icon when closed, hide close icon
-            if (_menuBtnLabel) _menuBtnLabel.classList.remove('hidden');
-            if (_menuIconArrow) _menuIconArrow.classList.remove('hidden');
-            if (_menuIconClose) _menuIconClose.classList.add('hidden');
+            // Remove open state class to smoothly animate back to arrow icon
+            if (_openMenuBtn) _openMenuBtn.classList.remove('is-open');
 
             _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
             _backMenuBtn.classList.remove('pointer-events-auto');
