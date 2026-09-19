@@ -111,11 +111,7 @@
 
         .apple-menu-item {
             opacity: 1;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        
-        .apple-menu-item:active {
-            transform: scale(0.98);
+            color: #86868b;
         }
 
         ._f1 {
@@ -212,46 +208,55 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Menu Button Icon Morph Animation (2-Bar to Close X) */
-        .menu-line {
-            transform-origin: 12px 12px;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Smooth Icon Transition for Header Menu Button */
+        #btn-open-menu #menu-icon-arrow,
+        #btn-open-menu #menu-icon-close {
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
         }
 
-        .menu-line-top {
-            transform: translateY(-2.5px) rotate(0deg);
+        #btn-open-menu #menu-icon-arrow {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
         }
 
-        .menu-line-bottom {
-            transform: translateY(2.5px) rotate(0deg);
+        #btn-open-menu #menu-icon-close {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.65);
         }
 
-        #btn-open-menu.menu-active .menu-line-top {
-            transform: translateY(0px) rotate(45deg);
+        #btn-open-menu.is-open #menu-icon-arrow {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.65);
         }
 
-        #btn-open-menu.menu-active .menu-line-bottom {
-            transform: translateY(0px) rotate(-45deg);
+        #btn-open-menu.is-open #menu-icon-close {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
         }
     </style>
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Top Header Navigation Bar (Edges of screen like apple.com) -->
+    <!-- Top Header Navigation Bar -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <!-- Left Edge: Back Button (<) -->
-        <button id="btn-back-menu" class="p-2 text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
-            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+        <!-- Left Edge: Back Button (Normal Arrow with Shaft) -->
+        <button id="btn-back-menu" class="p-1.5 text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
         </button>
 
-        <!-- Right Edge: Morphing Menu / Close Toggle Button -->
-        <button id="btn-open-menu" class="p-2 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
-            <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                <line class="menu-line menu-line-top" x1="4" y1="12" x2="20" y2="12" />
-                <line class="menu-line menu-line-bottom" x1="4" y1="12" x2="20" y2="12" />
-            </svg>
+        <!-- Right Edge: Left Arrow / Close Button Toggle (Slightly Reduced Size) -->
+        <button id="btn-open-menu" class="p-1.5 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500 relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 select-none" aria-label="Toggle Menu">
+            <div class="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
+                <svg id="menu-icon-arrow" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                </svg>
+                <svg id="menu-icon-close" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </div>
         </button>
     </header>
 
@@ -262,30 +267,30 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
-                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
                     <span>Topics</span>
                     <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
                 </button>
 
-                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
                     <span>Autoplay</span>
                     <span id="badge-autoplay-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
                     <span>Previous Quote</span>
                 </button>
 
-                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
                     <span>Size</span>
                 </button>
 
-                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
                     <span>Touch Gestures</span>
                     <span id="badge-gestures-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
                     <span>How This Site Helps You</span>
                 </button>
             </div>
@@ -538,6 +543,7 @@
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _openMenuBtn = document.getElementById('btn-open-menu');
         const _backMenuBtn = document.getElementById('btn-back-menu');
+        
         const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
         const _badgeGestures = document.getElementById('badge-gestures-status');
@@ -546,14 +552,13 @@
         const _sizeNav = document.getElementById('apple-size-nav');
         const _gesturesNav = document.getElementById('apple-gestures-nav');
 
-        // Screen Wake Lock API to prevent device screen timeout
         async function _requestWakeLock() {
             try {
                 if ('wakeLock' in navigator) {
                     _wakeLock = await navigator.wakeLock.request('screen');
                 }
             } catch (err) {
-                // Ignore wake lock request errors (e.g. low battery mode)
+                // Ignore wake lock request errors
             }
         }
 
@@ -565,7 +570,6 @@
             }
         }
 
-        // Re-apply wake lock when tab regains visibility
         document.addEventListener('visibilitychange', async () => {
             if (document.visibilityState === 'visible') {
                 await _requestWakeLock();
@@ -772,7 +776,7 @@
                 const btn = document.createElement('button');
                 
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                    isActive ? 'text-white' : 'text-[#86868b]'
                 }`;
                 
                 btn.innerHTML = `
@@ -796,7 +800,7 @@
                 const btn = document.createElement('button');
                 
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                    isActive ? 'text-white' : 'text-[#86868b]'
                 }`;
                 
                 btn.innerHTML = `
@@ -820,7 +824,7 @@
                 const btn = document.createElement('button');
                 
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                    isActive ? 'text-white' : 'text-[#86868b]'
                 }`;
                 
                 btn.innerHTML = `
@@ -844,7 +848,7 @@
                 const btn = document.createElement('button');
                 
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
+                    isActive ? 'text-white' : 'text-[#86868b]'
                 }`;
                 
                 btn.innerHTML = `
@@ -863,7 +867,10 @@
 
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
-            _openMenuBtn.classList.add('menu-active');
+            
+            // Add open state class for smooth icon morphing animation
+            if (_openMenuBtn) _openMenuBtn.classList.add('is-open');
+
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
             
             if (source === 'swipe') {
@@ -886,7 +893,10 @@
 
         function _closeAppleMenu() {
             _isMenuOpen = false;
-            _openMenuBtn.classList.remove('menu-active');
+
+            // Remove open state class to smoothly animate back to arrow icon
+            if (_openMenuBtn) _openMenuBtn.classList.remove('is-open');
+
             _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
             _backMenuBtn.classList.remove('pointer-events-auto');
             _menuOverlay.classList.remove('menu-open');
@@ -957,7 +967,6 @@
                 }
             }
 
-            // Hide/Show top right menu button based on Touch Gestures state
             if (_swipeGesturesEnabled) {
                 _openMenuBtn.classList.add('opacity-0', 'pointer-events-none');
                 _openMenuBtn.classList.remove('opacity-100', 'pointer-events-auto');
@@ -976,7 +985,6 @@
         }
 
         window.onload = () => {
-            // Request wake lock to keep screen awake
             _requestWakeLock();
 
             const i = _getNextQuote();
@@ -992,12 +1000,10 @@
                 _st.classList.remove('opacity-0');
             }
 
-            // Step 1: Immediately reveal quotes
             requestAnimationFrame(() => {
                 _mc.classList.add('v');
             });
 
-            // Step 2: Reveal bottom tap hint after quote load
             setTimeout(() => {
                 if (!_hasTapped && _tapHint) {
                     _tapHint.classList.remove('opacity-0');
@@ -1005,7 +1011,6 @@
                 }
             }, 900);
 
-            // Step 3: Reveal top header last (if gestures off, show menu button)
             setTimeout(() => {
                 if (_topHeader) {
                     _topHeader.classList.remove('opacity-0');
@@ -1091,15 +1096,13 @@
 
             if (_longPressTimer) clearTimeout(_longPressTimer);
 
-            // Start Long Press Timer (0.5s) if Touch Gestures are Enabled
             if (_swipeGesturesEnabled && !_isMenuOpen) {
                 _longPressTimer = setTimeout(() => {
                     _isLongPress = true;
-                    _isSwipe = true; // Prevent click trigger
+                    _isSwipe = true;
                     if (navigator.vibrate) {
                         try { navigator.vibrate(50); } catch(err){}
                     }
-                    // Toggle Autoplay
                     if (_autoplayIntervalSec > 0) {
                         _selectAutoplay(0, "Off");
                     } else {
@@ -1113,7 +1116,6 @@
             _currentY = e.touches[0].clientY;
             _currentX = e.touches[0].clientX;
 
-            // Cancel Long Press if user moves finger more than 10px
             if (Math.abs(_currentX - _startX) > 10 || Math.abs(_currentY - _startY) > 10) {
                 if (_longPressTimer) clearTimeout(_longPressTimer);
             }
@@ -1125,25 +1127,20 @@
             const deltaX = _currentX - _startX;
             const deltaY = _currentY - _startY;
 
-            // Handle Swipes ONLY if Touch Gestures is TURNED ON
             if (_swipeGesturesEnabled && !_isLongPress) {
                 if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
                     _isSwipe = true;
                     if (deltaY > 40 && !_isMenuOpen) {
-                        // Swipe Down -> Open Menu
                         _openAppleMenu('swipe');
                     } else if (deltaY < -40 && _isMenuOpen) {
-                        // Swipe Up -> Close Menu
                         _closeAppleMenu();
                     }
                 } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     _isSwipe = true;
                     if (!_isMenuOpen) {
                         if (deltaX > 45) {
-                            // Swipe Right -> Previous Quote
                             _prev(true);
                         } else if (deltaX < -45) {
-                            // Swipe Left -> Next Quote
                             _next();
                         }
                     }
