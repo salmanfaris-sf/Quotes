@@ -53,7 +53,7 @@
         }
 
         #tap-hint {
-            bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+            bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
         }
 
         #_ap_status_ {
@@ -111,11 +111,7 @@
 
         .apple-menu-item {
             opacity: 1;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        
-        .apple-menu-item:active {
-            transform: scale(0.98);
+            color: #ffffff;
         }
 
         ._f1 {
@@ -212,46 +208,55 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Menu Button Icon Morph Animation (2-Bar to Close X) */
-        .menu-line {
-            transform-origin: 12px 12px;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Smooth Icon Transition for Header Menu Button */
+        #btn-open-menu #menu-icon-arrow,
+        #btn-open-menu #menu-icon-close {
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
         }
 
-        .menu-line-top {
-            transform: translateY(-4px) rotate(0deg);
+        #btn-open-menu #menu-icon-arrow {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
         }
 
-        .menu-line-bottom {
-            transform: translateY(4px) rotate(0deg);
+        #btn-open-menu #menu-icon-close {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.65);
         }
 
-        #btn-open-menu.menu-active .menu-line-top {
-            transform: translateY(0px) rotate(45deg);
+        #btn-open-menu.is-open #menu-icon-arrow {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.65);
         }
 
-        #btn-open-menu.menu-active .menu-line-bottom {
-            transform: translateY(0px) rotate(-45deg);
+        #btn-open-menu.is-open #menu-icon-close {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
         }
     </style>
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Top Header Navigation Bar (Edges of screen like apple.com) -->
+    <!-- Top Header Navigation Bar -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <!-- Left Edge: Back Button (<) -->
-        <button id="btn-back-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
-            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+        <!-- Left Edge: Back Button (Normal Arrow with Shaft) -->
+        <button id="btn-back-menu" class="p-1.5 text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
         </button>
 
-        <!-- Right Edge: Morphing Menu / Close Toggle Button -->
-        <button id="btn-open-menu" class="p-2 text-[#86868b] hover:text-white transition-colors focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500" aria-label="Toggle Menu">
-            <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                <line class="menu-line menu-line-top" x1="4" y1="12" x2="20" y2="12" />
-                <line class="menu-line menu-line-bottom" x1="4" y1="12" x2="20" y2="12" />
-            </svg>
+        <!-- Right Edge: Left Arrow / Close Button Toggle -->
+        <button id="btn-open-menu" class="p-1.5 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500 relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 select-none" aria-label="Toggle Menu">
+            <div class="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
+                <svg id="menu-icon-arrow" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                </svg>
+                <svg id="menu-icon-close" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </div>
         </button>
     </header>
 
@@ -262,30 +267,36 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
-                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white hover:text-white/80 transition-colors py-1 flex items-center justify-between">
-                    <span>Topics</span>
+                <button id="menu-item-fullscreen" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
+                    <span>Full Screen</span>
+                    <span id="badge-fullscreen-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">Enter</span>
                 </button>
 
-                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
+                    <span>Topics</span>
+                    <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
+                </button>
+
+                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Autoplay</span>
                     <span id="badge-autoplay-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Previous Quote</span>
                 </button>
 
-                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Size</span>
                 </button>
 
-                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
+                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Touch Gestures</span>
                     <span id="badge-gestures-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-helps" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] hover:text-white transition-colors py-1 flex items-center justify-between">
-                    <span>How It Helps</span>
+                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
+                    <span>How This Site Helps You</span>
                 </button>
             </div>
 
@@ -333,11 +344,11 @@
                             <span class="text-[#86868b]">Close Menu</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Left</span>
+                            <span class="font-medium text-white/90">Swipe Right</span>
                             <span class="text-[#86868b]">Previous Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Right / Tap</span>
+                            <span class="font-medium text-white/90">Swipe Left / Tap</span>
                             <span class="text-[#86868b]">Next Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
@@ -346,29 +357,28 @@
                         </div>
                     </div>
                     <p class="text-[11.5px] leading-relaxed text-[#86868b] pt-1">
-                        When enabled, the top-right menu button hides automatically for an uninterrupted full-screen experience.
+                        When enabled, header controls hide automatically for a clean, distraction-free view.
                     </p>
                 </div>
             </div>
 
-            <!-- VIEW 6: How It Helps Explanation -->
-            <div id="view-helps-menu" class="menu-view flex-col space-y-3 text-left">
+            <!-- VIEW 6: How This Site Benefits You -->
+            <div id="view-benefits-menu" class="menu-view flex-col space-y-3.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
                 
-                <div class="space-y-3 text-xs text-[#86868b] leading-relaxed">
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
-                        <div class="font-semibold text-white text-sm">Reset Mindset When Lazy or Afraid</div>
-                        <p class="text-white/70">Visit whenever you feel lazy, unmotivated, overwhelmed, or afraid. Reading short, uncompromising truths cuts through overthinking and gives you immediate clarity to take action.</p>
+                <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                        <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
+                        <p class="text-[#86868b]">
+                            Visit whenever you feel bored, lazy, afraid, or trapped in self-doubt. Read direct, unvarnished truths to quiet overthinking, regain perspective, and take immediate action.
+                        </p>
                     </div>
 
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
-                        <div class="font-semibold text-white text-sm">Ambient Desk Companion</div>
-                        <p class="text-white/70">Enable Autoplay, set your interval, and place your phone or tablet on your desk while working or studying. Every time you glance over, get motivated to stay focused and keep going.</p>
-                    </div>
-
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
-                        <div class="font-semibold text-white text-sm">Time Urgency Counter</div>
-                        <p class="text-white/70">Track the exact remaining minutes left in the day to maintain healthy urgency and never let valuable hours slip away unnoticed.</p>
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                        <div class="font-medium text-white text-sm">Ambient Focus While Studying or Working</div>
+                        <p class="text-[#86868b]">
+                            Turn on <span class="text-white font-medium">Autoplay</span> and keep this page visible on your screen while studying or working. Every time you glance over when you feel like giving up, get an instant spark of motivation to keep going.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -508,6 +518,7 @@
         let _autoplayIntervalSec = 0;
         let _swipeGesturesEnabled = false;
         let _autoplayTimer = null;
+        let _wakeLock = null;
         let _isMenuOpen = false;
         let _activeMenuView = "main";
         let _hasTapped = false;
@@ -537,12 +548,39 @@
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _openMenuBtn = document.getElementById('btn-open-menu');
         const _backMenuBtn = document.getElementById('btn-back-menu');
+        
+        const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
         const _badgeGestures = document.getElementById('badge-gestures-status');
+        const _badgeFullscreen = document.getElementById('badge-fullscreen-status');
         const _topicsNav = document.getElementById('apple-topics-nav');
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
         const _gesturesNav = document.getElementById('apple-gestures-nav');
+
+        async function _requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    _wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                // Ignore wake lock request errors
+            }
+        }
+
+        function _releaseWakeLock() {
+            if (_wakeLock !== null) {
+                _wakeLock.release().then(() => {
+                    _wakeLock = null;
+                }).catch(() => {});
+            }
+        }
+
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible') {
+                await _requestWakeLock();
+            }
+        });
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -653,16 +691,16 @@
             _resetAutoplayTimer();
         }
 
-        function _prev(fromMenu = false) {
+        function _prev(fromGestureOrMenu = false) {
             _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
-                if (fromMenu) {
+                if (fromGestureOrMenu) {
                     _showStatus("Previous Quote");
                 }
             } else {
-                if (fromMenu) {
+                if (fromGestureOrMenu) {
                     _showStatus("Start of quotes");
                 }
             }
@@ -716,7 +754,7 @@
 
         function _switchMenuView(viewName) {
             _activeMenuView = viewName;
-            const views = ['main', 'topics', 'autoplay', 'size', 'gestures', 'helps'];
+            const views = ['main', 'topics', 'autoplay', 'size', 'gestures', 'benefits'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}-menu`);
                 if (el) {
@@ -743,9 +781,7 @@
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
-                }`;
+                btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
                 
                 btn.innerHTML = `
                     <span>${topic.label}</span>
@@ -767,9 +803,7 @@
                 const isActive = opt.sec === _autoplayIntervalSec;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
-                }`;
+                btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
                 
                 btn.innerHTML = `
                     <span>${opt.label}</span>
@@ -791,9 +825,7 @@
                 const isActive = opt.id === _currentSizeId;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
-                }`;
+                btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
                 
                 btn.innerHTML = `
                     <span>${opt.label}</span>
@@ -815,9 +847,7 @@
                 const isActive = opt.enabled === _swipeGesturesEnabled;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b] hover:text-white'
-                }`;
+                btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
                 
                 btn.innerHTML = `
                     <span>${opt.label}</span>
@@ -835,7 +865,10 @@
 
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
-            _openMenuBtn.classList.add('menu-active');
+            
+            // Add open state class for smooth icon morphing animation
+            if (_openMenuBtn) _openMenuBtn.classList.add('is-open');
+
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
             
             if (source === 'swipe') {
@@ -858,7 +891,10 @@
 
         function _closeAppleMenu() {
             _isMenuOpen = false;
-            _openMenuBtn.classList.remove('menu-active');
+
+            // Remove open state class to smoothly animate back to arrow icon
+            if (_openMenuBtn) _openMenuBtn.classList.remove('is-open');
+
             _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
             _backMenuBtn.classList.remove('pointer-events-auto');
             _menuOverlay.classList.remove('menu-open');
@@ -869,6 +905,9 @@
 
         function _selectTopic(topicId, topicLabel) {
             _selectedTopicId = topicId;
+            if (_badgeTopics) {
+                _badgeTopics.innerText = topicLabel;
+            }
             _closeAppleMenu();
             _showStatus(`Topic: ${topicLabel}`);
             _currentPool = [];
@@ -926,7 +965,6 @@
                 }
             }
 
-            // Hide/Show top right menu button based on Touch Gestures state
             if (_swipeGesturesEnabled) {
                 _openMenuBtn.classList.add('opacity-0', 'pointer-events-none');
                 _openMenuBtn.classList.remove('opacity-100', 'pointer-events-auto');
@@ -943,49 +981,49 @@
                 _showStatus(`Touch Gestures Disabled`);
             }
         }
-
-        window.onload = () => {
-            const i = _getNextQuote();
-            _history.push(i);
-            _historyIndex = 0;
-            
-            _qx.innerText = i.t;
-            _qx.style.opacity = '1';
-            
-            if (i.id === "t_q") {
-                const s = _gs();
-                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-                _st.classList.remove('opacity-0');
+        function _toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen();
+                } else if (docEl.webkitRequestFullscreen) {
+                    docEl.webkitRequestFullscreen();
+                } else if (docEl.mozRequestFullScreen) {
+                    docEl.mozRequestFullScreen();
+                } else if (docEl.msRequestFullscreen) {
+                    docEl.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
             }
+        }
 
-            // Step 1: Immediately reveal quotes
-            requestAnimationFrame(() => {
-                _mc.classList.add('v');
-            });
+        function _updateFullscreenBadge() {
+            const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            if (_badgeFullscreen) {
+                _badgeFullscreen.innerText = isFS ? "Exit" : "Enter";
+            }
+        }
 
-            // Step 2: Reveal bottom tap hint after quote load
-            setTimeout(() => {
-                if (!_hasTapped && _tapHint) {
-                    _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-90');
-                }
-            }, 900);
-
-            // Step 3: Reveal top header last (if gestures off, show menu button)
-            setTimeout(() => {
-                if (_topHeader) {
-                    _topHeader.classList.remove('opacity-0');
-                    _topHeader.classList.add('opacity-100');
-                }
-            }, 1700);
-
-            _renderAppleMenuTopics();
-            _renderAutoplayOptions();
-            _renderSizeOptions();
-            _renderGesturesOptions();
-        };
+        ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+            document.addEventListener(evt, _updateFullscreenBadge);
+        });
 
         // Main Menu Button Bindings
+        document.getElementById('menu-item-fullscreen').onclick = (e) => {
+            e.stopPropagation();
+            _toggleFullscreen();
+            _closeAppleMenu();
+        };
+
         document.getElementById('menu-item-topics').onclick = (e) => {
             e.stopPropagation();
             _switchMenuView("topics");
@@ -1012,9 +1050,9 @@
             _switchMenuView("gestures");
         };
 
-        document.getElementById('menu-item-helps').onclick = (e) => {
+        document.getElementById('menu-item-benefits').onclick = (e) => {
             e.stopPropagation();
-            _switchMenuView("helps");
+            _switchMenuView("benefits");
         };
 
         _openMenuBtn.addEventListener('click', (e) => {
@@ -1039,6 +1077,7 @@
 
         // Global Canvas Click Event
         document.addEventListener('click', () => {
+            _requestWakeLock();
             if (_isMenuOpen) return;
             if (_isSwipe || _isLongPress) return;
             _next();
@@ -1046,6 +1085,7 @@
 
         // Touch event handlers for mobile gestures
         document.addEventListener('touchstart', (e) => {
+            _requestWakeLock();
             _startY = e.touches[0].clientY;
             _startX = e.touches[0].clientX;
             _currentY = _startY;
@@ -1055,15 +1095,13 @@
 
             if (_longPressTimer) clearTimeout(_longPressTimer);
 
-            // Start Long Press Timer (0.5s) if Touch Gestures are Enabled
             if (_swipeGesturesEnabled && !_isMenuOpen) {
                 _longPressTimer = setTimeout(() => {
                     _isLongPress = true;
-                    _isSwipe = true; // Prevent click trigger
+                    _isSwipe = true;
                     if (navigator.vibrate) {
                         try { navigator.vibrate(50); } catch(err){}
                     }
-                    // Toggle Autoplay
                     if (_autoplayIntervalSec > 0) {
                         _selectAutoplay(0, "Off");
                     } else {
@@ -1077,7 +1115,6 @@
             _currentY = e.touches[0].clientY;
             _currentX = e.touches[0].clientX;
 
-            // Cancel Long Press if user moves finger more than 10px
             if (Math.abs(_currentX - _startX) > 10 || Math.abs(_currentY - _startY) > 10) {
                 if (_longPressTimer) clearTimeout(_longPressTimer);
             }
@@ -1089,25 +1126,20 @@
             const deltaX = _currentX - _startX;
             const deltaY = _currentY - _startY;
 
-            // Handle Swipes ONLY if Touch Gestures is TURNED ON
             if (_swipeGesturesEnabled && !_isLongPress) {
                 if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX)) {
                     _isSwipe = true;
                     if (deltaY > 40 && !_isMenuOpen) {
-                        // Swipe Down -> Open Menu
                         _openAppleMenu('swipe');
                     } else if (deltaY < -40 && _isMenuOpen) {
-                        // Swipe Up -> Close Menu
                         _closeAppleMenu();
                     }
                 } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     _isSwipe = true;
                     if (!_isMenuOpen) {
-                        if (deltaX < -45) {
-                            // Swipe Left -> Previous Quote
-                            _prev(false);
-                        } else if (deltaX > 45) {
-                            // Swipe Right -> Next Quote
+                        if (deltaX > 45) {
+                            _prev(true);
+                        } else if (deltaX < -45) {
                             _next();
                         }
                     }
@@ -1124,6 +1156,7 @@
 
         // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
+            _requestWakeLock();
             if (e.code === 'Escape') {
                 if (_isMenuOpen) {
                     if (_activeMenuView !== "main") {
