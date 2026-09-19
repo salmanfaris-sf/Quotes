@@ -568,14 +568,6 @@
             }
         }
 
-        function _releaseWakeLock() {
-            if (_wakeLock !== null) {
-                _wakeLock.release().then(() => {
-                    _wakeLock = null;
-                }).catch(() => {});
-            }
-        }
-
         document.addEventListener('visibilitychange', async () => {
             if (document.visibilityState === 'visible') {
                 await _requestWakeLock();
@@ -780,19 +772,15 @@
             _topics.forEach((topic) => {
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
-                
                 btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
-                
                 btn.innerHTML = `
                     <span>${topic.label}</span>
                     ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
                 `;
-
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     _selectTopic(topic.id, topic.label);
                 };
-
                 _topicsNav.appendChild(btn);
             });
         }
@@ -802,19 +790,15 @@
             _autoplayOptions.forEach((opt) => {
                 const isActive = opt.sec === _autoplayIntervalSec;
                 const btn = document.createElement('button');
-                
                 btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
-                
                 btn.innerHTML = `
                     <span>${opt.label}</span>
                     ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
                 `;
-
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     _selectAutoplay(opt.sec, opt.label);
                 };
-
                 _autoplayNav.appendChild(btn);
             });
         }
@@ -824,19 +808,15 @@
             _sizeOptions.forEach((opt) => {
                 const isActive = opt.id === _currentSizeId;
                 const btn = document.createElement('button');
-                
                 btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
-                
                 btn.innerHTML = `
                     <span>${opt.label}</span>
                     ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
                 `;
-
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     _selectSize(opt);
                 };
-
                 _sizeNav.appendChild(btn);
             });
         }
@@ -846,31 +826,60 @@
             _gesturesOptions.forEach((opt) => {
                 const isActive = opt.enabled === _swipeGesturesEnabled;
                 const btn = document.createElement('button');
-                
                 btn.className = "apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white";
-                
                 btn.innerHTML = `
                     <span>${opt.label}</span>
                     ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
                 `;
-
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     _selectGestures(opt.enabled, opt.label);
                 };
-
                 _gesturesNav.appendChild(btn);
             });
         }
 
+        function _toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen();
+                } else if (docEl.webkitRequestFullscreen) {
+                    docEl.webkitRequestFullscreen();
+                } else if (docEl.mozRequestFullScreen) {
+                    docEl.mozRequestFullScreen();
+                } else if (docEl.msRequestFullscreen) {
+                    docEl.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        function _updateFullscreenBadge() {
+            const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            if (_badgeFullscreen) {
+                _badgeFullscreen.innerText = isFS ? "Exit" : "Enter";
+            }
+        }
+
+        ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+            document.addEventListener(evt, _updateFullscreenBadge);
+        });
+
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
-            
-            // Add open state class for smooth icon morphing animation
             if (_openMenuBtn) _openMenuBtn.classList.add('is-open');
 
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
-            
             if (source === 'swipe') {
                 _menuOverlay.classList.add('mode-swipe');
             } else {
@@ -882,17 +891,14 @@
             _renderAutoplayOptions();
             _renderSizeOptions();
             _renderGesturesOptions();
+            _updateFullscreenBadge();
 
-            // Force layout reflow
             void _menuOverlay.offsetWidth;
-
             _menuOverlay.classList.add('menu-open');
         }
 
         function _closeAppleMenu() {
             _isMenuOpen = false;
-
-            // Remove open state class to smoothly animate back to arrow icon
             if (_openMenuBtn) _openMenuBtn.classList.remove('is-open');
 
             _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
@@ -981,43 +987,7 @@
                 _showStatus(`Touch Gestures Disabled`);
             }
         }
-        function _toggleFullscreen() {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-                const docEl = document.documentElement;
-                if (docEl.requestFullscreen) {
-                    docEl.requestFullscreen();
-                } else if (docEl.webkitRequestFullscreen) {
-                    docEl.webkitRequestFullscreen();
-                } else if (docEl.mozRequestFullScreen) {
-                    docEl.mozRequestFullScreen();
-                } else if (docEl.msRequestFullscreen) {
-                    docEl.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-        }
 
-        function _updateFullscreenBadge() {
-            const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-            if (_badgeFullscreen) {
-                _badgeFullscreen.innerText = isFS ? "Exit" : "Enter";
-            }
-        }
-
-        ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
-            document.addEventListener(evt, _updateFullscreenBadge);
-        });
-
-        // Main Menu Button Bindings
         document.getElementById('menu-item-fullscreen').onclick = (e) => {
             e.stopPropagation();
             _toggleFullscreen();
@@ -1186,6 +1156,53 @@
                 _prev(false);
             }
         });
+
+        function _initApp() {
+            _requestWakeLock();
+
+            const i = _getNextQuote();
+            _history.push(i);
+            _historyIndex = 0;
+            
+            _qx.innerText = i.t;
+            _qx.style.opacity = '1';
+            
+            if (i.id === "t_q") {
+                const s = _gs();
+                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+                _st.classList.remove('opacity-0');
+            }
+
+            requestAnimationFrame(() => {
+                if (_mc) _mc.classList.add('v');
+            });
+
+            setTimeout(() => {
+                if (!_hasTapped && _tapHint) {
+                    _tapHint.classList.remove('opacity-0');
+                    _tapHint.classList.add('opacity-90');
+                }
+            }, 900);
+
+            setTimeout(() => {
+                if (_topHeader) {
+                    _topHeader.classList.remove('opacity-0');
+                    _topHeader.classList.add('opacity-100');
+                }
+            }, 1700);
+
+            _renderAppleMenuTopics();
+            _renderAutoplayOptions();
+            _renderSizeOptions();
+            _renderGesturesOptions();
+            _updateFullscreenBadge();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', _initApp);
+        } else {
+            _initApp();
+        }
 
     })();
     </script>
