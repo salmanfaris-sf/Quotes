@@ -111,7 +111,12 @@
 
         .apple-menu-item {
             opacity: 1;
-            color: #86868b;
+            color: #ffffff;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .apple-menu-item:hover {
+            opacity: 0.85;
         }
 
         ._f1 {
@@ -247,7 +252,7 @@
             </svg>
         </button>
 
-        <!-- Right Edge: Left Arrow / Close Button Toggle (Slightly Reduced Size) -->
+        <!-- Right Edge: Left Arrow / Close Button Toggle -->
         <button id="btn-open-menu" class="p-1.5 text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500 relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 select-none" aria-label="Toggle Menu">
             <div class="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
                 <svg id="menu-icon-arrow" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
@@ -267,30 +272,30 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
-                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
+                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Topics</span>
                     <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
                 </button>
 
-                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
+                <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Autoplay</span>
                     <span id="badge-autoplay-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
+                <button id="menu-item-prev" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Previous Quote</span>
                 </button>
 
-                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
+                <button id="menu-item-size" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Size</span>
                 </button>
 
-                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
+                <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>Touch Gestures</span>
                     <span id="badge-gestures-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full hidden">Off</span>
                 </button>
 
-                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-[#86868b] py-1 flex items-center justify-between">
+                <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between">
                     <span>How This Site Helps You</span>
                 </button>
             </div>
@@ -298,7 +303,7 @@
             <!-- VIEW 2: Topics Sub-Menu -->
             <div id="view-topics-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left">
-                    <!-- Topic options dynamically rendered -->
+                    <!-- Topic options dynamically rendered in white -->
                 </nav>
             </div>
 
@@ -306,7 +311,7 @@
             <div id="view-autoplay-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Autoplay Interval</div>
                 <nav id="apple-autoplay-nav" class="flex flex-col space-y-1 text-left">
-                    <!-- Autoplay options rendered dynamically -->
+                    <!-- Autoplay options rendered dynamically in white -->
                 </nav>
             </div>
 
@@ -314,7 +319,7 @@
             <div id="view-size-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Quote Text Size</div>
                 <nav id="apple-size-nav" class="flex flex-col space-y-1 text-left">
-                    <!-- Size options rendered dynamically -->
+                    <!-- Size options rendered dynamically in white -->
                 </nav>
             </div>
 
@@ -323,7 +328,7 @@
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Touch Gestures</div>
                 
                 <nav id="apple-gestures-nav" class="flex flex-col space-y-1 text-left">
-                    <!-- Gesture options rendered dynamically -->
+                    <!-- Gesture options rendered dynamically in white -->
                 </nav>
 
                 <!-- Gesture Instructions & Explanation Guide -->
@@ -331,23 +336,23 @@
                     <div class="text-[11px] font-medium uppercase tracking-wider text-white/60">How Gestures Work</div>
                     <div class="grid grid-cols-1 gap-1.5 text-white/80">
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Down</span>
+                            <span class="font-medium text-white">Swipe Down</span>
                             <span class="text-[#86868b]">Open Menu</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Up</span>
+                            <span class="font-medium text-white">Swipe Up</span>
                             <span class="text-[#86868b]">Close Menu</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Right</span>
+                            <span class="font-medium text-white">Swipe Right</span>
                             <span class="text-[#86868b]">Previous Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Swipe Left / Tap</span>
+                            <span class="font-medium text-white">Swipe Left / Tap</span>
                             <span class="text-[#86868b]">Next Quote</span>
                         </div>
                         <div class="flex items-center justify-between py-0.5">
-                            <span class="font-medium text-white/90">Long Press</span>
+                            <span class="font-medium text-white">Long Press</span>
                             <span class="text-[#86868b]">Toggle Autoplay</span>
                         </div>
                     </div>
@@ -775,9 +780,7 @@
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b]'
-                }`;
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer`;
                 
                 btn.innerHTML = `
                     <span>${topic.label}</span>
@@ -799,9 +802,7 @@
                 const isActive = opt.sec === _autoplayIntervalSec;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b]'
-                }`;
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer`;
                 
                 btn.innerHTML = `
                     <span>${opt.label}</span>
@@ -823,9 +824,7 @@
                 const isActive = opt.id === _currentSizeId;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b]'
-                }`;
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer`;
                 
                 btn.innerHTML = `
                     <span>${opt.label}</span>
@@ -847,9 +846,7 @@
                 const isActive = opt.enabled === _swipeGesturesEnabled;
                 const btn = document.createElement('button');
                 
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between ${
-                    isActive ? 'text-white' : 'text-[#86868b]'
-                }`;
+                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer`;
                 
                 btn.innerHTML = `
                     <span>${opt.label}</span>
