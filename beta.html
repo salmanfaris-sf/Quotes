@@ -173,7 +173,6 @@
             line-height: 1.6;
         }
 
-        /* Pop up status toast styled in pure white text */
         #_ap_status_ {
             position: absolute;
             left: 50%;
@@ -182,7 +181,7 @@
             background: rgba(30, 30, 35, 0.9);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #ffffff;
+            color: #e5e5e7;
             padding: 6px 16px;
             border-radius: 9999px;
             font-weight: 400;
@@ -249,12 +248,16 @@
             </svg>
         </button>
 
-        <!-- Right Edge: Menu Toggle / Close Button (Preserved subtle gray tone with no color active shift) -->
+        <!-- Right Edge: Menu Toggle / Close Button with Three Dots (Ellipsis) Icon -->
         <button id="btn-open-menu" class="p-1.5 text-[#86868b] active:text-[#86868b] focus:outline-none bg-transparent border-none outline-none cursor-pointer pointer-events-auto transition-opacity duration-500 relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 select-none" aria-label="Toggle Menu">
             <div class="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
-                <svg id="menu-icon-arrow" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                <!-- Three Dots (Ellipsis) Menu Icon -->
+                <svg id="menu-icon-arrow" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-current" viewBox="0 0 24 24">
+                    <circle cx="5" cy="12" r="1.75" />
+                    <circle cx="12" cy="12" r="1.75" />
+                    <circle cx="19" cy="12" r="1.75" />
                 </svg>
+                <!-- Close (X) Icon when open -->
                 <svg id="menu-icon-close" class="w-5 h-5 sm:w-6 sm:h-6 absolute inset-0 fill-none stroke-current" stroke-width="1.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -777,7 +780,6 @@
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
                 
-                // All menu options configured with pure white text color
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white`;
                 
                 btn.innerHTML = `
@@ -800,7 +802,6 @@
                 const isActive = opt.sec === _autoplayIntervalSec;
                 const btn = document.createElement('button');
                 
-                // All menu options configured with pure white text color
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white`;
                 
                 btn.innerHTML = `
@@ -823,7 +824,6 @@
                 const isActive = opt.id === _currentSizeId;
                 const btn = document.createElement('button');
                 
-                // All menu options configured with pure white text color
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white`;
                 
                 btn.innerHTML = `
@@ -846,7 +846,6 @@
                 const isActive = opt.enabled === _swipeGesturesEnabled;
                 const btn = document.createElement('button');
                 
-                // All menu options configured with pure white text color
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white`;
                 
                 btn.innerHTML = `
@@ -866,7 +865,6 @@
         function _openAppleMenu(source = 'button') {
             _isMenuOpen = true;
             
-            // Add open state class for smooth icon morphing animation
             if (_openMenuBtn) _openMenuBtn.classList.add('is-open');
 
             _menuOverlay.classList.remove('mode-ripple', 'mode-swipe');
@@ -883,7 +881,6 @@
             _renderSizeOptions();
             _renderGesturesOptions();
 
-            // Force layout reflow
             void _menuOverlay.offsetWidth;
 
             _menuOverlay.classList.add('menu-open');
@@ -892,7 +889,6 @@
         function _closeAppleMenu() {
             _isMenuOpen = false;
 
-            // Remove open state class to smoothly animate back to arrow icon
             if (_openMenuBtn) _openMenuBtn.classList.remove('is-open');
 
             _backMenuBtn.classList.add('opacity-0', 'pointer-events-none');
