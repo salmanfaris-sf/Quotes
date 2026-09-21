@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-black">
 <head>
@@ -344,6 +345,9 @@
             { t: "Race one another in good deeds." },
             { t: "Don't waste time. You don't get it back." },
             { t: "Focus." },
+            { t: "Be relentless." },
+            { t: "Win the day." },
+            { t: "No shortcuts." },
             { t: "The problem is,\nyou think you have a lot of time to live." },
             { t: "Live everyday like it's your last day." },
             { t: "Consistency." },
@@ -352,7 +356,7 @@
             { t: "Do it even when you don't feel like it." },
             { t: "Nothing changes if nothing changes." },
             { t: "Stay different." },
-            { t: "You only have 1,440 minutes every day,\ndont let a single one go to waste.", id: "t_q" },
+            { t: "You only have 1,440 minutes every day,\ndon't let a single one go to waste.", id: "t_q" },
             { t: "You can't have a million dollar dream with a minimum wage work ethic." },
             { t: "A real man protects and provides." },
             { t: "Don't follow the crowd. Follow the truth." },
@@ -426,6 +430,7 @@
 
         const _topics = [
             { id: "all", label: "All Quotes" },
+            { id: "short", label: "Short Quotes" },
             { id: "laziness", label: "Time & Laziness" },
             { id: "brave", label: "Courage & Strength" },
             { id: "action", label: "Action & Hard Work" },
@@ -440,6 +445,7 @@
         const _autoplayOptions = [
             { sec: 0, label: "Off" },
             { sec: 5, label: "5 Seconds" },
+            { sec: 15, label: "15 Seconds" },
             { sec: 30, label: "30 Seconds" },
             { sec: 60, label: "1 Minute" },
             { sec: 3600, label: "1 Hour" }
@@ -513,6 +519,11 @@
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
+            if (topicId === "short") {
+                const textWithoutNewlines = q.t.replace(/\n/g, ' ').trim();
+                const wordCount = textWithoutNewlines.split(/\s+/).length;
+                return wordCount <= 6 || textWithoutNewlines.length <= 32;
+            }
             if (topicId === "laziness") {
                 return /laziness|tomorrow|waste|time|1,440|waiting|overthinking|minutes|year|relax|boredom/i.test(q.t);
             }
@@ -943,9 +954,6 @@
             e.stopPropagation();
             _switchMenuView("main");
         });
-
-        // Tapping/clicking anywhere on screen when menu is open will NOT close the menu.
-        // Swiping up is required to close the menu.
 
         // Global Canvas Click Event
         document.addEventListener('click', () => {
