@@ -157,16 +157,17 @@
             line-height: 1.6;
         }
 
+        /* Border removed from toast status pop-up */
         #_ap_status_ {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             font-size: 12px;
-            background: rgba(30, 30, 35, 0.9);
+            background: rgba(30, 30, 35, 0.95);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: none;
             color: #e5e5e7;
-            padding: 6px 16px;
+            padding: 7px 18px;
             border-radius: 9999px;
             font-weight: 400;
             letter-spacing: 0.03em;
@@ -175,7 +176,7 @@
             z-index: 60;
             white-space: nowrap;
             transition: opacity 0.35s ease-in-out, transform 0.35s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         }
 
         /* Menu View Transitions */
@@ -299,14 +300,15 @@
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
                 
                 <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
-                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                    <!-- Cards styled without borders -->
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] space-y-1">
                         <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
                         <p class="text-[#86868b]">
                             Visit whenever you feel bored, lazy, afraid, or trapped in self-doubt. Read direct, unvarnished truths to quiet overthinking, regain perspective, and take immediate action.
                         </p>
                     </div>
 
-                    <div class="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
+                    <div class="p-3.5 rounded-xl bg-white/[0.04] space-y-1">
                         <div class="font-medium text-white text-sm">Ambient Focus While Studying or Working</div>
                         <p class="text-[#86868b]">
                             Turn on <span class="text-white font-medium">Autoplay</span> and keep this page visible on your screen while studying or working. Every time you glance over when you feel like giving up, get an instant spark of motivation to keep going.
@@ -334,7 +336,7 @@
         Tap anywhere to view the next quote
     </div>
 
-    <!-- Status Toast Notification -->
+    <!-- Status Toast Notification (Borderless) -->
     <div id="_ap_status_"></div>
 
     <script>
@@ -475,7 +477,6 @@
         let _history = [];
         let _historyIndex = -1;
 
-        // DOM Element references
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
@@ -627,7 +628,6 @@
                         if (_tapHint && _tapHint.parentNode) {
                             _tapHint.parentNode.removeChild(_tapHint);
                         }
-                        // Reveal Swipe Hint after Tap Hint goes away, then auto-dismiss after 4 seconds
                         if (!_swipeHintDismissed && _swipeHint) {
                             _swipeHint.classList.remove('opacity-0');
                             _swipeHint.classList.add('opacity-90');
@@ -813,7 +813,6 @@
             _renderAutoplayOptions();
             _renderSizeOptions();
 
-            // Force layout reflow
             void _menuOverlay.offsetWidth;
 
             _menuOverlay.classList.add('menu-open');
@@ -957,7 +956,7 @@
         // Global Canvas Click Event
         document.addEventListener('click', () => {
             _requestWakeLock();
-            if (_isMenuOpen) return; // Ignores screen taps while menu is open
+            if (_isMenuOpen) return;
             if (_isSwipe || _isLongPress) return;
             _next();
         });
@@ -1011,7 +1010,6 @@
                     if (deltaY > 40 && !_isMenuOpen) {
                         _openAppleMenu();
                     } else if (deltaY < -40 && _isMenuOpen) {
-                        // Swipe Up closes the menu
                         _closeAppleMenu();
                     }
                 } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
