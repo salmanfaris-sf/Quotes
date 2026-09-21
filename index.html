@@ -56,6 +56,10 @@
             bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
         }
 
+        .top-hint-pos {
+            top: calc(1.5rem + env(safe-area-inset-top, 0px));
+        }
+
         #_ap_status_ {
             top: calc(1.75rem + env(safe-area-inset-top, 0px));
         }
@@ -320,13 +324,14 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <!-- Sequential Hints at Bottom -->
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
-        Tap anywhere to view the next quote
+    <!-- Repositioned Swipe Hint at Top -->
+    <div id="swipe-hint" class="top-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+        Swipe down for menu
     </div>
 
-    <div id="swipe-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
-        Swipe down for menu
+    <!-- Tap Hint at Bottom -->
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+        Tap anywhere to view the next quote
     </div>
 
     <!-- Status Toast Notification -->
@@ -939,16 +944,13 @@
             _switchMenuView("main");
         });
 
-        _menuOverlay.addEventListener('click', (e) => {
-            if (e.target === _menuOverlay) {
-                _closeAppleMenu();
-            }
-        });
+        // Tapping/clicking anywhere on screen when menu is open will NOT close the menu.
+        // Swiping up is required to close the menu.
 
         // Global Canvas Click Event
         document.addEventListener('click', () => {
             _requestWakeLock();
-            if (_isMenuOpen) return;
+            if (_isMenuOpen) return; // Ignores screen taps while menu is open
             if (_isSwipe || _isLongPress) return;
             _next();
         });
@@ -1002,6 +1004,7 @@
                     if (deltaY > 40 && !_isMenuOpen) {
                         _openAppleMenu();
                     } else if (deltaY < -40 && _isMenuOpen) {
+                        // Swipe Up closes the menu
                         _closeAppleMenu();
                     }
                 } else if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
