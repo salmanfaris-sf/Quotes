@@ -64,7 +64,6 @@
             top: calc(1.75rem + env(safe-area-inset-top, 0px));
         }
 
-        /* Apple Overlay Menu Container */
         #apple-menu-overlay {
             position: fixed;
             top: 0;
@@ -93,7 +92,6 @@
             pointer-events: auto;
         }
 
-        /* All menu option items set to white */
         .apple-menu-item {
             opacity: 1;
             color: #ffffff;
@@ -136,7 +134,6 @@
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
         }
 
-        /* Text Size Variants */
         #_q_.size-standard {
             font-size: clamp(1.125rem, 3.5vw, 1.875rem);
             line-height: 1.5;
@@ -157,7 +154,6 @@
             line-height: 1.6;
         }
 
-        /* Border removed from toast status pop-up */
         #_ap_status_ {
             position: absolute;
             left: 50%;
@@ -179,7 +175,6 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         }
 
-        /* Menu View Transitions */
         .menu-view {
             display: none;
             animation: fadeInView 0.25s ease-out forwards;
@@ -197,9 +192,7 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Top Header Navigation Bar (Sub-Menu Back Button Only) -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <!-- Left Edge: Back Button -->
         <button id="btn-back-menu" class="p-1.5 text-[#86868b] active:text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
@@ -209,7 +202,6 @@
 
     <!-- Overlay Navigation Menu -->
     <div id="apple-menu-overlay" class="fixed inset-0 z-50 px-8 sm:px-16 flex flex-col justify-start overflow-y-auto pt-20 sm:pt-24">
-        <!-- Menu Container for Views -->
         <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
             
             <!-- VIEW 1: Main Menu -->
@@ -244,7 +236,7 @@
             <!-- VIEW 2: Topics Sub-Menu -->
             <div id="view-topics-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left">
-                    <!-- Topic options dynamically rendered -->
+                    <!-- Topic options dynamically rendered without short quotes -->
                 </nav>
             </div>
 
@@ -268,7 +260,6 @@
             <div id="view-gestures-menu" class="menu-view flex-col space-y-3 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Gesture Controls</div>
                 
-                <!-- Gesture Instructions Guide -->
                 <div class="text-xs text-[#86868b] space-y-2.5">
                     <div class="grid grid-cols-1 gap-1.5 text-white/80">
                         <div class="flex items-center justify-between py-1 border-b border-white/10">
@@ -300,7 +291,6 @@
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
                 
                 <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
-                    <!-- Cards styled without borders -->
                     <div class="p-3.5 rounded-xl bg-white/[0.04] space-y-1">
                         <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
                         <p class="text-[#86868b]">
@@ -336,7 +326,7 @@
         Tap anywhere to view the next quote
     </div>
 
-    <!-- Status Toast Notification (Borderless) -->
+    <!-- Status Toast Notification -->
     <div id="_ap_status_"></div>
 
     <script>
@@ -431,7 +421,6 @@
 
         const _topics = [
             { id: "all", label: "All Quotes" },
-            { id: "short", label: "Short Quotes" },
             { id: "laziness", label: "Time & Laziness" },
             { id: "brave", label: "Courage & Strength" },
             { id: "action", label: "Action & Hard Work" },
@@ -498,17 +487,7 @@
                 if ('wakeLock' in navigator) {
                     _wakeLock = await navigator.wakeLock.request('screen');
                 }
-            } catch (err) {
-                // Ignore wake lock request errors
-            }
-        }
-
-        function _releaseWakeLock() {
-            if (_wakeLock !== null) {
-                _wakeLock.release().then(() => {
-                    _wakeLock = null;
-                }).catch(() => {});
-            }
+            } catch (err) {}
         }
 
         document.addEventListener('visibilitychange', async () => {
@@ -519,11 +498,6 @@
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
-            if (topicId === "short") {
-                const textWithoutNewlines = q.t.replace(/\n/g, ' ').trim();
-                const wordCount = textWithoutNewlines.split(/\s+/).length;
-                return wordCount <= 6 || textWithoutNewlines.length <= 32;
-            }
             if (topicId === "laziness") {
                 return /laziness|tomorrow|waste|time|1,440|waiting|overthinking|minutes|year|relax|boredom/i.test(q.t);
             }
@@ -916,7 +890,6 @@
             _renderSizeOptions();
         };
 
-        // Main Menu Button Bindings
         document.getElementById('menu-item-topics').onclick = (e) => {
             e.stopPropagation();
             _switchMenuView("topics");
@@ -953,7 +926,6 @@
             _switchMenuView("main");
         });
 
-        // Global Canvas Click Event
         document.addEventListener('click', () => {
             _requestWakeLock();
             if (_isMenuOpen) return;
@@ -961,7 +933,6 @@
             _next();
         });
 
-        // Touch event handlers for mobile gestures
         document.addEventListener('touchstart', (e) => {
             _requestWakeLock();
             _startY = e.touches[0].clientY;
@@ -1032,7 +1003,6 @@
             }
         }, { passive: true });
 
-        // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
             _requestWakeLock();
             if (e.code === 'Escape') {
