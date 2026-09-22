@@ -64,7 +64,7 @@
             top: calc(1.75rem + env(safe-area-inset-top, 0px));
         }
 
-        /* Apple Overlay Menu Container */
+        /* Apple Overlay Menu Container with precise clip-path animation */
         #apple-menu-overlay {
             position: fixed;
             top: 0;
@@ -214,6 +214,10 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
+                <button id="menu-item-fullscreen" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
+                    <span id="label-fullscreen">Full Screen</span>
+                </button>
+
                 <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
                     <span>Topics</span>
                     <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
@@ -241,7 +245,7 @@
                 </button>
             </div>
 
-            <!-- VIEW 2: Topics Sub-Menu -->
+            <!-- VIEW 2: Topics Sub-Menu (Without Short Quotes) -->
             <div id="view-topics-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left">
                     <!-- Topic options dynamically rendered -->
@@ -431,7 +435,6 @@
 
         const _topics = [
             { id: "all", label: "All Quotes" },
-            { id: "short", label: "Short Quotes" },
             { id: "laziness", label: "Time & Laziness" },
             { id: "brave", label: "Courage & Strength" },
             { id: "action", label: "Action & Hard Work" },
@@ -486,6 +489,7 @@
         const _topHeader = document.getElementById('top-header');
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _backMenuBtn = document.getElementById('btn-back-menu');
+        const _labelFullscreen = document.getElementById('label-fullscreen');
         
         const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
@@ -493,22 +497,49 @@
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
 
+        function _isFS() {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+        }
+
+        function _updateFullscreenUI() {
+            if (_labelFullscreen) {
+                _labelFullscreen.innerText = _isFS() ? "Exit Full Screen" : "Full Screen";
+            }
+        }
+
+        function _toggleFullscreen() {
+            if (!_isFS()) {
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen().catch(() => {
+                        _showStatus("Fullscreen unavailable");
+                    });
+                } else if (docEl.webkitRequestFullscreen) {
+                    docEl.webkitRequestFullscreen();
+                } else if (docEl.msRequestFullscreen) {
+                    docEl.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', _updateFullscreenUI);
+        document.addEventListener('webkitfullscreenchange', _updateFullscreenUI);
+        document.addEventListener('msfullscreenchange', _updateFullscreenUI);
+
         async function _requestWakeLock() {
             try {
                 if ('wakeLock' in navigator) {
                     _wakeLock = await navigator.wakeLock.request('screen');
                 }
-            } catch (err) {
-                // Ignore wake lock request errors
-            }
-        }
-
-        function _releaseWakeLock() {
-            if (_wakeLock !== null) {
-                _wakeLock.release().then(() => {
-                    _wakeLock = null;
-                }).catch(() => {});
-            }
+            } catch (err) {}
         }
 
         document.addEventListener('visibilitychange', async () => {
@@ -519,11 +550,6 @@
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
-            if (topicId === "short") {
-                const textWithoutNewlines = q.t.replace(/\n/g, ' ').trim();
-                const wordCount = textWithoutNewlines.split(/\s+/).length;
-                return wordCount <= 6 || textWithoutNewlines.length <= 32;
-            }
             if (topicId === "laziness") {
                 return /laziness|tomorrow|waste|time|1,440|waiting|overthinking|minutes|year|relax|boredom/i.test(q.t);
             }
@@ -809,6 +835,7 @@
             _isMenuOpen = true;
 
             _switchMenuView("main");
+            _updateFullscreenUI();
             _renderAppleMenuTopics();
             _renderAutoplayOptions();
             _renderSizeOptions();
@@ -879,6 +906,7 @@
 
         window.onload = () => {
             _requestWakeLock();
+            _updateFullscreenUI();
 
             const i = _getNextQuote();
             _history.push(i);
@@ -917,6 +945,12 @@
         };
 
         // Main Menu Button Bindings
+        document.getElementById('menu-item-fullscreen').onclick = (e) => {
+            e.stopPropagation();
+            _toggleFullscreen();
+            _closeAppleMenu();
+        };
+
         document.getElementById('menu-item-topics').onclick = (e) => {
             e.stopPropagation();
             _switchMenuView("topics");
