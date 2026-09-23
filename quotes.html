@@ -138,7 +138,7 @@
     <div id="_ap_status_"></div>
 
     <div class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="text-sm md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
+        <h1 id="_q_" class="text-[15.2px] md:text-base lg:text-lg leading-relaxed tracking-wide opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </div>
 
@@ -263,7 +263,6 @@
     const AUTOPLAY_INTERVAL_MS = 20000;
     const LONG_PRESS_DELAY_MS = 550;
 
-    // Secure Fisher-Yates array shuffling
     function _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -272,7 +271,6 @@
         return arr;
     }
 
-    // Navigation and history tracker pool
     let _currentPool = [];
     let _lastQuoteText = null;
     let _history = [];
@@ -354,7 +352,6 @@
         }
     }
 
-    /* Status Toast function implementation */
     function _showStatus(text) {
         if (_statusTimeout) clearTimeout(_statusTimeout);
         
@@ -471,7 +468,6 @@
         const diffY = _startY - _currentY;
         const diffX = Math.abs(_startX - _currentX);
 
-        // Cancel long press if user moves finger beyond small threshold
         if (Math.abs(diffY) > 10 || diffX > 10) {
             _cancelLongPressTimer();
         }
@@ -496,9 +492,9 @@
         if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
             _isSwipe = true;
             if (deltaX > 50) {
-                _prev(); // Swipe Right -> Previous
+                _prev();
             } else if (deltaX < -50) {
-                _next(); // Swipe Left -> Next
+                _next();
             }
         }
 
@@ -509,9 +505,8 @@
         }
     }, { passive: true });
 
-    // Desktop Mouse support for long press toggle
     document.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return; // Only primary click
+        if (e.button !== 0) return;
         _startX = e.clientX;
         _startY = e.clientY;
         _isLongPress = false;
@@ -532,7 +527,6 @@
         _cancelLongPressTimer();
     });
 
-    // Keyboard navigation support
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' || e.code === 'ArrowRight') {
             _next();
