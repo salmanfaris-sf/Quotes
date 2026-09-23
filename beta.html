@@ -214,6 +214,7 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
+                <!-- Top of menu list: Full Screen Toggle Button -->
                 <button id="menu-item-fullscreen" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
                     <span id="label-fullscreen">Full Screen</span>
                 </button>
@@ -489,30 +490,32 @@
         const _topHeader = document.getElementById('top-header');
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _backMenuBtn = document.getElementById('btn-back-menu');
-        const _labelFullscreen = document.getElementById('label-fullscreen');
         
         const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
         const _topicsNav = document.getElementById('apple-topics-nav');
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
+        
+        const _labelFullscreen = document.getElementById('label-fullscreen');
 
-        function _isFS() {
+        function _isFullscreen() {
             return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
         }
 
         function _updateFullscreenUI() {
+            const isFS = _isFullscreen();
             if (_labelFullscreen) {
-                _labelFullscreen.innerText = _isFS() ? "Exit Full Screen" : "Full Screen";
+                _labelFullscreen.innerText = isFS ? "Exit Full Screen" : "Full Screen";
             }
         }
 
         function _toggleFullscreen() {
-            if (!_isFS()) {
+            if (!_isFullscreen()) {
                 const docEl = document.documentElement;
                 if (docEl.requestFullscreen) {
                     docEl.requestFullscreen().catch(() => {
-                        _showStatus("Fullscreen unavailable");
+                        _showStatus("Fullscreen not supported");
                     });
                 } else if (docEl.webkitRequestFullscreen) {
                     docEl.webkitRequestFullscreen();
@@ -521,7 +524,7 @@
                 }
             } else {
                 if (document.exitFullscreen) {
-                    document.exitFullscreen();
+                    document.exitFullscreen().catch(() => {});
                 } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
                 } else if (document.msExitFullscreen) {
@@ -532,7 +535,6 @@
 
         document.addEventListener('fullscreenchange', _updateFullscreenUI);
         document.addEventListener('webkitfullscreenchange', _updateFullscreenUI);
-        document.addEventListener('msfullscreenchange', _updateFullscreenUI);
 
         async function _requestWakeLock() {
             try {
@@ -947,8 +949,10 @@
         // Main Menu Button Bindings
         document.getElementById('menu-item-fullscreen').onclick = (e) => {
             e.stopPropagation();
+            const wasFS = _isFullscreen();
             _toggleFullscreen();
             _closeAppleMenu();
+            _showStatus(wasFS ? "Exited Full Screen" : "Entered Full Screen");
         };
 
         document.getElementById('menu-item-topics').onclick = (e) => {
