@@ -214,6 +214,10 @@
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
+                <button id="menu-item-fullscreen" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
+                    <span>Full Screen</span>
+                </button>
+
                 <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
                     <span>Topics</span>
                     <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
@@ -233,7 +237,7 @@
                 </button>
 
                 <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
-                    <span>Gesture Controls</span>
+                    <span>Gesture Guide</span>
                 </button>
 
                 <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
@@ -266,7 +270,7 @@
 
             <!-- VIEW 5: Touch Gestures Guide -->
             <div id="view-gestures-menu" class="menu-view flex-col space-y-3 text-left">
-                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Gesture Controls</div>
+                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Gesture Guide</div>
                 
                 <!-- Gesture Instructions Guide -->
                 <div class="text-xs text-[#86868b] space-y-2.5">
@@ -295,7 +299,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 6: How This Site Benefits You -->
+            <!-- VIEW 6: How This Site Helps You -->
             <div id="view-benefits-menu" class="menu-view flex-col space-y-3.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
                 
@@ -491,6 +495,35 @@
         const _topicsNav = document.getElementById('apple-topics-nav');
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
+
+        function _isFullscreen() {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        }
+
+        function _toggleFullscreen() {
+            if (!_isFullscreen()) {
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen().catch(() => {});
+                } else if (docEl.webkitRequestFullscreen) {
+                    docEl.webkitRequestFullscreen();
+                } else if (docEl.mozRequestFullScreen) {
+                    docEl.mozRequestFullScreen();
+                } else if (docEl.msRequestFullscreen) {
+                    docEl.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
 
         async function _requestWakeLock() {
             try {
@@ -901,6 +934,11 @@
         };
 
         // Main Menu Button Bindings
+        document.getElementById('menu-item-fullscreen').onclick = (e) => {
+            e.stopPropagation();
+            _toggleFullscreen();
+        };
+
         document.getElementById('menu-item-topics').onclick = (e) => {
             e.stopPropagation();
             _switchMenuView("topics");
