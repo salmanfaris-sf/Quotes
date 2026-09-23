@@ -253,6 +253,7 @@
     let _currentX = 0;
     let _isSwipe = false;
     let _fsTriggered = false;
+    let _wasInFullscreenBeforeSwipe = false;
 
     // Autoplay & Long Press State
     let _isAutoplay = false;
@@ -406,6 +407,18 @@
         }
     }
 
+    function _exitFullscreen() {
+        if (document.fullscreenElement) {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+
     function _startLongPressTimer() {
         _cancelLongPressTimer();
         _longPressTimer = setTimeout(() => {
@@ -458,6 +471,7 @@
         _isSwipe = false;
         _isLongPress = false;
         _fsTriggered = false;
+        _wasInFullscreenBeforeSwipe = !!document.fullscreenElement;
 
         _startLongPressTimer();
     }, { passive: true });
@@ -472,14 +486,14 @@
             _cancelLongPressTimer();
         }
 
-        if (diffY > 10 && e.cancelable) {
-            e.preventDefault();
-        }
-
-        if (!_fsTriggered && diffY > 40 && diffX < 25) {
-            _fsTriggered = true;
-            _isSwipe = true;
-            _enterFullscreen();
+        // Swipe UP to enter full screen (only if not already fullscreen)
+        if (diffY > 40 && diffX < 25 && !_wasInFullscreenBeforeSwipe) {
+            if (e.cancelable) e.preventDefault();
+            if (!_fsTriggered) {
+                _fsTriggered = true;
+                _isSwipe = true;
+                _enterFullscreen();
+            }
         }
     }, { passive: false });
 
@@ -489,6 +503,13 @@
         const deltaX = _currentX - _startX;
         const deltaY = _currentY - _startY;
 
+        // Swipe DOWN to exit full screen (only if currently in fullscreen)
+        if (deltaY > 50 && Math.abs(deltaX) < Math.abs(deltaY) && _wasInFullscreenBeforeSwipe) {
+            _isSwipe = true;
+            _exitFullscreen();
+        }
+
+        // Horizontal swipes for navigation
         if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
             _isSwipe = true;
             if (deltaX > 50) {
