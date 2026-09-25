@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     
-    
+    <!-- Pure Black Address Bar & Status Bar Controls -->
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,8 +27,8 @@
     <style>
         :root {
             --bg: #000000;
-            --text: #f5f5f7;
-            --apple-dark: #161617; /* Apple signature dark gray menu background */
+            --text: #ffffff;
+            --apple-dark: #161617;
             --apple-muted: #86868b;
         }
 
@@ -45,15 +45,83 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Respect safe areas for notched devices */
+        /* Dynamic Ambient Horizon Glow Container */
+        #ambient-bg-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+            transition: opacity 1.5s ease;
+        }
+
+        .ambient-blob {
+            position: absolute;
+            filter: blur(90px);
+            opacity: 0.85;
+            will-change: transform, filter;
+        }
+
+        /* Bottom Horizon Glow with Automatic Multi-Spectrum Color Cycle */
+        .bottom-horizon-glow .blob-1 {
+            width: 140vw;
+            height: 70vh;
+            bottom: -35vh;
+            left: -20vw;
+            top: auto;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at bottom, rgba(37, 99, 235, 0.85) 0%, rgba(147, 51, 234, 0.55) 35%, rgba(236, 72, 153, 0.3) 65%, transparent 85%);
+            animation: floatHorizon1 12s ease-in-out infinite alternate, autoColorCycle 24s linear infinite;
+        }
+        .bottom-horizon-glow .blob-2 {
+            width: 120vw;
+            height: 60vh;
+            bottom: -30vh;
+            right: -20vw;
+            top: auto;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at bottom, rgba(99, 102, 241, 0.75) 0%, rgba(168, 85, 247, 0.45) 45%, transparent 80%);
+            animation: floatHorizon2 15s ease-in-out infinite alternate, autoColorCycle 24s linear infinite reverse;
+        }
+        .bottom-horizon-glow .blob-3 {
+            width: 100vw;
+            height: 50vh;
+            bottom: -25vh;
+            left: 0vw;
+            top: auto;
+            border-radius: 50%;
+            background: radial-gradient(circle at bottom, rgba(56, 189, 248, 0.65) 0%, rgba(14, 165, 233, 0.35) 55%, transparent 75%);
+            animation: floatHorizon3 10s ease-in-out infinite alternate, autoColorCycle 20s linear infinite;
+        }
+
+        @keyframes floatHorizon1 {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-35px) scale(1.08); }
+        }
+        @keyframes floatHorizon2 {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-45px) scale(1.05); }
+        }
+        @keyframes floatHorizon3 {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-25px) scale(1.12); }
+        }
+
+        /* Automatic Color Transition Spectrum Cycle */
+        @keyframes autoColorCycle {
+            0% { filter: blur(90px) hue-rotate(0deg); }
+            20% { filter: blur(90px) hue-rotate(72deg); }
+            40% { filter: blur(90px) hue-rotate(144deg); }
+            60% { filter: blur(90px) hue-rotate(216deg); }
+            80% { filter: blur(90px) hue-rotate(288deg); }
+            100% { filter: blur(90px) hue-rotate(360deg); }
+        }
+
+        /* Safe Area Padding */
         #top-header {
             padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
             padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
             padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
-        }
-
-        .bottom-hint-pos {
-            bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
         }
 
         .top-hint-pos {
@@ -64,7 +132,7 @@
             top: calc(1.75rem + env(safe-area-inset-top, 0px));
         }
 
-        /* Apple Overlay Menu Container with precise clip-path animation */
+        /* Apple Overlay Menu Container */
         #apple-menu-overlay {
             position: fixed;
             top: 0;
@@ -93,7 +161,6 @@
             pointer-events: auto;
         }
 
-        /* All menu option items set to white */
         .apple-menu-item {
             opacity: 1;
             color: #ffffff;
@@ -116,7 +183,7 @@
             max-width: 680px;
             width: calc(100% - 48px);
             text-align: center;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -127,13 +194,13 @@
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
             margin-bottom: 16px;
-            color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out, font-size 0.3s ease;
             font-weight: 300;
             letter-spacing: -0.01em;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
         }
 
         /* Text Size Variants */
@@ -157,15 +224,14 @@
             line-height: 1.6;
         }
 
-        /* Border removed from toast status pop-up */
         #_ap_status_ {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             font-size: 12px;
-            background: rgba(30, 30, 35, 0.95);
-            backdrop-filter: blur(12px);
-            border: none;
+            background: rgba(25, 25, 30, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #e5e5e7;
             padding: 7px 18px;
             border-radius: 9999px;
@@ -197,10 +263,16 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Top Header Navigation Bar (Sub-Menu Back Button Only) -->
+    <!-- Ambient Bottom Glow Background Container -->
+    <div id="ambient-bg-container" class="bottom-horizon-glow">
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+        <div class="ambient-blob blob-3"></div>
+    </div>
+
+    <!-- Top Header Navigation Bar -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <!-- Left Edge: Back Button -->
-        <button id="btn-back-menu" class="p-1.5 text-[#86868b] active:text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
+        <button id="btn-back-menu" class="p-1.5 text-[#86868b] hover:text-white focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
@@ -209,14 +281,17 @@
 
     <!-- Overlay Navigation Menu -->
     <div id="apple-menu-overlay" class="fixed inset-0 z-50 px-8 sm:px-16 flex flex-col justify-start overflow-y-auto pt-20 sm:pt-24">
-        <!-- Menu Container for Views -->
         <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
-                <!-- Top of menu list: Full Screen Toggle Button -->
                 <button id="menu-item-fullscreen" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
-                    <span id="label-fullscreen">Full Screen</span>
+                    <span id="fullscreen-text">Full Screen</span>
+                </button>
+
+                <button id="menu-item-ambient-toggle" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
+                    <span>Bottom Horizon Glow</span>
+                    <span id="badge-ambient-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">On</span>
                 </button>
 
                 <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
@@ -238,7 +313,7 @@
                 </button>
 
                 <button id="menu-item-gestures" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
-                    <span>Gesture Controls</span>
+                    <span>Gesture Guide</span>
                 </button>
 
                 <button id="menu-item-benefits" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
@@ -246,34 +321,26 @@
                 </button>
             </div>
 
-            <!-- VIEW 2: Topics Sub-Menu (Without Short Quotes) -->
+            <!-- VIEW 2: Topics Sub-Menu -->
             <div id="view-topics-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
-                <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left">
-                    <!-- Topic options dynamically rendered -->
-                </nav>
+                <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left"></nav>
             </div>
 
             <!-- VIEW 3: Autoplay Speed Options -->
             <div id="view-autoplay-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Autoplay Interval</div>
-                <nav id="apple-autoplay-nav" class="flex flex-col space-y-1 text-left">
-                    <!-- Autoplay options rendered dynamically -->
-                </nav>
+                <nav id="apple-autoplay-nav" class="flex flex-col space-y-1 text-left"></nav>
             </div>
 
             <!-- VIEW 4: Text Size Options -->
             <div id="view-size-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Quote Text Size</div>
-                <nav id="apple-size-nav" class="flex flex-col space-y-1 text-left">
-                    <!-- Size options rendered dynamically -->
-                </nav>
+                <nav id="apple-size-nav" class="flex flex-col space-y-1 text-left"></nav>
             </div>
 
             <!-- VIEW 5: Touch Gestures Guide -->
             <div id="view-gestures-menu" class="menu-view flex-col space-y-3 text-left">
-                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Gesture Controls</div>
-                
-                <!-- Gesture Instructions Guide -->
+                <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Gesture Guide</div>
                 <div class="text-xs text-[#86868b] space-y-2.5">
                     <div class="grid grid-cols-1 gap-1.5 text-white/80">
                         <div class="flex items-center justify-between py-1 border-b border-white/10">
@@ -300,12 +367,10 @@
                 </div>
             </div>
 
-            <!-- VIEW 6: How This Site Benefits You -->
+            <!-- VIEW 6: Benefits -->
             <div id="view-benefits-menu" class="menu-view flex-col space-y-3.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
-                
                 <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
-                    <!-- Cards styled without borders -->
                     <div class="p-3.5 rounded-xl bg-white/[0.04] space-y-1">
                         <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
                         <p class="text-[#86868b]">
@@ -326,22 +391,17 @@
     </div>
 
     <!-- Main Content Display -->
-    <main class="_c1 _f1" id="_mc_">
-        <h1 id="_q_" class="size-standard font-light leading-relaxed tracking-tight opacity-0"></h1>
+    <main class="_c1 _f1 relative z-20" id="_mc_">
+        <h1 id="_q_" class="size-standard font-light leading-relaxed tracking-tight opacity-0 text-white"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <!-- Repositioned Swipe Hint at Top -->
+    <!-- Swipe Hint at Top -->
     <div id="swipe-hint" class="top-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Swipe down for menu
     </div>
 
-    <!-- Tap Hint at Bottom -->
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
-        Tap anywhere to view the next quote
-    </div>
-
-    <!-- Status Toast Notification (Borderless) -->
+    <!-- Status Toast Notification -->
     <div id="_ap_status_"></div>
 
     <script>
@@ -456,6 +516,8 @@
             { sec: 3600, label: "1 Hour" }
         ];
 
+        // System State
+        let _ambientEnabled = true;
         let _selectedTopicId = "all";
         let _currentSizeId = "standard";
         let _autoplayIntervalSec = 0;
@@ -463,7 +525,6 @@
         let _wakeLock = null;
         let _isMenuOpen = false;
         let _activeMenuView = "main";
-        let _hasTapped = false;
         let _swipeHintDismissed = false;
 
         let _l_i = null;
@@ -481,32 +542,33 @@
         let _history = [];
         let _historyIndex = -1;
 
+        // DOM Element References
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
         const _apStatus = document.getElementById('_ap_status_');
-        const _tapHint = document.getElementById('tap-hint');
         const _swipeHint = document.getElementById('swipe-hint');
         const _topHeader = document.getElementById('top-header');
         const _menuOverlay = document.getElementById('apple-menu-overlay');
         const _backMenuBtn = document.getElementById('btn-back-menu');
+        const _fullscreenText = document.getElementById('fullscreen-text');
+        const _ambientBgContainer = document.getElementById('ambient-bg-container');
         
+        const _badgeAmbient = document.getElementById('badge-ambient-status');
         const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
+        
         const _topicsNav = document.getElementById('apple-topics-nav');
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
-        
-        const _labelFullscreen = document.getElementById('label-fullscreen');
 
         function _isFullscreen() {
-            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
         }
 
         function _updateFullscreenUI() {
-            const isFS = _isFullscreen();
-            if (_labelFullscreen) {
-                _labelFullscreen.innerText = isFS ? "Exit Full Screen" : "Full Screen";
+            if (_fullscreenText) {
+                _fullscreenText.innerText = _isFullscreen() ? "Exit Full Screen" : "Full Screen";
             }
         }
 
@@ -514,11 +576,11 @@
             if (!_isFullscreen()) {
                 const docEl = document.documentElement;
                 if (docEl.requestFullscreen) {
-                    docEl.requestFullscreen().catch(() => {
-                        _showStatus("Fullscreen not supported");
-                    });
+                    docEl.requestFullscreen().catch(() => {});
                 } else if (docEl.webkitRequestFullscreen) {
                     docEl.webkitRequestFullscreen();
+                } else if (docEl.mozRequestFullScreen) {
+                    docEl.mozRequestFullScreen();
                 } else if (docEl.msRequestFullscreen) {
                     docEl.msRequestFullscreen();
                 }
@@ -527,14 +589,24 @@
                     document.exitFullscreen().catch(() => {});
                 } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 }
             }
         }
 
-        document.addEventListener('fullscreenchange', _updateFullscreenUI);
-        document.addEventListener('webkitfullscreenchange', _updateFullscreenUI);
+        ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(event => {
+            document.addEventListener(event, () => {
+                _updateFullscreenUI();
+                if (_isFullscreen()) {
+                    _showStatus("Entered Full Screen");
+                } else {
+                    _showStatus("Exited Full Screen");
+                }
+            });
+        });
 
         async function _requestWakeLock() {
             try {
@@ -549,6 +621,19 @@
                 await _requestWakeLock();
             }
         });
+
+        function _toggleAmbientMode() {
+            _ambientEnabled = !_ambientEnabled;
+            if (_ambientEnabled) {
+                _ambientBgContainer.style.opacity = '1';
+                if (_badgeAmbient) _badgeAmbient.innerText = "On";
+                _showStatus("Bottom Horizon Glow: Enabled");
+            } else {
+                _ambientBgContainer.style.opacity = '0';
+                if (_badgeAmbient) _badgeAmbient.innerText = "Off";
+                _showStatus("Bottom Horizon Glow: Off");
+            }
+        }
 
         function _matchesTopic(q, topicId) {
             if (topicId === "all") return true;
@@ -646,30 +731,8 @@
             }
         }
 
-        function _hideTapHint() {
-            if (!_hasTapped) {
-                _hasTapped = true;
-                if (_tapHint) {
-                    _tapHint.classList.remove('opacity-90');
-                    _tapHint.classList.add('opacity-0');
-                    setTimeout(() => {
-                        if (_tapHint && _tapHint.parentNode) {
-                            _tapHint.parentNode.removeChild(_tapHint);
-                        }
-                        if (!_swipeHintDismissed && _swipeHint) {
-                            _swipeHint.classList.remove('opacity-0');
-                            _swipeHint.classList.add('opacity-90');
-                            setTimeout(() => {
-                                _dismissSwipeHint();
-                            }, 4000);
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
         function _next() {
-            _hideTapHint();
+            _dismissSwipeHint();
             if (_historyIndex < _history.length - 1) {
                 _historyIndex++;
                 _showQuote(_history[_historyIndex]);
@@ -683,7 +746,7 @@
         }
 
         function _prev(fromGestureOrMenu = false) {
-            _hideTapHint();
+            _dismissSwipeHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
@@ -771,7 +834,6 @@
             _topics.forEach((topic) => {
                 const isActive = topic.id === _selectedTopicId;
                 const btn = document.createElement('button');
-                
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white cursor-pointer`;
                 
                 btn.innerHTML = `
@@ -793,7 +855,6 @@
             _autoplayOptions.forEach((opt) => {
                 const isActive = opt.sec === _autoplayIntervalSec;
                 const btn = document.createElement('button');
-                
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white cursor-pointer`;
                 
                 btn.innerHTML = `
@@ -815,7 +876,6 @@
             _sizeOptions.forEach((opt) => {
                 const isActive = opt.id === _currentSizeId;
                 const btn = document.createElement('button');
-                
                 btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white cursor-pointer`;
                 
                 btn.innerHTML = `
@@ -836,14 +896,13 @@
             _dismissSwipeHint();
             _isMenuOpen = true;
 
-            _switchMenuView("main");
             _updateFullscreenUI();
+            _switchMenuView("main");
             _renderAppleMenuTopics();
             _renderAutoplayOptions();
             _renderSizeOptions();
 
             void _menuOverlay.offsetWidth;
-
             _menuOverlay.classList.add('menu-open');
         }
 
@@ -908,7 +967,6 @@
 
         window.onload = () => {
             _requestWakeLock();
-            _updateFullscreenUI();
 
             const i = _getNextQuote();
             _history.push(i);
@@ -928,19 +986,13 @@
             });
 
             setTimeout(() => {
-                if (!_hasTapped && _tapHint) {
-                    _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-90');
-                }
-            }, 900);
-
-            setTimeout(() => {
                 if (_topHeader) {
                     _topHeader.classList.remove('opacity-0');
                     _topHeader.classList.add('opacity-100');
                 }
             }, 1700);
 
+            _updateFullscreenUI();
             _renderAppleMenuTopics();
             _renderAutoplayOptions();
             _renderSizeOptions();
@@ -949,10 +1001,14 @@
         // Main Menu Button Bindings
         document.getElementById('menu-item-fullscreen').onclick = (e) => {
             e.stopPropagation();
-            const wasFS = _isFullscreen();
-            _toggleFullscreen();
             _closeAppleMenu();
-            _showStatus(wasFS ? "Exited Full Screen" : "Entered Full Screen");
+            _toggleFullscreen();
+        };
+
+        document.getElementById('menu-item-ambient-toggle').onclick = (e) => {
+            e.stopPropagation();
+            _toggleAmbientMode();
+            _closeAppleMenu();
         };
 
         document.getElementById('menu-item-topics').onclick = (e) => {
@@ -991,7 +1047,7 @@
             _switchMenuView("main");
         });
 
-        // Global Canvas Click Event
+        // Global Click Event
         document.addEventListener('click', () => {
             _requestWakeLock();
             if (_isMenuOpen) return;
@@ -999,7 +1055,7 @@
             _next();
         });
 
-        // Touch event handlers for mobile gestures
+        // Mobile touch gestures
         document.addEventListener('touchstart', (e) => {
             _requestWakeLock();
             _startY = e.touches[0].clientY;
