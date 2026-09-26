@@ -464,6 +464,13 @@
         let _activeMenuView = "main";
         let _hasTapped = false;
         let _swipeHintDismissed = false;
+        let _swipeHintTimer = null;
+
+        // Check if user has opened the menu in the past
+        let _hasOpenedMenuInPast = false;
+        try {
+            _hasOpenedMenuInPast = localStorage.getItem('_has_opened_menu_') === 'true';
+        } catch(e) {}
 
         let _l_i = null;
         let _startY = 0;
@@ -641,6 +648,10 @@
         }
 
         function _dismissSwipeHint() {
+            if (_swipeHintTimer) {
+                clearTimeout(_swipeHintTimer);
+                _swipeHintTimer = null;
+            }
             if (!_swipeHintDismissed && _swipeHint) {
                 _swipeHintDismissed = true;
                 _swipeHint.classList.remove('opacity-90');
@@ -663,12 +674,15 @@
                         if (_tapHint && _tapHint.parentNode) {
                             _tapHint.parentNode.removeChild(_tapHint);
                         }
-                        if (!_swipeHintDismissed && _swipeHint) {
+                        // Only show the swipe hint if the user has NEVER opened the menu in the past
+                        if (!_hasOpenedMenuInPast && !_swipeHintDismissed && _swipeHint) {
                             _swipeHint.classList.remove('opacity-0');
                             _swipeHint.classList.add('opacity-90');
-                            setTimeout(() => {
+                            
+                            // Extended to 15 seconds
+                            _swipeHintTimer = setTimeout(() => {
                                 _dismissSwipeHint();
-                            }, 4000);
+                            }, 15000);
                         }
                     }, 1000);
                 }
@@ -840,6 +854,12 @@
         }
 
         function _openAppleMenu() {
+            // Persist the state that user has opened the menu
+            _hasOpenedMenuInPast = true;
+            try {
+                localStorage.setItem('_has_opened_menu_', 'true');
+            } catch(e) {}
+
             _dismissSwipeHint();
             _isMenuOpen = true;
 
