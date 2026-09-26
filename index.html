@@ -14,7 +14,6 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Forge an unbreakable mind. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
     
-    <!-- Pure Black Address Bar & Status Bar Controls -->
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -48,7 +47,6 @@
             bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
         }
 
-        /* Borderless Status Toast Popup */
         #_ap_status_ {
             position: fixed;
             top: calc(1.5rem + env(safe-area-inset-top, 0px));
@@ -128,16 +126,13 @@
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
-    <!-- Status Toast Notification -->
     <div id="_ap_status_"></div>
 
-    <!-- Main Content Display -->
     <main class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <!-- Tap Hint at Bottom -->
     <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
@@ -240,7 +235,6 @@
         let _history = [];
         let _historyIndex = -1;
 
-        // Autoplay & Long Press Variables
         let _autoplayTimer = null;
         let _longPressTimer = null;
         let _statusTimer = null;
@@ -364,7 +358,7 @@
             if (_autoplayTimer) clearInterval(_autoplayTimer);
             _autoplayTimer = setInterval(() => {
                 _next();
-            }, 15000); // 15 seconds interval
+            }, 15000);
         }
 
         function _stopAutoplay() {
@@ -397,7 +391,6 @@
                 _showQuote(nq);
             }
 
-            // Reset timer if autoplay is active
             if (_autoplayTimer) {
                 _startAutoplay();
             }
@@ -443,7 +436,6 @@
             }, 900);
         };
 
-        // Long Press Gesture Handlers
         function _startPress(x, y) {
             _startX = x;
             _startY = y;
@@ -469,7 +461,6 @@
             if (_longPressTimer) clearTimeout(_longPressTimer);
         }
 
-        // Pointer / Touch / Mouse Events
         document.addEventListener('touchstart', (e) => {
             _requestWakeLock();
             _startPress(e.touches[0].clientX, e.touches[0].clientY);
@@ -494,7 +485,6 @@
 
         document.addEventListener('mouseup', _endPress);
 
-        // Global Click Event (skips if triggered via long press)
         document.addEventListener('click', (e) => {
             _requestWakeLock();
             if (_isLongPress) {
@@ -504,7 +494,6 @@
             _next();
         });
 
-        // Keyboard Navigation
         document.addEventListener('keydown', (e) => {
             _requestWakeLock();
             if (e.code === 'Space' || e.code === 'ArrowRight') {
