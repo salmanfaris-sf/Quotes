@@ -112,7 +112,7 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
-            font-size: clamp(14.5px, 2.75vw, 1.5rem);
+            font-size: clamp(14px, 2.6vw, 1.4rem);
             line-height: 1.75;
         }
 
@@ -137,7 +137,7 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-[0.2em] uppercase text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-[0.2em] uppercase text-[#48484a] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
 
@@ -347,7 +347,7 @@
             if (!_hasTapped) {
                 _hasTapped = true;
                 if (_tapHint) {
-                    _tapHint.classList.remove('opacity-90');
+                    _tapHint.classList.remove('opacity-100');
                     _tapHint.classList.add('opacity-0');
                     setTimeout(() => {
                         if (_tapHint && _tapHint.parentNode) {
@@ -435,7 +435,7 @@
             setTimeout(() => {
                 if (!_hasTapped && _tapHint) {
                     _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-90');
+                    _tapHint.classList.add('opacity-100');
                 }
             }, 900);
         };
