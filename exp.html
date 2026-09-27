@@ -21,7 +21,7 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -37,7 +37,7 @@
             background-color: var(--bg);
             overflow: hidden;
             touch-action: manipulation;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -99,29 +99,46 @@
         }
 
         #_q_ {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
             font-weight: 400;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            font-size: clamp(1.125rem, 3.5vw, 1.875rem);
-            line-height: 1.5;
+            font-size: clamp(0.95rem, 2.8vw, 1.6rem);
+            line-height: 1.6;
         }
 
         #_st_ {
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
             color: var(--apple-muted);
             font-weight: 400;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.03em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
+        }
+
+        @media (max-width: 640px) {
+            ._c1 {
+                width: calc(100% - 36px);
+            }
+
+            #_q_ {
+                font-size: clamp(0.825rem, 3.8vw, 1.15rem);
+                line-height: 1.65;
+                margin-bottom: 16px;
+                letter-spacing: 0.08em;
+            }
+
+            #_st_ {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
@@ -134,7 +151,7 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[11px] font-normal tracking-widest uppercase text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
 
