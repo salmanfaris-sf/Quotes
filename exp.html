@@ -21,12 +21,12 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg: #000000;
-            --text: #f5f5f7;
+            --text: #ffffff;
             --apple-muted: #86868b;
         }
 
@@ -37,7 +37,7 @@
             background-color: var(--bg);
             overflow: hidden;
             touch-action: manipulation;
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -52,21 +52,23 @@
             top: calc(1.5rem + env(safe-area-inset-top, 0px));
             left: 50%;
             transform: translate(-50%, -10px);
-            font-size: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
             background: rgba(30, 30, 35, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #e5e5e7;
-            padding: 7px 18px;
+            padding: 8px 20px;
             border-radius: 9999px;
-            font-weight: 400;
-            letter-spacing: 0.02em;
+            font-weight: 600;
             pointer-events: none;
             opacity: 0;
             z-index: 60;
             white-space: nowrap;
             transition: opacity 0.35s ease, transform 0.35s ease;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         #_ap_status_.visible {
@@ -88,7 +90,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 680px;
+            max-width: 760px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 10;
@@ -99,46 +101,33 @@
         }
 
         #_q_ {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
             margin-bottom: 20px;
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
+            /* Slightly reduced thickness for refined elegance */
             font-weight: 400;
-            letter-spacing: 0.1em;
+            /* Increased spacing between letters */
+            letter-spacing: 0.18em;
+            /* Uppercase transformation */
             text-transform: uppercase;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            font-size: clamp(1.05rem, 3.2vw, 1.8rem);
-            line-height: 1.6;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+            font-size: clamp(0.875rem, 2.75vw, 1.5rem);
+            line-height: 1.75;
         }
 
         #_st_ {
-            font-family: 'Roboto', sans-serif;
-            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
             color: var(--apple-muted);
-            font-weight: 400;
-            letter-spacing: 0.03em;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
             transition: opacity 0.35s ease;
             line-height: 1.6;
-        }
-
-        @media (max-width: 640px) {
-            ._c1 {
-                width: calc(100% - 36px);
-            }
-
-            #_q_ {
-                font-size: clamp(0.9rem, 4.2vw, 1.3rem);
-                line-height: 1.65;
-                margin-bottom: 16px;
-                letter-spacing: 0.08em;
-            }
-
-            #_st_ {
-                font-size: 11px;
-            }
         }
     </style>
 </head>
@@ -151,7 +140,7 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[11px] font-normal tracking-widest uppercase text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-[0.2em] uppercase text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
 
@@ -340,7 +329,7 @@
                 if (nq.id === "t_q") {
                     const ux = () => {
                         const s = _gs();
-                        _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+                        _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
                     };
                     ux();
                     _st.classList.remove('opacity-0');
@@ -438,7 +427,7 @@
             
             if (i.id === "t_q") {
                 const s = _gs();
-                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+                _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
                 _st.classList.remove('opacity-0');
             }
 
