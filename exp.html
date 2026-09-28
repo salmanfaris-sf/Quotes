@@ -90,22 +90,17 @@
             transform: translate(-50%, -50%);
             max-width: 580px;
             width: calc(100% - 48px);
-            max-height: calc(100vh - 120px);
             text-align: center;
             z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             will-change: transform, opacity;
-            overflow: hidden;
         }
 
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: break-word;
             margin-bottom: 14px;
             color: #ffffff;
             display: inline-block;
@@ -255,7 +250,6 @@
         let _startPinchDist = 0;
         let _startFontScale = 1.0;
         let _isPinching = false;
-        let _rafId = null;
 
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
@@ -324,28 +318,6 @@
             return { t: `${h}:${m} ${a}`, l: ml };
         }
 
-        function _getMaxScaleForCurrentText() {
-            if (!_mc || !_qx) return 2.5;
-            
-            // Available space in pixels leaving top status & bottom hint margin
-            const maxAvailHeight = window.innerHeight - 130; 
-            
-            // Current scrollHeight at current scale
-            const unscaledHeight = _mc.scrollHeight / _fontScale;
-            if (unscaledHeight <= 0) return 2.5;
-
-            const maxAllowed = maxAvailHeight / unscaledHeight;
-            return Math.max(0.6, Math.min(2.5, maxAllowed));
-        }
-
-        function _clampFontScaleToFit() {
-            const maxAllowed = _getMaxScaleForCurrentText();
-            if (_fontScale > maxAllowed) {
-                _fontScale = maxAllowed;
-                _qx.style.setProperty('--font-scale', _fontScale);
-            }
-        }
-
         function _showQuote(nq) {
             _st.classList.add('opacity-0');
             if (_l_i) clearInterval(_l_i);
@@ -369,9 +341,6 @@
                     _st.classList.add('opacity-0');
                 }
 
-                // Check and auto-fit font size so new quote never overflows screen
-                _clampFontScaleToFit();
-
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
                     _qx.style.opacity = '1';
@@ -393,8 +362,6 @@
             setTimeout(() => {
                 _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
                 _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
-
-                _clampFontScaleToFit();
 
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -512,10 +479,6 @@
             }, 900);
         };
 
-        window.addEventListener('resize', () => {
-            _clampFontScaleToFit();
-        });
-
         function _startPress(x, y) {
             _startX = x;
             _startY = y;
@@ -597,20 +560,11 @@
             if (e.touches.length === 2 && _isPinching) {
                 if (_longPressTimer) clearTimeout(_longPressTimer);
                 const currentDist = _getTouchDist(e.touches);
-                
                 if (_startPinchDist > 0) {
                     const ratio = currentDist / _startPinchDist;
-                    const rawScale = _startFontScale * ratio;
-                    const maxScale = _getMaxScaleForCurrentText();
-                    
-                    // Bound scale between 0.6 and max allowed height scale to fit viewport
-                    _fontScale = Math.min(Math.max(rawScale, 0.6), maxScale);
-                    
-                    if (_rafId) cancelAnimationFrame(_rafId);
-                    _rafId = requestAnimationFrame(() => {
-                        _qx.style.setProperty('--font-scale', _fontScale);
-                        _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
-                    });
+                    _fontScale = Math.min(Math.max(_startFontScale * ratio, 0.6), 2.5);
+                    _qx.style.setProperty('--font-scale', _fontScale);
+                    _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
                 }
                 return;
             }
