@@ -475,7 +475,7 @@
             const absX = Math.abs(dx);
             const absY = Math.abs(dy);
 
-            // Minimum distance threshold of 50px for a swipe gesture
+            // Horizontal Swipe Gesture (Left / Right)
             if (absX > 50 && absX > absY * 1.2) {
                 _isSwipe = true;
                 if (dx > 0) {
@@ -487,6 +487,19 @@
                 } else {
                     // Swipe Left: Go to next quote
                     _next();
+                }
+            } 
+            // Vertical Swipe Gesture (Up / Down)
+            else if (absY > 50 && absY > absX * 1.2) {
+                _isSwipe = true;
+                if (dy < 0) {
+                    // Swipe Up: Uppercase
+                    _qx.style.textTransform = 'uppercase';
+                    _showStatus("Uppercase");
+                } else {
+                    // Swipe Down: Normal case
+                    _qx.style.textTransform = 'none';
+                    _showStatus("Normal Case");
                 }
             }
         }
@@ -537,6 +550,12 @@
                     _prev();
                     _showStatus("Previous Quote");
                 }
+            } else if (e.code === 'ArrowUp') {
+                _qx.style.textTransform = 'uppercase';
+                _showStatus("Uppercase");
+            } else if (e.code === 'ArrowDown') {
+                _qx.style.textTransform = 'none';
+                _showStatus("Normal Case");
             }
         });
 
