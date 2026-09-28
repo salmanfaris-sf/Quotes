@@ -26,7 +26,7 @@
     <style>
         :root {
             --bg: #000000;
-            --text: #ffffff;
+            --text: #f5f5f7;
             --apple-muted: #86868b;
         }
 
@@ -52,23 +52,21 @@
             top: calc(1.5rem + env(safe-area-inset-top, 0px));
             left: 50%;
             transform: translate(-50%, -10px);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
+            font-size: 12px;
             background: rgba(30, 30, 35, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #e5e5e7;
-            padding: 8px 20px;
+            padding: 7px 18px;
             border-radius: 9999px;
-            font-weight: 600;
+            font-weight: 400;
+            letter-spacing: 0.02em;
             pointer-events: none;
             opacity: 0;
             z-index: 60;
             white-space: nowrap;
             transition: opacity 0.35s ease, transform 0.35s ease;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         #_ap_status_.visible {
@@ -90,7 +88,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 760px;
+            max-width: 680px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 10;
@@ -103,26 +101,24 @@
         #_q_ {
             font-family: 'Roboto', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
-            font-size: clamp(14px, 2.6vw, 1.4rem);
-            line-height: 1.75;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            font-size: clamp(1.125rem, 3.5vw, 1.875rem);
+            line-height: 1.5;
         }
 
         #_st_ {
             font-family: 'Roboto', sans-serif;
-            font-size: 11px;
+            font-size: 13px;
             color: var(--apple-muted);
-            font-weight: 500;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+            font-weight: 400;
+            letter-spacing: 0.02em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
         }
@@ -137,7 +133,7 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-[0.2em] uppercase text-[#48484a] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
 
@@ -148,7 +144,7 @@
             { t: "Race one another in good deeds." },
             { t: "Don't waste time. You don't get it back." },
             { t: "Focus." },
-            { t: "Be relentless." },
+            { t: "Be Relentless." },
             { t: "Win the day." },
             { t: "No shortcuts." },
             { t: "The problem is,\nyou think you have a lot of time to live." },
@@ -158,7 +154,7 @@
             { t: "Practice makes perfect." },
             { t: "Do it even when you don't feel like it." },
             { t: "Nothing changes if nothing changes." },
-            { t: "Stay different." },
+            { t: "Stay Different." },
             { t: "You only have 1,440 minutes every day,\ndon't let a single one go to waste.", id: "t_q" },
             { t: "You can't have a million dollar dream with a minimum wage work ethic." },
             { t: "A real man protects and provides." },
@@ -195,7 +191,7 @@
             { t: "Habits decide outcomes." },
             { t: "Growth requires discomfort." },
             { t: "Sweat more in practice. Bleed less in war." },
-            { t: "do it scared.\ndo it tired.\ndo it anyway." },
+            { t: "Do it scared.\nDo it tired.\nDo it anyway." },
             { t: "When you feel like nothing is going your way, look at a person breaking a rock. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it,it was the result of all the hits that happened before it." },
             { t: "It always seems impossible until it's done." },
             { t: "Focus is a superpower in a distracted world." },
@@ -326,7 +322,7 @@
                 if (nq.id === "t_q") {
                     const ux = () => {
                         const s = _gs();
-                        _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
+                        _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                     };
                     ux();
                     _st.classList.remove('opacity-0');
@@ -347,7 +343,7 @@
             if (!_hasTapped) {
                 _hasTapped = true;
                 if (_tapHint) {
-                    _tapHint.classList.remove('opacity-100');
+                    _tapHint.classList.remove('opacity-90');
                     _tapHint.classList.add('opacity-0');
                     setTimeout(() => {
                         if (_tapHint && _tapHint.parentNode) {
@@ -424,7 +420,7 @@
             
             if (i.id === "t_q") {
                 const s = _gs();
-                _st.innerHTML = `TIME: ${s.t} • ${s.l} MINUTES REMAINING TODAY`;
+                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                 _st.classList.remove('opacity-0');
             }
 
@@ -435,7 +431,7 @@
             setTimeout(() => {
                 if (!_hasTapped && _tapHint) {
                     _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-100');
+                    _tapHint.classList.add('opacity-90');
                 }
             }, 900);
         };
