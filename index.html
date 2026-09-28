@@ -240,6 +240,7 @@
         let _statusTimer = null;
         let _isLongPress = false;
         let _isSwipe = false;
+        let _isCaseAnimating = false;
         let _startX = 0;
         let _startY = 0;
         let _lastX = 0;
@@ -340,6 +341,34 @@
                     _qx.style.opacity = '1';
                 });
             }, 350);
+        }
+
+        function _setCase(isUpper) {
+            if (_isCaseAnimating) return;
+
+            const isCurrentUpper = _qx.style.textTransform === 'uppercase';
+            if (isUpper === isCurrentUpper) return;
+
+            _isCaseAnimating = true;
+
+            _qx.style.transition = 'opacity 0.35s ease-in-out';
+            _qx.style.opacity = '0';
+
+            setTimeout(() => {
+                _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
+                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
+
+                requestAnimationFrame(() => {
+                    _qx.style.transition = 'opacity 0.35s ease-in-out';
+                    _qx.style.opacity = '1';
+                });
+
+                setTimeout(() => {
+                    _isCaseAnimating = false;
+                }, 350);
+            }, 350);
+
+            _showStatus(isUpper ? "Uppercase" : "Normal Case");
         }
 
         function _hideTapHint() {
@@ -494,12 +523,10 @@
                 _isSwipe = true;
                 if (dy < 0) {
                     // Swipe Up: Uppercase
-                    _qx.style.textTransform = 'uppercase';
-                    _showStatus("Uppercase");
+                    _setCase(true);
                 } else {
                     // Swipe Down: Normal case
-                    _qx.style.textTransform = 'none';
-                    _showStatus("Normal Case");
+                    _setCase(false);
                 }
             }
         }
@@ -551,11 +578,9 @@
                     _showStatus("Previous Quote");
                 }
             } else if (e.code === 'ArrowUp') {
-                _qx.style.textTransform = 'uppercase';
-                _showStatus("Uppercase");
+                _setCase(true);
             } else if (e.code === 'ArrowDown') {
-                _qx.style.textTransform = 'none';
-                _showStatus("Normal Case");
+                _setCase(false);
             }
         });
 
