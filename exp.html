@@ -113,6 +113,14 @@
             line-height: 1.6;
         }
 
+        /* Small-caps styling keeps uppercase glyphs scaled to lowercase x-height */
+        #_q_.uppercase-mode {
+            font-variant-caps: all-small-caps;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 1.1em;
+        }
+
         #_st_ {
             font-family: 'Inter', sans-serif;
             font-size: 12px;
@@ -346,7 +354,7 @@
         function _setCase(isUpper) {
             if (_isCaseAnimating) return;
 
-            const isCurrentUpper = _qx.style.textTransform === 'uppercase';
+            const isCurrentUpper = _qx.classList.contains('uppercase-mode');
             if (isUpper === isCurrentUpper) return;
 
             _isCaseAnimating = true;
@@ -355,8 +363,11 @@
             _qx.style.opacity = '0';
 
             setTimeout(() => {
-                _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
-                _qx.style.letterSpacing = isUpper ? '0.08em' : '-0.01em';
+                if (isUpper) {
+                    _qx.classList.add('uppercase-mode');
+                } else {
+                    _qx.classList.remove('uppercase-mode');
+                }
 
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -522,7 +533,7 @@
             else if (absY > 50 && absY > absX * 1.2) {
                 _isSwipe = true;
                 if (dy < 0) {
-                    // Swipe Up: Uppercase
+                    // Swipe Up: Uppercase (small-caps matching x-height)
                     _setCase(true);
                 } else {
                     // Swipe Down: Normal case
