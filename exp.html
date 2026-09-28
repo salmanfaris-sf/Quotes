@@ -90,17 +90,22 @@
             transform: translate(-50%, -50%);
             max-width: 580px;
             width: calc(100% - 48px);
+            max-height: calc(100vh - 120px);
             text-align: center;
             z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             will-change: transform, opacity;
+            overflow: hidden;
         }
 
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
             margin-bottom: 14px;
             color: #ffffff;
             display: inline-block;
@@ -109,8 +114,7 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            /* Slightly reduced font size for cleaner proportion */
-            font-size: clamp(0.95rem, 2.4vw, 1.35rem);
+            font-size: calc(clamp(0.95rem, 2.4vw, 1.35rem) * var(--font-scale, 1));
             line-height: 1.6;
         }
 
@@ -240,8 +244,18 @@
         let _longPressTimer = null;
         let _statusTimer = null;
         let _isLongPress = false;
+        let _isSwipe = false;
+        let _isCaseAnimating = false;
         let _startX = 0;
         let _startY = 0;
+        let _lastX = 0;
+        let _lastY = 0;
+
+        let _fontScale = 1.0;
+        let _startPinchDist = 0;
+        let _startFontScale = 1.0;
+        let _isPinching = false;
+        let _rafId = null;
 
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
@@ -310,6 +324,28 @@
             return { t: `${h}:${m} ${a}`, l: ml };
         }
 
+        function _getMaxScaleForCurrentText() {
+            if (!_mc || !_qx) return 2.5;
+            
+            // Available space in pixels leaving top status & bottom hint margin
+            const maxAvailHeight = window.innerHeight - 130; 
+            
+            // Current scrollHeight at current scale
+            const unscaledHeight = _mc.scrollHeight / _fontScale;
+            if (unscaledHeight <= 0) return 2.5;
+
+            const maxAllowed = maxAvailHeight / unscaledHeight;
+            return Math.max(0.6, Math.min(2.5, maxAllowed));
+        }
+
+        function _clampFontScaleToFit() {
+            const maxAllowed = _getMaxScaleForCurrentText();
+            if (_fontScale > maxAllowed) {
+                _fontScale = maxAllowed;
+                _qx.style.setProperty('--font-scale', _fontScale);
+            }
+        }
+
         function _showQuote(nq) {
             _st.classList.add('opacity-0');
             if (_l_i) clearInterval(_l_i);
@@ -333,11 +369,50 @@
                     _st.classList.add('opacity-0');
                 }
 
+                // Check and auto-fit font size so new quote never overflows screen
+                _clampFontScaleToFit();
+
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
                     _qx.style.opacity = '1';
                 });
             }, 350);
+        }
+
+        function _setCase(isUpper) {
+            if (_isCaseAnimating) return;
+
+            const isCurrentUpper = _qx.style.textTransform === 'uppercase';
+            if (isUpper === isCurrentUpper) return;
+
+            _isCaseAnimating = true;
+
+            _qx.style.transition = 'opacity 0.35s ease-in-out';
+            _qx.style.opacity = '0';
+
+            setTimeout(() => {
+                _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
+                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
+
+                _clampFontScaleToFit();
+
+                requestAnimationFrame(() => {
+                    _qx.style.transition = 'opacity 0.35s ease-in-out';
+                    _qx.style.opacity = '1';
+                });
+
+                setTimeout(() => {
+                    _isCaseAnimating = false;
+                }, 350);
+            }, 350);
+
+            _showStatus(isUpper ? "Uppercase" : "Normal Case");
+        }
+
+        function _getTouchDist(touches) {
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.hypot(dx, dy);
         }
 
         function _hideTapHint() {
@@ -437,10 +512,17 @@
             }, 900);
         };
 
+        window.addEventListener('resize', () => {
+            _clampFontScaleToFit();
+        });
+
         function _startPress(x, y) {
             _startX = x;
             _startY = y;
+            _lastX = x;
+            _lastY = y;
             _isLongPress = false;
+            _isSwipe = false;
             if (_longPressTimer) clearTimeout(_longPressTimer);
 
             _longPressTimer = setTimeout(() => {
@@ -453,26 +535,111 @@
         }
 
         function _movePress(x, y) {
-            if (Math.abs(x - _startX) > 10 || Math.abs(y - _startY) > 10) {
+            _lastX = x;
+            _lastY = y;
+            const dx = Math.abs(x - _startX);
+            const dy = Math.abs(y - _startY);
+            if (dx > 10 || dy > 10) {
                 if (_longPressTimer) clearTimeout(_longPressTimer);
             }
         }
 
         function _endPress() {
             if (_longPressTimer) clearTimeout(_longPressTimer);
+
+            const dx = _lastX - _startX;
+            const dy = _lastY - _startY;
+            const absX = Math.abs(dx);
+            const absY = Math.abs(dy);
+
+            // Horizontal Swipe Gesture (Left / Right)
+            if (absX > 50 && absX > absY * 1.2) {
+                _isSwipe = true;
+                if (dx > 0) {
+                    // Swipe Right: Go to previous quote
+                    if (_historyIndex > 0) {
+                        _prev();
+                        _showStatus("Previous Quote");
+                    }
+                } else {
+                    // Swipe Left: Go to next quote
+                    _next();
+                }
+            } 
+            // Vertical Swipe Gesture (Up / Down)
+            else if (absY > 50 && absY > absX * 1.2) {
+                _isSwipe = true;
+                if (dy < 0) {
+                    // Swipe Up: Uppercase
+                    _setCase(true);
+                } else {
+                    // Swipe Down: Normal case
+                    _setCase(false);
+                }
+            }
         }
 
         document.addEventListener('touchstart', (e) => {
             _requestWakeLock();
-            _startPress(e.touches[0].clientX, e.touches[0].clientY);
+            if (e.touches.length === 2) {
+                if (_longPressTimer) clearTimeout(_longPressTimer);
+                _isPinching = true;
+                _startPinchDist = _getTouchDist(e.touches);
+                _startFontScale = _fontScale;
+                return;
+            }
+            if (e.touches.length === 1 && !_isPinching) {
+                _startPress(e.touches[0].clientX, e.touches[0].clientY);
+            }
         }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
-            _movePress(e.touches[0].clientX, e.touches[0].clientY);
+            if (e.touches.length === 2 && _isPinching) {
+                if (_longPressTimer) clearTimeout(_longPressTimer);
+                const currentDist = _getTouchDist(e.touches);
+                
+                if (_startPinchDist > 0) {
+                    const ratio = currentDist / _startPinchDist;
+                    const rawScale = _startFontScale * ratio;
+                    const maxScale = _getMaxScaleForCurrentText();
+                    
+                    // Bound scale between 0.6 and max allowed height scale to fit viewport
+                    _fontScale = Math.min(Math.max(rawScale, 0.6), maxScale);
+                    
+                    if (_rafId) cancelAnimationFrame(_rafId);
+                    _rafId = requestAnimationFrame(() => {
+                        _qx.style.setProperty('--font-scale', _fontScale);
+                        _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
+                    });
+                }
+                return;
+            }
+            if (e.touches.length === 1 && !_isPinching) {
+                _movePress(e.touches[0].clientX, e.touches[0].clientY);
+            }
         }, { passive: true });
 
-        document.addEventListener('touchend', _endPress, { passive: true });
-        document.addEventListener('touchcancel', _endPress, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            if (_isPinching) {
+                if (e.touches.length < 2) {
+                    setTimeout(() => {
+                        _isPinching = false;
+                    }, 300);
+                }
+                return;
+            }
+            _endPress();
+        }, { passive: true });
+
+        document.addEventListener('touchcancel', (e) => {
+            if (_isPinching) {
+                setTimeout(() => {
+                    _isPinching = false;
+                }, 300);
+                return;
+            }
+            _endPress();
+        }, { passive: true });
 
         document.addEventListener('mousedown', (e) => {
             if (e.button !== 0) return;
@@ -488,6 +655,11 @@
 
         document.addEventListener('click', (e) => {
             _requestWakeLock();
+            if (_isPinching) return;
+            if (_isSwipe) {
+                _isSwipe = false;
+                return;
+            }
             if (_isLongPress) {
                 _isLongPress = false;
                 return;
@@ -500,7 +672,14 @@
             if (e.code === 'Space' || e.code === 'ArrowRight') {
                 _next();
             } else if (e.code === 'ArrowLeft') {
-                _prev();
+                if (_historyIndex > 0) {
+                    _prev();
+                    _showStatus("Previous Quote");
+                }
+            } else if (e.code === 'ArrowUp') {
+                _setCase(true);
+            } else if (e.code === 'ArrowDown') {
+                _setCase(false);
             }
         });
 
