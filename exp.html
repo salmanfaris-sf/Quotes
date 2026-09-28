@@ -21,13 +21,14 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg: #000000;
-            --text: #f5f5f7;
-            --apple-muted: #86868b;
+            --text: #ffffff;
+            --apple-muted: #98989d;
+            --font-scale: 1.0;
         }
 
         html, body {
@@ -44,7 +45,7 @@
         }
 
         .bottom-hint-pos {
-            bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+            bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
         }
 
         #_ap_status_ {
@@ -52,21 +53,22 @@
             top: calc(1.5rem + env(safe-area-inset-top, 0px));
             left: 50%;
             transform: translate(-50%, -10px);
-            font-size: 12px;
-            background: rgba(30, 30, 35, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: #e5e5e7;
-            padding: 7px 18px;
+            font-size: 13px;
+            background: rgba(30, 30, 35, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: #f1f1f3;
+            padding: 8px 20px;
             border-radius: 9999px;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 0.02em;
             pointer-events: none;
             opacity: 0;
             z-index: 60;
             white-space: nowrap;
             transition: opacity 0.35s ease, transform 0.35s ease;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         #_ap_status_.visible {
@@ -88,7 +90,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 580px;
+            max-width: 620px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 10;
@@ -101,23 +103,24 @@
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out;
-            font-weight: 300;
-            letter-spacing: -0.01em;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            font-size: calc(clamp(0.95rem, 2.4vw, 1.35rem) * var(--font-scale, 1));
-            line-height: 1.6;
+            /* Enhanced typography thickness */
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+            font-size: calc(clamp(1.05rem, 2.7vw, 1.5rem) * var(--font-scale, 1));
+            line-height: 1.55;
         }
 
         #_st_ {
             font-family: 'Inter', sans-serif;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--apple-muted);
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 0.02em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
@@ -133,7 +136,7 @@
         <div id="_st_" class="opacity-0"></div>
     </main>
 
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-medium tracking-wide text-[#98989d] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
         Tap anywhere to view the next quote
     </div>
 
@@ -246,7 +249,7 @@
         let _lastX = 0;
         let _lastY = 0;
 
-        let _fontScale = 1.0;
+        let _fontScale = 1.0; // Baseline scale factor
         let _startPinchDist = 0;
         let _startFontScale = 1.0;
         let _isPinching = false;
@@ -361,7 +364,7 @@
 
             setTimeout(() => {
                 _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
-                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
+                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.015em';
 
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -519,13 +522,11 @@
             if (absX > 50 && absX > absY * 1.2) {
                 _isSwipe = true;
                 if (dx > 0) {
-                    // Swipe Right: Go to previous quote
                     if (_historyIndex > 0) {
                         _prev();
                         _showStatus("Previous Quote");
                     }
                 } else {
-                    // Swipe Left: Go to next quote
                     _next();
                 }
             } 
@@ -533,10 +534,8 @@
             else if (absY > 50 && absY > absX * 1.2) {
                 _isSwipe = true;
                 if (dy < 0) {
-                    // Swipe Up: Uppercase
                     _setCase(true);
                 } else {
-                    // Swipe Down: Normal case
                     _setCase(false);
                 }
             }
@@ -562,9 +561,15 @@
                 const currentDist = _getTouchDist(e.touches);
                 if (_startPinchDist > 0) {
                     const ratio = currentDist / _startPinchDist;
-                    _fontScale = Math.min(Math.max(_startFontScale * ratio, 0.6), 2.5);
+                    /* Default size (1.0) is strictly the minimum size limit */
+                    _fontScale = Math.min(Math.max(_startFontScale * ratio, 1.0), 2.5);
                     _qx.style.setProperty('--font-scale', _fontScale);
-                    _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
+                    
+                    if (_fontScale === 1.0) {
+                        _showStatus("Font Size: Default (100%)");
+                    } else {
+                        _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
+                    }
                 }
                 return;
             }
@@ -634,6 +639,18 @@
                 _setCase(true);
             } else if (e.code === 'ArrowDown') {
                 _setCase(false);
+            } else if (e.key === '+' || e.key === '=') {
+                _fontScale = Math.min(_fontScale + 0.1, 2.5);
+                _qx.style.setProperty('--font-scale', _fontScale);
+                _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
+            } else if (e.key === '-' || e.key === '_') {
+                _fontScale = Math.max(_fontScale - 0.1, 1.0);
+                _qx.style.setProperty('--font-scale', _fontScale);
+                if (_fontScale === 1.0) {
+                    _showStatus("Font Size: Default (100%)");
+                } else {
+                    _showStatus(`Font Size: ${Math.round(_fontScale * 100)}%`);
+                }
             }
         });
 
