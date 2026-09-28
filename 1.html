@@ -64,7 +64,6 @@
             top: calc(1.75rem + env(safe-area-inset-top, 0px));
         }
 
-        /* Apple Overlay Menu Container with precise clip-path animation */
         #apple-menu-overlay {
             position: fixed;
             top: 0;
@@ -93,7 +92,6 @@
             pointer-events: auto;
         }
 
-        /* All menu option items set to white */
         .apple-menu-item {
             opacity: 1;
             color: #ffffff;
@@ -157,7 +155,6 @@
             line-height: 1.6;
         }
 
-        /* Border removed from toast status pop-up */
         #_ap_status_ {
             position: absolute;
             left: 50%;
@@ -179,7 +176,6 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         }
 
-        /* Menu View Transitions */
         .menu-view {
             display: none;
             animation: fadeInView 0.25s ease-out forwards;
@@ -199,7 +195,6 @@
 
     <!-- Top Header Navigation Bar (Sub-Menu Back Button Only) -->
     <header id="top-header" class="fixed top-0 left-0 right-0 z-[60] flex justify-between items-center px-6 sm:px-10 py-5 opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <!-- Left Edge: Back Button -->
         <button id="btn-back-menu" class="p-1.5 text-[#86868b] active:text-[#86868b] focus:outline-none flex items-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer" aria-label="Go Back">
             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
@@ -209,18 +204,12 @@
 
     <!-- Overlay Navigation Menu -->
     <div id="apple-menu-overlay" class="fixed inset-0 z-50 px-8 sm:px-16 flex flex-col justify-start overflow-y-auto pt-20 sm:pt-24">
-        <!-- Menu Container for Views -->
         <div class="w-full max-w-lg mx-auto my-auto flex flex-col">
             
             <!-- VIEW 1: Main Menu -->
             <div id="view-main-menu" class="menu-view active flex-col space-y-1 sm:space-y-1.5 text-left">
                 <button id="menu-item-fullscreen" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
                     <span id="fullscreen-text">Full Screen</span>
-                </button>
-
-                <button id="menu-item-topics" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
-                    <span>Topics</span>
-                    <span id="badge-topics-status" class="text-xs font-normal text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full">All Quotes</span>
                 </button>
 
                 <button id="menu-item-autoplay" class="apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight text-white py-1 flex items-center justify-between cursor-pointer">
@@ -245,14 +234,7 @@
                 </button>
             </div>
 
-            <!-- VIEW 2: Topics Sub-Menu (Without Short Quotes) -->
-            <div id="view-topics-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
-                <nav id="apple-topics-nav" class="flex flex-col space-y-1 sm:space-y-1.5 text-left">
-                    <!-- Topic options dynamically rendered -->
-                </nav>
-            </div>
-
-            <!-- VIEW 3: Autoplay Speed Options -->
+            <!-- VIEW 2: Autoplay Speed Options -->
             <div id="view-autoplay-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Autoplay Interval</div>
                 <nav id="apple-autoplay-nav" class="flex flex-col space-y-1 text-left">
@@ -260,7 +242,7 @@
                 </nav>
             </div>
 
-            <!-- VIEW 4: Text Size Options -->
+            <!-- VIEW 3: Text Size Options -->
             <div id="view-size-menu" class="menu-view flex-col space-y-1 sm:space-y-1.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b] mb-1">Quote Text Size</div>
                 <nav id="apple-size-nav" class="flex flex-col space-y-1 text-left">
@@ -268,11 +250,10 @@
                 </nav>
             </div>
 
-            <!-- VIEW 5: Touch Gestures Guide -->
+            <!-- VIEW 4: Touch Gestures Guide -->
             <div id="view-gestures-menu" class="menu-view flex-col space-y-3 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">Gesture Guide</div>
                 
-                <!-- Gesture Instructions Guide -->
                 <div class="text-xs text-[#86868b] space-y-2.5">
                     <div class="grid grid-cols-1 gap-1.5 text-white/80">
                         <div class="flex items-center justify-between py-1 border-b border-white/10">
@@ -299,12 +280,11 @@
                 </div>
             </div>
 
-            <!-- VIEW 6: How This Site Helps You -->
+            <!-- VIEW 5: How This Site Helps You -->
             <div id="view-benefits-menu" class="menu-view flex-col space-y-3.5 text-left">
                 <div class="text-xs font-medium uppercase tracking-wider text-[#86868b]">How This Site Helps You</div>
                 
                 <div class="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
-                    <!-- Cards styled without borders -->
                     <div class="p-3.5 rounded-xl bg-white/[0.04] space-y-1">
                         <div class="font-medium text-white text-sm">Cut Through Friction & Take Action</div>
                         <p class="text-[#86868b]">
@@ -433,14 +413,6 @@
             { t: "Pressure reveals the man within."}
         ];
 
-        const _topics = [
-            { id: "all", label: "All Quotes" },
-            { id: "laziness", label: "Time & Laziness" },
-            { id: "brave", label: "Courage & Strength" },
-            { id: "action", label: "Action & Hard Work" },
-            { id: "focus", label: "Focus & Discipline" }
-        ];
-
         const _sizeOptions = [
             { id: "standard", label: "Large", class: "size-standard" },
             { id: "medium", label: "Regular", class: "size-medium" }
@@ -455,7 +427,6 @@
             { sec: 3600, label: "1 Hour" }
         ];
 
-        let _selectedTopicId = "all";
         let _currentSizeId = "standard";
         let _autoplayIntervalSec = 0;
         let _autoplayTimer = null;
@@ -491,9 +462,7 @@
         const _backMenuBtn = document.getElementById('btn-back-menu');
         const _fullscreenText = document.getElementById('fullscreen-text');
         
-        const _badgeTopics = document.getElementById('badge-topics-status');
         const _badgeAutoplay = document.getElementById('badge-autoplay-status');
-        const _topicsNav = document.getElementById('apple-topics-nav');
         const _autoplayNav = document.getElementById('apple-autoplay-nav');
         const _sizeNav = document.getElementById('apple-size-nav');
 
@@ -557,23 +526,6 @@
             }
         });
 
-        function _matchesTopic(q, topicId) {
-            if (topicId === "all") return true;
-            if (topicId === "laziness") {
-                return /laziness|tomorrow|waste|time|1,440|waiting|overthinking|minutes|year|relax|boredom/i.test(q.t);
-            }
-            if (topicId === "brave") {
-                return /brave|courage|pressure|fear|scared|hard days|stone|strength|vulnerable|free|man within|protect/i.test(q.t);
-            }
-            if (topicId === "action") {
-                return /act|action|do it|work|now|walk|walks|beginner|pro|sweat|repeat|excuses|cost|done|now\./i.test(q.t);
-            }
-            if (topicId === "focus") {
-                return /focus|consistency|habits|discipline|mind|mastery|goal|plan|progress|learning|character/i.test(q.t);
-            }
-            return true;
-        }
-
         function _shuffle(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -584,8 +536,7 @@
 
         function _getNextQuote() {
             if (_currentPool.length === 0) {
-                let freshList = _db.filter(q => _matchesTopic(q, _selectedTopicId));
-                if (freshList.length === 0) freshList = [..._db];
+                let freshList = [..._db];
                 _shuffle(freshList);
                 if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
                     const head = freshList.pop();
@@ -752,7 +703,7 @@
 
         function _switchMenuView(viewName) {
             _activeMenuView = viewName;
-            const views = ['main', 'topics', 'autoplay', 'size', 'gestures', 'benefits'];
+            const views = ['main', 'autoplay', 'size', 'gestures', 'benefits'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}-menu`);
                 if (el) {
@@ -771,28 +722,6 @@
                 _backMenuBtn.classList.remove('opacity-0', 'pointer-events-none');
                 _backMenuBtn.classList.add('pointer-events-auto');
             }
-        }
-
-        function _renderAppleMenuTopics() {
-            _topicsNav.innerHTML = "";
-            _topics.forEach((topic) => {
-                const isActive = topic.id === _selectedTopicId;
-                const btn = document.createElement('button');
-                
-                btn.className = `apple-menu-item text-left text-2xl sm:text-3xl font-bold tracking-tight transition-colors py-1 flex items-center justify-between text-white cursor-pointer`;
-                
-                btn.innerHTML = `
-                    <span>${topic.label}</span>
-                    ${isActive ? '<span class="text-xs font-normal tracking-normal text-white bg-white/10 px-2.5 py-0.5 rounded-full">Active</span>' : ''}
-                `;
-
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    _selectTopic(topic.id, topic.label);
-                };
-
-                _topicsNav.appendChild(btn);
-            });
         }
 
         function _renderAutoplayOptions() {
@@ -845,7 +774,6 @@
 
             _updateFullscreenUI();
             _switchMenuView("main");
-            _renderAppleMenuTopics();
             _renderAutoplayOptions();
             _renderSizeOptions();
 
@@ -863,19 +791,6 @@
             setTimeout(() => {
                 _switchMenuView("main");
             }, 400);
-        }
-
-        function _selectTopic(topicId, topicLabel) {
-            _selectedTopicId = topicId;
-            if (_badgeTopics) {
-                _badgeTopics.innerText = topicLabel;
-            }
-            _closeAppleMenu();
-            _showStatus(`Topic: ${topicLabel}`);
-            _currentPool = [];
-            _history = [];
-            _historyIndex = -1;
-            _next();
         }
 
         function _selectAutoplay(sec, label) {
@@ -948,7 +863,6 @@
             }, 1700);
 
             _updateFullscreenUI();
-            _renderAppleMenuTopics();
             _renderAutoplayOptions();
             _renderSizeOptions();
         };
@@ -958,11 +872,6 @@
             e.stopPropagation();
             _closeAppleMenu();
             _toggleFullscreen();
-        };
-
-        document.getElementById('menu-item-topics').onclick = (e) => {
-            e.stopPropagation();
-            _switchMenuView("topics");
         };
 
         document.getElementById('menu-item-autoplay').onclick = (e) => {
