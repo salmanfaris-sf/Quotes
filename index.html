@@ -88,7 +88,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 680px;
+            max-width: 580px;
             width: calc(100% - 48px);
             text-align: center;
             z-index: 10;
@@ -101,7 +101,7 @@
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
@@ -109,13 +109,13 @@
             font-weight: 300;
             letter-spacing: -0.01em;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            font-size: clamp(1.125rem, 3.5vw, 1.875rem);
-            line-height: 1.5;
+            font-size: clamp(0.95rem, 2.4vw, 1.35rem);
+            line-height: 1.6;
         }
 
         #_st_ {
             font-family: 'Inter', sans-serif;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--apple-muted);
             font-weight: 400;
             letter-spacing: 0.02em;
@@ -239,8 +239,11 @@
         let _longPressTimer = null;
         let _statusTimer = null;
         let _isLongPress = false;
+        let _isSwipe = false;
         let _startX = 0;
         let _startY = 0;
+        let _lastX = 0;
+        let _lastY = 0;
 
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
@@ -439,7 +442,10 @@
         function _startPress(x, y) {
             _startX = x;
             _startY = y;
+            _lastX = x;
+            _lastY = y;
             _isLongPress = false;
+            _isSwipe = false;
             if (_longPressTimer) clearTimeout(_longPressTimer);
 
             _longPressTimer = setTimeout(() => {
@@ -452,13 +458,37 @@
         }
 
         function _movePress(x, y) {
-            if (Math.abs(x - _startX) > 10 || Math.abs(y - _startY) > 10) {
+            _lastX = x;
+            _lastY = y;
+            const dx = Math.abs(x - _startX);
+            const dy = Math.abs(y - _startY);
+            if (dx > 10 || dy > 10) {
                 if (_longPressTimer) clearTimeout(_longPressTimer);
             }
         }
 
         function _endPress() {
             if (_longPressTimer) clearTimeout(_longPressTimer);
+
+            const dx = _lastX - _startX;
+            const dy = _lastY - _startY;
+            const absX = Math.abs(dx);
+            const absY = Math.abs(dy);
+
+            // Minimum distance threshold of 50px for a swipe gesture
+            if (absX > 50 && absX > absY * 1.2) {
+                _isSwipe = true;
+                if (dx > 0) {
+                    // Swipe Right: Go to previous quote
+                    if (_historyIndex > 0) {
+                        _prev();
+                        _showStatus("Previous Quote");
+                    }
+                } else {
+                    // Swipe Left: Go to next quote
+                    _next();
+                }
+            }
         }
 
         document.addEventListener('touchstart', (e) => {
@@ -487,6 +517,10 @@
 
         document.addEventListener('click', (e) => {
             _requestWakeLock();
+            if (_isSwipe) {
+                _isSwipe = false;
+                return;
+            }
             if (_isLongPress) {
                 _isLongPress = false;
                 return;
@@ -499,7 +533,10 @@
             if (e.code === 'Space' || e.code === 'ArrowRight') {
                 _next();
             } else if (e.code === 'ArrowLeft') {
-                _prev();
+                if (_historyIndex > 0) {
+                    _prev();
+                    _showStatus("Previous Quote");
+                }
             }
         });
 
