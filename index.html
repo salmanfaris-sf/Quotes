@@ -21,7 +21,7 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -111,6 +111,16 @@
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
             font-size: clamp(0.95rem, 2.4vw, 1.35rem);
             line-height: 1.6;
+        }
+
+        /* Reduced line-height for uppercase small-caps mode to eliminate excess line gap */
+        #_q_.uppercase-mode {
+            font-family: 'Roboto', sans-serif;
+            font-variant-caps: all-small-caps;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 1.25em;
+            line-height: 1.32;
         }
 
         #_st_ {
@@ -346,7 +356,7 @@
         function _setCase(isUpper) {
             if (_isCaseAnimating) return;
 
-            const isCurrentUpper = _qx.style.textTransform === 'uppercase';
+            const isCurrentUpper = _qx.classList.contains('uppercase-mode');
             if (isUpper === isCurrentUpper) return;
 
             _isCaseAnimating = true;
@@ -355,8 +365,11 @@
             _qx.style.opacity = '0';
 
             setTimeout(() => {
-                _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
-                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
+                if (isUpper) {
+                    _qx.classList.add('uppercase-mode');
+                } else {
+                    _qx.classList.remove('uppercase-mode');
+                }
 
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -522,7 +535,7 @@
             else if (absY > 50 && absY > absX * 1.2) {
                 _isSwipe = true;
                 if (dy < 0) {
-                    // Swipe Up: Uppercase
+                    // Swipe Up: Uppercase (small-caps matching x-height)
                     _setCase(true);
                 } else {
                     // Swipe Down: Normal case
