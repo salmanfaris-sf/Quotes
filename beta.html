@@ -121,6 +121,7 @@
             letter-spacing: 0.02em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
+            font-variant-numeric: tabular-nums;
         }
     </style>
 </head>
@@ -305,12 +306,13 @@
             const n = new Date();
             let h = n.getHours();
             const m = n.getMinutes().toString().padStart(2, '0');
+            const s = n.getSeconds().toString().padStart(2, '0');
             const a = h >= 12 ? 'pm' : 'am';
             h = h % 12 || 12;
             const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
             const d = e - n;
             const ml = Math.floor(d / 60000);
-            return { t: `${h}:${m} ${a}`, l: ml };
+            return { t: `${h}:${m}:${s} ${a}`, l: ml };
         }
 
         function _showQuote(nq) {
@@ -330,7 +332,7 @@
                     };
                     ux();
                     _st.classList.remove('opacity-0');
-                    _l_i = setInterval(ux, 30000);
+                    _l_i = setInterval(ux, 1000);
                 } else {
                     _st.innerHTML = "";
                     _st.classList.add('opacity-0');
@@ -453,9 +455,14 @@
             _qx.style.opacity = '1';
             
             if (i.id === "t_q") {
-                const s = _gs();
-                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+                const ux = () => {
+                    const s = _gs();
+                    _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+                };
+                ux();
                 _st.classList.remove('opacity-0');
+                if (_l_i) clearInterval(_l_i);
+                _l_i = setInterval(ux, 1000);
             }
 
             requestAnimationFrame(() => {
