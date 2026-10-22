@@ -53,7 +53,7 @@
             left: 50%;
             transform: translate(-50%, -10px);
             font-size: 12px;
-            background: rgba(30, 30, 35, 0.9);
+            background: rgba(30, 30, 35, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #e5e5e7;
@@ -67,6 +67,15 @@
             white-space: nowrap;
             transition: opacity 0.35s ease, transform 0.35s ease;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #_ap_status_.interactive {
+            pointer-events: auto;
+            cursor: pointer;
         }
 
         #_ap_status_.visible {
@@ -121,7 +130,6 @@
             letter-spacing: 0.02em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
-            font-variant-numeric: tabular-nums;
         }
     </style>
 </head>
@@ -142,12 +150,9 @@
     (function(){
         const _db = [
             { t: "Be better than you were yesterday." },
-            { t: "Race one another in good deeds." },
+            { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
             { t: "Don't waste time. You don't get it back." },
             { t: "Focus." },
-            { t: "Be Relentless." },
-            { t: "Win the day." },
-            { t: "No shortcuts." },
             { t: "The problem is,\nyou think you have a lot of time to live." },
             { t: "Live everyday like it's your last day." },
             { t: "Consistency." },
@@ -155,8 +160,8 @@
             { t: "Practice makes perfect." },
             { t: "Do it even when you don't feel like it." },
             { t: "Nothing changes if nothing changes." },
-            { t: "Stay Different." },
-            { t: "You only have 1,440 minutes every day,\ndon't let a single one go to waste.", id: "t_q" },
+            { t: "Stay different." },
+            { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
             { t: "You can't have a million dollar dream with a minimum wage work ethic." },
             { t: "A real man protects and provides." },
             { t: "Don't follow the crowd. Follow the truth." },
@@ -170,13 +175,16 @@
             { t: "Time waits for no one." },
             { t: "Quality over quantity in everything." },
             { t: "Knowledge without action is useless." },
+            { t: "Fear Allah. Not people." },
             { t: "Live with purpose." },
+            { t: "Be a man of your word." },
             { t: "A real man protects those who are vulnerable." },
             { t: "Every day is a second chance." },
             { t: "Now is the time." },
             { t: "Success is earned, not given." },
             { t: "Focus on your growth." },
             { t: "Stay Disciplined." },
+            { t: "A heart connected to Allah is\n never truly broken." },
             { t: "He who is brave is free." },
             { t: "Growth begins outside comfort zones." },
             { t: "This is the way." },
@@ -192,9 +200,11 @@
             { t: "Habits decide outcomes." },
             { t: "Growth requires discomfort." },
             { t: "Sweat more in practice. Bleed less in war." },
-            { t: "Do it scared.\nDo it tired.\nDo it anyway." },
+            { t: "do it scared.\ndo it tired.\ndo it anyway." },
             { t: "When you feel like nothing is going your way, look at a person breaking a rock. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it,it was the result of all the hits that happened before it." },
             { t: "It always seems impossible until it's done." },
+            { t: "Feel the fear and do it anyway." },
+            { t: "Prepare for death, for it does not wait for your readiness." },
             { t: "Focus is a superpower in a distracted world." },
             { t: "Weakness leaves when discipline enters." },
             { t: "Strength is built through patience." },
@@ -205,22 +215,30 @@
             { t: "Every wasted year makes the\n next one heavier." },
             { t: "Do it the moment you remember it." },
             { t: "Stick to the plan. Not your mood." },
+            { t: "Be the change that you wish to see in the world." },
             { t: "5,4,3,2,1. Act Now." },
-            { t: "There are two blessings that many people are deceived into losing: health and free time." },
-            { t: "Make things easy for the people, and do not make it difficult for them." },
-            { t: "Do good deeds properly, sincerely and moderately." },
-            { t: "Speak good or remain silent." },
+            { t: "Indeed Shaitan is ever, to mankind,\na clear enemy.\n[Qur'an 17:53]"},
+            { t: "People are asleep, and when they die, they awaken." },
+            { t: "Prophet Muhammad ﷺ said:\nThere are two blessings that many people are deceived into losing: health and free time.\n[Sahih al-Bukhari 6412]" },
+            { t: "Prophet Muhammad ﷺ said:\nMake things easy for the people, and do not make it difficult for them.\n[Sahih al-Bukhari 6125]" },
+            { t: "Prophet Muhammad ﷺ said:\nDo good deeds properly, sincerely and moderately.\n[Sahih al-Bukhari 6464]" },
+            { t: "Prophet Muhammad ﷺ said:\nSpeak good or remain silent.\n[Riyad as-Salihin 1511]" },
+            { t: "Prophet Muhammad ﷺ said:\nThe most beloved deed to Allah is the most regular and constant even if it were little.\n[Sahih al-Bukhari 6464]" },
+            { t: "Death is not the end of life; it is the beginning of a life that never ends." },
             { t: "Character is who you are when no one is watching." },
             { t: "Keep moving forward." },
             { t: "If not now, Then when?" },
             { t: "Leave a legacy. Let your life be a story of courage, action, and impact." },
             { t: "NOW.\nWaiting won’t help.\nOverthinking won’t help.\nAction will.\nDo it." },
+            { t: "Lower your gaze, guard your tongue, and protect your heart." },
             { t: "Your current life is the result of past actions. Your future will be the result of today's actions." },
             { t: "The man who keeps walking will eventually leave the place he hates." },
             { t: "A few years of sacrifice can create a lifetime of freedom." },
             { t: "Your future is built by what you do after a long tiring day." },
             { t: "Action may not always bring happiness, but there is no happiness without action." },
             { t: "Stand straight. Speak clearly. Fear none."},
+            { t: "Its what's inside that matters." },
+            { t: "Every pro was once a beginner."},
             { t: "Weak men wait for courage.\n Strong men create it through action."},
             { t: "Be the man who acts while others are still thinking."},
             { t: "Be so disciplined that even your bad days look like progress."},
@@ -247,6 +265,20 @@
         let _lastX = 0;
         let _lastY = 0;
 
+        // Autoplay Interval Options with exact display labels and duration in milliseconds
+        const _autoplayOptions = [
+            { label: "5 seconds", ms: 5000 },
+            { label: "10 seconds", ms: 10000 },
+            { label: "15 seconds", ms: 15000 },
+            { label: "30 seconds", ms: 30000 },
+            { label: "1 minute", ms: 60000 },
+            { label: "1 hour", ms: 3600000 },
+            { label: "8 hours", ms: 28800000 },
+            { label: "12 hours", ms: 43200000 },
+            { label: "24 hours", ms: 86400000 }
+        ];
+        let _currentDurationIndex = 2; // Default to 15 seconds
+
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
@@ -267,16 +299,42 @@
             }
         });
 
-        function _showStatus(msg) {
+        function _showStatus(msg, isInteractive = false) {
             if (!_apStatus) return;
             if (_statusTimer) clearTimeout(_statusTimer);
 
-            _apStatus.innerText = msg;
+            if (isInteractive) {
+                _apStatus.innerHTML = `<span>${msg}</span><svg class="w-3 h-3 ml-1 text-gray-400 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>`;
+                _apStatus.classList.add('interactive');
+            } else {
+                _apStatus.innerText = msg;
+                _apStatus.classList.remove('interactive');
+            }
+
             _apStatus.classList.add('visible');
+
+            const displayTime = isInteractive ? 3500 : 2200;
 
             _statusTimer = setTimeout(() => {
                 _apStatus.classList.remove('visible');
-            }, 2200);
+            }, displayTime);
+        }
+
+        // Tap popup status to cycle through autoplay options without flashing
+        if (_apStatus) {
+            _apStatus.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (_autoplayTimer) {
+                    _currentDurationIndex = (_currentDurationIndex + 1) % _autoplayOptions.length;
+                    _startAutoplay();
+                    const opt = _autoplayOptions[_currentDurationIndex];
+                    _showStatus(`Autoplay On (${opt.label})`, true);
+                }
+            });
+
+            _apStatus.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
         }
 
         function _shuffle(arr) {
@@ -306,13 +364,12 @@
             const n = new Date();
             let h = n.getHours();
             const m = n.getMinutes().toString().padStart(2, '0');
-            const s = n.getSeconds().toString().padStart(2, '0');
             const a = h >= 12 ? 'pm' : 'am';
             h = h % 12 || 12;
             const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
             const d = e - n;
             const ml = Math.floor(d / 60000);
-            return { t: `${h}:${m}:${s} ${a}`, l: ml };
+            return { t: `${h}:${m} ${a}`, l: ml };
         }
 
         function _showQuote(nq) {
@@ -332,7 +389,7 @@
                     };
                     ux();
                     _st.classList.remove('opacity-0');
-                    _l_i = setInterval(ux, 1000);
+                    _l_i = setInterval(ux, 30000);
                 } else {
                     _st.innerHTML = "";
                     _st.classList.add('opacity-0');
@@ -392,9 +449,10 @@
 
         function _startAutoplay() {
             if (_autoplayTimer) clearInterval(_autoplayTimer);
+            const intervalMs = _autoplayOptions[_currentDurationIndex].ms;
             _autoplayTimer = setInterval(() => {
                 _next();
-            }, 15000);
+            }, intervalMs);
         }
 
         function _stopAutoplay() {
@@ -411,7 +469,8 @@
             } else {
                 _next();
                 _startAutoplay();
-                _showStatus("Autoplay On (15s)");
+                const opt = _autoplayOptions[_currentDurationIndex];
+                _showStatus(`Autoplay On (${opt.label})`, true);
             }
         }
 
@@ -455,14 +514,9 @@
             _qx.style.opacity = '1';
             
             if (i.id === "t_q") {
-                const ux = () => {
-                    const s = _gs();
-                    _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-                };
-                ux();
+                const s = _gs();
+                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
                 _st.classList.remove('opacity-0');
-                if (_l_i) clearInterval(_l_i);
-                _l_i = setInterval(ux, 1000);
             }
 
             requestAnimationFrame(() => {
@@ -517,13 +571,11 @@
             if (absX > 50 && absX > absY * 1.2) {
                 _isSwipe = true;
                 if (dx > 0) {
-                    // Swipe Right: Go to previous quote
                     if (_historyIndex > 0) {
                         _prev();
                         _showStatus("Previous Quote");
                     }
                 } else {
-                    // Swipe Left: Go to next quote
                     _next();
                 }
             } 
@@ -531,10 +583,8 @@
             else if (absY > 50 && absY > absX * 1.2) {
                 _isSwipe = true;
                 if (dy < 0) {
-                    // Swipe Up: Uppercase
                     _setCase(true);
                 } else {
-                    // Swipe Down: Lowercase
                     _setCase(false);
                 }
             }
