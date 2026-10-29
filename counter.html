@@ -411,12 +411,6 @@
         body.lockout-active #x9 {
             pointer-events: none !important;
         }
-
-        /* Global Bold Modifier Class */
-        body.bold-mode,
-        body.bold-mode * {
-            font-weight: 700 !important;
-        }
     </style>
 </head>
 
@@ -434,7 +428,6 @@
             <button class="menu-item" id="fs-btn-menu">Fullscreen</button>
             <button class="menu-item" id="goal-btn-menu">Set Goal</button>
             <button class="menu-item" id="lock-btn-menu">Lock Screen</button>
-            <button class="menu-item" id="weight-btn-menu">Bold Text</button>
         </div>
     </div>
     <div id="x3" class="b3">
@@ -474,19 +467,17 @@
     </div>
     <script>
         (function () {
-            const d = document, w = window, k = { c: '_n_c', b: '_n_b', s: '_m_s', t: '_n_step', g: '_n_goal' },
+            const d = document, w = window, k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
-                weightMenu = d.getElementById('weight-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
 
             let v = parseInt(localStorage.getItem(k.c)) || 0,
                 st = parseInt(localStorage.getItem(k.t)) || 1,
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
-                bd = localStorage.getItem(k.b) === 'true',
                 sn = localStorage.getItem(k.s) !== 'false',
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
@@ -527,7 +518,6 @@
 
             function _w() {
                 f.textContent = v.toLocaleString('en-US');
-                f.style.fontWeight = bd ? '700' : '100';
                 if (st > 1) {
                     sd.textContent = 'Increment: ' + st;
                     sd.classList.add('v')
@@ -542,7 +532,6 @@
 
             function _x() {
                 localStorage.setItem(k.c, v);
-                localStorage.setItem(k.b, bd);
                 localStorage.setItem(k.s, sn);
                 localStorage.setItem(k.t, st);
                 localStorage.setItem(k.g, gl)
@@ -627,21 +616,6 @@
                 e.stopPropagation();
                 md.classList.remove('active');
                 triggerSetGoal();
-            };
-
-            weightMenu.onclick = e => {
-                e.stopPropagation();
-                md.classList.remove('active');
-                bd = !bd;
-                if (bd) {
-                    d.body.classList.add('bold-mode');
-                    weightMenu.textContent = 'Default Text';
-                } else {
-                    d.body.classList.remove('bold-mode');
-                    weightMenu.textContent = 'Bold Text';
-                }
-                _w();
-                _x();
             };
 
             let sx = 0, cx = 0;
@@ -749,7 +723,7 @@
                         if (v > 0) {
                             if (confirm('Subtract 1 from counter?')) {
                                 if (navigator.vibrate) navigator.vibrate(40);
-                                v = v - 1; // Always decrements by exactly 1
+                                v = v - 1;
                                 _p(v);
                                 _w(); _x(); _z('number subtracted', 2000)
                             }
@@ -768,14 +742,6 @@
                 v = r === '' ? 0 : parseInt(r);
                 _w(); _x(); _u()
             };
-
-            if (bd) {
-                d.body.classList.add('bold-mode');
-                weightMenu.textContent = 'Default Text';
-            } else {
-                d.body.classList.remove('bold-mode');
-                weightMenu.textContent = 'Bold Text';
-            }
 
             _w();
             stt = setTimeout(() => { i.classList.add('v') }, 0)
