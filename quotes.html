@@ -53,7 +53,7 @@
             left: 50%;
             transform: translate(-50%, -10px);
             font-size: 12px;
-            background: rgba(30, 30, 35, 0.9);
+            background: rgba(30, 30, 35, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #e5e5e7;
@@ -67,6 +67,15 @@
             white-space: nowrap;
             transition: opacity 0.35s ease, transform 0.35s ease;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #_ap_status_.interactive {
+            pointer-events: auto;
+            cursor: pointer;
         }
 
         #_ap_status_.visible {
@@ -256,6 +265,20 @@
         let _lastX = 0;
         let _lastY = 0;
 
+        // Autoplay Interval Options with exact display labels and duration in milliseconds
+        const _autoplayOptions = [
+            { label: "5 seconds", ms: 5000 },
+            { label: "10 seconds", ms: 10000 },
+            { label: "15 seconds", ms: 15000 },
+            { label: "30 seconds", ms: 30000 },
+            { label: "1 minute", ms: 60000 },
+            { label: "1 hour", ms: 3600000 },
+            { label: "8 hours", ms: 28800000 },
+            { label: "12 hours", ms: 43200000 },
+            { label: "24 hours", ms: 86400000 }
+        ];
+        let _currentDurationIndex = 2; // Default to 15 seconds
+
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
@@ -276,16 +299,42 @@
             }
         });
 
-        function _showStatus(msg) {
+        function _showStatus(msg, isInteractive = false) {
             if (!_apStatus) return;
             if (_statusTimer) clearTimeout(_statusTimer);
 
-            _apStatus.innerText = msg;
+            if (isInteractive) {
+                _apStatus.innerHTML = `<span>${msg}</span><svg class="w-3 h-3 ml-1 text-gray-400 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>`;
+                _apStatus.classList.add('interactive');
+            } else {
+                _apStatus.innerText = msg;
+                _apStatus.classList.remove('interactive');
+            }
+
             _apStatus.classList.add('visible');
+
+            const displayTime = isInteractive ? 3500 : 2200;
 
             _statusTimer = setTimeout(() => {
                 _apStatus.classList.remove('visible');
-            }, 2200);
+            }, displayTime);
+        }
+
+        // Tap popup status to cycle through autoplay options without flashing
+        if (_apStatus) {
+            _apStatus.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (_autoplayTimer) {
+                    _currentDurationIndex = (_currentDurationIndex + 1) % _autoplayOptions.length;
+                    _startAutoplay();
+                    const opt = _autoplayOptions[_currentDurationIndex];
+                    _showStatus(`Autoplay On (${opt.label})`, true);
+                }
+            });
+
+            _apStatus.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
         }
 
         function _shuffle(arr) {
@@ -400,9 +449,10 @@
 
         function _startAutoplay() {
             if (_autoplayTimer) clearInterval(_autoplayTimer);
+            const intervalMs = _autoplayOptions[_currentDurationIndex].ms;
             _autoplayTimer = setInterval(() => {
                 _next();
-            }, 15000);
+            }, intervalMs);
         }
 
         function _stopAutoplay() {
@@ -419,7 +469,8 @@
             } else {
                 _next();
                 _startAutoplay();
-                _showStatus("Autoplay On (15s)");
+                const opt = _autoplayOptions[_currentDurationIndex];
+                _showStatus(`Autoplay On (${opt.label})`, true);
             }
         }
 
@@ -520,13 +571,11 @@
             if (absX > 50 && absX > absY * 1.2) {
                 _isSwipe = true;
                 if (dx > 0) {
-                    // Swipe Right: Go to previous quote
                     if (_historyIndex > 0) {
                         _prev();
                         _showStatus("Previous Quote");
                     }
                 } else {
-                    // Swipe Left: Go to next quote
                     _next();
                 }
             } 
@@ -534,10 +583,8 @@
             else if (absY > 50 && absY > absX * 1.2) {
                 _isSwipe = true;
                 if (dy < 0) {
-                    // Swipe Up: Uppercase
                     _setCase(true);
                 } else {
-                    // Swipe Down: Lowercase
                     _setCase(false);
                 }
             }
