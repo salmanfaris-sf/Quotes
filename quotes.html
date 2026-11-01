@@ -349,6 +349,7 @@
             if (_currentPool.length === 0) {
                 let freshList = [..._db];
                 _shuffle(freshList);
+                // Prevent duplicate quote back-to-back between pool cycles
                 if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
                     const head = freshList.pop();
                     freshList.unshift(head);
