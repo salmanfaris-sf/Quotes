@@ -21,7 +21,7 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -97,8 +97,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 580px;
-            width: calc(100% - 48px);
+            max-width: 1200px;
+            width: calc(100% - 32px);
             text-align: center;
             z-index: 10;
             display: flex;
@@ -110,21 +110,21 @@
         #_q_ {
             font-family: 'Inter', sans-serif;
             white-space: pre-wrap;
-            margin-bottom: 14px;
+            margin-bottom: 24px;
             color: #ffffff;
             display: inline-block;
             will-change: opacity;
             transition: opacity 0.35s ease-in-out, font-family 0.35s ease;
-            font-weight: 300;
-            letter-spacing: -0.01em;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            font-size: clamp(0.95rem, 2.4vw, 1.35rem);
-            line-height: 1.6;
+            font-weight: 500;
+            letter-spacing: -0.025em;
+            text-shadow: 0 4px 28px rgba(0, 0, 0, 0.8);
+            font-size: clamp(2.5rem, 7vw, 5.25rem);
+            line-height: 1.25;
         }
 
         #_st_ {
             font-family: 'Inter', sans-serif;
-            font-size: 12px;
+            font-size: clamp(14px, 1.5vw, 18px);
             color: var(--apple-muted);
             font-weight: 400;
             letter-spacing: 0.02em;
@@ -141,6 +141,10 @@
         <h1 id="_q_" class="opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
+
+    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
+        Tap anywhere to view the next quote
+    </div>
 
     <script>
     (function(){
@@ -171,9 +175,9 @@
             { t: "Time waits for no one." },
             { t: "Quality over quantity in everything." },
             { t: "Knowledge without action is useless." },
-            { t: "Fear Allah. Not people." },
+            { t: "Stay Fearless." },
             { t: "Live with purpose." },
-            { t: "Be a man of your word." },
+            { t: "Aim High." },
             { t: "A real man protects those who are vulnerable." },
             { t: "Every day is a second chance." },
             { t: "Now is the time." },
@@ -211,10 +215,11 @@
             { t: "Every wasted year makes the\n next one heavier." },
             { t: "Do it the moment you remember it." },
             { t: "Stick to the plan. Not your mood." },
-            { t: "Be the change that you wish to see in the world." },
+            { t: "Protect your peace." },
             { t: "5,4,3,2,1. Act Now." },
             { t: "Indeed Shaitan is ever, to mankind,\na clear enemy.\n[Qur'an 17:53]"},
             { t: "People are asleep, and when they die, they awaken." },
+            { t: "Never settle." },
             { t: "Prophet Muhammad ﷺ said:\nThere are two blessings that many people are deceived into losing: health and free time.\n[Sahih al-Bukhari 6412]" },
             { t: "Prophet Muhammad ﷺ said:\nMake things easy for the people, and do not make it difficult for them.\n[Sahih al-Bukhari 6125]" },
             { t: "Prophet Muhammad ﷺ said:\nDo good deeds properly, sincerely and moderately.\n[Sahih al-Bukhari 6464]" },
@@ -278,6 +283,7 @@
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
+        const _tapHint = document.getElementById('tap-hint');
         const _apStatus = document.getElementById('_ap_status_');
 
         async function _requestWakeLock() {
@@ -412,8 +418,8 @@
             setTimeout(() => {
                 _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
                 _qx.style.fontFamily = isUpper ? "'Roboto', sans-serif" : "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
-                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
-                _qx.style.fontWeight = '300';
+                _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.02em';
+                _qx.style.fontWeight = isUpper ? '400' : '400';
 
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
@@ -426,6 +432,21 @@
             }, 350);
 
             _showStatus(isUpper ? "Uppercase" : "Lowercase");
+        }
+
+        function _hideTapHint() {
+            if (!_hasTapped) {
+                _hasTapped = true;
+                if (_tapHint) {
+                    _tapHint.classList.remove('opacity-90');
+                    _tapHint.classList.add('opacity-0');
+                    setTimeout(() => {
+                        if (_tapHint && _tapHint.parentNode) {
+                            _tapHint.parentNode.removeChild(_tapHint);
+                        }
+                    }, 1000);
+                }
+            }
         }
 
         function _startAutoplay() {
@@ -456,6 +477,7 @@
         }
 
         function _next() {
+            _hideTapHint();
             if (_historyIndex < _history.length - 1) {
                 _historyIndex++;
                 _showQuote(_history[_historyIndex]);
@@ -472,6 +494,7 @@
         }
 
         function _prev() {
+            _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
@@ -501,6 +524,13 @@
             requestAnimationFrame(() => {
                 _mc.classList.add('v');
             });
+
+            setTimeout(() => {
+                if (!_hasTapped && _tapHint) {
+                    _tapHint.classList.remove('opacity-0');
+                    _tapHint.classList.add('opacity-90');
+                }
+            }, 900);
         };
 
         function _startPress(x, y) {
