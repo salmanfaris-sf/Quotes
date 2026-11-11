@@ -43,10 +43,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .bottom-hint-pos {
-            bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
-        }
-
         #_ap_status_ {
             position: fixed;
             top: calc(1.5rem + env(safe-area-inset-top, 0px));
@@ -141,10 +137,6 @@
         <h1 id="_q_" class="opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
-
-    <div id="tap-hint" class="bottom-hint-pos fixed left-1/2 -translate-x-1/2 text-[12px] font-normal tracking-wide text-[#86868b] pointer-events-none transition-opacity duration-1000 opacity-0 text-center whitespace-nowrap z-30">
-        Tap anywhere to view the next quote
-    </div>
 
     <script>
     (function(){
@@ -247,7 +239,6 @@
         ];
 
         let _wakeLock = null;
-        let _hasTapped = false;
         let _l_i = null;
         let _currentPool = [];
         let _lastQuoteText = null;
@@ -282,7 +273,6 @@
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
-        const _tapHint = document.getElementById('tap-hint');
         const _apStatus = document.getElementById('_ap_status_');
 
         async function _requestWakeLock() {
@@ -349,7 +339,6 @@
             if (_currentPool.length === 0) {
                 let freshList = [..._db];
                 _shuffle(freshList);
-                // Prevent duplicate quote back-to-back between pool cycles
                 if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
                     const head = freshList.pop();
                     freshList.unshift(head);
@@ -433,21 +422,6 @@
             _showStatus(isUpper ? "Uppercase" : "Lowercase");
         }
 
-        function _hideTapHint() {
-            if (!_hasTapped) {
-                _hasTapped = true;
-                if (_tapHint) {
-                    _tapHint.classList.remove('opacity-90');
-                    _tapHint.classList.add('opacity-0');
-                    setTimeout(() => {
-                        if (_tapHint && _tapHint.parentNode) {
-                            _tapHint.parentNode.removeChild(_tapHint);
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
         function _startAutoplay() {
             if (_autoplayTimer) clearInterval(_autoplayTimer);
             const intervalMs = _autoplayOptions[_currentDurationIndex].ms;
@@ -476,7 +450,6 @@
         }
 
         function _next() {
-            _hideTapHint();
             if (_historyIndex < _history.length - 1) {
                 _historyIndex++;
                 _showQuote(_history[_historyIndex]);
@@ -493,7 +466,6 @@
         }
 
         function _prev() {
-            _hideTapHint();
             if (_historyIndex > 0) {
                 _historyIndex--;
                 _showQuote(_history[_historyIndex]);
@@ -523,13 +495,6 @@
             requestAnimationFrame(() => {
                 _mc.classList.add('v');
             });
-
-            setTimeout(() => {
-                if (!_hasTapped && _tapHint) {
-                    _tapHint.classList.remove('opacity-0');
-                    _tapHint.classList.add('opacity-90');
-                }
-            }, 900);
         };
 
         function _startPress(x, y) {
