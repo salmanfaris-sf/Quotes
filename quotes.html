@@ -61,7 +61,8 @@
             opacity: 0;
             z-index: 60;
             white-space: nowrap;
-            transition: opacity 0.35s ease, transform 0.35s ease;
+            transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), 
+                        transform 0.25s cubic-bezier(0.2, 0, 0, 1);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
             border: none;
             display: flex;
@@ -72,6 +73,12 @@
         #_ap_status_.interactive {
             pointer-events: auto;
             cursor: pointer;
+        }
+
+        #_ap_status_.interactive:active {
+            transform: translate(-50%, 0) scale(0.92) !important;
+            opacity: 0.8;
+            transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1), opacity 0.1s ease;
         }
 
         #_ap_status_.visible {
@@ -256,7 +263,6 @@
         let _lastX = 0;
         let _lastY = 0;
 
-        // Autoplay Interval Options with exact display labels and duration in milliseconds
         const _autoplayOptions = [
             { label: "5 seconds", ms: 5000 },
             { label: "10 seconds", ms: 10000 },
@@ -268,7 +274,7 @@
             { label: "12 hours", ms: 43200000 },
             { label: "24 hours", ms: 86400000 }
         ];
-        let _currentDurationIndex = 2; // Default to 15 seconds
+        let _currentDurationIndex = 2;
 
         const _qx = document.getElementById('_q_');
         const _st = document.getElementById('_st_');
@@ -293,11 +299,10 @@
             if (!_apStatus) return;
             if (_statusTimer) clearTimeout(_statusTimer);
 
+            _apStatus.innerText = msg;
             if (isInteractive) {
-                _apStatus.innerHTML = `<span>${msg}</span><svg class="w-3 h-3 ml-1 text-gray-400 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>`;
                 _apStatus.classList.add('interactive');
             } else {
-                _apStatus.innerText = msg;
                 _apStatus.classList.remove('interactive');
             }
 
@@ -310,7 +315,6 @@
             }, displayTime);
         }
 
-        // Tap popup status to cycle through autoplay options without flashing
         if (_apStatus) {
             _apStatus.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -533,7 +537,6 @@
             const absX = Math.abs(dx);
             const absY = Math.abs(dy);
 
-            // Horizontal Swipe Gesture (Left / Right)
             if (absX > 50 && absX > absY * 1.2) {
                 _isSwipe = true;
                 if (dx > 0) {
@@ -545,7 +548,6 @@
                     _next();
                 }
             } 
-            // Vertical Swipe Gesture (Up / Down)
             else if (absY > 50 && absY > absX * 1.2) {
                 _isSwipe = true;
                 if (dy < 0) {
