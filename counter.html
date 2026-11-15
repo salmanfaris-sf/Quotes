@@ -104,7 +104,7 @@
             padding: 0;
             display: none;
             flex-direction: column;
-            min-width: 150px;
+            min-width: 165px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.6);
             z-index: 200;
             overflow: hidden;
@@ -135,6 +135,7 @@
             align-items: center;
             justify-content: flex-start;
             transition: background 0.1s;
+            white-space: nowrap;
         }
 
         .menu-item:active,
@@ -246,6 +247,12 @@
             font-weight: 400;
             transition: opacity .4s;
             z-index: 5
+        }
+
+        /* Class to hide the bottom gesture hints when toggled off in the menu */
+        body.hide-hints .b2 {
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         .b2 span {
@@ -415,9 +422,12 @@
 </head>
 
 <body oncontextmenu="return !1">
+    <!-- Top Left Title -->
     <div class="a1" id="x1"><span>Counter</span></div>
+    
+    <!-- Top Right Menu & Dropdown -->
     <div class="a2">
-        <button id="menu-btn">
+        <button id="menu-btn" aria-label="Menu">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="5" cy="12" r="1.8"></circle>
                 <circle cx="12" cy="12" r="1.8"></circle>
@@ -427,13 +437,18 @@
         <div class="menu-dropdown" id="menu-dropdown">
             <button class="menu-item" id="fs-btn-menu">Fullscreen</button>
             <button class="menu-item" id="goal-btn-menu">Set Goal</button>
+            <button class="menu-item" id="hint-btn-menu">Hide Bottom Hint</button>
             <button class="menu-item" id="lock-btn-menu">Lock Screen</button>
         </div>
     </div>
+
+    <!-- Notification Toast -->
     <div id="x3" class="b3">
         <span id="x4"></span>
         <button id="x5">turn off</button>
     </div>
+
+    <!-- Main Counter Display & Goal Ring -->
     <div class="a3">
         <div id="x6" class="a4">
             <svg class="a5" width="100%" height="100%" viewBox="0 0 100 100">
@@ -447,13 +462,17 @@
         <div id="x9" class="a9" contenteditable="false" inputmode="numeric">0</div>
         <div id="y1" class="b1 v">Tap anywhere to count</div>
     </div>
-    <div class="b2">
+
+    <!-- Bottom Gesture Hints -->
+    <div class="b2" id="bottom-hints">
         <span>swipe up: edit</span>
         <span>swipe left: reset</span>
         <span>swipe down: minus one</span>
         <span>swipe right: increment</span>
         <span>hold: tap sound</span>
     </div>
+
+    <!-- Screen Lock Slider Overlay -->
     <div id="lock-overlay">
         <div class="slider-track">
             <span class="slider-text">Swipe to unlock</span>
@@ -465,26 +484,43 @@
             </div>
         </div>
     </div>
+
     <script>
         (function () {
-            const d = document, w = window, k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal' },
+            const d = document, w = window, 
+                k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal', h: '_n_hide_hints' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), hb = d.getElementById('x5'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
-                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), goalMenu = d.getElementById('goal-btn-menu'),
+                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), 
+                goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle');
 
+            // Load persisted settings from localStorage
             let v = parseInt(localStorage.getItem(k.c)) || 0,
                 st = parseInt(localStorage.getItem(k.t)) || 1,
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
                 sn = localStorage.getItem(k.s) !== 'false',
+                hh = localStorage.getItem(k.h) === 'true',
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
+
+            // Apply initial bottom hint visibility state
+            function _applyHintState() {
+                if (hh) {
+                    d.body.classList.add('hide-hints');
+                    hintMenu.textContent = 'Show Bottom Hint';
+                } else {
+                    d.body.classList.remove('hide-hints');
+                    hintMenu.textContent = 'Hide Bottom Hint';
+                }
+            }
+            _applyHintState();
 
             function _u() {
                 if (stt) clearTimeout(stt);
@@ -534,7 +570,8 @@
                 localStorage.setItem(k.c, v);
                 localStorage.setItem(k.s, sn);
                 localStorage.setItem(k.t, st);
-                localStorage.setItem(k.g, gl)
+                localStorage.setItem(k.g, gl);
+                localStorage.setItem(k.h, hh);
             }
 
             function _z(m, du, showBtn = false) {
@@ -577,6 +614,16 @@
                     btn.classList.remove('active-touch');
                 }, { passive: true });
             });
+
+            // Toggle Bottom Hints Visibility
+            hintMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                hh = !hh;
+                _applyHintState();
+                _x();
+                _z(hh ? 'bottom hint hidden' : 'bottom hint shown', 2000);
+            };
 
             lbMenu.onclick = e => {
                 e.stopPropagation();
