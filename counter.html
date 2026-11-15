@@ -567,11 +567,15 @@
                 e.stopPropagation();
                 md.classList.remove('active');
                 if (deferredInstallPrompt) {
+                    _z('installing...', 3000);
                     deferredInstallPrompt.prompt();
                     const { outcome } = await deferredInstallPrompt.userChoice;
                     if (outcome === 'accepted') {
                         deferredInstallPrompt = null;
                         installMenu.style.display = 'none';
+                    } else {
+                        if (rt) clearTimeout(rt);
+                        h.classList.remove('active');
                     }
                 }
             };
