@@ -17,8 +17,8 @@
     <meta name="apple-mobile-web-app-title" content="Counter">
     <meta name="mobile-web-app-capable" content="yes">
     <title>COUNTER</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23000000'/%3E%3Cpath d='M340 180c-25-25-60-36-100-36-82 0-140 58-140 140s58 140 140 140c40 0 75-11 100-36' fill='none' stroke='%23ffffff' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23000000'/%3E%3Cpath d='M340 180c-25-25-60-36-100-36-82 0-140 58-140 140s58 140 140 140c40 0 75-11 100-36' fill='none' stroke='%23ffffff' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <link id="manifest-link" rel="manifest">
     <style>
         :root {
@@ -530,12 +530,8 @@
 
             _requestWakeLock();
 
-            // Dynamic inline manifest setup for one-file installation with custom SVG "C" logo
+            // Dynamic inline manifest setup for one-file installation
             try {
-                const iconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%23000000'/><path d='M340 180c-25-25-60-36-100-36-82 0-140 58-140 140s58 140 140 140c40 0 75-11 100-36' fill='none' stroke='%23ffffff' stroke-width='48' stroke-linecap='round'/></svg>`;
-                const iconBlob = new Blob([iconSvg], { type: 'image/svg+xml' });
-                const iconUrl = URL.createObjectURL(iconBlob);
-
                 const manifest = {
                     name: 'Counter',
                     short_name: 'Counter',
@@ -546,8 +542,8 @@
                     theme_color: '#000000',
                     orientation: 'portrait',
                     icons: [
-                        { src: iconUrl, sizes: '192x192', type: 'image/svg+xml' },
-                        { src: iconUrl, sizes: '512x512', type: 'image/svg+xml' }
+                        { src: new URL('favicon.png', location.href).href, sizes: '192x192', type: 'image/png' },
+                        { src: new URL('favicon.png', location.href).href, sizes: '512x512', type: 'image/png' }
                     ]
                 };
                 const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
@@ -596,6 +592,7 @@
                 stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
+            // Speech synthesis helper (sn = true means muted/sound off, sn = false means sound on)
             function _p(textToSpeak) {
                 if (sn) return;
                 if ('speechSynthesis' in w) {
@@ -851,6 +848,7 @@
                 pt = setTimeout(() => {
                     sn = !sn;
                     qf = 1;
+                    _x();
                     if (navigator.vibrate) navigator.vibrate(50);
                     _z(sn ? 'Sound off' : 'Sound on', 2000)
                 }, 800)
@@ -869,12 +867,16 @@
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
                     const p = v;
                     v += st;
-                    _p(v);
+                    // Check if target goal has just been reached
                     if (gl > 0 && p < gl && v >= gl) {
+                        _p(`${v}. Goal reached`);
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
                         _triggerGoalLockout();
+                    } else {
+                        _p(v);
                     }
-                    _w()
+                    _w();
+                    _x();
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 50) {
                         if (confirm('Reset counter to 0?')) {
