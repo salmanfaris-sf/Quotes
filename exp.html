@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#0a0a0c]">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P37159WTH1');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Dispatches • Salman Faris</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="description" content="A private frequency of daily discipline, uncompromised focus, and timeless reminders. Sent directly by Salman Faris.">
+    
+    <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --surface: #141418;
+            --surface-hover: #1c1c22;
+            --text: #f1f1f3;
+            --muted: #8e8e99;
+            --accent: #d4af37; /* subtle brass/gold touch */
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            overflow: hidden;
+            touch-action: none;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            color: var(--text);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ambient background glow */
+        .ambient-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 600px;
+            max-height: 600px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, rgba(10, 10, 12, 0) 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Header Navigation Minimal */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            z-index: 50;
+            background: linear-gradient(to bottom, rgba(10,10,12,0.9), rgba(10,10,12,0));
+        }
+
+        .brand-sig {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-sig span {
+            width: 6px;
+            height: 6px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            padding: 8px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Toast Status Pill */
+        #_status_pill {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translate(-50%, -10px);
+            font-size: 12px;
+            background: rgba(28, 28, 35, 0.95);
+            backdrop-filter: blur(16px);
+            color: #f1f1f3;
+            padding: 8px 20px;
+            border-radius: 9999px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        #_status_pill.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        /* Gallery Viewport */
+        ._viewport {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        ._slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 28px;
+            will-change: transform;
+        }
+
+        .card-container {
+            max-width: 620px;
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 48px 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .dispatch-meta {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dispatch-meta::before, .dispatch-meta::after {
+            content: "";
+            width: 20px;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        ._q_text {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(2rem, 4.5vw, 2.8rem);
+            line-height: 1.15;
+            font-weight: 400;
+            color: #ffffff;
+            white-space: pre-wrap;
+            margin-bottom: 28px;
+            letter-spacing: -0.01em;
+            transition: opacity 0.35s ease-in-out;
+        }
+
+        ._st_text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+            min-height: 20px;
+            transition: opacity 0.35s ease-in-out;
+        }
+
+        /* Bottom Hint & Footer */
+        .bottom-hint {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            z-index: 50;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Archive Drawer Overlay */
+        #_archive_drawer {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 12, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #_archive_drawer.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .archive-content {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 24px;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col h-full overflow-hidden bg-[#0a0a0c] text-white">
+
+    <div class="ambient-glow"></div>
+    <div id="_status_pill"></div>
+
+    <!-- Top Minimal Navigation -->
+    <header class="top-bar">
+        <div class="brand-sig">
+            <span></span> Salman Faris — Dispatches
+        </div>
+        <div class="action-btns">
+            <button class="icon-btn" id="_archive_btn">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                Index
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Dispatch Card Viewport -->
+    <main class="_viewport" id="_mc_">
+        <div class="_slide" id="_s_prev_">
+            <div class="card-container">
+                <div class="dispatch-meta">Dispatch</div>
+                <div class="_q_text"></div>
+                <div class="_st_text opacity-0"></div>
+            </div>
+        </div>
+        <div class="_slide" id="_s_curr_">
+            <div class="card-container">
+                <div class="dispatch-meta">Dispatch</div>
+                <h1 class="_q_text"></h1>
+                <div class="_st_text opacity-0"></div>
+            </div>
+        </div>
+        <div class="_slide" id="_s_next_">
+            <div class="card-container">
+                <div class="dispatch-meta">Dispatch</div>
+                <div class="_q_text"></div>
+                <div class="_st_text opacity-0"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="bottom-hint">Swipe left / right or tap to receive next dispatch</div>
+
+    <!-- Archive Modal Drawer -->
+    <div id="_archive_drawer">
+        <div class="archive-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <h2 style="font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; margin: 0;">Dispatch Index</h2>
+                <button class="icon-btn" id="_close_archive">Close ✕</button>
+            </div>
+            <div id="_archive_list" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; padding-bottom: 40px;">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        const _db = [
+            { t: "Be better than you were yesterday." },
+            { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
+            { t: "Don't waste time. You don't get it back." },
+            { t: "Focus is a superpower in a distracted world." },
+            { t: "The problem is,\nyou think you have a lot of time to live." },
+            { t: "Live everyday like it's your last day." },
+            { t: "Consistency beats intensity every single time." },
+            { t: "Big dreams need uncompromised sacrifices." },
+            { t: "Do it even when you don't feel like it." },
+            { t: "Nothing changes if nothing changes." },
+            { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
+            { t: "A real man protects, provides, and stays true to his word." },
+            { t: "Don't follow the crowd. Follow the truth." },
+            { t: "Eliminate the 'tomorrow' mindset today." },
+            { t: "The strongest man is he who controls his anger." },
+            { t: "Your habits define your future self." },
+            { t: "Knowledge without action is useless." },
+            { t: "Fear Allah. Not people." },
+            { t: "This is the way." },
+            { t: "Hard days build unbreakable minds." },
+            { t: "Do the boring work exceptionally well." },
+            { t: "Sweat more in practice. Bleed less in war." },
+            { t: "do it scared.\ndo it tired.\ndo it anyway." },
+            { t: "Stick to the plan. Not your mood." },
+            { t: "Weak men wait for courage.\nStrong men create it through action." },
+            { t: "A strong man doesn’t need motivation.\nHe acts because he decided." }
+        ];
+
+        let _currentPool = [];
+        let _lastQuoteText = null;
+        let _history = [];
+        let _historyIndex = -1;
+
+        let _slideEndTimer = null;
+        let _fadeTimer = null;
+        let _statusTimer = null;
+
+        let _isPointerDown = false;
+        let _gestureAxis = null;
+        let _isAnimating = false;
+        let _isCaseAnimating = false;
+        let _isUpperCase = false;
+
+        let _startX = 0;
+        let _startY = 0;
+        let _lastX = 0;
+        let _lastY = 0;
+        let _startTime = 0;
+
+        const _SLIDE_GAP = 28;
+        const _SPRING_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+        const _SLIDE_DURATION = 340;
+
+        const _mc = document.getElementById('_mc_');
+        const _statusPill = document.getElementById('_status_pill');
+        const _archiveDrawer = document.getElementById('_archive_drawer');
+        const _archiveBtn = document.getElementById('_archive_btn');
+        const _closeArchive = document.getElementById('_close_archive');
+        const _archiveList = document.getElementById('_archive_list');
+
+        let _sPrev = document.getElementById('_s_prev_');
+        let _sCurr = document.getElementById('_s_curr_');
+        let _sNext = document.getElementById('_s_next_');
+
+        function _showStatus(msg) {
+            if (!_statusPill) return;
+            if (_statusTimer) clearTimeout(_statusTimer);
+            _statusPill.innerText = msg;
+            _statusPill.classList.add('visible');
+            _statusTimer = setTimeout(() => {
+                _statusPill.classList.remove('visible');
+            }, 2000);
+        }
+
+        function _shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function _getNextQuote() {
+            if (_currentPool.length === 0) {
+                let freshList = [..._db];
+                _shuffle(freshList);
+                if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
+                    const head = freshList.pop();
+                    freshList.unshift(head);
+                }
+                _currentPool = freshList;
+            }
+            const choice = _currentPool.pop();
+            if (choice) _lastQuoteText = choice.t;
+            return choice || { t: "Stay disciplined." };
+        }
+
+        function _ensureNextInHistory() {
+            if (_historyIndex + 1 >= _history.length) {
+                _history.push(_getNextQuote());
+            }
+        }
+
+        function _gs() {
+            const n = new Date();
+            let h = n.getHours();
+            const m = n.getMinutes().toString().padStart(2, '0');
+            const s = n.getSeconds().toString().padStart(2, '0');
+            const a = h >= 12 ? 'pm' : 'am';
+            h = h % 12 || 12;
+            const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
+            const d = e - n;
+            const ml = Math.max(0, Math.floor(d / 60000));
+            return { t: `${h}:${m}:${s} ${a}`, l: ml };
+        }
+
+        function _getTimeSubtitle() {
+            const s = _gs();
+            return `Time: ${s.t} • ${s.l} minutes remaining today`;
+        }
+
+        function _applySlideCase(slideEl) {
+            const qEl = slideEl.querySelector('._q_text');
+            const stEl = slideEl.querySelector('._st_text');
+            qEl.style.textTransform = _isUpperCase ? 'uppercase' : 'none';
+            qEl.style.letterSpacing = _isUpperCase ? '0.02em' : '-0.01em';
+            stEl.style.textTransform = _isUpperCase ? 'uppercase' : 'none';
+        }
+
+        function _renderSlide(slideEl, quoteObj) {
+            const qEl = slideEl.querySelector('._q_text');
+            const stEl = slideEl.querySelector('._st_text');
+            _applySlideCase(slideEl);
+
+            if (!quoteObj) {
+                qEl.innerText = "";
+                stEl.innerText = "";
+                stEl.classList.add('opacity-0');
+                return;
+            }
+
+            qEl.innerText = quoteObj.t;
+            if (quoteObj.id === "t_q") {
+                stEl.innerText = _getTimeSubtitle();
+                stEl.classList.remove('opacity-0');
+            } else {
+                stEl.innerText = "";
+                stEl.classList.add('opacity-0');
+            }
+        }
+
+        function _positionSlides(dx = 0, animate = false) {
+            const stride = window.innerWidth + _SLIDE_GAP;
+            const transition = animate ? `transform ${_SLIDE_DURATION}ms ${_SPRING_EASE}` : 'none';
+
+            _sPrev.style.transition = transition;
+            _sCurr.style.transition = transition;
+            _sNext.style.transition = transition;
+
+            _sPrev.style.transform = `translate3d(${-stride + dx}px, 0, 0)`;
+            _sCurr.style.transform = `translate3d(${dx}px, 0, 0)`;
+            _sNext.style.transform = `translate3d(${stride + dx}px, 0, 0)`;
+        }
+
+        function _syncGallery() {
+            _ensureNextInHistory();
+            _renderSlide(_sPrev, _historyIndex > 0 ? _history[_historyIndex - 1] : null);
+            _renderSlide(_sCurr, _history[_historyIndex]);
+            _renderSlide(_sNext, _history[_historyIndex + 1]);
+            _positionSlides(0, false);
+        }
+
+        function _finalizeSlideTransition(direction) {
+            if (_slideEndTimer) clearTimeout(_slideEndTimer);
+            _slideEndTimer = setTimeout(() => {
+                if (direction === 'next') {
+                    _historyIndex++;
+                    const recycled = _sPrev;
+                    _sPrev = _sCurr;
+                    _sCurr = _sNext;
+                    _sNext = recycled;
+                } else if (direction === 'prev') {
+                    _historyIndex--;
+                    const recycled = _sNext;
+                    _sNext = _sCurr;
+                    _sCurr = _sPrev;
+                    _sPrev = recycled;
+                }
+
+                const prevH1 = document.querySelector('h1._q_text');
+                if (prevH1 && prevH1.parentElement.parentElement !== _sCurr) {
+                    const div = document.createElement('div');
+                    div.className = prevH1.className;
+                    div.style.cssText = prevH1.style.cssText;
+                    div.innerText = prevH1.innerText;
+                    prevH1.replaceWith(div);
+
+                    const activeQ = _sCurr.querySelector('._q_text');
+                    const h1 = document.createElement('h1');
+                    h1.className = activeQ.className;
+                    h1.style.cssText = activeQ.style.cssText;
+                    h1.innerText = activeQ.innerText;
+                    activeQ.replaceWith(h1);
+                }
+
+                _syncGallery();
+                _isAnimating = false;
+            }, _SLIDE_DURATION);
+        }
+
+        function _slideNext() {
+            if (_isAnimating) return;
+            _ensureNextInHistory();
+            _isAnimating = true;
+            _positionSlides(-(window.innerWidth + _SLIDE_GAP), true);
+            _finalizeSlideTransition('next');
+        }
+
+        function _slidePrev(showToast = true) {
+            if (_isAnimating) return;
+            if (_historyIndex <= 0) {
+                _positionSlides(0, true);
+                return;
+            }
+            _isAnimating = true;
+            _positionSlides(window.innerWidth + _SLIDE_GAP, true);
+            if (showToast) _showStatus("Previous Dispatch");
+            _finalizeSlideTransition('prev');
+        }
+
+        function _fadeNext() {
+            if (_isAnimating) return;
+            _isAnimating = true;
+
+            _ensureNextInHistory();
+            _historyIndex++;
+            const targetQuote = _history[_historyIndex];
+
+            const qEl = _sCurr.querySelector('._q_text');
+            const stEl = _sCurr.querySelector('._st_text');
+
+            stEl.classList.add('opacity-0');
+            qEl.style.transition = 'opacity 0.3s ease';
+            qEl.style.opacity = '0';
+
+            if (_fadeTimer) clearTimeout(_fadeTimer);
+            _fadeTimer = setTimeout(() => {
+                _syncGallery();
+                const newQEl = _sCurr.querySelector('._q_text');
+                const newStEl = _sCurr.querySelector('._st_text');
+
+                if (targetQuote.id === "t_q") {
+                    newStEl.classList.remove('opacity-0');
+                } else {
+                    newStEl.classList.add('opacity-0');
+                }
+
+                requestAnimationFrame(() => {
+                    newQEl.style.transition = 'opacity 0.3s ease';
+                    newQEl.style.opacity = '1';
+                });
+
+                setTimeout(() => {
+                    _isAnimating = false;
+                }, 300);
+            }, 300);
+        }
+
+        // Archive Drawer Logic
+        function _populateArchive() {
+            _archiveList.innerHTML = '';
+            _db.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.style.cssText = "background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.04); cursor: pointer; transition: all 0.2s;";
+                card.innerHTML = `<div style="font-size: 11px; color: var(--muted); margin-bottom: 6px;">DISPATCH #${idx + 1}</div><div style="font-family: 'Instrument Serif', serif; font-size: 1.25rem; color: #fff;">${item.t}</div>`;
+                card.onmouseover = () => card.style.borderColor = 'rgba(255,255,255,0.15)';
+                card.onmouseout = () => card.style.borderColor = 'rgba(255,255,255,0.04)';
+                card.onclick = () => {
+                    _history.push(item);
+                    _historyIndex = _history.length - 1;
+                    _syncGallery();
+                    _archiveDrawer.classList.remove('open');
+                };
+                _archiveList.appendChild(card);
+            });
+        }
+
+        _archiveBtn.onclick = () => {
+            _populateArchive();
+            _archiveDrawer.classList.add('open');
+        };
+        _closeArchive.onclick = () => _archiveDrawer.classList.remove('open');
+
+        window.onload = () => {
+            const first = _getNextQuote();
+            _history.push(first);
+            _historyIndex = 0;
+            _syncGallery();
+        };
+
+        // Touch & Gesture Listeners
+        function _startPress(x, y) {
+            if (_isAnimating || _archiveDrawer.classList.contains('open')) return;
+            _isPointerDown = true;
+            _startX = x;
+            _startY = y;
+            _lastX = x;
+            _lastY = y;
+            _startTime = Date.now();
+            _gestureAxis = null;
+        }
+
+        function _movePress(x, y) {
+            if (!_isPointerDown || _isAnimating) return;
+            _lastX = x;
+            _lastY = y;
+            const dx = x - _startX;
+            const dy = y - _startY;
+            const absX = Math.abs(dx);
+            const absY = Math.abs(dy);
+
+            if (!_gestureAxis && (absX > 10 || absY > 10)) {
+                _gestureAxis = absX >= absY ? 'x' : 'y';
+            }
+
+            if (_gestureAxis === 'x') {
+                let effectiveDx = dx;
+                if (dx > 0 && _historyIndex === 0) effectiveDx = dx * 0.25;
+                _positionSlides(effectiveDx, false);
+            }
+        }
+
+        function _endPress() {
+            if (!_isPointerDown) return;
+            _isPointerDown = false;
+
+            const dx = _lastX - _startX;
+            const dy = _lastY - _startY;
+            const absX = Math.abs(dx);
+            const absY = Math.abs(dy);
+            const elapsed = Math.max(1, Date.now() - _startTime);
+            const velocityX = absX / elapsed;
+
+            if (_gestureAxis === 'x') {
+                const threshold = Math.min(window.innerWidth * 0.25, 110);
+                const isFastFlick = velocityX > 0.45 && absX > 28;
+
+                if ((dx > threshold || (dx > 0 && isFastFlick)) && _historyIndex > 0) {
+                    _slidePrev(true);
+                } else if (dx < -threshold || (dx < 0 && isFastFlick)) {
+                    _slideNext();
+                } else {
+                    _positionSlides(0, true);
+                }
+                return;
+            }
+
+            // Clean tap anywhere -> Fade next
+            if (absX < 10 && absY < 10) {
+                _fadeNext();
+            }
+        }
+
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) return;
+            _startPress(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) return;
+            _movePress(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        document.addEventListener('touchend', _endPress, { passive: true });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            _startPress(e.clientX, e.clientY);
+        });
+        document.addEventListener('mousemove', (e) => _movePress(e.clientX, e.clientY));
+        document.addEventListener('mouseup', _endPress);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowRight') {
+                _slideNext();
+            } else if (e.code === 'ArrowLeft') {
+                _slidePrev(true);
+            }
+        });
+
+    })();
+    </script>
+</body>
+</html>
