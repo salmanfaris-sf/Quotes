@@ -869,7 +869,7 @@
                     v += st;
                     // Check if target goal has just been reached
                     if (gl > 0 && p < gl && v >= gl) {
-                        _p(`${v}. Goal reached`);
+                        _p(`${v}. You have reached your goal.`);
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
                         _triggerGoalLockout();
                     } else {
