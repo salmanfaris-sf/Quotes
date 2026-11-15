@@ -2,7 +2,7 @@
 "name": "Counter",
 "short_name": "Counter",
 "description": "Minimalist gesture tap counter",
-"start_url": "./index.html",
+"start_url": "./cbeta.html",
 "scope": "./",
 "display": "standalone",
 "background_color": "#000000",
