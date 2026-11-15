@@ -95,7 +95,6 @@
             opacity: 1;
         }
 
-        /* Full-screen Gallery Viewport */
         ._viewport {
             position: fixed;
             inset: 0;
@@ -105,7 +104,6 @@
             z-index: 10;
         }
 
-        /* Individual Gallery Slide */
         ._slide {
             position: absolute;
             inset: 0;
@@ -292,11 +290,12 @@
         let _longPressTimer = null;
         let _statusTimer = null;
         let _slideEndTimer = null;
+        let _fadeTimer = null;
 
         let _isPointerDown = false;
         let _isLongPress = false;
         let _gestureAxis = null; // 'x' | 'y' | null
-        let _isAnimatingSlide = false;
+        let _isAnimating = false;
         let _isCaseAnimating = false;
         let _isUpperCase = false;
 
@@ -306,7 +305,6 @@
         let _lastY = 0;
         let _startTime = 0;
 
-        // Gallery gap between slides (like iOS/Android photo gallery)
         const _SLIDE_GAP = 28;
         const _SPRING_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
         const _SLIDE_DURATION = 340;
@@ -516,8 +514,8 @@
             _positionSlides(0, false);
         }
 
-        // Complete gallery transition and rotate slide DOM references seamlessly
-        function _finalizeTransition(direction) {
+        // Complete gallery slide transition and rotate slide DOM references
+        function _finalizeSlideTransition(direction) {
             if (_slideEndTimer) clearTimeout(_slideEndTimer);
             _slideEndTimer = setTimeout(() => {
                 if (direction === 'next') {
@@ -552,36 +550,80 @@
                 }
 
                 _syncGallery();
-                _isAnimatingSlide = false;
+                _isAnimating = false;
             }, _SLIDE_DURATION);
         }
 
-        // Slide forward to next quote (gallery swipe left)
-        function _next(fromGesture = false) {
-            if (_isAnimatingSlide) return;
+        // Gallery Swipe Left -> Slide to next quote
+        function _slideNext() {
+            if (_isAnimating) return;
             _ensureNextInHistory();
-            _isAnimatingSlide = true;
+            _isAnimating = true;
             _positionSlides(-(window.innerWidth + _SLIDE_GAP), true);
-            _finalizeTransition('next');
+            _finalizeSlideTransition('next');
 
             if (_autoplayTimer) {
                 _startAutoplay();
             }
         }
 
-        // Slide backward to previous quote (gallery swipe right)
-        function _prev(fromGesture = false) {
-            if (_isAnimatingSlide) return;
+        // Gallery Swipe Right -> Slide to previous quote
+        function _slidePrev(showToast = true) {
+            if (_isAnimating) return;
             if (_historyIndex <= 0) {
                 _positionSlides(0, true);
                 return;
             }
-            _isAnimatingSlide = true;
+            _isAnimating = true;
             _positionSlides(window.innerWidth + _SLIDE_GAP, true);
-            if (!fromGesture) {
+            if (showToast) {
                 _showStatus("Previous Quote");
             }
-            _finalizeTransition('prev');
+            _finalizeSlideTransition('prev');
+
+            if (_autoplayTimer) {
+                _startAutoplay();
+            }
+        }
+
+        // Classic Opacity Fade Transition (Used for Tap, Space, and Autoplay)
+        function _fadeNext() {
+            if (_isAnimating) return;
+            _isAnimating = true;
+
+            _ensureNextInHistory();
+            _historyIndex++;
+            const targetQuote = _history[_historyIndex];
+
+            const qEl = _sCurr.querySelector('._q_text');
+            const stEl = _sCurr.querySelector('._st_text');
+
+            stEl.classList.add('opacity-0');
+            qEl.style.transition = 'opacity 0.35s ease-in-out';
+            qEl.style.opacity = '0';
+
+            if (_fadeTimer) clearTimeout(_fadeTimer);
+            _fadeTimer = setTimeout(() => {
+                _syncGallery();
+
+                const newQEl = _sCurr.querySelector('._q_text');
+                const newStEl = _sCurr.querySelector('._st_text');
+
+                if (targetQuote.id === "t_q") {
+                    newStEl.classList.remove('opacity-0');
+                } else {
+                    newStEl.classList.add('opacity-0');
+                }
+
+                requestAnimationFrame(() => {
+                    newQEl.style.transition = 'opacity 0.35s ease-in-out';
+                    newQEl.style.opacity = '1';
+                });
+
+                setTimeout(() => {
+                    _isAnimating = false;
+                }, 350);
+            }, 350);
 
             if (_autoplayTimer) {
                 _startAutoplay();
@@ -621,7 +663,7 @@
             if (_autoplayTimer) clearInterval(_autoplayTimer);
             const intervalMs = _autoplayOptions[_currentDurationIndex].ms;
             _autoplayTimer = setInterval(() => {
-                _next();
+                _fadeNext();
             }, intervalMs);
         }
 
@@ -637,7 +679,7 @@
                 _stopAutoplay();
                 _showStatus("Autoplay Off");
             } else {
-                _next();
+                _fadeNext();
                 _startAutoplay();
                 const opt = _autoplayOptions[_currentDurationIndex];
                 _showStatus(`Autoplay On (${opt.label})`, true);
@@ -645,7 +687,7 @@
         }
 
         window.addEventListener('resize', () => {
-            if (!_isPointerDown && !_isAnimatingSlide) {
+            if (!_isPointerDown && !_isAnimating) {
                 _positionSlides(0, false);
             }
         });
@@ -667,7 +709,7 @@
 
         // Interactive Gallery Touch & Mouse Gesture Handlers
         function _startPress(x, y) {
-            if (_isAnimatingSlide) return;
+            if (_isAnimating) return;
 
             _isPointerDown = true;
             _startX = x;
@@ -692,7 +734,7 @@
         }
 
         function _movePress(x, y) {
-            if (!_isPointerDown || _isAnimatingSlide) return;
+            if (!_isPointerDown || _isAnimating) return;
 
             _lastX = x;
             _lastY = y;
@@ -705,15 +747,12 @@
                 if (_longPressTimer) clearTimeout(_longPressTimer);
             }
 
-            // Lock axis once movement passes deadzone
             if (!_gestureAxis && (absX > 10 || absY > 10)) {
                 _gestureAxis = absX >= absY ? 'x' : 'y';
             }
 
-            // Live 1:1 gallery tracking during horizontal drag
             if (_gestureAxis === 'x') {
                 let effectiveDx = dx;
-                // Elastic rubber-band damping if swiping right on the very first quote
                 if (dx > 0 && _historyIndex === 0) {
                     effectiveDx = dx * 0.28;
                 }
@@ -731,21 +770,20 @@
             const absX = Math.abs(dx);
             const absY = Math.abs(dy);
             const elapsed = Math.max(1, Date.now() - _startTime);
-            const velocityX = absX / elapsed; // px per ms
+            const velocityX = absX / elapsed;
 
             if (_gestureAxis === 'x') {
                 const threshold = Math.min(window.innerWidth * 0.25, 110);
                 const isFastFlick = velocityX > 0.45 && absX > 28;
 
                 if ((dx > threshold || (dx > 0 && isFastFlick)) && _historyIndex > 0) {
-                    // Commit swipe right -> Previous quote
-                    _showStatus("Previous Quote");
-                    _prev(true);
+                    // Swipe right -> Gallery slide to previous quote
+                    _slidePrev(true);
                 } else if (dx < -threshold || (dx < 0 && isFastFlick)) {
-                    // Commit swipe left -> Next quote
-                    _next(true);
+                    // Swipe left -> Gallery slide to next quote
+                    _slideNext();
                 } else {
-                    // Snap back to center if threshold not met
+                    // Snap back to center
                     _positionSlides(0, true);
                 }
                 return;
@@ -762,9 +800,9 @@
                 return;
             }
 
-            // Clean tap (no drag and no long-press)
+            // Clean tap anywhere -> Classic opacity fade to next quote
             if (!_isLongPress && absX < 10 && absY < 10) {
-                _next();
+                _fadeNext();
             }
         }
 
@@ -796,10 +834,12 @@
 
         document.addEventListener('keydown', (e) => {
             _requestWakeLock();
-            if (e.code === 'Space' || e.code === 'ArrowRight') {
-                _next();
+            if (e.code === 'Space') {
+                _fadeNext();
+            } else if (e.code === 'ArrowRight') {
+                _slideNext();
             } else if (e.code === 'ArrowLeft') {
-                _prev();
+                _slidePrev(true);
             } else if (e.code === 'ArrowUp') {
                 _setCase(true);
             } else if (e.code === 'ArrowDown') {
