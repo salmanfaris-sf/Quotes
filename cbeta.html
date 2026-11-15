@@ -17,8 +17,8 @@
     <meta name="apple-mobile-web-app-title" content="Counter">
     <meta name="mobile-web-app-capable" content="yes">
     <title>COUNTER</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23000000'/%3E%3Cpath d='M340 180c-25-25-60-36-100-36-82 0-140 58-140 140s58 140 140 140c40 0 75-11 100-36' fill='none' stroke='%23ffffff' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23000000'/%3E%3Cpath d='M340 180c-25-25-60-36-100-36-82 0-140 58-140 140s58 140 140 140c40 0 75-11 100-36' fill='none' stroke='%23ffffff' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E">
     <link id="manifest-link" rel="manifest">
     <style>
         :root {
@@ -433,8 +433,8 @@
             <button class="menu-item" id="fs-btn-menu"><span>Fullscreen</span></button>
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
-            <button class="menu-item" id="install-btn-menu" style="display:none;"><span>Install App</span></button>
             <button class="menu-item" id="lock-btn-menu"><span>Lock Screen</span></button>
+            <button class="menu-item" id="install-btn-menu" style="display:none;"><span>Install App</span></button>
         </div>
     </div>
     <div id="x3" class="b3">
@@ -530,8 +530,12 @@
 
             _requestWakeLock();
 
-            // Dynamic inline manifest setup for one-file installation
+            // Dynamic inline manifest setup for one-file installation with custom SVG "C" logo
             try {
+                const iconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%23000000'/><path d='M340 180c-25-25-60-36-100-36-82 0-140 58-140 140s58 140 140 140c40 0 75-11 100-36' fill='none' stroke='%23ffffff' stroke-width='48' stroke-linecap='round'/></svg>`;
+                const iconBlob = new Blob([iconSvg], { type: 'image/svg+xml' });
+                const iconUrl = URL.createObjectURL(iconBlob);
+
                 const manifest = {
                     name: 'Counter',
                     short_name: 'Counter',
@@ -542,8 +546,8 @@
                     theme_color: '#000000',
                     orientation: 'portrait',
                     icons: [
-                        { src: new URL('favicon.png', location.href).href, sizes: '192x192', type: 'image/png' },
-                        { src: new URL('favicon.png', location.href).href, sizes: '512x512', type: 'image/png' }
+                        { src: iconUrl, sizes: '192x192', type: 'image/svg+xml' },
+                        { src: iconUrl, sizes: '512x512', type: 'image/svg+xml' }
                     ]
                 };
                 const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
@@ -560,7 +564,6 @@
             w.addEventListener('appinstalled', () => {
                 deferredInstallPrompt = null;
                 installMenu.style.display = 'none';
-                _z('app installed', 2000);
             });
 
             installMenu.onclick = async e => {
