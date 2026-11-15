@@ -1,7 +1,7 @@
 const CACHE_NAME = 'counter-app-v1';
 const ASSETS = [
   './',
-  './index.html',
+  './cbeta.html',
   './manifest.json',
   './favicon.png'
 ];
