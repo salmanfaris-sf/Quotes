@@ -592,6 +592,7 @@
                 stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
+            // Speech synthesis helper (sn = true means muted/sound off, sn = false means sound on)
             function _p(textToSpeak) {
                 if (sn) return;
                 if ('speechSynthesis' in w) {
@@ -847,6 +848,7 @@
                 pt = setTimeout(() => {
                     sn = !sn;
                     qf = 1;
+                    _x();
                     if (navigator.vibrate) navigator.vibrate(50);
                     _z(sn ? 'Sound off' : 'Sound on', 2000)
                 }, 800)
@@ -865,12 +867,16 @@
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
                     const p = v;
                     v += st;
-                    _p(v);
+                    // Check if target goal has just been reached
                     if (gl > 0 && p < gl && v >= gl) {
+                        _p(`${v}. Goal reached`);
                         if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
                         _triggerGoalLockout();
+                    } else {
+                        _p(v);
                     }
-                    _w()
+                    _w();
+                    _x();
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 50) {
                         if (confirm('Reset counter to 0?')) {
