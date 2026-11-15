@@ -86,6 +86,64 @@
             transform: translate(-50%, 0);
         }
 
+        /* Subtle Minimalist Voice Toggle Pill */
+        #_tts_btn_ {
+            position: fixed;
+            bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(25, 25, 30, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--apple-muted);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        #_tts_btn_:hover {
+            color: #ffffff;
+            background: rgba(40, 40, 48, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        #_tts_btn_:active {
+            transform: translateX(-50%) scale(0.94);
+        }
+
+        #_tts_btn_.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        /* Soundwave animation when speaking */
+        .wave-bar {
+            width: 2px;
+            height: 10px;
+            background-color: currentColor;
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        .speaking .wave-bar:nth-child(1) { animation: wave 0.9s infinite ease-in-out 0.0s; }
+        .speaking .wave-bar:nth-child(2) { animation: wave 0.9s infinite ease-in-out 0.2s; }
+        .speaking .wave-bar:nth-child(3) { animation: wave 0.9s infinite ease-in-out 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 4px; }
+            50% { height: 12px; }
+        }
+
         ._f1 {
             opacity: 0;
             transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -147,6 +205,16 @@
         <h1 id="_q_" class="opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
     </main>
+
+    <!-- Offline Speech Synthesis Control -->
+    <button id="_tts_btn_" aria-label="Toggle Offline Voice">
+        <div class="flex items-center gap-[2px] h-3" id="_wave_container_">
+            <span class="wave-bar h-[5px]"></span>
+            <span class="wave-bar h-[9px]"></span>
+            <span class="wave-bar h-[6px]"></span>
+        </div>
+        <span id="_tts_label_">Voice Off</span>
+    </button>
 
     <script>
     (function(){
@@ -267,6 +335,12 @@
         let _lastX = 0;
         let _lastY = 0;
 
+        // Offline Speech Synthesis State
+        let _ttsEnabled = false;
+        let _selectedVoice = null;
+        let _currentUtterance = null;
+        const _synth = window.speechSynthesis;
+
         const _autoplayOptions = [
             { label: "5 seconds", ms: 5000 },
             { label: "10 seconds", ms: 10000 },
@@ -284,6 +358,137 @@
         const _st = document.getElementById('_st_');
         const _mc = document.getElementById('_mc_');
         const _apStatus = document.getElementById('_ap_status_');
+        const _ttsBtn = document.getElementById('_tts_btn_');
+        const _ttsLabel = document.getElementById('_tts_label_');
+        const _waveContainer = document.getElementById('_wave_container_');
+
+        // Select the cleanest, most natural local/offline voice available on the device
+        function _loadBestVoice() {
+            if (!_synth) return;
+            const voices = _synth.getVoices();
+            if (!voices.length) return;
+
+            // Prioritize natural-sounding English voices (Apple Daniel/Samantha/Alex, Android/Windows natural local voices)
+            const preferredNames = [
+                'Daniel', 'Alex', 'Samantha', 'Arthur', 'Oliver', 
+                'Aaron', 'Nicky', 'Google UK English Male', 'Microsoft Mark', 
+                'Microsoft David', 'English United Kingdom', 'English United States'
+            ];
+
+            // First try localService voices matching preferred names
+            for (const name of preferredNames) {
+                const match = voices.find(v => v.lang.startsWith('en') && v.name.includes(name) && v.localService);
+                if (match) {
+                    _selectedVoice = match;
+                    return;
+                }
+            }
+
+            // Second try any local English voice
+            const localEn = voices.find(v => v.lang.startsWith('en') && v.localService);
+            if (localEn) {
+                _selectedVoice = localEn;
+                return;
+            }
+
+            // Fallback to any English voice
+            _selectedVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+        }
+
+        if (_synth) {
+            _loadBestVoice();
+            if (_synth.onvoiceschanged !== undefined) {
+                _synth.onvoiceschanged = _loadBestVoice;
+            }
+        }
+
+        // Format text cleanly so speech synthesis reads quotes naturally without awkward symbol pronunciation
+        function _cleanTextForSpeech(rawText) {
+            return rawText
+                .replace(/ﷺ/g, 'peace be upon him')
+                .replace(/\[([^\]]+)\]/g, '. $1.') // Pause before citations like [Qur'an 17:53]
+                .replace(/\(([^)]+)\)/g, '. $1.')  // Pause before citations like (Qur'an 2:148)
+                .replace(/(\d+):(\d+)/g, 'chapter $1, verse $2') // Read 2:148 naturally
+                .replace(/\n+/g, '. ') // Turn line breaks into natural pauses
+                .replace(/\.\s*\./g, '.')
+                .trim();
+        }
+
+        // Speak the provided quote text offline
+        function _speakQuote(text) {
+            if (!_synth || !_ttsEnabled) return;
+
+            // Cancel any ongoing speech
+            _synth.cancel();
+            _waveContainer.classList.remove('speaking');
+
+            const cleanText = _cleanTextForSpeech(text);
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            
+            if (!_selectedVoice) _loadBestVoice();
+            if (_selectedVoice) {
+                utterance.voice = _selectedVoice;
+            }
+
+            // Calm, deliberate, stoic cadence
+            utterance.rate = 0.92;
+            utterance.pitch = 0.96;
+            utterance.volume = 1.0;
+
+            utterance.onstart = () => {
+                _waveContainer.classList.add('speaking');
+            };
+
+            utterance.onend = () => {
+                _waveContainer.classList.remove('speaking');
+            };
+
+            utterance.onerror = () => {
+                _waveContainer.classList.remove('speaking');
+            };
+
+            // Prevent garbage collection bug in some mobile browsers
+            _currentUtterance = utterance;
+            _synth.speak(utterance);
+        }
+
+        function _toggleTTS() {
+            if (!_synth) {
+                _showStatus("Speech not supported on device");
+                return;
+            }
+
+            _ttsEnabled = !_ttsEnabled;
+
+            if (_ttsEnabled) {
+                _ttsBtn.classList.add('active');
+                _ttsLabel.innerText = "Voice On";
+                _showStatus("Offline Voice On");
+                if (_qx.innerText) {
+                    _speakQuote(_qx.innerText);
+                }
+            } else {
+                _synth.cancel();
+                _waveContainer.classList.remove('speaking');
+                _ttsBtn.classList.remove('active');
+                _ttsLabel.innerText = "Voice Off";
+                _showStatus("Offline Voice Off");
+            }
+        }
+
+        // Prevent tap on TTS button from advancing quote
+        if (_ttsBtn) {
+            _ttsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                _toggleTTS();
+            });
+            _ttsBtn.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+            _ttsBtn.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+            });
+        }
 
         // Keep screen awake while viewing
         async function _requestWakeLock() {
@@ -297,6 +502,9 @@
         document.addEventListener('visibilitychange', async () => {
             if (document.visibilityState === 'visible') {
                 await _requestWakeLock();
+            } else if (_synth) {
+                _synth.cancel();
+                _waveContainer.classList.remove('speaking');
             }
         });
 
@@ -406,6 +614,11 @@
                     _st.classList.add('opacity-0');
                 }
 
+                // Speak quote if voice is enabled
+                if (_ttsEnabled) {
+                    _speakQuote(nq.t);
+                }
+
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
                     _qx.style.opacity = '1';
@@ -425,15 +638,28 @@
             _qx.style.transition = 'opacity 0.35s ease-in-out';
             _qx.style.opacity = '0';
 
+            const hasSubtitle = !_st.classList.contains('opacity-0') && _st.innerHTML !== "";
+            if (hasSubtitle) {
+                _st.style.transition = 'opacity 0.35s ease-in-out';
+                _st.style.opacity = '0';
+            }
+
             setTimeout(() => {
                 _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
                 _qx.style.fontFamily = isUpper ? "'Roboto', sans-serif" : "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
                 _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
                 _qx.style.fontWeight = '300';
 
+                _st.style.textTransform = isUpper ? 'uppercase' : 'none';
+                _st.style.letterSpacing = isUpper ? '0.04em' : '0.02em';
+
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
                     _qx.style.opacity = '1';
+                    if (hasSubtitle) {
+                        _st.style.transition = 'opacity 0.35s ease-in-out';
+                        _st.style.opacity = '';
+                    }
                 });
 
                 setTimeout(() => {
@@ -625,6 +851,12 @@
                 _setCase(true);
             } else if (e.code === 'ArrowDown') {
                 _setCase(false);
+            } else if (e.key === 'v' || e.key === 'V' || e.key === 'm' || e.key === 'M') {
+                _toggleTTS();
+            } else if (e.key === 'r' || e.key === 'R') {
+                if (_ttsEnabled && _qx.innerText) {
+                    _speakQuote(_qx.innerText);
+                }
             }
         });
 
