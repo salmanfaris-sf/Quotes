@@ -19,6 +19,7 @@
     <title>COUNTER</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
+    <link id="manifest-link" rel="manifest">
     <style>
         :root {
             --b: #000;
@@ -433,6 +434,7 @@
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
             <button class="menu-item" id="lock-btn-menu"><span>Lock Screen</span></button>
+            <button class="menu-item" id="install-btn-menu" style="display:none;"><span>Install App</span></button>
         </div>
     </div>
     <div id="x3" class="b3">
@@ -490,6 +492,7 @@
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), 
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
+                installMenu = d.getElementById('install-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
@@ -498,7 +501,7 @@
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
-                wakeLock = null,
+                wakeLock = null, deferredInstallPrompt = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
@@ -526,6 +529,52 @@
             });
 
             _requestWakeLock();
+
+            // Dynamic inline manifest setup for one-file installation
+            try {
+                const manifest = {
+                    name: 'Counter',
+                    short_name: 'Counter',
+                    description: 'Minimalist gesture tap counter',
+                    start_url: location.href,
+                    display: 'standalone',
+                    background_color: '#000000',
+                    theme_color: '#000000',
+                    orientation: 'portrait',
+                    icons: [
+                        { src: new URL('favicon.png', location.href).href, sizes: '192x192', type: 'image/png' },
+                        { src: new URL('favicon.png', location.href).href, sizes: '512x512', type: 'image/png' }
+                    ]
+                };
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+                const manifestLink = d.getElementById('manifest-link');
+                if (manifestLink) manifestLink.href = URL.createObjectURL(manifestBlob);
+            } catch (e) {}
+
+            w.addEventListener('beforeinstallprompt', e => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                installMenu.style.display = 'flex';
+            });
+
+            w.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                installMenu.style.display = 'none';
+                _z('app installed', 2000);
+            });
+
+            installMenu.onclick = async e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const { outcome } = await deferredInstallPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        deferredInstallPrompt = null;
+                        installMenu.style.display = 'none';
+                    }
+                }
+            };
 
             function _applyHintState() {
                 if (hh) {
