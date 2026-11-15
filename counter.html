@@ -18,7 +18,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>COUNTER</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="favicon.png">
+    <link id="manifest-link" rel="manifest">
     <style>
         :root {
             --b: #000;
@@ -432,6 +432,7 @@
             <button class="menu-item" id="fs-btn-menu"><span>Fullscreen</span></button>
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
+            <button class="menu-item" id="install-btn-menu" style="display:none;"><span>Add to Home Screen</span></button>
             <button class="menu-item" id="lock-btn-menu"><span>Lock Screen</span></button>
         </div>
     </div>
@@ -490,6 +491,7 @@
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), 
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
+                installMenu = d.getElementById('install-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
@@ -498,7 +500,7 @@
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
-                wakeLock = null,
+                wakeLock = null, deferredInstallPrompt = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
@@ -506,7 +508,7 @@
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
-            // Automatic Keep Screen Awake (Wake Lock API)
+            // --- 1. Automatic Keep Screen Awake (Wake Lock API) ---
             async function _requestWakeLock() {
                 if (!('wakeLock' in navigator)) return;
                 try {
@@ -516,7 +518,9 @@
                             wakeLock = null;
                         });
                     }
-                } catch (err) {}
+                } catch (err) {
+                    // Fail silently if battery saver or browser blocks wake lock
+                }
             }
 
             d.addEventListener('visibilitychange', () => {
@@ -526,6 +530,80 @@
             });
 
             _requestWakeLock();
+
+            // --- 2. PWA Manifest & Offline Service Worker ---
+            (function _setupPWA() {
+                try {
+                    const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#000"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#fff" font-family="-apple-system,system-ui,sans-serif" font-weight="200" font-size="280">0</text></svg>`;
+                    const iconUrl = 'data:image/svg+xml;base64,' + btoa(iconSvg);
+
+                    const manifest = {
+                        name: 'Counter',
+                        short_name: 'Counter',
+                        description: 'Minimalist gesture tap counter',
+                        start_url: location.href,
+                        display: 'standalone',
+                        background_color: '#000000',
+                        theme_color: '#000000',
+                        orientation: 'portrait',
+                        icons: [
+                            { src: iconUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+                            { src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+                        ]
+                    };
+                    const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+                    const manifestLink = d.getElementById('manifest-link');
+                    if (manifestLink) manifestLink.href = URL.createObjectURL(manifestBlob);
+
+                    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+                        const swCode = `
+                            const CACHE = 'counter-v1';
+                            self.addEventListener('install', e => {
+                                self.skipWaiting();
+                                e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./'])));
+                            });
+                            self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+                            self.addEventListener('fetch', e => {
+                                if (e.request.method !== 'GET') return;
+                                e.respondWith(
+                                    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+                                        const copy = res.clone();
+                                        caches.open(CACHE).then(c => c.put(e.request, copy));
+                                        return res;
+                                    }).catch(() => cached))
+                                );
+                            });
+                        `;
+                        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+                    }
+                } catch (e) {}
+            })();
+
+            w.addEventListener('beforeinstallprompt', e => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                installMenu.style.display = 'flex';
+            });
+
+            w.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                installMenu.style.display = 'none';
+                _z('added to home screen', 2000);
+            });
+
+            installMenu.onclick = async e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const { outcome } = await deferredInstallPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        deferredInstallPrompt = null;
+                        installMenu.style.display = 'none';
+                    }
+                }
+            };
 
             function _applyHintState() {
                 if (hh) {
