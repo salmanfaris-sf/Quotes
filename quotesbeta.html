@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P37159WTH1');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>salmanfaris.com</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="description" content="Forge an unbreakable mind. Be a man of your word. Don't waste time. Stay disciplined. Stay focused. This is the way.">
+    
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="msapplication-navbutton-color" content="#000000">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #f5f5f7;
+            --apple-muted: #86868b;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            overflow: hidden;
+            touch-action: none;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #_ap_status_ {
+            position: fixed;
+            top: calc(1.5rem + env(safe-area-inset-top, 0px));
+            left: 50%;
+            transform: translate(-50%, -10px);
+            font-size: 12px;
+            background: rgba(30, 30, 35, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #e5e5e7;
+            padding: 7px 18px;
+            border-radius: 9999px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 60;
+            white-space: nowrap;
+            transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), 
+                        transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #_ap_status_.interactive {
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        #_ap_status_.interactive:active {
+            transform: translate(-50%, 0) scale(0.92) !important;
+            opacity: 0.8;
+            transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1), opacity 0.1s ease;
+        }
+
+        #_ap_status_.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        ._f1 {
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        ._f1.v {
+            opacity: 1;
+        }
+
+        /* Full-screen Gallery Viewport */
+        ._viewport {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        /* Individual Gallery Slide */
+        ._slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            will-change: transform;
+        }
+
+        ._slide_inner {
+            max-width: 580px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ._q_text {
+            font-family: 'Inter', sans-serif;
+            white-space: pre-wrap;
+            margin: 0 0 14px 0;
+            color: #ffffff;
+            display: inline-block;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            font-size: clamp(0.95rem, 2.4vw, 1.35rem);
+            line-height: 1.6;
+            transition: opacity 0.35s ease-in-out;
+        }
+
+        ._st_text {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--apple-muted);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            line-height: 1.6;
+            font-variant-numeric: tabular-nums;
+            min-height: 19px;
+            transition: opacity 0.35s ease-in-out;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
+
+    <!-- Status Notification Pill -->
+    <div id="_ap_status_"></div>
+
+    <!-- Gallery Swipe Viewport -->
+    <main class="_viewport _f1" id="_mc_">
+        <div class="_slide" id="_s_prev_">
+            <div class="_slide_inner">
+                <div class="_q_text"></div>
+                <div class="_st_text opacity-0"></div>
+            </div>
+        </div>
+        <div class="_slide" id="_s_curr_">
+            <div class="_slide_inner">
+                <h1 class="_q_text"></h1>
+                <div class="_st_text opacity-0"></div>
+            </div>
+        </div>
+        <div class="_slide" id="_s_next_">
+            <div class="_slide_inner">
+                <div class="_q_text"></div>
+                <div class="_st_text opacity-0"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    (function(){
+        // Quote Database
+        const _db = [
+            { t: "Be better than you were yesterday." },
+            { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
+            { t: "Don't waste time. You don't get it back." },
+            { t: "Focus." },
+            { t: "The problem is,\nyou think you have a lot of time to live." },
+            { t: "Live everyday like it's your last day." },
+            { t: "Consistency." },
+            { t: "Big dreams need big sacrifices." },
+            { t: "Practice makes perfect." },
+            { t: "Do it even when you don't feel like it." },
+            { t: "Nothing changes if nothing changes." },
+            { t: "Stay different." },
+            { t: "You only have 1,440 minutes every day,\ndon’t let a single one go to waste.", id: "t_q" },
+            { t: "You can't have a million dollar dream with a minimum wage work ethic." },
+            { t: "A real man protects and provides." },
+            { t: "Don't follow the crowd. Follow the truth." },
+            { t: "Never build your happiness on\n someone else's tears." },
+            { t: "Eliminate the 'tomorrow' mindset today." },
+            { t: "The strongest man is he who controls his anger." },
+            { t: "Be a man of your word." },
+            { t: "Your habits define your future self." },
+            { t: "Hate Laziness." },
+            { t: "Always speak the truth." },
+            { t: "Time waits for no one." },
+            { t: "Quality over quantity in everything." },
+            { t: "Knowledge without action is useless." },
+            { t: "Fear Allah. Not people." },
+            { t: "Live with purpose." },
+            { t: "Be a man of your word." },
+            { t: "A real man protects those who are vulnerable." },
+            { t: "Every day is a second chance." },
+            { t: "Now is the time." },
+            { t: "Success is earned, not given." },
+            { t: "Focus on your growth." },
+            { t: "Stay Disciplined." },
+            { t: "A heart connected to Allah is\n never truly broken." },
+            { t: "He who is brave is free." },
+            { t: "Growth begins outside comfort zones." },
+            { t: "This is the way." },
+            { t: "Hard days make strong people." },
+            { t: "Keep showing up." },
+            { t: "Strength is built through repetition." },
+            { t: "Be the change that you wish to see in the world." },
+            { t: "Do the boring work well." },
+            { t: "Consistency creates mastery." },
+            { t: "Work now, Relax later." },
+            { t: "Don't look back. You're not going that way."},
+            { t: "Every day counts." },
+            { t: "Habits decide outcomes." },
+            { t: "Growth requires discomfort." },
+            { t: "Sweat more in practice. Bleed less in war." },
+            { t: "do it scared.\ndo it tired.\ndo it anyway." },
+            { t: "When you feel like nothing is going your way, look at a person breaking a rock. They can hit a big rock 100 times and it won't even move. But on the 101st hit, it suddenly breaks into two pieces. It wasn't just that last hit that broke it,it was the result of all the hits that happened before it." },
+            { t: "It always seems impossible until it's done." },
+            { t: "Feel the fear and do it anyway." },
+            { t: "Prepare for death, for it does not wait for your readiness." },
+            { t: "Focus is a superpower in a distracted world." },
+            { t: "Weakness leaves when discipline enters." },
+            { t: "Strength is built through patience." },
+            { t: "Be strict with yourself." },
+            { t: "Zero Excuses." },
+            { t: "You already know what to do.\nYou just don’t like the cost." },
+            { t: "The brain will invent reasons to avoid pain, even when pain is the only path forward." },
+            { t: "Every wasted year makes the\n next one heavier." },
+            { t: "Do it the moment you remember it." },
+            { t: "Stick to the plan. Not your mood." },
+            { t: "Be the change that you wish to see in the world." },
+            { t: "5,4,3,2,1. Act Now." },
+            { t: "Indeed Shaitan is ever, to mankind,\na clear enemy.\n[Qur'an 17:53]"},
+            { t: "People are asleep, and when they die, they awaken." },
+            { t: "Prophet Muhammad ﷺ said:\nThere are two blessings that many people are deceived into losing: health and free time.\n[Sahih al-Bukhari 6412]" },
+            { t: "Prophet Muhammad ﷺ said:\nMake things easy for the people, and do not make it difficult for them.\n[Sahih al-Bukhari 6125]" },
+            { t: "Prophet Muhammad ﷺ said:\nDo good deeds properly, sincerely and moderately.\n[Sahih al-Bukhari 6464]" },
+            { t: "Prophet Muhammad ﷺ said:\nSpeak good or remain silent.\n[Riyad as-Salihin 1511]" },
+            { t: "Prophet Muhammad ﷺ said:\nThe most beloved deed to Allah is the most regular and constant even if it were little.\n[Sahih al-Bukhari 6464]" },
+            { t: "Death is not the end of life; it is the beginning of a life that never ends." },
+            { t: "Character is who you are when no one is watching." },
+            { t: "Keep moving forward." },
+            { t: "If not now, Then when?" },
+            { t: "Leave a legacy. Let your life be a story of courage, action, and impact." },
+            { t: "NOW.\nWaiting won’t help.\nOverthinking won’t help.\nAction will.\nDo it." },
+            { t: "Lower your gaze, guard your tongue, and protect your heart." },
+            { t: "Your current life is the result of past actions. Your future will be the result of today's actions." },
+            { t: "The man who keeps walking will eventually leave the place he hates." },
+            { t: "A few years of sacrifice can create a lifetime of freedom." },
+            { t: "Your future is built by what you do after a long tiring day." },
+            { t: "Action may not always bring happiness, but there is no happiness without action." },
+            { t: "Stand straight. Speak clearly. Fear none."},
+            { t: "Its what's inside that matters." },
+            { t: "Every pro was once a beginner."},
+            { t: "Weak men wait for courage.\n Strong men create it through action."},
+            { t: "Be the man who acts while others are still thinking."},
+            { t: "Be so disciplined that even your bad days look like progress."},
+            { t: "A strong man doesn’t need motivation.\nHe acts because he decided."},
+            { t: "Pressure reveals the man within."}
+        ];
+
+        let _wakeLock = null;
+        let _l_i = null;
+        let _currentPool = [];
+        let _lastQuoteText = null;
+        let _history = [];
+        let _historyIndex = -1;
+
+        let _autoplayTimer = null;
+        let _longPressTimer = null;
+        let _statusTimer = null;
+        let _slideEndTimer = null;
+
+        let _isPointerDown = false;
+        let _isLongPress = false;
+        let _gestureAxis = null; // 'x' | 'y' | null
+        let _isAnimatingSlide = false;
+        let _isCaseAnimating = false;
+        let _isUpperCase = false;
+
+        let _startX = 0;
+        let _startY = 0;
+        let _lastX = 0;
+        let _lastY = 0;
+        let _startTime = 0;
+
+        // Gallery gap between slides (like iOS/Android photo gallery)
+        const _SLIDE_GAP = 28;
+        const _SPRING_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+        const _SLIDE_DURATION = 340;
+
+        const _autoplayOptions = [
+            { label: "5 seconds", ms: 5000 },
+            { label: "10 seconds", ms: 10000 },
+            { label: "15 seconds", ms: 15000 },
+            { label: "30 seconds", ms: 30000 },
+            { label: "1 minute", ms: 60000 },
+            { label: "1 hour", ms: 3600000 },
+            { label: "8 hours", ms: 28800000 },
+            { label: "12 hours", ms: 43200000 },
+            { label: "24 hours", ms: 86400000 }
+        ];
+        let _currentDurationIndex = 2;
+
+        const _mc = document.getElementById('_mc_');
+        const _apStatus = document.getElementById('_ap_status_');
+
+        let _sPrev = document.getElementById('_s_prev_');
+        let _sCurr = document.getElementById('_s_curr_');
+        let _sNext = document.getElementById('_s_next_');
+
+        // Keep screen awake while viewing
+        async function _requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    _wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {}
+        }
+
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible') {
+                await _requestWakeLock();
+            }
+        });
+
+        // Display transient feedback toast
+        function _showStatus(msg, isInteractive = false) {
+            if (!_apStatus) return;
+            if (_statusTimer) clearTimeout(_statusTimer);
+
+            _apStatus.innerText = msg;
+            if (isInteractive) {
+                _apStatus.classList.add('interactive');
+            } else {
+                _apStatus.classList.remove('interactive');
+            }
+
+            _apStatus.classList.add('visible');
+            const displayTime = isInteractive ? 3500 : 2200;
+
+            _statusTimer = setTimeout(() => {
+                _apStatus.classList.remove('visible');
+            }, displayTime);
+        }
+
+        if (_apStatus) {
+            _apStatus.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (_autoplayTimer) {
+                    _currentDurationIndex = (_currentDurationIndex + 1) % _autoplayOptions.length;
+                    _startAutoplay();
+                    const opt = _autoplayOptions[_currentDurationIndex];
+                    _showStatus(`Autoplay On (${opt.label})`, true);
+                }
+            });
+
+            _apStatus.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+        }
+
+        // Fisher-Yates shuffle
+        function _shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Fetch next unrepeated quote
+        function _getNextQuote() {
+            if (_currentPool.length === 0) {
+                let freshList = [..._db];
+                _shuffle(freshList);
+                if (freshList.length > 1 && freshList[freshList.length - 1].t === _lastQuoteText) {
+                    const head = freshList.pop();
+                    freshList.unshift(head);
+                }
+                _currentPool = freshList;
+            }
+            const choice = _currentPool.pop();
+            if (choice) _lastQuoteText = choice.t;
+            return choice || { t: "Stay Disciplined." };
+        }
+
+        // Ensure next quote is pre-populated in history so adjacent gallery card is ready
+        function _ensureNextInHistory() {
+            if (_historyIndex + 1 >= _history.length) {
+                _history.push(_getNextQuote());
+            }
+        }
+
+        // Calculate current time with live seconds and remaining minutes in the day
+        function _gs() {
+            const n = new Date();
+            let h = n.getHours();
+            const m = n.getMinutes().toString().padStart(2, '0');
+            const s = n.getSeconds().toString().padStart(2, '0');
+            const a = h >= 12 ? 'pm' : 'am';
+            h = h % 12 || 12;
+            const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
+            const d = e - n;
+            const ml = Math.max(0, Math.floor(d / 60000));
+            return { t: `${h}:${m}:${s} ${a}`, l: ml };
+        }
+
+        function _getTimeSubtitle() {
+            const s = _gs();
+            return `Time: ${s.t} • ${s.l} minutes remaining today`;
+        }
+
+        // Apply uppercase/lowercase typography to a slide
+        function _applySlideCase(slideEl) {
+            const qEl = slideEl.querySelector('._q_text');
+            const stEl = slideEl.querySelector('._st_text');
+
+            qEl.style.textTransform = _isUpperCase ? 'uppercase' : 'none';
+            qEl.style.fontFamily = _isUpperCase ? "'Roboto', sans-serif" : "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+            qEl.style.letterSpacing = _isUpperCase ? '0.04em' : '-0.01em';
+            qEl.style.fontWeight = '300';
+
+            stEl.style.textTransform = _isUpperCase ? 'uppercase' : 'none';
+            stEl.style.letterSpacing = _isUpperCase ? '0.04em' : '0.02em';
+        }
+
+        // Populate content of a slide
+        function _renderSlide(slideEl, quoteObj) {
+            const qEl = slideEl.querySelector('._q_text');
+            const stEl = slideEl.querySelector('._st_text');
+            _applySlideCase(slideEl);
+
+            if (!quoteObj) {
+                qEl.innerText = "";
+                stEl.innerText = "";
+                stEl.classList.add('opacity-0');
+                return;
+            }
+
+            qEl.innerText = quoteObj.t;
+            if (quoteObj.id === "t_q") {
+                stEl.innerText = _getTimeSubtitle();
+                stEl.classList.remove('opacity-0');
+            } else {
+                stEl.innerText = "";
+                stEl.classList.add('opacity-0');
+            }
+        }
+
+        // Update all live time quotes visible across slides
+        function _startLiveClock() {
+            if (_l_i) clearInterval(_l_i);
+            const tick = () => {
+                const sub = _getTimeSubtitle();
+                const slots = [
+                    { el: _sPrev, idx: _historyIndex - 1 },
+                    { el: _sCurr, idx: _historyIndex },
+                    { el: _sNext, idx: _historyIndex + 1 }
+                ];
+                slots.forEach(({ el, idx }) => {
+                    const q = _history[idx];
+                    if (q && q.id === "t_q") {
+                        const stEl = el.querySelector('._st_text');
+                        stEl.innerText = sub;
+                        stEl.classList.remove('opacity-0');
+                    }
+                });
+            };
+            tick();
+            _l_i = setInterval(tick, 1000);
+        }
+
+        // Position the 3 gallery slides around a horizontal drag offset (dx)
+        function _positionSlides(dx = 0, animate = false) {
+            const stride = window.innerWidth + _SLIDE_GAP;
+            const transition = animate ? `transform ${_SLIDE_DURATION}ms ${_SPRING_EASE}` : 'none';
+
+            _sPrev.style.transition = transition;
+            _sCurr.style.transition = transition;
+            _sNext.style.transition = transition;
+
+            _sPrev.style.transform = `translate3d(${-stride + dx}px, 0, 0)`;
+            _sCurr.style.transform = `translate3d(${dx}px, 0, 0)`;
+            _sNext.style.transform = `translate3d(${stride + dx}px, 0, 0)`;
+        }
+
+        // Synchronize previous, current, and next slide contents
+        function _syncGallery() {
+            _ensureNextInHistory();
+            _renderSlide(_sPrev, _historyIndex > 0 ? _history[_historyIndex - 1] : null);
+            _renderSlide(_sCurr, _history[_historyIndex]);
+            _renderSlide(_sNext, _history[_historyIndex + 1]);
+            _positionSlides(0, false);
+        }
+
+        // Complete gallery transition and rotate slide DOM references seamlessly
+        function _finalizeTransition(direction) {
+            if (_slideEndTimer) clearTimeout(_slideEndTimer);
+            _slideEndTimer = setTimeout(() => {
+                if (direction === 'next') {
+                    _historyIndex++;
+                    const recycled = _sPrev;
+                    _sPrev = _sCurr;
+                    _sCurr = _sNext;
+                    _sNext = recycled;
+                } else if (direction === 'prev') {
+                    _historyIndex--;
+                    const recycled = _sNext;
+                    _sNext = _sCurr;
+                    _sCurr = _sPrev;
+                    _sPrev = recycled;
+                }
+
+                // Update semantic H1 tag on active center slide
+                const prevH1 = document.querySelector('h1._q_text');
+                if (prevH1 && prevH1.parentElement.parentElement !== _sCurr) {
+                    const div = document.createElement('div');
+                    div.className = prevH1.className;
+                    div.style.cssText = prevH1.style.cssText;
+                    div.innerText = prevH1.innerText;
+                    prevH1.replaceWith(div);
+
+                    const activeQ = _sCurr.querySelector('._q_text');
+                    const h1 = document.createElement('h1');
+                    h1.className = activeQ.className;
+                    h1.style.cssText = activeQ.style.cssText;
+                    h1.innerText = activeQ.innerText;
+                    activeQ.replaceWith(h1);
+                }
+
+                _syncGallery();
+                _isAnimatingSlide = false;
+            }, _SLIDE_DURATION);
+        }
+
+        // Slide forward to next quote (gallery swipe left)
+        function _next(fromGesture = false) {
+            if (_isAnimatingSlide) return;
+            _ensureNextInHistory();
+            _isAnimatingSlide = true;
+            _positionSlides(-(window.innerWidth + _SLIDE_GAP), true);
+            _finalizeTransition('next');
+
+            if (_autoplayTimer) {
+                _startAutoplay();
+            }
+        }
+
+        // Slide backward to previous quote (gallery swipe right)
+        function _prev(fromGesture = false) {
+            if (_isAnimatingSlide) return;
+            if (_historyIndex <= 0) {
+                _positionSlides(0, true);
+                return;
+            }
+            _isAnimatingSlide = true;
+            _positionSlides(window.innerWidth + _SLIDE_GAP, true);
+            if (!fromGesture) {
+                _showStatus("Previous Quote");
+            }
+            _finalizeTransition('prev');
+
+            if (_autoplayTimer) {
+                _startAutoplay();
+            }
+        }
+
+        // Toggle between Uppercase and standard case
+        function _setCase(isUpper) {
+            if (_isCaseAnimating || isUpper === _isUpperCase) return;
+            _isCaseAnimating = true;
+            _isUpperCase = isUpper;
+
+            const qEl = _sCurr.querySelector('._q_text');
+            const stEl = _sCurr.querySelector('._st_text');
+            const hasSubtitle = !stEl.classList.contains('opacity-0') && stEl.innerText !== "";
+
+            qEl.style.opacity = '0';
+            if (hasSubtitle) stEl.style.opacity = '0';
+
+            setTimeout(() => {
+                [_sPrev, _sCurr, _sNext].forEach(slide => _applySlideCase(slide));
+
+                requestAnimationFrame(() => {
+                    qEl.style.opacity = '1';
+                    if (hasSubtitle) stEl.style.opacity = '';
+                });
+
+                setTimeout(() => {
+                    _isCaseAnimating = false;
+                }, 350);
+            }, 350);
+
+            _showStatus(isUpper ? "Uppercase" : "Lowercase");
+        }
+
+        function _startAutoplay() {
+            if (_autoplayTimer) clearInterval(_autoplayTimer);
+            const intervalMs = _autoplayOptions[_currentDurationIndex].ms;
+            _autoplayTimer = setInterval(() => {
+                _next();
+            }, intervalMs);
+        }
+
+        function _stopAutoplay() {
+            if (_autoplayTimer) {
+                clearInterval(_autoplayTimer);
+                _autoplayTimer = null;
+            }
+        }
+
+        function _toggleAutoplay() {
+            if (_autoplayTimer) {
+                _stopAutoplay();
+                _showStatus("Autoplay Off");
+            } else {
+                _next();
+                _startAutoplay();
+                const opt = _autoplayOptions[_currentDurationIndex];
+                _showStatus(`Autoplay On (${opt.label})`, true);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (!_isPointerDown && !_isAnimatingSlide) {
+                _positionSlides(0, false);
+            }
+        });
+
+        window.onload = () => {
+            _requestWakeLock();
+
+            const first = _getNextQuote();
+            _history.push(first);
+            _historyIndex = 0;
+
+            _syncGallery();
+            _startLiveClock();
+
+            requestAnimationFrame(() => {
+                _mc.classList.add('v');
+            });
+        };
+
+        // Interactive Gallery Touch & Mouse Gesture Handlers
+        function _startPress(x, y) {
+            if (_isAnimatingSlide) return;
+
+            _isPointerDown = true;
+            _startX = x;
+            _startY = y;
+            _lastX = x;
+            _lastY = y;
+            _startTime = Date.now();
+            _isLongPress = false;
+            _gestureAxis = null;
+
+            if (_longPressTimer) clearTimeout(_longPressTimer);
+
+            _longPressTimer = setTimeout(() => {
+                if (!_gestureAxis) {
+                    _isLongPress = true;
+                    if (navigator.vibrate) {
+                        try { navigator.vibrate(50); } catch(e){}
+                    }
+                    _toggleAutoplay();
+                }
+            }, 550);
+        }
+
+        function _movePress(x, y) {
+            if (!_isPointerDown || _isAnimatingSlide) return;
+
+            _lastX = x;
+            _lastY = y;
+            const dx = x - _startX;
+            const dy = y - _startY;
+            const absX = Math.abs(dx);
+            const absY = Math.abs(dy);
+
+            if (absX > 8 || absY > 8) {
+                if (_longPressTimer) clearTimeout(_longPressTimer);
+            }
+
+            // Lock axis once movement passes deadzone
+            if (!_gestureAxis && (absX > 10 || absY > 10)) {
+                _gestureAxis = absX >= absY ? 'x' : 'y';
+            }
+
+            // Live 1:1 gallery tracking during horizontal drag
+            if (_gestureAxis === 'x') {
+                let effectiveDx = dx;
+                // Elastic rubber-band damping if swiping right on the very first quote
+                if (dx > 0 && _historyIndex === 0) {
+                    effectiveDx = dx * 0.28;
+                }
+                _positionSlides(effectiveDx, false);
+            }
+        }
+
+        function _endPress() {
+            if (!_isPointerDown) return;
+            _isPointerDown = false;
+            if (_longPressTimer) clearTimeout(_longPressTimer);
+
+            const dx = _lastX - _startX;
+            const dy = _lastY - _startY;
+            const absX = Math.abs(dx);
+            const absY = Math.abs(dy);
+            const elapsed = Math.max(1, Date.now() - _startTime);
+            const velocityX = absX / elapsed; // px per ms
+
+            if (_gestureAxis === 'x') {
+                const threshold = Math.min(window.innerWidth * 0.25, 110);
+                const isFastFlick = velocityX > 0.45 && absX > 28;
+
+                if ((dx > threshold || (dx > 0 && isFastFlick)) && _historyIndex > 0) {
+                    // Commit swipe right -> Previous quote
+                    _showStatus("Previous Quote");
+                    _prev(true);
+                } else if (dx < -threshold || (dx < 0 && isFastFlick)) {
+                    // Commit swipe left -> Next quote
+                    _next(true);
+                } else {
+                    // Snap back to center if threshold not met
+                    _positionSlides(0, true);
+                }
+                return;
+            }
+
+            if (_gestureAxis === 'y') {
+                if (absY > 50 && absY > absX * 1.2) {
+                    if (dy < 0) {
+                        _setCase(true);
+                    } else {
+                        _setCase(false);
+                    }
+                }
+                return;
+            }
+
+            // Clean tap (no drag and no long-press)
+            if (!_isLongPress && absX < 10 && absY < 10) {
+                _next();
+            }
+        }
+
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) return;
+            _requestWakeLock();
+            _startPress(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) return;
+            _movePress(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        document.addEventListener('touchend', _endPress, { passive: true });
+        document.addEventListener('touchcancel', _endPress, { passive: true });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            _requestWakeLock();
+            _startPress(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            _movePress(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('mouseup', _endPress);
+
+        document.addEventListener('keydown', (e) => {
+            _requestWakeLock();
+            if (e.code === 'Space' || e.code === 'ArrowRight') {
+                _next();
+            } else if (e.code === 'ArrowLeft') {
+                _prev();
+            } else if (e.code === 'ArrowUp') {
+                _setCase(true);
+            } else if (e.code === 'ArrowDown') {
+                _setCase(false);
+            }
+        });
+
+    })();
+    </script>
+</body>
+</html>
