@@ -133,13 +133,16 @@
             letter-spacing: 0.02em;
             transition: opacity 0.35s ease;
             line-height: 1.6;
+            font-variant-numeric: tabular-nums;
         }
     </style>
 </head>
 <body class="relative flex flex-col h-full overflow-hidden bg-black text-white">
 
+    <!-- Status Notification Pill -->
     <div id="_ap_status_"></div>
 
+    <!-- Main Quote Container -->
     <main class="_c1 _f1" id="_mc_">
         <h1 id="_q_" class="opacity-0"></h1>
         <div id="_st_" class="opacity-0"></div>
@@ -147,6 +150,7 @@
 
     <script>
     (function(){
+        // Quote Database
         const _db = [
             { t: "Be better than you were yesterday." },
             { t: "Race one another in good deeds.\n(Qur'an 2:148)" },
@@ -281,6 +285,7 @@
         const _mc = document.getElementById('_mc_');
         const _apStatus = document.getElementById('_ap_status_');
 
+        // Keep screen awake while viewing
         async function _requestWakeLock() {
             try {
                 if ('wakeLock' in navigator) {
@@ -295,6 +300,7 @@
             }
         });
 
+        // Display transient feedback toast
         function _showStatus(msg, isInteractive = false) {
             if (!_apStatus) return;
             if (_statusTimer) clearTimeout(_statusTimer);
@@ -331,6 +337,7 @@
             }, { passive: true });
         }
 
+        // Fisher-Yates shuffle
         function _shuffle(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -339,6 +346,7 @@
             return arr;
         }
 
+        // Fetch next unrepeated quote
         function _getNextQuote() {
             if (_currentPool.length === 0) {
                 let freshList = [..._db];
@@ -354,18 +362,33 @@
             return choice || { t: "Stay Disciplined." };
         }
 
+        // Calculate current time with live seconds and remaining minutes in the day
         function _gs() {
             const n = new Date();
             let h = n.getHours();
             const m = n.getMinutes().toString().padStart(2, '0');
+            const s = n.getSeconds().toString().padStart(2, '0');
             const a = h >= 12 ? 'pm' : 'am';
             h = h % 12 || 12;
             const e = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23, 59, 59);
             const d = e - n;
-            const ml = Math.floor(d / 60000);
-            return { t: `${h}:${m} ${a}`, l: ml };
+            const ml = Math.max(0, Math.floor(d / 60000));
+            return { t: `${h}:${m}:${s} ${a}`, l: ml };
         }
 
+        // Start 1-second live clock update for the time quote
+        function _startLiveClock() {
+            if (_l_i) clearInterval(_l_i);
+            const ux = () => {
+                const s = _gs();
+                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
+            };
+            ux();
+            _st.classList.remove('opacity-0');
+            _l_i = setInterval(ux, 1000);
+        }
+
+        // Transition and render selected quote
         function _showQuote(nq) {
             _st.classList.add('opacity-0');
             if (_l_i) clearInterval(_l_i);
@@ -377,13 +400,7 @@
                 _qx.innerText = nq.t;
 
                 if (nq.id === "t_q") {
-                    const ux = () => {
-                        const s = _gs();
-                        _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-                    };
-                    ux();
-                    _st.classList.remove('opacity-0');
-                    _l_i = setInterval(ux, 30000);
+                    _startLiveClock();
                 } else {
                     _st.innerHTML = "";
                     _st.classList.add('opacity-0');
@@ -396,6 +413,7 @@
             }, 350);
         }
 
+        // Toggle between Uppercase and standard case
         function _setCase(isUpper) {
             if (_isCaseAnimating) return;
 
@@ -407,15 +425,28 @@
             _qx.style.transition = 'opacity 0.35s ease-in-out';
             _qx.style.opacity = '0';
 
+            const hasSubtitle = !_st.classList.contains('opacity-0') && _st.innerHTML !== "";
+            if (hasSubtitle) {
+                _st.style.transition = 'opacity 0.35s ease-in-out';
+                _st.style.opacity = '0';
+            }
+
             setTimeout(() => {
                 _qx.style.textTransform = isUpper ? 'uppercase' : 'none';
                 _qx.style.fontFamily = isUpper ? "'Roboto', sans-serif" : "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
                 _qx.style.letterSpacing = isUpper ? '0.04em' : '-0.01em';
                 _qx.style.fontWeight = '300';
 
+                _st.style.textTransform = isUpper ? 'uppercase' : 'none';
+                _st.style.letterSpacing = isUpper ? '0.04em' : '0.02em';
+
                 requestAnimationFrame(() => {
                     _qx.style.transition = 'opacity 0.35s ease-in-out';
                     _qx.style.opacity = '1';
+                    if (hasSubtitle) {
+                        _st.style.transition = 'opacity 0.35s ease-in-out';
+                        _st.style.opacity = '';
+                    }
                 });
 
                 setTimeout(() => {
@@ -491,9 +522,7 @@
             _qx.style.opacity = '1';
             
             if (i.id === "t_q") {
-                const s = _gs();
-                _st.innerHTML = `Time: ${s.t} • ${s.l} minutes remaining today`;
-                _st.classList.remove('opacity-0');
+                _startLiveClock();
             }
 
             requestAnimationFrame(() => {
@@ -501,6 +530,7 @@
             });
         };
 
+        // Gesture & Pointer Handlers
         function _startPress(x, y) {
             _startX = x;
             _startY = y;
