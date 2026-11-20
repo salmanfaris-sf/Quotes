@@ -26,8 +26,7 @@
             --t: #fff;
             --s: #fff;
             --m: rgba(28, 28, 30, 0.94);
-            --accent: #34c759;
-            --danger: #ff453a;
+            --accent: #34c759
         }
 
         * {
@@ -310,132 +309,6 @@
             white-space: nowrap
         }
 
-        /* Custom Modal Dialog Styles */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.72);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2500;
-            padding: 20px;
-            touch-action: auto;
-        }
-
-        .modal-backdrop.active {
-            display: flex;
-            animation: modalFadeIn 0.16s ease-out forwards;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-card {
-            background: var(--m);
-            width: 100%;
-            max-width: 310px;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            flex-direction: column;
-            animation: modalScaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes modalScaleIn {
-            from { transform: scale(0.94); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-body {
-            padding: 22px 20px 18px;
-            text-align: center;
-        }
-
-        .modal-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--t);
-            margin-bottom: 6px;
-        }
-
-        .modal-desc {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.65);
-            line-height: 1.4;
-            margin-bottom: 14px;
-        }
-
-        .modal-desc:last-child {
-            margin-bottom: 0;
-        }
-
-        .modal-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            border-radius: 10px;
-            padding: 11px 12px;
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 500;
-            text-align: center;
-            outline: none;
-            user-select: text;
-            -webkit-user-select: text;
-            transition: border-color 0.2s;
-        }
-
-        .modal-input:focus {
-            border-color: var(--accent);
-        }
-
-        .modal-actions {
-            display: flex;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            padding: 14px 10px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--s);
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-
-        .modal-btn:active {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .modal-btn + .modal-btn {
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-btn.cancel {
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 400;
-        }
-
-        .modal-btn.confirm {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .modal-btn.danger {
-            color: var(--danger);
-            font-weight: 600;
-        }
-
         #lock-overlay,
         #goal-overlay {
             position: fixed;
@@ -587,22 +460,6 @@
         <span>swipe right: increment</span>
         <span>hold: tap sound</span>
     </div>
-
-    <!-- Custom Modal Dialog for Inputs & Confirmations (Fixes mobile keyboard persistence) -->
-    <div id="custom-modal" class="modal-backdrop" role="dialog" aria-modal="true">
-        <div class="modal-card">
-            <div class="modal-body">
-                <div id="modal-title" class="modal-title"></div>
-                <div id="modal-desc" class="modal-desc"></div>
-                <input id="modal-input" class="modal-input" type="number" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" />
-            </div>
-            <div class="modal-actions">
-                <button id="modal-cancel" class="modal-btn cancel" type="button">Cancel</button>
-                <button id="modal-ok" class="modal-btn confirm" type="button">OK</button>
-            </div>
-        </div>
-    </div>
-
     <div id="lock-overlay">
         <div class="slider-track">
             <span class="slider-text">Swipe to unlock</span>
@@ -637,13 +494,7 @@
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
                 installMenu = d.getElementById('install-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
-                go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle'),
-                modal = d.getElementById('custom-modal'),
-                modalTitle = d.getElementById('modal-title'),
-                modalDesc = d.getElementById('modal-desc'),
-                modalInput = d.getElementById('modal-input'),
-                modalCancel = d.getElementById('modal-cancel'),
-                modalOk = d.getElementById('modal-ok');
+                go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
             let v = parseInt(localStorage.getItem(k.c)) || 0,
                 st = parseInt(localStorage.getItem(k.t)) || 1,
@@ -651,95 +502,27 @@
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
                 wakeLock = null, deferredInstallPrompt = null,
-                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false,
-                isModalOpen = false, modalCallback = null;
+                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
-            // Custom Modal System (Replaces native prompt/confirm & explicitly dismisses mobile keyboard)
-            function _dismissKeyboard() {
+            // Helper to ensure mobile soft keyboard closes cleanly after native prompt()
+            function _dismissMobileKeyboard() {
                 if (d.activeElement && typeof d.activeElement.blur === 'function') {
                     d.activeElement.blur();
                 }
-                modalInput.blur();
-                f.blur();
+                const tmp = d.createElement('input');
+                tmp.type = 'text';
+                tmp.setAttribute('readonly', 'readonly');
+                tmp.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;pointer-events:none;';
+                d.body.appendChild(tmp);
+                tmp.focus();
+                tmp.blur();
+                d.body.removeChild(tmp);
             }
-
-            function _closeModal(result) {
-                if (!isModalOpen) return;
-                _dismissKeyboard();
-                isModalOpen = false;
-                modal.classList.remove('active');
-                const cb = modalCallback;
-                modalCallback = null;
-                if (cb) {
-                    // Slight delay ensures mobile viewport & keyboard finish retracting smoothly
-                    setTimeout(() => cb(result), 50);
-                }
-            }
-
-            function _openModal({ title, desc, showInput = false, defaultValue = '', placeholder = '', okText = 'OK', okDanger = false }) {
-                return new Promise(resolve => {
-                    isModalOpen = true;
-                    modalCallback = resolve;
-                    modalTitle.textContent = title;
-                    modalDesc.textContent = desc || '';
-                    modalDesc.style.display = desc ? 'block' : 'none';
-                    modalOk.textContent = okText;
-                    modalOk.className = 'modal-btn ' + (okDanger ? 'danger' : 'confirm');
-
-                    if (showInput) {
-                        modalInput.style.display = 'block';
-                        modalInput.value = defaultValue;
-                        modalInput.placeholder = placeholder;
-                    } else {
-                        modalInput.style.display = 'none';
-                        modalInput.value = '';
-                    }
-
-                    modal.classList.add('active');
-
-                    if (showInput) {
-                        setTimeout(() => {
-                            modalInput.focus();
-                            modalInput.select();
-                        }, 60);
-                    }
-                });
-            }
-
-            modalOk.addEventListener('click', e => {
-                e.stopPropagation();
-                const val = modalInput.style.display !== 'none' ? modalInput.value : true;
-                _closeModal(val);
-            });
-
-            modalCancel.addEventListener('click', e => {
-                e.stopPropagation();
-                _closeModal(null);
-            });
-
-            modal.addEventListener('click', e => {
-                if (e.target === modal) {
-                    e.stopPropagation();
-                    _closeModal(null);
-                }
-            });
-
-            modalInput.addEventListener('keydown', e => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    _closeModal(modalInput.value);
-                } else if (e.key === 'Escape') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    _closeModal(null);
-                }
-            });
 
             // Automatic Keep Screen Awake (Wake Lock API)
             async function _requestWakeLock() {
@@ -942,29 +725,29 @@
                 else d.exitFullscreen().catch(() => { })
             };
 
-            async function triggerSetGoal() {
-                const r = await _openModal({
-                    title: 'Set Target Goal',
-                    desc: `Current: ${gl || 'none'}. Enter 0 to remove.`,
-                    showInput: true,
-                    defaultValue: gl || '',
-                    placeholder: 'Enter target number',
-                    okText: 'OK'
-                });
-                if (r !== null && r !== '') {
-                    const n = parseInt(r, 10);
-                    if (!isNaN(n) && n >= 0) {
-                        gl = n;
-                        if (gl > 0) {
-                            v = 0;
-                            _z(`goal set to ${gl}`, 2000);
-                        } else {
-                            _z('goal removed', 2000);
-                        }
-                        _w();
-                        _x();
-                    }
+            function triggerSetGoal() {
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
                 }
+                setTimeout(() => {
+                    const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
+                    _dismissMobileKeyboard();
+                    setTimeout(_dismissMobileKeyboard, 80);
+                    if (r !== null) {
+                        const n = parseInt(r);
+                        if (!isNaN(n) && n >= 0) {
+                            gl = n;
+                            if (gl > 0) {
+                                v = 0;
+                                _z(`goal set to ${gl}`, 2000);
+                            } else {
+                                _z('goal removed', 2000);
+                            }
+                            _w();
+                            _x();
+                        }
+                    }
+                }, 50);
             }
 
             goalMenu.onclick = e => {
@@ -1078,10 +861,10 @@
             });
 
             d.body.addEventListener('touchstart', e => {
-                if (lk || isLockout || isModalOpen) return;
+                if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay') || e.target.closest('#custom-modal')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -1093,9 +876,9 @@
                 }, 800)
             });
 
-            d.body.addEventListener('touchend', async e => {
-                if (lk || isLockout || isModalOpen) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay') || e.target.closest('#custom-modal')) return;
+            d.body.addEventListener('touchend', e => {
+                if (lk || isLockout) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
@@ -1118,28 +901,16 @@
                     _x();
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 50) {
-                        const confirmed = await _openModal({
-                            title: 'Reset Counter',
-                            desc: 'Reset counter back to 0?',
-                            showInput: false,
-                            okText: 'Reset',
-                            okDanger: true
-                        });
-                        if (confirmed) {
+                        if (confirm('Reset counter to 0?')) {
                             if (navigator.vibrate) navigator.vibrate(40);
                             v = 0; _w(); _x(); _z('counter reset', 2000)
                         }
                     } else if (dx < -50) {
-                        const r = await _openModal({
-                            title: 'Set Increment',
-                            desc: `Current increment: ${st}`,
-                            showInput: true,
-                            defaultValue: st,
-                            placeholder: 'Enter step value',
-                            okText: 'OK'
-                        });
-                        if (r !== null && r !== '') {
-                            const n = parseInt(r, 10);
+                        const r = prompt('Set Increment (current: ' + st + ')', st);
+                        _dismissMobileKeyboard();
+                        setTimeout(_dismissMobileKeyboard, 80);
+                        if (r !== null) {
+                            const n = parseInt(r);
                             st = (!isNaN(n) && n > 0) ? n : 1;
                             _z(`increment set to ${st}`, 2000);
                             _w(); _x()
@@ -1154,14 +925,7 @@
                         s.removeAllRanges(); s.addRange(r)
                     } else if (dy < -50) {
                         if (v > 0) {
-                            const confirmed = await _openModal({
-                                title: 'Subtract One',
-                                desc: 'Subtract 1 from counter?',
-                                showInput: false,
-                                okText: 'Subtract',
-                                okDanger: false
-                            });
-                            if (confirmed) {
+                            if (confirm('Subtract 1 from counter?')) {
                                 if (navigator.vibrate) navigator.vibrate(40);
                                 v = v - 1;
                                 _p(v);
