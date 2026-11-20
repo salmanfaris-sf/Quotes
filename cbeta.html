@@ -488,51 +488,75 @@
 
         .undo-toast {
             position: fixed;
-            bottom: 34px;
+            bottom: 32px;
             left: 50%;
-            transform: translateX(-50%) translateY(16px);
-            background: var(--m);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+            transform: translateX(-50%) translateY(20px) scale(0.96);
+            background: rgba(24, 24, 27, 0.96);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
             color: var(--s);
-            border-radius: 999px;
-            padding: 7px 8px 7px 16px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 11px 12px 13px 16px;
+            font-size: 0.82rem;
+            font-weight: 400;
+            letter-spacing: 0.01rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.78);
             opacity: 0;
             pointer-events: none;
             z-index: 3005;
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: hidden;
+            transition: opacity 0.24s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
             white-space: nowrap;
+            min-width: 230px;
             max-width: 90vw;
         }
 
         .undo-toast.active {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0) scale(1);
             pointer-events: auto;
         }
 
+        .undo-toast-text {
+            color: rgba(255, 255, 255, 0.86);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .undo-toast-btn {
-            background: rgba(255, 255, 255, 0.14);
+            background: #ffffff;
             border: none;
-            color: var(--s);
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.03rem;
+            color: #000000;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04rem;
             text-transform: uppercase;
-            padding: 5px 12px;
-            border-radius: 999px;
+            padding: 6px 13px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.12s ease;
+            flex-shrink: 0;
+            transition: transform 0.1s ease, opacity 0.12s ease;
         }
 
         .undo-toast-btn:active {
-            background: rgba(255, 255, 255, 0.26);
+            transform: scale(0.95);
+            opacity: 0.85;
+        }
+
+        .undo-toast-bar {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.45);
+            transform-origin: left center;
+            transform: scaleX(1);
         }
 
         #lock-overlay,
@@ -679,8 +703,9 @@
         <span id="x4"></span>
     </div>
     <div id="undo-toast" class="undo-toast" role="status" aria-live="polite">
-        <span id="undo-toast-text"></span>
+        <span id="undo-toast-text" class="undo-toast-text"></span>
         <button type="button" id="undo-toast-btn" class="undo-toast-btn">Undo</button>
+        <div id="undo-toast-bar" class="undo-toast-bar"></div>
     </div>
     <div class="a3">
         <div id="x6" class="a4">
@@ -731,7 +756,7 @@
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
                 undoToast = d.getElementById('undo-toast'), undoToastText = d.getElementById('undo-toast-text'),
-                undoToastBtn = d.getElementById('undo-toast-btn'),
+                undoToastBtn = d.getElementById('undo-toast-btn'), undoToastBar = d.getElementById('undo-toast-bar'),
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'),
                 titleBtn = d.getElementById('x1'), titleText = d.getElementById('counter-title-text'),
                 switcher = d.getElementById('counter-switcher'), newCounterMenu = d.getElementById('new-counter-menu'),
@@ -1026,14 +1051,19 @@
                 undoToast.classList.remove('active');
             }
 
-            function _showUndoToast(message, onUndo, durationMs = 5000) {
+            function _showUndoToast(message, onUndo, durationMs = 5500) {
                 if (undoTimer) {
                     clearTimeout(undoTimer);
                     undoTimer = null;
                 }
                 pendingUndoAction = onUndo;
                 undoToastText.textContent = message;
+                undoToastBar.style.transition = 'none';
+                undoToastBar.style.transform = 'scaleX(1)';
                 undoToast.classList.add('active');
+                void undoToastBar.offsetWidth;
+                undoToastBar.style.transition = `transform ${durationMs}ms linear`;
+                undoToastBar.style.transform = 'scaleX(0)';
                 undoTimer = setTimeout(() => {
                     _hideUndoToast();
                 }, durationMs);
@@ -1891,15 +1921,28 @@
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     suppressBodyTapUntil = Date.now() + 350;
                     if (dx > 50) {
-                        if (navigator.vibrate) navigator.vibrate(40);
+                        if (v === 0) {
+                            _z('counter already 0', 1800);
+                            return;
+                        }
                         const prevValue = v;
                         const targetCounterId = activeId;
-                        v = 0; _w(); _x();
-                        if (prevValue !== 0) {
-                            _showUndoToast(`Counter reset (${prevValue.toLocaleString('en-US')})`, () => {
-                                const target = counters.find(c => c.id === targetCounterId);
-                                if (!target) return;
-                                target.v = prevValue;
+                        const targetCounterName = currentCounter.name;
+                        setTimeout(() => {
+                            const confirmed = w.confirm(`Reset "${targetCounterName}" (${prevValue.toLocaleString('en-US')}) to 0?`);
+                            if (!confirmed) return;
+                            if (navigator.vibrate) navigator.vibrate(40);
+                            const targetObj = counters.find(c => c.id === targetCounterId);
+                            if (targetObj) targetObj.v = 0;
+                            if (activeId === targetCounterId) {
+                                v = 0;
+                                _w();
+                            }
+                            _x();
+                            _showUndoToast(`Reset to 0 (was ${prevValue.toLocaleString('en-US')})`, () => {
+                                const restoreObj = counters.find(c => c.id === targetCounterId);
+                                if (!restoreObj) return;
+                                restoreObj.v = prevValue;
                                 if (activeId === targetCounterId) {
                                     v = prevValue;
                                     _w();
@@ -1907,9 +1950,7 @@
                                 _x();
                                 _z('reset undone', 2000);
                             }, 5500);
-                        } else {
-                            _z('counter reset', 2000);
-                        }
+                        }, 30);
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
                         _dismissMobileKeyboard();
