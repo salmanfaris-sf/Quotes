@@ -772,14 +772,15 @@
                 hh = localStorage.getItem(k.h) === 'true',
                 expandedCounterId = null,
                 wakeLock = null, deferredInstallPrompt = null,
-                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
+                nx = 0, ny = 0, pt = null, qf = 0, ignoreNextMouseClick = false,
+                rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
-            // Force mobile WebView/browser IME keyboard to close after native prompt()
+            // Dismiss mobile keyboard cleanly after prompt dialogs
             function _dismissMobileKeyboard() {
                 try {
                     if (d.activeElement && typeof d.activeElement.blur === 'function') {
@@ -799,7 +800,7 @@
                 } catch (err) {}
             }
 
-            // Automatic Keep Screen Awake (Wake Lock API)
+            // Request screen wake lock so the counter display stays awake
             async function _requestWakeLock() {
                 if (!('wakeLock' in navigator)) return;
                 try {
@@ -820,7 +821,7 @@
 
             _requestWakeLock();
 
-            // Dynamic inline manifest setup for one-file installation
+            // Configure dynamic web app manifest for standalone installation
             try {
                 const manifest = {
                     name: 'Counter',
@@ -865,6 +866,7 @@
                 }
             };
 
+            // Apply bottom gesture hint visibility state
             function _applyHintState() {
                 if (hh) {
                     d.body.classList.add('hide-hints');
@@ -876,409 +878,114 @@
             }
             _applyHintState();
 
+            // Temporarily hide prompt label while interacting
             function _u() {
                 if (stt) clearTimeout(stt);
                 i.classList.remove('v');
-                stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
+                stt = setTimeout(() => { if (!isLockout) i.classList.add('v') }, 5e3);
             }
 
-            // Speech synthesis helper (sn = true means muted/sound off, sn = false means sound on)
+            // Speak count aloud using SpeechSynthesis when sound mode is enabled
             function _p(textToSpeak) {
                 if (sn) return;
-                if ('speechSynthesis' in w) {
-                    w.speechSynthesis.cancel();
-                    
-                    const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
-                    utterance.rate = 1.15;
-                    utterance.pitch = 1.0;
-                    utterance.volume = 1.0;
-                    
-                    w.speechSynthesis.speak(utterance);
-                }
+                try {
+                    if ('speechSynthesis' in w) {
+                        w.speechSynthesis.cancel();
+                        const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
+                        utterance.rate = 1.15;
+                        utterance.pitch = 1.0;
+                        utterance.volume = 1.0;
+                        w.speechSynthesis.speak(utterance);
+                    }
+                } catch (err) {}
             }
 
+            // Update circular goal progress ring
             function _up() {
                 if (gl > 0) {
                     pc.classList.add('active');
                     const o = cr - (Math.min(v, gl) / gl) * cr;
                     rg.style.strokeDashoffset = o;
                     rg.style.opacity = v >= gl ? 1 : .3;
-                    rg.style.stroke = v >= gl ? 'var(--accent)' : '#fff'
-                } else pc.classList.remove('active')
+                    rg.style.stroke = v >= gl ? 'var(--accent)' : '#fff';
+                } else {
+                    pc.classList.remove('active');
+                }
             }
 
+            // Scale counter number font size smoothly for longer numbers
+            function _updateNumberSize(formattedText) {
+                const len = formattedText.length;
+                if (len <= 4) {
+                    f.style.fontSize = '18vw';
+                } else if (len <= 6) {
+                    f.style.fontSize = '14vw';
+                } else if (len <= 9) {
+                    f.style.fontSize = '10vw';
+                } else {
+                    f.style.fontSize = '7.5vw';
+                }
+            }
+
+            // Refresh UI display for active counter
             function _w() {
-                const activeObj = _getActiveCounter();
-                x1Label.textContent = activeObj ? activeObj.name : 'Counter';
+                currentCounter = _getActiveCounter();
+                currentCounter.v = v;
+                currentCounter.st = st;
+                currentCounter.gl = gl;
+
+                x1Label.textContent = currentCounter.name;
                 const formatted = v.toLocaleString('en-US');
                 f.textContent = formatted;
-                const len = formatted.length;
-                f.style.fontSize = len <= 4 ? '18vw' : Math.max(7, Math.floor(82 / len)) + 'vw';
+                _updateNumberSize(formatted);
+
                 if (st > 1) {
                     sd.textContent = 'Increment: ' + st;
-                    sd.classList.add('v')
-                } else sd.classList.remove('v');
+                    sd.classList.add('v');
+                } else {
+                    sd.classList.remove('v');
+                }
 
                 if (gl > 0) {
                     gd.textContent = 'Goal: ' + gl.toLocaleString('en-US');
-                    gd.classList.add('v')
-                } else gd.classList.remove('v');
+                    gd.classList.add('v');
+                } else {
+                    gd.classList.remove('v');
+                }
+
                 _up();
                 if (cs.classList.contains('active')) {
-                    _renderSwitcher();
+                    _renderCounterSwitcher();
                 }
             }
 
-            // Persist counter collection and active counter state
+            // Persist all counters and settings to localStorage
             function _x() {
-                const activeObj = _getActiveCounter();
-                if (activeObj) {
-                    activeObj.v = v;
-                    activeObj.st = st;
-                    activeObj.gl = gl;
-                }
-                localStorage.setItem(k.list, JSON.stringify(counters));
-                localStorage.setItem(k.active, activeId);
-                localStorage.setItem(k.c, v);
-                localStorage.setItem(k.s, sn);
-                localStorage.setItem(k.t, st);
-                localStorage.setItem(k.g, gl);
-                localStorage.setItem(k.h, hh);
+                try {
+                    currentCounter = _getActiveCounter();
+                    currentCounter.v = v;
+                    currentCounter.st = st;
+                    currentCounter.gl = gl;
+
+                    localStorage.setItem(k.list, JSON.stringify(counters));
+                    localStorage.setItem(k.active, activeId);
+                    localStorage.setItem(k.c, v);
+                    localStorage.setItem(k.s, sn);
+                    localStorage.setItem(k.t, st);
+                    localStorage.setItem(k.g, gl);
+                    localStorage.setItem(k.h, hh);
+                } catch (err) {}
             }
 
-            // Switch active counter and sync UI & storage
-            function _switchCounter(targetId) {
-                const target = counters.find(item => item.id === targetId);
-                if (!target) return;
-                _x();
-                activeId = target.id;
-                v = target.v || 0;
-                st = target.st || 1;
-                gl = target.gl || 0;
-                expandedCounterId = null;
-                cs.classList.remove('active');
-                _w();
-                _x();
-                _z(`switched to ${target.name}`, 1800);
-            }
-
-            // Create a new custom counter and select it
-            function _createNewCounter() {
-                expandedCounterId = null;
-                setTimeout(() => {
-                    const defaultName = `Counter ${counters.length + 1}`;
-                    const rawName = prompt('New Counter Name:', defaultName);
-                    _dismissMobileKeyboard();
-                    setTimeout(_dismissMobileKeyboard, 150);
-                    setTimeout(_dismissMobileKeyboard, 350);
-                    if (rawName === null) return;
-                    const trimmed = rawName.trim() || defaultName;
-                    _x();
-                    const newItem = {
-                        id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-                        name: trimmed,
-                        permanent: false,
-                        v: 0,
-                        st: 1,
-                        gl: 0
-                    };
-                    counters.push(newItem);
-                    activeId = newItem.id;
-                    v = 0;
-                    st = 1;
-                    gl = 0;
-                    _w();
-                    _x();
-                    _z(`created "${trimmed}"`, 2000);
-                }, 60);
-            }
-
-            // Rename a non-permanent counter
-            function _renameCounter(targetId) {
-                const target = counters.find(item => item.id === targetId);
-                if (!target || target.permanent || target.id === PERMANENT_ID) return;
-                expandedCounterId = null;
-                cs.classList.remove('active');
-                setTimeout(() => {
-                    const rawName = prompt('Rename Counter:', target.name);
-                    _dismissMobileKeyboard();
-                    setTimeout(_dismissMobileKeyboard, 150);
-                    setTimeout(_dismissMobileKeyboard, 350);
-                    if (rawName === null) return;
-                    const trimmed = rawName.trim();
-                    if (!trimmed) return;
-                    target.name = trimmed;
-                    _w();
-                    _x();
-                    _z(`renamed to "${trimmed}"`, 2000);
-                }, 60);
-            }
-
-            // Delete a non-permanent counter and fall back to permanent counter if needed
-            function _deleteCounter(targetId) {
-                const target = counters.find(item => item.id === targetId);
-                if (!target || target.permanent || target.id === PERMANENT_ID) return;
-                expandedCounterId = null;
-                cs.classList.remove('active');
-                if (!confirm(`Delete "${target.name}"?`)) return;
-                counters = counters.filter(item => item.id !== targetId);
-                if (activeId === targetId) {
-                    const fallback = counters.find(item => item.id === PERMANENT_ID) || counters[0];
-                    activeId = fallback.id;
-                    v = fallback.v || 0;
-                    st = fallback.st || 1;
-                    gl = fallback.gl || 0;
-                }
-                _w();
-                _x();
-                _z(`deleted "${target.name}"`, 2000);
-            }
-
-            // Render counter switcher list with in-place long-press action swap
-            function _renderSwitcher() {
-                cs.innerHTML = '';
-                counters.forEach(item => {
-            // Render counter switcher list with smooth round edit/delete buttons beneath long-pressed row
-            function _renderSwitcher() {
-                cs.innerHTML = '';
-                counters.forEach(item => {
-                    const isSelected = item.id === activeId;
-                    const isPermanent = Boolean(item.permanent || item.id === PERMANENT_ID);
-                    const isExpanded = !isPermanent && expandedCounterId === item.id;
-                    const displayVal = isSelected ? v : (item.v || 0);
-
-                    const group = d.createElement('div');
-                    group.className = 'counter-item-group';
-
-                    const row = d.createElement('div');
-                    row.className = 'counter-row' + (isSelected ? ' selected' : '') + (isExpanded ? ' actions-open' : '');
-
-                    const info = d.createElement('div');
-                    info.className = 'counter-row-info';
-
-                    const dot = d.createElement('span');
-                    dot.className = 'counter-dot';
-
-                    const nameEl = d.createElement('span');
-                    nameEl.className = 'counter-row-name';
-                    nameEl.textContent = item.name;
-
-                    const countEl = d.createElement('span');
-                    countEl.className = 'counter-row-count';
-                    countEl.textContent = displayVal.toLocaleString('en-US');
-
-                    info.appendChild(dot);
-                    info.appendChild(nameEl);
-                    row.appendChild(info);
-                    row.appendChild(countEl);
-                    group.appendChild(row);
-
-                    if (!isPermanent) {
-                        const actionsWrap = d.createElement('div');
-                        actionsWrap.className = 'counter-round-actions-wrap' + (isExpanded ? ' open' : '');
-
-                        const editRoundBtn = d.createElement('button');
-                        editRoundBtn.type = 'button';
-                        editRoundBtn.className = 'counter-round-btn';
-                        editRoundBtn.setAttribute('aria-label', 'Edit Counter');
-                        editRoundBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>';
-                        editRoundBtn.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            editRoundBtn.classList.add('active-touch');
-                        }, { passive: true });
-                        editRoundBtn.addEventListener('touchend', e => {
-                            e.stopPropagation();
-                            editRoundBtn.classList.remove('active-touch');
-                        }, { passive: true });
-                        editRoundBtn.addEventListener('touchcancel', () => editRoundBtn.classList.remove('active-touch'), { passive: true });
-                        editRoundBtn.onclick = e => {
-                            e.stopPropagation();
-                            _renameCounter(item.id);
-                        };
-
-                        const delRoundBtn = d.createElement('button');
-                        delRoundBtn.type = 'button';
-                        delRoundBtn.className = 'counter-round-btn';
-                        delRoundBtn.setAttribute('aria-label', 'Delete Counter');
-                        delRoundBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>';
-                        delRoundBtn.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            delRoundBtn.classList.add('active-touch');
-                        }, { passive: true });
-                        delRoundBtn.addEventListener('touchend', e => {
-                            e.stopPropagation();
-                            delRoundBtn.classList.remove('active-touch');
-                        }, { passive: true });
-                        delRoundBtn.addEventListener('touchcancel', () => delRoundBtn.classList.remove('active-touch'), { passive: true });
-                        delRoundBtn.onclick = e => {
-                            e.stopPropagation();
-                            _deleteCounter(item.id);
-                        };
-
-                        const closeRoundHint = d.createElement('span');
-                        closeRoundHint.className = 'counter-round-label';
-                        closeRoundHint.textContent = 'done';
-                        closeRoundHint.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            closeRoundHint.classList.add('active-touch');
-                        }, { passive: true });
-                        closeRoundHint.addEventListener('touchend', e => {
-                            e.stopPropagation();
-                            closeRoundHint.classList.remove('active-touch');
-                        }, { passive: true });
-                        closeRoundHint.addEventListener('touchcancel', () => closeRoundHint.classList.remove('active-touch'), { passive: true });
-                        closeRoundHint.onclick = e => {
-                            e.stopPropagation();
-                            expandedCounterId = null;
-                            _renderSwitcher();
-                        };
-
-                        actionsWrap.appendChild(editRoundBtn);
-                        actionsWrap.appendChild(delRoundBtn);
-                        actionsWrap.appendChild(closeRoundHint);
-                        group.appendChild(actionsWrap);
-
-                        let holdTimer = null, holdTriggered = false, startX = 0, startY = 0, suppressClick = false;
-
-                        const clearHold = () => {
-                            if (holdTimer) {
-                                clearTimeout(holdTimer);
-                                holdTimer = null;
-                            }
-                            row.classList.remove('pressing');
-                        };
-
-                        row.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            holdTriggered = false;
-                            suppressClick = false;
-                            startX = e.touches[0].clientX;
-                            startY = e.touches[0].clientY;
-                            row.classList.add('active-touch');
-                            row.classList.add('pressing');
-
-                            holdTimer = setTimeout(() => {
-                                holdTriggered = true;
-                                suppressClick = true;
-                                clearHold();
-                                row.classList.remove('active-touch');
-                                expandedCounterId = expandedCounterId === item.id ? null : item.id;
-                                if (navigator.vibrate) navigator.vibrate(40);
-                                _renderSwitcher();
-                            }, 480);
-                        }, { passive: true });
-
-                        row.addEventListener('touchmove', e => {
-                            if (!holdTimer) return;
-                            const dx = Math.abs(e.touches[0].clientX - startX);
-                            const dy = Math.abs(e.touches[0].clientY - startY);
-                            if (dx > 10 || dy > 10) {
-                                clearHold();
-                                row.classList.remove('active-touch');
-                            }
-                        }, { passive: true });
-
-                        const onRowTouchEnd = e => {
-                            const didHold = holdTriggered;
-                            clearHold();
-                            row.classList.remove('active-touch');
-
-                            if (didHold) {
-                                if (e && e.cancelable) e.preventDefault();
-                                return;
-                            }
-
-                            suppressClick = true;
-                            setTimeout(() => { suppressClick = false; }, 350);
-
-                            if (isSelected) {
-                                cs.classList.remove('active');
-                            } else {
-                                _switchCounter(item.id);
-                            }
-                        };
-
-                        row.addEventListener('touchend', onRowTouchEnd);
-                        row.addEventListener('touchcancel', () => {
-                            clearHold();
-                            row.classList.remove('active-touch');
-                        });
-
-                        row.addEventListener('mousedown', e => {
-                            if (e.button !== 0) return;
-                            e.stopPropagation();
-                            holdTriggered = false;
-                            row.classList.add('pressing');
-                            holdTimer = setTimeout(() => {
-                                holdTriggered = true;
-                                suppressClick = true;
-                                clearHold();
-                                expandedCounterId = expandedCounterId === item.id ? null : item.id;
-                                _renderSwitcher();
-                            }, 480);
-                        });
-
-                        row.addEventListener('mouseup', clearHold);
-                        row.addEventListener('mouseleave', clearHold);
-
-                        row.onclick = e => {
-                            e.stopPropagation();
-                            if (suppressClick) {
-                                suppressClick = false;
-                                return;
-                            }
-                            if (isSelected) {
-                                cs.classList.remove('active');
-                            } else {
-                                _switchCounter(item.id);
-                            }
-                        };
-                    } else {
-                        row.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            row.classList.add('active-touch');
-                        }, { passive: true });
-                        row.addEventListener('touchend', () => row.classList.remove('active-touch'), { passive: true });
-                        row.addEventListener('touchcancel', () => row.classList.remove('active-touch'), { passive: true });
-
-                        row.onclick = e => {
-                            e.stopPropagation();
-                            expandedCounterId = null;
-                            if (isSelected) {
-                                cs.classList.remove('active');
-                            } else {
-                                _switchCounter(item.id);
-                            }
-                        };
-                    }
-
-                    cs.appendChild(group);
-                });
-
-                const divider = d.createElement('div');
-                divider.className = 'counter-divider';
-                cs.appendChild(divider);
-
-                const addBtn = d.createElement('button');
-                addBtn.className = 'menu-item';
-                addBtn.innerHTML = '<span>+ New Counter</span>';
-                addBtn.onclick = e => {
-                    e.stopPropagation();
-                    expandedCounterId = null;
-                    cs.classList.remove('active');
-                    _createNewCounter();
-                };
-                cs.appendChild(addBtn);
-            }
-
+            // Show floating status pill message
             function _z(m, du) {
                 if (rt) clearTimeout(rt);
                 ht.textContent = m;
                 h.classList.add('active');
                 rt = setTimeout(() => {
                     h.classList.remove('active');
-                    rt = null
-                }, du)
+                    rt = null;
+                }, du);
             }
 
             function _triggerGoalLockout() {
@@ -1294,23 +1001,322 @@
                 go.classList.add('active');
             }
 
+            // Increment active counter and handle goal completion
+            function _incrementCounter() {
+                const p = v;
+                v += st;
+                if (gl > 0 && p < gl && v >= gl) {
+                    _p(`${v}. Goal reached`);
+                    if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+                    _triggerGoalLockout();
+                } else {
+                    _p(v);
+                }
+                _w();
+                _x();
+            }
+
+            // Switch to another counter by ID
+            function _switchCounter(targetId) {
+                const found = counters.find(item => item.id === targetId);
+                if (!found) return;
+                activeId = found.id;
+                currentCounter = found;
+                v = found.v;
+                st = found.st;
+                gl = found.gl;
+                expandedCounterId = null;
+                f.contentEditable = 'false';
+                _w();
+                _x();
+            }
+
+            // Create a new custom counter
+            function _createCounter() {
+                setTimeout(() => {
+                    const nameInput = prompt('New Counter Name:', 'Counter ' + (counters.length + 1));
+                    _dismissMobileKeyboard();
+                    setTimeout(_dismissMobileKeyboard, 150);
+                    setTimeout(_dismissMobileKeyboard, 350);
+                    if (nameInput === null) return;
+
+                    const cleanName = nameInput.trim() || ('Counter ' + (counters.length + 1));
+                    const newCounter = {
+                        id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                        name: cleanName,
+                        permanent: false,
+                        v: 0,
+                        st: 1,
+                        gl: 0
+                    };
+                    counters.push(newCounter);
+                    _switchCounter(newCounter.id);
+                    cs.classList.remove('active');
+                    _z(`switched to ${cleanName}`, 2000);
+                }, 60);
+            }
+
+            // Rename a non-permanent custom counter
+            function _renameCounter(targetId) {
+                const target = counters.find(item => item.id === targetId);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+
+                setTimeout(() => {
+                    const nextName = prompt('Rename Counter:', target.name);
+                    _dismissMobileKeyboard();
+                    setTimeout(_dismissMobileKeyboard, 150);
+                    setTimeout(_dismissMobileKeyboard, 350);
+                    if (nextName === null) return;
+
+                    const cleanName = nextName.trim();
+                    if (cleanName) {
+                        target.name = cleanName;
+                        expandedCounterId = null;
+                        _w();
+                        _x();
+                        _z(`renamed to ${cleanName}`, 2000);
+                    }
+                }, 60);
+            }
+
+            // Delete a non-permanent custom counter
+            function _deleteCounter(targetId) {
+                const target = counters.find(item => item.id === targetId);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+                if (!confirm(`Delete "${target.name}"?`)) return;
+
+                counters = counters.filter(item => item.id !== targetId);
+                if (expandedCounterId === targetId) {
+                    expandedCounterId = null;
+                }
+                if (activeId === targetId) {
+                    _switchCounter(PERMANENT_ID);
+                } else {
+                    _w();
+                    _x();
+                }
+                _z(`deleted ${target.name}`, 2000);
+            }
+
+            // Render counter switcher rows and smooth long-press round Edit/Delete buttons
+            function _renderCounterSwitcher() {
+                cs.innerHTML = '';
+
+                counters.forEach(item => {
+                    const isPermanent = Boolean(item.permanent || item.id === PERMANENT_ID);
+                    const isExpanded = !isPermanent && expandedCounterId === item.id;
+
+                    const group = d.createElement('div');
+                    group.className = 'counter-item-group';
+
+                    const row = d.createElement('div');
+                    row.className = 'counter-row' +
+                        (item.id === activeId ? ' selected' : '') +
+                        (isExpanded ? ' actions-open' : '');
+
+                    const info = d.createElement('div');
+                    info.className = 'counter-row-info';
+
+                    const dot = d.createElement('span');
+                    dot.className = 'counter-dot';
+
+                    const nameEl = d.createElement('span');
+                    nameEl.className = 'counter-row-name';
+                    nameEl.textContent = item.name;
+
+                    info.appendChild(dot);
+                    info.appendChild(nameEl);
+
+                    const countEl = d.createElement('span');
+                    countEl.className = 'counter-row-count';
+                    countEl.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
+
+                    row.appendChild(info);
+                    row.appendChild(countEl);
+
+                    let holdTimer = null, holdTriggered = false, startX = 0, startY = 0;
+
+                    const clearHold = () => {
+                        if (holdTimer) {
+                            clearTimeout(holdTimer);
+                            holdTimer = null;
+                        }
+                        row.classList.remove('pressing');
+                    };
+
+                    row.addEventListener('touchstart', e => {
+                        e.stopPropagation();
+                        holdTriggered = false;
+                        startX = e.touches[0].clientX;
+                        startY = e.touches[0].clientY;
+                        row.classList.add('active-touch');
+
+                        if (!isPermanent) {
+                            row.classList.add('pressing');
+                            holdTimer = setTimeout(() => {
+                                holdTriggered = true;
+                                row.classList.remove('active-touch');
+                                row.classList.remove('pressing');
+                                expandedCounterId = expandedCounterId === item.id ? null : item.id;
+                                if (navigator.vibrate) navigator.vibrate(40);
+                                _renderCounterSwitcher();
+                            }, 460);
+                        }
+                    }, { passive: true });
+
+                    row.addEventListener('touchmove', e => {
+                        if (!holdTimer) return;
+                        const dx = Math.abs(e.touches[0].clientX - startX);
+                        const dy = Math.abs(e.touches[0].clientY - startY);
+                        if (dx > 10 || dy > 10) {
+                            clearHold();
+                            row.classList.remove('active-touch');
+                        }
+                    }, { passive: true });
+
+                    row.addEventListener('touchend', e => {
+                        const didHold = holdTriggered;
+                        clearHold();
+                        row.classList.remove('active-touch');
+
+                        if (didHold) {
+                            ignoreNextMouseClick = true;
+                            if (e && e.cancelable) e.preventDefault();
+                            return;
+                        }
+
+                        ignoreNextMouseClick = true;
+                        _switchCounter(item.id);
+                        cs.classList.remove('active');
+                        _z(`switched to ${item.name}`, 1600);
+                    });
+
+                    row.addEventListener('touchcancel', () => {
+                        clearHold();
+                        row.classList.remove('active-touch');
+                    });
+
+                    row.addEventListener('mousedown', e => {
+                        if (e.button !== 0 || isPermanent) return;
+                        e.stopPropagation();
+                        holdTriggered = false;
+                        row.classList.add('pressing');
+                        holdTimer = setTimeout(() => {
+                            holdTriggered = true;
+                            row.classList.remove('pressing');
+                            expandedCounterId = expandedCounterId === item.id ? null : item.id;
+                            _renderCounterSwitcher();
+                        }, 460);
+                    });
+
+                    row.addEventListener('mouseup', clearHold);
+                    row.addEventListener('mouseleave', clearHold);
+
+                    row.onclick = e => {
+                        e.stopPropagation();
+                        if (ignoreNextMouseClick) {
+                            ignoreNextMouseClick = false;
+                            return;
+                        }
+                        if (holdTriggered) {
+                            holdTriggered = false;
+                            return;
+                        }
+                        _switchCounter(item.id);
+                        cs.classList.remove('active');
+                        _z(`switched to ${item.name}`, 1600);
+                    };
+
+                    group.appendChild(row);
+
+                    if (!isPermanent) {
+                        const actionsWrap = d.createElement('div');
+                        actionsWrap.className = 'counter-round-actions-wrap' + (isExpanded ? ' open' : '');
+
+                        const editBtn = d.createElement('button');
+                        editBtn.type = 'button';
+                        editBtn.className = 'counter-round-btn';
+                        editBtn.setAttribute('aria-label', 'Rename counter');
+                        editBtn.title = 'Rename';
+                        editBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
+                        editBtn.onclick = e => {
+                            e.stopPropagation();
+                            ignoreNextMouseClick = true;
+                            cs.classList.remove('active');
+                            _renameCounter(item.id);
+                        };
+
+                        const delBtn = d.createElement('button');
+                        delBtn.type = 'button';
+                        delBtn.className = 'counter-round-btn';
+                        delBtn.setAttribute('aria-label', 'Delete counter');
+                        delBtn.title = 'Delete';
+                        delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>`;
+                        delBtn.onclick = e => {
+                            e.stopPropagation();
+                            ignoreNextMouseClick = true;
+                            cs.classList.remove('active');
+                            _deleteCounter(item.id);
+                        };
+
+                        const doneBtn = d.createElement('span');
+                        doneBtn.className = 'counter-round-label';
+                        doneBtn.textContent = 'done';
+                        doneBtn.onclick = e => {
+                            e.stopPropagation();
+                            ignoreNextMouseClick = true;
+                            expandedCounterId = null;
+                            _renderCounterSwitcher();
+                        };
+
+                        actionsWrap.appendChild(editBtn);
+                        actionsWrap.appendChild(delBtn);
+                        actionsWrap.appendChild(doneBtn);
+                        group.appendChild(actionsWrap);
+                    }
+
+                    cs.appendChild(group);
+                });
+
+                const divider = d.createElement('div');
+                divider.className = 'counter-divider';
+                cs.appendChild(divider);
+
+                const addRow = d.createElement('button');
+                addRow.type = 'button';
+                addRow.className = 'menu-item';
+                addRow.style.padding = '12px 16px';
+                addRow.style.fontSize = '0.85rem';
+                addRow.innerHTML = '<span>+ New Counter</span>';
+                addRow.onclick = e => {
+                    e.stopPropagation();
+                    ignoreNextMouseClick = true;
+                    _createCounter();
+                };
+                cs.appendChild(addRow);
+            }
+
             x1.onclick = e => {
                 e.stopPropagation();
+                ignoreNextMouseClick = true;
                 md.classList.remove('active');
-                if (cs.classList.contains('active')) {
-                    expandedCounterId = null;
-                    cs.classList.remove('active');
-                } else {
-                    expandedCounterId = null;
-                    _renderSwitcher();
-                    cs.classList.add('active');
-                }
+                _renderCounterSwitcher();
+                cs.classList.toggle('active');
+            };
+
+            newCounterMenu.onclick = e => {
+                e.stopPropagation();
+                ignoreNextMouseClick = true;
+                md.classList.remove('active');
+                cs.classList.remove('active');
+                _createCounter();
             };
 
             mb.onclick = e => {
                 e.stopPropagation();
-                expandedCounterId = null;
+                ignoreNextMouseClick = true;
                 cs.classList.remove('active');
+                expandedCounterId = null;
                 md.classList.toggle('active');
             };
 
@@ -1318,7 +1324,7 @@
                 if (!e.target.closest('.a2')) {
                     md.classList.remove('active');
                 }
-                if (!e.target.closest('#x1') && !e.target.closest('#counter-switcher')) {
+                if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
                     expandedCounterId = null;
                     cs.classList.remove('active');
                 }
@@ -1336,14 +1342,9 @@
                 }, { passive: true });
             });
 
-            newCounterMenu.onclick = e => {
-                e.stopPropagation();
-                md.classList.remove('active');
-                _createNewCounter();
-            };
-
             hintMenu.onclick = e => {
                 e.stopPropagation();
+                ignoreNextMouseClick = true;
                 md.classList.remove('active');
                 hh = !hh;
                 _applyHintState();
@@ -1353,18 +1354,22 @@
 
             lbMenu.onclick = e => {
                 e.stopPropagation();
+                ignoreNextMouseClick = true;
                 md.classList.remove('active');
+                cs.classList.remove('active');
+                expandedCounterId = null;
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
-                if (navigator.vibrate) navigator.vibrate(50)
+                if (navigator.vibrate) navigator.vibrate(50);
             };
 
             fsMenu.onclick = e => {
                 e.stopPropagation();
+                ignoreNextMouseClick = true;
                 md.classList.remove('active');
-                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => { });
-                else d.exitFullscreen().catch(() => { })
+                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => {});
+                else d.exitFullscreen().catch(() => {});
             };
 
             function triggerSetGoal() {
@@ -1395,6 +1400,7 @@
 
             goalMenu.onclick = e => {
                 e.stopPropagation();
+                ignoreNextMouseClick = true;
                 md.classList.remove('active');
                 triggerSetGoal();
             };
@@ -1402,8 +1408,8 @@
             let sx = 0, cx = 0;
             sh.addEventListener('touchstart', e => {
                 sx = e.touches[0].clientX;
-                sh.style.transition = ''
-            });
+                sh.style.transition = '';
+            }, { passive: true });
 
             sh.addEventListener('touchmove', e => {
                 const dx = e.touches[0].clientX - sx,
@@ -1415,14 +1421,14 @@
                     d.body.classList.remove('locked');
                     lo.classList.remove('active');
                     sh.style.transform = 'translateX(0)';
-                    if (navigator.vibrate) navigator.vibrate([10, 30, 10])
+                    if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
                 }
-            });
+            }, { passive: true });
 
             sh.addEventListener('touchend', () => {
                 if (lk) {
                     sh.style.transition = 'transform .4s cubic-bezier(.175,.885,.32,1.275)';
-                    sh.style.transform = 'translateX(0)'
+                    sh.style.transform = 'translateX(0)';
                 }
             });
 
@@ -1499,85 +1505,21 @@
             f.addEventListener('keydown', e => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    f.blur()
+                    f.blur();
                 }
             });
 
-            d.body.addEventListener('touchstart', e => {
+            // Support mouse/trackpad/preview taps so clicking anywhere also increments reliably
+            d.body.addEventListener('click', e => {
                 if (lk || isLockout) return;
+                if (ignoreNextMouseClick) {
+                    ignoreNextMouseClick = false;
+                    return;
+                }
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('#counter-switcher') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (f.contentEditable === 'true') return;
                 _u();
-                if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('#counter-switcher') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
-                nx = e.touches[0].clientX;
-                ny = e.touches[0].clientY;
-                pt = setTimeout(() => {
-                    sn = !sn;
-                    qf = 1;
-                    _x();
-                    if (navigator.vibrate) navigator.vibrate(50);
-                    _z(sn ? 'Sound off' : 'Sound on', 2000)
-                }, 800)
-            });
-
-            d.body.addEventListener('touchend', e => {
-                if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('#counter-switcher') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
-                if (pt) { clearTimeout(pt); pt = null }
-                if (qf) { qf = 0; return }
-                if (f.contentEditable === 'true') { f.blur(); return }
-
-                const dx = nx - e.changedTouches[0].clientX,
-                    dy = ny - e.changedTouches[0].clientY;
-
-                if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    const p = v;
-                    v += st;
-                    // Check if target goal has just been reached
-                    if (gl > 0 && p < gl && v >= gl) {
-                        _p(`${v}. Goal reached`);
-                        if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-                        _triggerGoalLockout();
-                    } else {
-                        _p(v);
-                    }
-                    _w();
-                    _x();
-                } else if (Math.abs(dx) > Math.abs(dy)) {
-                    if (dx > 50) {
-                        if (confirm('Reset counter to 0?')) {
-                            if (navigator.vibrate) navigator.vibrate(40);
-                            v = 0; _w(); _x(); _z('counter reset', 2000)
-                        }
-                    } else if (dx < -50) {
-                        const r = prompt('Set Increment (current: ' + st + ')', st);
-                        _dismissMobileKeyboard();
-                        setTimeout(_dismissMobileKeyboard, 150);
-                        setTimeout(_dismissMobileKeyboard, 350);
-                        if (r !== null) {
-                            const n = parseInt(r);
-                            st = (!isNaN(n) && n > 0) ? n : 1;
-                            _z(`increment set to ${st}`, 2000);
-                            _w(); _x()
-                        }
-                    }
-                } else {
-                    if (dy > 50) {
-                        f.contentEditable = 'true';
-                        f.focus();
-                        const r = d.createRange(), s = w.getSelection();
-                        r.selectNodeContents(f); r.collapse(!1);
-                        s.removeAllRanges(); s.addRange(r)
-                    } else if (dy < -50) {
-                        if (v > 0) {
-                            if (confirm('Subtract 1 from counter?')) {
-                                if (navigator.vibrate) navigator.vibrate(40);
-                                v = v - 1;
-                                _p(v);
-                                _w(); _x(); _z('number subtracted', 2000)
-                            }
-                        }
-                    }
-                }
+                _incrementCounter();
             });
 
             d.addEventListener('fullscreenchange', () => {
