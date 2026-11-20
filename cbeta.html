@@ -79,6 +79,16 @@
             opacity: 0.65;
         }
 
+        #counter-title-chevron {
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: rotate(0deg);
+            flex-shrink: 0;
+        }
+
+        .a1.open #counter-title-chevron {
+            transform: rotate(180deg);
+        }
+
         .counter-switcher {
             position: fixed;
             top: 72px;
@@ -88,7 +98,7 @@
             -webkit-backdrop-filter: blur(25px);
             border: none;
             border-radius: 14px;
-            padding: 6px 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             min-width: 240px;
@@ -191,7 +201,8 @@
         .counter-row-content:active,
         .counter-row-content.active-touch,
         .counter-row-content.drag-hover {
-            background: rgb(46, 46, 50);
+            background: rgba(255, 255, 255, 0.14);
+            transition: background 0.06s linear;
         }
 
         .counter-row-content.is-current .counter-row-name {
@@ -244,8 +255,9 @@
         .counter-add-btn:active,
         .counter-add-btn.active-touch,
         .counter-add-btn.drag-hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.14);
             opacity: 1;
+            transition: background 0.06s linear, opacity 0.06s linear;
         }
 
         .a2 {
@@ -330,13 +342,15 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            transition: background 0.1s;
+            transition: background 0.06s linear;
             white-space: nowrap;
         }
 
         .menu-item:active,
-        .menu-item.active-touch {
-            background: rgba(255, 255, 255, 0.15);
+        .menu-item.active-touch,
+        .menu-item.drag-hover {
+            background: rgba(255, 255, 255, 0.14);
+            transition: background 0.06s linear;
         }
 
         .a3 {
@@ -615,7 +629,7 @@
 <body oncontextmenu="return !1">
     <div class="a1" id="x1">
         <span id="counter-title-text">Counter</span>
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.65;">
+        <svg id="counter-title-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.65;">
             <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
     </div>
@@ -765,7 +779,16 @@
                 titleTouchStartY = 0,
                 titleDraggedDown = false,
                 hoveredDragTarget = null,
+                dragHoverRaf = null,
+                pendingDragPoint = null,
                 suppressTitleClickUntil = 0;
+
+            // Chrome-like press-and-drag-down state for the top-right 3-dot menu button
+            let menuTouchTracking = false,
+                menuTouchStartY = 0,
+                menuDraggedDown = false,
+                menuWasOpenOnTouchStart = false,
+                suppressMenuClickUntil = 0;
 
             const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
@@ -987,46 +1010,106 @@
                 _x();
             }
 
-            function _closeOpenSwipeRows(exceptEl) {
-                switcher.querySelectorAll('.counter-row-content').forEach(row => {
-                    if (row !== exceptEl) {
-                        row.classList.remove('swiping');
-                        row.style.transform = 'translateX(0px)';
-                        row.dataset.swipeOpen = 'false';
-                    }
-                });
+            // Syncs the title button's visual open state with #counter-switcher visibility
+            function _syncSwitcherOpenState() {
+                titleBtn.classList.toggle('open', switcher.classList.contains('active'));
             }
 
+            // Clears active drag-hover highlight across counter switcher and menu items
             function _clearDragHover() {
+                if (dragHoverRaf) {
+                    cancelAnimationFrame(dragHoverRaf);
+                    dragHoverRaf = null;
+                }
+                pendingDragPoint = null;
                 if (hoveredDragTarget) {
                     hoveredDragTarget.classList.remove('drag-hover');
                     hoveredDragTarget = null;
                 }
+                d.querySelectorAll('.drag-hover').forEach(el => el.classList.remove('drag-hover'));
             }
 
-            function _updateDragHoverAtPoint(clientX, clientY) {
-                const elAtPoint = d.elementFromPoint(clientX, clientY);
-                const candidate = elAtPoint ? elAtPoint.closest('.counter-row-content, .counter-add-btn') : null;
-                if (candidate && switcher.contains(candidate)) {
-                    if (hoveredDragTarget && hoveredDragTarget !== candidate) {
+            // Resolves the menu or counter item under (clientX, clientY) with generous horizontal bounds
+            function _findDragTargetAtPoint(clientX, clientY) {
+                const isSwitcherOpen = switcher.classList.contains('active');
+                const isMenuOpen = md.classList.contains('active');
+                const candidates = [];
+
+                if (isSwitcherOpen) {
+                    switcher.querySelectorAll('.counter-row-content, .counter-add-btn').forEach(el => candidates.push(el));
+                }
+                if (isMenuOpen) {
+                    md.querySelectorAll('.menu-item').forEach(el => candidates.push(el));
+                }
+
+                for (let idx = 0; idx < candidates.length; idx++) {
+                    const el = candidates[idx];
+                    const rect = el.getBoundingClientRect();
+                    if (clientY >= rect.top - 2 && clientY <= rect.bottom + 2 &&
+                        clientX >= rect.left - 36 && clientX <= rect.right + 36) {
+                        return el;
+                    }
+                }
+                return null;
+            }
+
+            function _applyDragHoverNow(clientX, clientY) {
+                const nextTarget = _findDragTargetAtPoint(clientX, clientY);
+                if (nextTarget !== hoveredDragTarget) {
+                    if (hoveredDragTarget) {
                         hoveredDragTarget.classList.remove('drag-hover');
                     }
-                    hoveredDragTarget = candidate;
-                    hoveredDragTarget.classList.add('drag-hover');
-                } else {
-                    _clearDragHover();
+                    hoveredDragTarget = nextTarget;
+                    if (hoveredDragTarget) {
+                        hoveredDragTarget.classList.add('drag-hover');
+                    }
                 }
             }
 
+            function _updateDragHoverAtPoint(clientX, clientY) {
+                pendingDragPoint = { x: clientX, y: clientY };
+                if (dragHoverRaf) return;
+                dragHoverRaf = requestAnimationFrame(() => {
+                    dragHoverRaf = null;
+                    if (pendingDragPoint) {
+                        _applyDragHoverNow(pendingDragPoint.x, pendingDragPoint.y);
+                    }
+                });
+            }
+
+            // Collapses any swiped-open counter rows except `exceptRow`
+            function _closeOpenSwipeRows(exceptRow) {
+                switcher.querySelectorAll('.counter-row-content').forEach(row => {
+                    if (row !== exceptRow && row.dataset.swipeOpen === 'true') {
+                        row.dataset.swipeOpen = 'false';
+                        row.style.transform = 'translateX(0px)';
+                    }
+                });
+            }
+
+            function _switchToCounter(id) {
+                const found = counters.find(c => c.id === id);
+                if (!found) return;
+                activeId = found.id;
+                currentCounter = found;
+                v = parseInt(found.v) || 0;
+                st = parseInt(found.st) || 1;
+                gl = parseInt(found.gl) || 0;
+                _w();
+                _x();
+            }
+
             function _createCounter() {
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
+                }
                 setTimeout(() => {
-                    const nameInput = prompt('New Counter Name:', 'Counter ' + (counters.length + 1));
+                    const rawName = prompt('New counter name:', `Counter ${counters.length + 1}`);
                     _dismissMobileKeyboard();
                     setTimeout(_dismissMobileKeyboard, 150);
                     setTimeout(_dismissMobileKeyboard, 350);
-                    if (nameInput === null) return;
-
-                    const cleanName = nameInput.trim() || ('Counter ' + (counters.length + 1));
+                    if (rawName === null) return;
+                    const cleanName = String(rawName).trim() || `Counter ${counters.length + 1}`;
                     const newItem = {
                         id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
                         name: cleanName,
@@ -1038,47 +1121,35 @@
                     counters.push(newItem);
                     _switchToCounter(newItem.id);
                     switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
                     _z(`switched to ${cleanName}`, 2000);
                 }, 60);
-            }
-
-            function _switchToCounter(id) {
-                const target = counters.find(c => c.id === id);
-                if (!target) return;
-                activeId = target.id;
-                currentCounter = target;
-                v = target.v;
-                st = target.st;
-                gl = target.gl;
-                f.contentEditable = 'false';
-                _w();
-                _x();
             }
 
             function _renameCounter(id) {
                 const target = counters.find(c => c.id === id);
                 if (!target || target.permanent || target.id === PERMANENT_ID) return;
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
+                }
                 setTimeout(() => {
-                    const nextName = prompt('Rename Counter:', target.name);
+                    const rawName = prompt('Rename counter:', target.name);
                     _dismissMobileKeyboard();
                     setTimeout(_dismissMobileKeyboard, 150);
                     setTimeout(_dismissMobileKeyboard, 350);
-                    if (nextName === null) return;
-                    const cleanName = nextName.trim();
-                    if (cleanName) {
-                        target.name = cleanName;
-                        _w();
-                        _x();
-                        _renderCounterSwitcher();
-                        _z(`renamed to ${cleanName}`, 2000);
-                    }
+                    if (rawName === null) return;
+                    const cleanName = String(rawName).trim();
+                    if (!cleanName) return;
+                    target.name = cleanName;
+                    _w();
+                    _x();
+                    _z(`renamed to ${cleanName}`, 2000);
                 }, 60);
             }
 
             function _deleteCounter(id) {
                 const target = counters.find(c => c.id === id);
                 if (!target || target.permanent || target.id === PERMANENT_ID) return;
-                if (!confirm(`Delete "${target.name}"?`)) return;
 
                 counters = counters.filter(c => c.id !== id);
                 if (activeId === id) {
@@ -1125,6 +1196,7 @@
                             e.stopPropagation();
                             _closeOpenSwipeRows(null);
                             switcher.classList.remove('active');
+                            _syncSwitcherOpenState();
                             _renameCounter(item.id);
                         };
 
@@ -1136,6 +1208,7 @@
                             e.stopPropagation();
                             _closeOpenSwipeRows(null);
                             switcher.classList.remove('active');
+                            _syncSwitcherOpenState();
                             _deleteCounter(item.id);
                         };
 
@@ -1198,6 +1271,7 @@
                                 } else {
                                     _switchToCounter(item.id);
                                     switcher.classList.remove('active');
+                                    _syncSwitcherOpenState();
                                     _z(`switched to ${item.name}`, 1600);
                                 }
                             }
@@ -1228,6 +1302,7 @@
                         }
                         _switchToCounter(item.id);
                         switcher.classList.remove('active');
+                        _syncSwitcherOpenState();
                         _z(`switched to ${item.name}`, 1600);
                     };
 
@@ -1248,14 +1323,15 @@
                 addBtn.addEventListener('touchcancel', () => addBtn.classList.remove('active-touch'), { passive: true });
                 addBtn.onclick = e => {
                     e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 300;
                     _closeOpenSwipeRows(null);
                     _createCounter();
                 };
                 switcher.appendChild(addBtn);
             }
 
-            // Chrome-style press & swipe-down selection on top-left counter button
+            // Chrome-like press & swipe-down selection on top-left counter button
+            let switcherWasOpenOnTouchStart = false;
+
             titleBtn.addEventListener('touchstart', e => {
                 if (lk || isLockout) return;
                 e.stopPropagation();
@@ -1266,11 +1342,13 @@
                 titleTouchTracking = true;
                 titleTouchStartY = e.touches[0].clientY;
                 titleDraggedDown = false;
+                switcherWasOpenOnTouchStart = switcher.classList.contains('active');
                 _clearDragHover();
 
-                if (!switcher.classList.contains('active')) {
+                if (!switcherWasOpenOnTouchStart) {
                     _renderCounterSwitcher();
                     switcher.classList.add('active');
+                    _syncSwitcherOpenState();
                 }
             }, { passive: true });
 
@@ -1294,35 +1372,47 @@
 
                 const changedTouch = e.changedTouches && e.changedTouches[0];
                 if (changedTouch && titleDraggedDown && switcher.classList.contains('active')) {
-                    _updateDragHoverAtPoint(changedTouch.clientX, changedTouch.clientY);
+                    _applyDragHoverNow(changedTouch.clientX, changedTouch.clientY);
                     const chosen = hoveredDragTarget;
                     _clearDragHover();
                     titleTouchTracking = false;
                     titleDraggedDown = false;
+                    switcherWasOpenOnTouchStart = false;
 
                     if (chosen) {
                         if (chosen.dataset.action === 'new-counter') {
                             switcher.classList.remove('active');
+                            _syncSwitcherOpenState();
                             _createCounter();
                         } else if (chosen.dataset.counterId) {
                             const target = counters.find(c => c.id === chosen.dataset.counterId);
                             _switchToCounter(chosen.dataset.counterId);
                             switcher.classList.remove('active');
+                            _syncSwitcherOpenState();
                             if (target) _z(`switched to ${target.name}`, 1600);
                         }
                         return;
                     }
                 }
 
+                // Simple tap (no downward drag): if menu was already open on touchstart, close it
+                if (!titleDraggedDown && switcherWasOpenOnTouchStart) {
+                    switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
+                }
+
                 _clearDragHover();
                 titleTouchTracking = false;
                 titleDraggedDown = false;
+                switcherWasOpenOnTouchStart = false;
             });
 
             titleBtn.addEventListener('touchcancel', () => {
                 _clearDragHover();
                 titleTouchTracking = false;
                 titleDraggedDown = false;
+                switcherWasOpenOnTouchStart = false;
+                _syncSwitcherOpenState();
             }, { passive: true });
 
             titleBtn.onclick = e => {
@@ -1333,24 +1423,99 @@
                 _closeOpenSwipeRows(null);
                 if (switcher.classList.contains('active')) {
                     switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
                     return;
                 }
                 _renderCounterSwitcher();
                 switcher.classList.add('active');
+                _syncSwitcherOpenState();
             };
+
+            // Chrome-like press & swipe-down selection on top-right 3-dot menu button
+            mb.addEventListener('touchstart', e => {
+                if (lk || isLockout) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
+                _closeOpenSwipeRows(null);
+
+                menuTouchTracking = true;
+                menuTouchStartY = e.touches[0].clientY;
+                menuDraggedDown = false;
+                menuWasOpenOnTouchStart = md.classList.contains('active');
+                _clearDragHover();
+
+                if (!menuWasOpenOnTouchStart) {
+                    md.classList.add('active');
+                }
+            }, { passive: true });
+
+            mb.addEventListener('touchmove', e => {
+                if (!menuTouchTracking) return;
+                e.stopPropagation();
+                const touch = e.touches[0];
+                if (touch.clientY - menuTouchStartY > 12) {
+                    menuDraggedDown = true;
+                }
+                if (menuDraggedDown && md.classList.contains('active')) {
+                    _updateDragHoverAtPoint(touch.clientX, touch.clientY);
+                }
+            }, { passive: true });
+
+            mb.addEventListener('touchend', e => {
+                if (!menuTouchTracking) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                suppressMenuClickUntil = Date.now() + 400;
+
+                const changedTouch = e.changedTouches && e.changedTouches[0];
+                if (changedTouch && menuDraggedDown && md.classList.contains('active')) {
+                    _applyDragHoverNow(changedTouch.clientX, changedTouch.clientY);
+                    const chosen = hoveredDragTarget;
+                    _clearDragHover();
+                    menuTouchTracking = false;
+                    menuDraggedDown = false;
+                    menuWasOpenOnTouchStart = false;
+
+                    if (chosen && md.contains(chosen)) {
+                        chosen.click();
+                        return;
+                    }
+                }
+
+                if (!menuDraggedDown && menuWasOpenOnTouchStart) {
+                    md.classList.remove('active');
+                }
+
+                _clearDragHover();
+                menuTouchTracking = false;
+                menuDraggedDown = false;
+                menuWasOpenOnTouchStart = false;
+            });
+
+            mb.addEventListener('touchcancel', () => {
+                _clearDragHover();
+                menuTouchTracking = false;
+                menuDraggedDown = false;
+                menuWasOpenOnTouchStart = false;
+            }, { passive: true });
 
             newCounterMenu.onclick = e => {
                 e.stopPropagation();
                 suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 switcher.classList.remove('active');
+                _syncSwitcherOpenState();
                 _createCounter();
             };
 
             mb.onclick = e => {
                 e.stopPropagation();
                 suppressBodyTapUntil = Date.now() + 300;
+                if (Date.now() < suppressMenuClickUntil) return;
                 switcher.classList.remove('active');
+                _syncSwitcherOpenState();
                 _closeOpenSwipeRows(null);
                 md.classList.toggle('active');
             };
@@ -1362,6 +1527,7 @@
                 if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
                     _closeOpenSwipeRows(null);
                     switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
                 }
                 if (Date.now() < suppressBodyTapUntil) return;
                 if (lk || isLockout) return;
@@ -1398,6 +1564,7 @@
                 suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 switcher.classList.remove('active');
+                _syncSwitcherOpenState();
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
@@ -1581,10 +1748,8 @@
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     suppressBodyTapUntil = Date.now() + 350;
                     if (dx > 50) {
-                        if (confirm('Reset counter to 0?')) {
-                            if (navigator.vibrate) navigator.vibrate(40);
-                            v = 0; _w(); _x(); _z('counter reset', 2000)
-                        }
+                        if (navigator.vibrate) navigator.vibrate(40);
+                        v = 0; _w(); _x(); _z('counter reset', 2000);
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
                         _dismissMobileKeyboard();
@@ -1607,12 +1772,10 @@
                         s.removeAllRanges(); s.addRange(r)
                     } else if (dy < -50) {
                         if (v > 0) {
-                            if (confirm('Subtract 1 from counter?')) {
-                                if (navigator.vibrate) navigator.vibrate(40);
-                                v = v - 1;
-                                _p(v);
-                                _w(); _x(); _z('number subtracted', 2000)
-                            }
+                            if (navigator.vibrate) navigator.vibrate(40);
+                            v = v - 1;
+                            _p(v);
+                            _w(); _x(); _z('number subtracted', 2000);
                         }
                     }
                 }
