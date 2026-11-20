@@ -509,19 +509,24 @@
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
-            // Helper to ensure mobile soft keyboard closes cleanly after native prompt()
+            // Force mobile WebView/browser IME keyboard to close after native prompt()
             function _dismissMobileKeyboard() {
-                if (d.activeElement && typeof d.activeElement.blur === 'function') {
-                    d.activeElement.blur();
-                }
-                const tmp = d.createElement('input');
-                tmp.type = 'text';
-                tmp.setAttribute('readonly', 'readonly');
-                tmp.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;pointer-events:none;';
-                d.body.appendChild(tmp);
-                tmp.focus();
-                tmp.blur();
-                d.body.removeChild(tmp);
+                try {
+                    if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                        d.activeElement.blur();
+                    }
+                    const tmp = d.createElement('input');
+                    tmp.type = 'text';
+                    tmp.setAttribute('inputmode', 'none');
+                    tmp.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;border:0;padding:0;margin:0;';
+                    d.body.appendChild(tmp);
+                    tmp.focus({ preventScroll: true });
+                    setTimeout(() => {
+                        tmp.blur();
+                        if (tmp.parentNode) tmp.parentNode.removeChild(tmp);
+                        w.focus();
+                    }, 30);
+                } catch (err) {}
             }
 
             // Automatic Keep Screen Awake (Wake Lock API)
@@ -732,7 +737,8 @@
                 setTimeout(() => {
                     const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
                     _dismissMobileKeyboard();
-                    setTimeout(_dismissMobileKeyboard, 80);
+                    setTimeout(_dismissMobileKeyboard, 150);
+                    setTimeout(_dismissMobileKeyboard, 350);
                     if (r !== null) {
                         const n = parseInt(r);
                         if (!isNaN(n) && n >= 0) {
@@ -747,7 +753,7 @@
                             _x();
                         }
                     }
-                }, 50);
+                }, 60);
             }
 
             goalMenu.onclick = e => {
@@ -908,7 +914,8 @@
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
                         _dismissMobileKeyboard();
-                        setTimeout(_dismissMobileKeyboard, 80);
+                        setTimeout(_dismissMobileKeyboard, 150);
+                        setTimeout(_dismissMobileKeyboard, 350);
                         if (r !== null) {
                             const n = parseInt(r);
                             st = (!isNaN(n) && n > 0) ? n : 1;
