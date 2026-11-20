@@ -488,7 +488,7 @@
 
         .undo-toast {
             position: fixed;
-            bottom: 84px;
+            bottom: 108px;
             left: 50%;
             transform: translateX(-50%) translateY(16px);
             background: #202124;
@@ -1981,10 +1981,23 @@
                         s.removeAllRanges(); s.addRange(r)
                     } else if (dy < -50) {
                         if (v > 0) {
-                            if (navigator.vibrate) navigator.vibrate(40);
-                            v = v - 1;
-                            _p(v);
-                            _w(); _x(); _z('number subtracted', 2000);
+                            const targetCounterId = activeId;
+                            const targetCounterName = currentCounter.name;
+                            const currentVal = v;
+                            setTimeout(() => {
+                                const confirmed = w.confirm(`Subtract 1 from "${targetCounterName}" (${currentVal.toLocaleString('en-US')} → ${(currentVal - 1).toLocaleString('en-US')})?`);
+                                if (!confirmed) return;
+                                if (navigator.vibrate) navigator.vibrate(40);
+                                const targetObj = counters.find(c => c.id === targetCounterId);
+                                if (targetObj && targetObj.v > 0) targetObj.v -= 1;
+                                if (activeId === targetCounterId && v > 0) {
+                                    v = v - 1;
+                                    _p(v);
+                                    _w();
+                                }
+                                _x();
+                                _z('number subtracted', 2000);
+                            }, 30);
                         }
                     }
                 }
