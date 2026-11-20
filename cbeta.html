@@ -488,7 +488,7 @@
 
         .undo-toast {
             position: fixed;
-            bottom: 24px;
+            bottom: 84px;
             left: 50%;
             transform: translateX(-50%) translateY(16px);
             background: #202124;
@@ -511,10 +511,15 @@
             z-index: 3005;
             overflow: hidden;
             transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                        transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+                        transform 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+                        bottom 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
             min-width: 280px;
             max-width: calc(100vw - 32px);
+        }
+
+        body.hide-hints .undo-toast {
+            bottom: 28px;
         }
 
         .undo-toast.active {
