@@ -1148,14 +1148,6 @@
                 menu.style.top = `${Math.round(top)}px`;
                 menu.style.transformOrigin = `${Math.round(originX)}px ${Math.round(originY)}px`;
             }
-                let top = rect.top;
-                if (top + menuRect.height > w.innerHeight - 12) {
-                    top = Math.max(12, w.innerHeight - menuRect.height - 12);
-                }
-
-                menu.style.left = `${Math.round(left)}px`;
-                menu.style.top = `${Math.round(top)}px`;
-            }
 
             // Clears active drag-hover highlight across counter switcher and menu items
             function _clearDragHover() {
