@@ -1192,27 +1192,6 @@
                 }
             }
 
-            // Opens a minimal floating menu anchored cleanly near the long-pressed counter row
-            function _openCounterItemMenu(counterId, anchorEl, touchPoint) {
-                const target = counters.find(c => c.id === counterId);
-                if (!target || target.permanent || target.id === PERMANENT_ID) return;
-                if (titleTouchTracking || titleDraggedDown) return;
-
-                const menu = _ensureCounterItemMenu();
-                _closeCounterItemMenu();
-                openItemMenuCounterId = counterId;
-
-                const headingEl = menu.querySelector('#counter-item-menu-heading');
-                if (headingEl) {
-                    headingEl.textContent = target.name;
-                }
-
-                const rect = anchorEl.getBoundingClientRect();
-                const refX = touchPoint ? touchPoint.x : (rect.left + rect.width * 0.7);
-                const refY = touchPoint ? touchPoint.y : (rect.top + rect.height / 2);
-
-                menu.style.left = '0px';
-                menu.style.top = '0px';
             // Opens a fixed-position menu in a clean, predictable spot for Edit/Delete
             function _openCounterItemMenu(counterId) {
                 const target = counters.find(c => c.id === counterId);
