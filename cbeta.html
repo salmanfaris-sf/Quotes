@@ -234,12 +234,25 @@
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
             z-index: 320;
             overflow: hidden;
-            display: none;
+            display: flex;
             flex-direction: column;
+            opacity: 0;
+            transform: scale(0.28);
+            pointer-events: none;
+            visibility: hidden;
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.16s ease,
+                        visibility 0s linear 0.24s;
         }
 
         .counter-item-menu.active {
-            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            visibility: visible;
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.18s ease,
+                        visibility 0s linear 0s;
         }
 
         .counter-item-menu-btn {
@@ -1110,15 +1123,31 @@
                 anchorBtn.classList.add('active');
 
                 const rect = anchorBtn.getBoundingClientRect();
-                menu.classList.add('active');
+                const anchorCenterX = rect.left + rect.width / 2;
+                const anchorCenterY = rect.top + rect.height / 2;
+
                 menu.style.left = '0px';
                 menu.style.top = '0px';
+                menu.style.transformOrigin = 'center center';
+                menu.classList.add('active');
 
                 const menuRect = menu.getBoundingClientRect();
                 let left = rect.right + 8;
                 if (left + menuRect.width > w.innerWidth - 12) {
                     left = Math.max(12, rect.left - menuRect.width - 8);
                 }
+                let top = rect.top;
+                if (top + menuRect.height > w.innerHeight - 12) {
+                    top = Math.max(12, w.innerHeight - menuRect.height - 12);
+                }
+
+                const originX = Math.max(0, Math.min(menuRect.width, anchorCenterX - left));
+                const originY = Math.max(0, Math.min(menuRect.height, anchorCenterY - top));
+
+                menu.style.left = `${Math.round(left)}px`;
+                menu.style.top = `${Math.round(top)}px`;
+                menu.style.transformOrigin = `${Math.round(originX)}px ${Math.round(originY)}px`;
+            }
                 let top = rect.top;
                 if (top + menuRect.height > w.innerHeight - 12) {
                     top = Math.max(12, w.innerHeight - menuRect.height - 12);
