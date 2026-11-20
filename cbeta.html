@@ -229,6 +229,12 @@
             max-width: 100%;
             z-index: 5;
             font-weight: 100;
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+        }
+
+        .a9.resetting {
+            transform: scale(0.92);
+            opacity: 0.7;
         }
 
         .b1 {
@@ -513,7 +519,7 @@
                 gl = parseInt(localStorage.getItem(k.g)) || 0,
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
-                wakeLock = null, deferredInstallPrompt = null,
+                wakeLock = null, deferredInstallPrompt = null, resetAnimFrame = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
@@ -661,6 +667,53 @@
                     gd.classList.add('v')
                 } else gd.classList.remove('v');
                 _up()
+            }
+
+            // Smoothly animate the counter rolling down to 0
+            function _animateResetToZero() {
+                if (resetAnimFrame) {
+                    cancelAnimationFrame(resetAnimFrame);
+                    resetAnimFrame = null;
+                }
+                const startVal = v;
+                v = 0;
+                _x();
+
+                if (startVal <= 0) {
+                    _w();
+                    return;
+                }
+
+                const duration = 380;
+                const startTime = performance.now();
+                f.classList.add('resetting');
+
+                function step(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Ease-out cubic curve for rapid initial drop and smooth settle at 0
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const currentDisplay = Math.round(startVal * (1 - eased));
+
+                    f.textContent = currentDisplay.toLocaleString('en-US');
+                    if (gl > 0) {
+                        pc.classList.add('active');
+                        const o = cr - (Math.min(currentDisplay, gl) / gl) * cr;
+                        rg.style.strokeDashoffset = o;
+                        rg.style.opacity = currentDisplay >= gl ? 1 : .3;
+                        rg.style.stroke = currentDisplay >= gl ? 'var(--accent)' : '#fff';
+                    }
+
+                    if (progress < 1) {
+                        resetAnimFrame = requestAnimationFrame(step);
+                    } else {
+                        resetAnimFrame = null;
+                        f.classList.remove('resetting');
+                        _w();
+                    }
+                }
+
+                resetAnimFrame = requestAnimationFrame(step);
             }
 
             function _x() {
@@ -921,7 +974,8 @@
                     if (dx > 50) {
                         if (confirm('Reset counter to 0?')) {
                             if (navigator.vibrate) navigator.vibrate(40);
-                            v = 0; _w(); _x(); _z('counter reset', 2000)
+                            _animateResetToZero();
+                            _z('counter reset', 2000)
                         }
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
