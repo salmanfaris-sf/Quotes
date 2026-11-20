@@ -203,26 +203,56 @@
 
         .counter-item-menu {
             position: fixed;
+            top: 72px;
+            left: 273px;
             background: rgba(34, 34, 37, 0.96);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             min-width: 156px;
-            max-width: 220px;
+            max-width: calc(100vw - 293px);
             padding: 4px 0;
             box-shadow: none;
             z-index: 320;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            transform-origin: top left;
             opacity: 0;
-            transform: scale(0.92) translateY(-4px);
+            transform: scale(0.94) translateY(-4px);
             pointer-events: none;
             visibility: hidden;
             transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
                         opacity 0.16s ease,
                         visibility 0s linear 0.2s;
+        }
+
+        .counter-item-menu.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            visibility: visible;
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.18s ease,
+                        visibility 0s linear 0s;
+        }
+
+        @media (max-width: 460px) {
+            .counter-item-menu {
+                top: auto;
+                bottom: 28px;
+                left: 50%;
+                right: auto;
+                min-width: 210px;
+                max-width: calc(100vw - 40px);
+                transform-origin: bottom center;
+                transform: translateX(-50%) scale(0.94) translateY(6px);
+            }
+
+            .counter-item-menu.active {
+                transform: translateX(-50%) scale(1) translateY(0);
+            }
         }
 
         .counter-item-menu.active {
@@ -1183,22 +1213,22 @@
 
                 menu.style.left = '0px';
                 menu.style.top = '0px';
-                menu.style.transformOrigin = 'top left';
-                menu.classList.add('active');
+            // Opens a fixed-position menu in a clean, predictable spot for Edit/Delete
+            function _openCounterItemMenu(counterId) {
+                const target = counters.find(c => c.id === counterId);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+                if (titleTouchTracking || titleDraggedDown) return;
 
-                const menuRect = menu.getBoundingClientRect();
-                let left = Math.min(Math.max(14, refX - menuRect.width * 0.5), w.innerWidth - menuRect.width - 14);
-                let top = rect.bottom + 6;
-                if (top + menuRect.height > w.innerHeight - 14) {
-                    top = Math.max(14, rect.top - menuRect.height - 6);
+                const menu = _ensureCounterItemMenu();
+                _closeCounterItemMenu();
+                openItemMenuCounterId = counterId;
+
+                const headingEl = menu.querySelector('#counter-item-menu-heading');
+                if (headingEl) {
+                    headingEl.textContent = target.name;
                 }
 
-                const originX = Math.max(0, Math.min(menuRect.width, refX - left));
-                const originY = Math.max(0, Math.min(menuRect.height, refY - top));
-
-                menu.style.left = `${Math.round(left)}px`;
-                menu.style.top = `${Math.round(top)}px`;
-                menu.style.transformOrigin = `${Math.round(originX)}px ${Math.round(originY)}px`;
+                menu.classList.add('active');
                 if (navigator.vibrate) navigator.vibrate(35);
             }
 
@@ -1401,7 +1431,7 @@
                             suppressRowClickUntil = Date.now() + 450;
                             suppressBodyTapUntil = Date.now() + 450;
                             row.classList.remove('active-touch');
-                            _openCounterItemMenu(item.id, row, { x: rowStartX, y: rowStartY });
+                            _openCounterItemMenu(item.id);
                         }, 520);
                     }, { passive: true });
 
