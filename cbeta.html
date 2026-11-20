@@ -208,9 +208,10 @@
             -webkit-backdrop-filter: blur(28px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
-            min-width: 146px;
+            min-width: 156px;
+            max-width: 220px;
             padding: 4px 0;
-            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.72);
+            box-shadow: none;
             z-index: 320;
             overflow: hidden;
             display: flex;
@@ -232,6 +233,20 @@
             transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
                         opacity 0.18s ease,
                         visibility 0s linear 0s;
+        }
+
+        .counter-item-menu-heading {
+            padding: 9px 18px 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.52);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
         }
 
         .counter-item-menu-btn {
@@ -1045,14 +1060,47 @@
                 counterItemMenu = d.createElement('div');
                 counterItemMenu.className = 'counter-item-menu';
                 counterItemMenu.id = 'counter-item-menu';
+                counterItemMenu.addEventListener('touchstart', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 500;
+                }, { passive: true });
+                counterItemMenu.addEventListener('touchend', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 500;
+                });
+
+                const headingEl = d.createElement('div');
+                headingEl.className = 'counter-item-menu-heading';
+                headingEl.id = 'counter-item-menu-heading';
 
                 const renameBtn = d.createElement('button');
                 renameBtn.type = 'button';
                 renameBtn.className = 'counter-item-menu-btn';
                 renameBtn.textContent = 'Rename';
+                renameBtn.addEventListener('touchstart', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 500;
+                    renameBtn.classList.add('active-touch');
+                }, { passive: true });
+                renameBtn.addEventListener('touchend', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 600;
+                    renameBtn.classList.remove('active-touch');
+                    const targetId = openItemMenuCounterId;
+                    _closeCounterItemMenu();
+                    if (targetId) {
+                        switcher.classList.remove('active');
+                        _syncSwitcherOpenState();
+                        _renameCounter(targetId);
+                    }
+                });
+                renameBtn.addEventListener('touchcancel', () => {
+                    renameBtn.classList.remove('active-touch');
+                }, { passive: true });
                 renameBtn.onclick = e => {
                     e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 300;
+                    suppressBodyTapUntil = Date.now() + 600;
                     const targetId = openItemMenuCounterId;
                     _closeCounterItemMenu();
                     if (targetId) {
@@ -1066,9 +1114,30 @@
                 deleteBtn.type = 'button';
                 deleteBtn.className = 'counter-item-menu-btn';
                 deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('touchstart', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 500;
+                    deleteBtn.classList.add('active-touch');
+                }, { passive: true });
+                deleteBtn.addEventListener('touchend', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 600;
+                    deleteBtn.classList.remove('active-touch');
+                    const targetId = openItemMenuCounterId;
+                    _closeCounterItemMenu();
+                    if (targetId) {
+                        switcher.classList.remove('active');
+                        _syncSwitcherOpenState();
+                        _deleteCounter(targetId);
+                    }
+                });
+                deleteBtn.addEventListener('touchcancel', () => {
+                    deleteBtn.classList.remove('active-touch');
+                }, { passive: true });
                 deleteBtn.onclick = e => {
                     e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 300;
+                    suppressBodyTapUntil = Date.now() + 600;
                     const targetId = openItemMenuCounterId;
                     _closeCounterItemMenu();
                     if (targetId) {
@@ -1078,6 +1147,7 @@
                     }
                 };
 
+                counterItemMenu.appendChild(headingEl);
                 counterItemMenu.appendChild(renameBtn);
                 counterItemMenu.appendChild(deleteBtn);
                 d.body.appendChild(counterItemMenu);
@@ -1101,6 +1171,11 @@
                 const menu = _ensureCounterItemMenu();
                 _closeCounterItemMenu();
                 openItemMenuCounterId = counterId;
+
+                const headingEl = menu.querySelector('#counter-item-menu-heading');
+                if (headingEl) {
+                    headingEl.textContent = target.name;
+                }
 
                 const rect = anchorEl.getBoundingClientRect();
                 const refX = touchPoint ? touchPoint.x : (rect.left + rect.width * 0.7);
@@ -1788,7 +1863,7 @@
                 if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-item-menu') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -1802,7 +1877,7 @@
 
             d.body.addEventListener('touchend', e => {
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-item-menu') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
