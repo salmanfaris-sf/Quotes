@@ -91,7 +91,7 @@
             padding: 6px 0;
             display: flex;
             flex-direction: column;
-            min-width: 240px;
+            min-width: 230px;
             max-width: calc(100vw - 50px);
             max-height: 62vh;
             overflow-y: auto;
@@ -121,78 +121,28 @@
                         visibility 0s linear 0s;
         }
 
-        .counter-swipe-wrap {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            min-height: 50px;
-            display: flex;
-            align-items: stretch;
-        }
-
-        .counter-swipe-actions {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: stretch;
-            z-index: 1;
-        }
-
-        .counter-swipe-btn {
-            border: none;
-            color: #fff;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.02rem;
-            padding: 0 16px;
-            min-width: 74px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: opacity 0.12s ease, filter 0.12s ease;
-        }
-
-        .counter-swipe-btn:active {
-            filter: brightness(0.82);
-        }
-
-        .counter-swipe-btn.rename {
-            background: #2c2c2e;
-            color: #fff;
-        }
-
-        .counter-swipe-btn.delete {
-            background: #ff453a;
-            color: #fff;
-        }
-
         .counter-row-content {
-            position: relative;
-            z-index: 2;
             width: 100%;
             min-height: 50px;
             padding: 12px 18px;
-            background: rgb(28, 28, 30);
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             cursor: pointer;
             touch-action: pan-y;
-            transform: translateX(0);
-            transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), background 0.12s ease;
-        }
-
-        .counter-row-content.swiping {
-            transition: background 0.12s ease;
+            transition: background 0.14s ease, transform 0.14s ease;
         }
 
         .counter-row-content:active,
         .counter-row-content.active-touch {
-            background: rgb(44, 44, 46);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .counter-row-content.pressing {
+            background: rgba(255, 255, 255, 0.18);
+            transform: scale(0.985);
         }
 
         .counter-row-content.is-current .counter-row-name {
@@ -235,6 +185,96 @@
         .counter-add-btn.active-touch {
             background: rgba(255, 255, 255, 0.12);
             opacity: 1;
+        }
+
+        .counter-action-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 20px;
+            z-index: 400;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+        }
+
+        .counter-action-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            transition: opacity 0.24s ease, visibility 0s linear 0s;
+        }
+
+        .counter-action-sheet {
+            width: 100%;
+            max-width: 380px;
+            background: var(--m);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75);
+            transform: translateY(18px) scale(0.98);
+            transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: default;
+        }
+
+        .counter-action-backdrop.active .counter-action-sheet {
+            transform: translateY(0) scale(1);
+        }
+
+        .counter-action-header {
+            padding: 15px 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08rem;
+            text-transform: uppercase;
+            opacity: 0.65;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .counter-action-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--s);
+            padding: 16px 20px;
+            font-size: 0.94rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.12s ease, transform 0.1s ease;
+        }
+
+        .counter-action-btn:last-child {
+            border-bottom: none;
+        }
+
+        .counter-action-btn:active,
+        .counter-action-btn.active-touch {
+            background: rgba(255, 255, 255, 0.14);
+            transform: scale(0.99);
+        }
+
+        .counter-action-btn.danger {
+            color: #ff453a;
+        }
+
+        .counter-action-btn.cancel {
+            opacity: 0.72;
         }
 
         .a2 {
@@ -569,7 +609,8 @@
         body.locked .b2,
         body.locked .a1,
         body.locked .b1,
-        body.locked .counter-switcher {
+        body.locked .counter-switcher,
+        body.locked .counter-action-backdrop {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -578,7 +619,8 @@
         body.f .a2,
         body.f .b1,
         body.f .a1,
-        body.f .counter-switcher {
+        body.f .counter-switcher,
+        body.f .counter-action-backdrop {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -590,7 +632,8 @@
         body.lockout-active #x6,
         body.lockout-active .a7,
         body.lockout-active #y1,
-        body.lockout-active .counter-switcher {
+        body.lockout-active .counter-switcher,
+        body.lockout-active .counter-action-backdrop {
             display: none !important;
             pointer-events: none !important;
         }
@@ -609,6 +652,14 @@
         </svg>
     </div>
     <div class="counter-switcher" id="counter-switcher"></div>
+    <div class="counter-action-backdrop" id="counter-action-backdrop">
+        <div class="counter-action-sheet" id="counter-action-sheet">
+            <div class="counter-action-header" id="counter-action-header">Counter</div>
+            <button type="button" class="counter-action-btn" id="action-rename-btn"><span>Rename Counter</span></button>
+            <button type="button" class="counter-action-btn danger" id="action-delete-btn"><span>Delete Counter</span></button>
+            <button type="button" class="counter-action-btn cancel" id="action-cancel-btn"><span>Cancel</span></button>
+        </div>
+    </div>
     <div class="a2">
         <button id="menu-btn" aria-label="Menu">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -680,14 +731,18 @@
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'),
                 titleBtn = d.getElementById('x1'), titleText = d.getElementById('counter-title-text'),
                 switcher = d.getElementById('counter-switcher'), newCounterMenu = d.getElementById('new-counter-menu'),
+                actionBackdrop = d.getElementById('counter-action-backdrop'),
+                actionSheet = d.getElementById('counter-action-sheet'),
+                actionHeader = d.getElementById('counter-action-header'),
+                actionRenameBtn = d.getElementById('action-rename-btn'),
+                actionDeleteBtn = d.getElementById('action-delete-btn'),
+                actionCancelBtn = d.getElementById('action-cancel-btn'),
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'),
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
                 installMenu = d.getElementById('install-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
-
-            const ACTION_WIDTH = 148;
 
             f.contentEditable = 'false';
 
@@ -734,6 +789,7 @@
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
                 wakeLock = null, deferredInstallPrompt = null,
+                longPressedCounterId = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
@@ -942,14 +998,19 @@
                 go.classList.add('active');
             }
 
-            function _closeOpenSwipeRows(exceptEl) {
-                switcher.querySelectorAll('.counter-row-content').forEach(row => {
-                    if (row !== exceptEl) {
-                        row.classList.remove('swiping');
-                        row.style.transform = 'translateX(0px)';
-                        row.dataset.swipeOpen = 'false';
-                    }
-                });
+            function _openCounterActionSheet(id) {
+                const target = counters.find(c => c.id === id);
+                if (!target) return;
+                longPressedCounterId = target.id;
+                actionHeader.textContent = target.name;
+                switcher.classList.remove('active');
+                actionBackdrop.classList.add('active');
+                if (navigator.vibrate) navigator.vibrate(45);
+            }
+
+            function _closeCounterActionSheet() {
+                actionBackdrop.classList.remove('active');
+                longPressedCounterId = null;
             }
 
             function _createCounter() {
@@ -1030,40 +1091,8 @@
             function _renderCounterSwitcher() {
                 switcher.innerHTML = '';
                 counters.forEach(item => {
-                    const wrap = d.createElement('div');
-                    wrap.className = 'counter-swipe-wrap';
-
-                    const actions = d.createElement('div');
-                    actions.className = 'counter-swipe-actions';
-
-                    const renameBtn = d.createElement('button');
-                    renameBtn.type = 'button';
-                    renameBtn.className = 'counter-swipe-btn rename';
-                    renameBtn.textContent = 'Rename';
-                    renameBtn.onclick = e => {
-                        e.stopPropagation();
-                        _closeOpenSwipeRows(null);
-                        switcher.classList.remove('active');
-                        _renameCounter(item.id);
-                    };
-
-                    const delBtn = d.createElement('button');
-                    delBtn.type = 'button';
-                    delBtn.className = 'counter-swipe-btn delete';
-                    delBtn.textContent = 'Delete';
-                    delBtn.onclick = e => {
-                        e.stopPropagation();
-                        _closeOpenSwipeRows(null);
-                        switcher.classList.remove('active');
-                        _deleteCounter(item.id);
-                    };
-
-                    actions.appendChild(renameBtn);
-                    actions.appendChild(delBtn);
-
                     const row = d.createElement('div');
                     row.className = 'counter-row-content' + (item.id === activeId ? ' is-current' : '');
-                    row.dataset.swipeOpen = 'false';
 
                     const nameSpan = d.createElement('span');
                     nameSpan.className = 'counter-row-name';
@@ -1076,76 +1105,92 @@
                     row.appendChild(nameSpan);
                     row.appendChild(valSpan);
 
-                    let rowStartX = 0, rowStartY = 0, rowCurrentX = 0, rowDragging = false, rowMoved = false;
+                    let holdTimer = null, holdTriggered = false, startX = 0, startY = 0, suppressNextClick = false;
+
+                    const clearHoldTimer = () => {
+                        if (holdTimer) {
+                            clearTimeout(holdTimer);
+                            holdTimer = null;
+                        }
+                        row.classList.remove('pressing');
+                    };
 
                     row.addEventListener('touchstart', e => {
                         e.stopPropagation();
-                        _closeOpenSwipeRows(row);
-                        rowStartX = e.touches[0].clientX;
-                        rowStartY = e.touches[0].clientY;
-                        rowCurrentX = row.dataset.swipeOpen === 'true' ? -ACTION_WIDTH : 0;
-                        rowDragging = true;
-                        rowMoved = false;
-                        row.classList.add('swiping');
+                        holdTriggered = false;
+                        suppressNextClick = false;
+                        startX = e.touches[0].clientX;
+                        startY = e.touches[0].clientY;
                         row.classList.add('active-touch');
+                        row.classList.add('pressing');
+
+                        holdTimer = setTimeout(() => {
+                            holdTriggered = true;
+                            suppressNextClick = true;
+                            row.classList.remove('active-touch');
+                            row.classList.remove('pressing');
+                            _openCounterActionSheet(item.id);
+                        }, 480);
                     }, { passive: true });
 
                     row.addEventListener('touchmove', e => {
-                        if (!rowDragging) return;
-                        const dx = e.touches[0].clientX - rowStartX;
-                        const dy = e.touches[0].clientY - rowStartY;
-
-                        if (!rowMoved && Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-                        if (Math.abs(dy) > Math.abs(dx) && Math.abs(dx) < 12) return;
-
-                        rowMoved = true;
-                        row.classList.remove('active-touch');
-                        const baseOffset = row.dataset.swipeOpen === 'true' ? -ACTION_WIDTH : 0;
-                        const nextX = Math.max(-ACTION_WIDTH, Math.min(0, baseOffset + dx));
-                        rowCurrentX = nextX;
-                        row.style.transform = `translateX(${nextX}px)`;
+                        if (!holdTimer) return;
+                        const dx = Math.abs(e.touches[0].clientX - startX);
+                        const dy = Math.abs(e.touches[0].clientY - startY);
+                        if (dx > 10 || dy > 10) {
+                            clearHoldTimer();
+                            row.classList.remove('active-touch');
+                        }
                     }, { passive: true });
 
-                    const finishRowTouch = e => {
-                        if (!rowDragging) return;
-                        rowDragging = false;
-                        row.classList.remove('swiping');
+                    const handleTouchEnd = e => {
+                        const wasTriggered = holdTriggered;
+                        clearHoldTimer();
                         row.classList.remove('active-touch');
 
-                        if (rowMoved) {
+                        if (wasTriggered) {
                             if (e && e.cancelable) e.preventDefault();
-                            const shouldOpen = rowCurrentX <= -ACTION_WIDTH * 0.42;
-                            if (shouldOpen) {
-                                row.dataset.swipeOpen = 'true';
-                                row.style.transform = `translateX(${-ACTION_WIDTH}px)`;
-                            } else {
-                                row.dataset.swipeOpen = 'false';
-                                row.style.transform = 'translateX(0px)';
-                            }
-                        } else {
-                            if (row.dataset.swipeOpen === 'true') {
-                                row.dataset.swipeOpen = 'false';
-                                row.style.transform = 'translateX(0px)';
-                            } else {
-                                _switchToCounter(item.id);
-                                switcher.classList.remove('active');
-                                _z(`switched to ${item.name}`, 1600);
-                            }
+                            return;
                         }
+
+                        suppressNextClick = true;
+                        setTimeout(() => { suppressNextClick = false; }, 350);
+                        _switchToCounter(item.id);
+                        switcher.classList.remove('active');
+                        _z(`switched to ${item.name}`, 1600);
                     };
 
-                    row.addEventListener('touchend', finishRowTouch);
-                    row.addEventListener('touchcancel', finishRowTouch);
+                    row.addEventListener('touchend', handleTouchEnd);
+                    row.addEventListener('touchcancel', () => {
+                        clearHoldTimer();
+                        row.classList.remove('active-touch');
+                    });
+
+                    row.addEventListener('mousedown', e => {
+                        if (e.button !== 0) return;
+                        e.stopPropagation();
+                        holdTriggered = false;
+                        row.classList.add('pressing');
+                        holdTimer = setTimeout(() => {
+                            holdTriggered = true;
+                            suppressNextClick = true;
+                            row.classList.remove('pressing');
+                            _openCounterActionSheet(item.id);
+                        }, 480);
+                    });
+
+                    row.addEventListener('mouseup', () => {
+                        clearHoldTimer();
+                    });
+
+                    row.addEventListener('mouseleave', () => {
+                        clearHoldTimer();
+                    });
 
                     row.onclick = e => {
                         e.stopPropagation();
-                        if (rowMoved) {
-                            rowMoved = false;
-                            return;
-                        }
-                        if (row.dataset.swipeOpen === 'true') {
-                            row.dataset.swipeOpen = 'false';
-                            row.style.transform = 'translateX(0px)';
+                        if (suppressNextClick) {
+                            suppressNextClick = false;
                             return;
                         }
                         _switchToCounter(item.id);
@@ -1153,9 +1198,7 @@
                         _z(`switched to ${item.name}`, 1600);
                     };
 
-                    wrap.appendChild(actions);
-                    wrap.appendChild(row);
-                    switcher.appendChild(wrap);
+                    switcher.appendChild(row);
                 });
 
                 const addBtn = d.createElement('button');
@@ -1167,16 +1210,46 @@
                 addBtn.addEventListener('touchcancel', () => addBtn.classList.remove('active-touch'), { passive: true });
                 addBtn.onclick = e => {
                     e.stopPropagation();
-                    _closeOpenSwipeRows(null);
                     _createCounter();
                 };
                 switcher.appendChild(addBtn);
             }
 
+            actionRenameBtn.onclick = e => {
+                e.stopPropagation();
+                const id = longPressedCounterId;
+                _closeCounterActionSheet();
+                if (id) _renameCounter(id);
+            };
+
+            actionDeleteBtn.onclick = e => {
+                e.stopPropagation();
+                const id = longPressedCounterId;
+                _closeCounterActionSheet();
+                if (id) _deleteCounter(id);
+            };
+
+            actionCancelBtn.onclick = e => {
+                e.stopPropagation();
+                _closeCounterActionSheet();
+            };
+
+            actionBackdrop.onclick = e => {
+                if (!e.target.closest('#counter-action-sheet')) {
+                    _closeCounterActionSheet();
+                }
+            };
+
+            d.querySelectorAll('.counter-action-btn').forEach(btn => {
+                btn.addEventListener('touchstart', () => btn.classList.add('active-touch'), { passive: true });
+                btn.addEventListener('touchend', () => btn.classList.remove('active-touch'), { passive: true });
+                btn.addEventListener('touchcancel', () => btn.classList.remove('active-touch'), { passive: true });
+            });
+
             titleBtn.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
-                _closeOpenSwipeRows(null);
+                _closeCounterActionSheet();
                 _renderCounterSwitcher();
                 switcher.classList.toggle('active');
             };
@@ -1185,13 +1258,14 @@
                 e.stopPropagation();
                 md.classList.remove('active');
                 switcher.classList.remove('active');
+                _closeCounterActionSheet();
                 _createCounter();
             };
 
             mb.onclick = e => {
                 e.stopPropagation();
                 switcher.classList.remove('active');
-                _closeOpenSwipeRows(null);
+                _closeCounterActionSheet();
                 md.classList.toggle('active');
             };
 
@@ -1200,7 +1274,6 @@
                     md.classList.remove('active');
                 }
                 if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
-                    _closeOpenSwipeRows(null);
                     switcher.classList.remove('active');
                 }
             });
@@ -1230,6 +1303,7 @@
                 e.stopPropagation();
                 md.classList.remove('active');
                 switcher.classList.remove('active');
+                _closeCounterActionSheet();
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
@@ -1383,7 +1457,7 @@
                 if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-action-backdrop') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -1397,7 +1471,7 @@
 
             d.body.addEventListener('touchend', e => {
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-action-backdrop') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
