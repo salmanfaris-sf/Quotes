@@ -64,11 +64,169 @@
             text-transform: uppercase;
             font-weight: 700;
             color: var(--s);
-            z-index: 15;
+            z-index: 101;
             transition: opacity .4s;
             padding: 10px;
             margin: -10px;
+            pointer-events: auto;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .a1:active {
+            opacity: 0.65;
+        }
+
+        #counter-title-chevron {
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: rotate(0deg);
+            flex-shrink: 0;
+        }
+
+        .a1.open #counter-title-chevron {
+            transform: rotate(180deg);
+        }
+
+        .counter-switcher {
+            position: fixed;
+            top: 72px;
+            left: 25px;
+            background: var(--m);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: none;
+            border-radius: 14px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-width: 240px;
+            max-width: calc(100vw - 50px);
+            max-height: 62vh;
+            overflow-y: auto;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.65);
+            z-index: 200;
+            transform-origin: top left;
+            clip-path: inset(0 0 100% 0 round 14px);
+            opacity: 0;
+            transform: translateY(-6px);
             pointer-events: none;
+            visibility: hidden;
+            transition: clip-path 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.2s ease,
+                        visibility 0s linear 0.28s;
+        }
+
+        .counter-switcher.active {
+            clip-path: inset(0 0 0% 0 round 14px);
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            visibility: visible;
+            transition: clip-path 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.2s ease,
+                        visibility 0s linear 0s;
+        }
+
+        .counter-swipe-wrap {
+            position: relative;
+            overflow: visible;
+            width: 100%;
+            min-height: 50px;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .counter-row-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 50px;
+            padding: 12px 14px 12px 18px;
+            background: rgb(28, 28, 30);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.12s ease;
+        }
+
+        .counter-row-content:active,
+        .counter-row-content.active-touch,
+        .counter-row-content.drag-hover {
+            background: rgba(255, 255, 255, 0.14);
+            transition: background 0.06s linear;
+        }
+
+        .counter-row-content.is-current .counter-row-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .counter-row-content.is-current .counter-row-name::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .counter-row-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.88rem;
+            color: var(--s);
+        }
+
+        .counter-row-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .counter-row-val {
+            font-size: 0.82rem;
+            opacity: 0.65;
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+        }
+
+        .counter-footer-actions {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .counter-add-btn {
+            background: none;
+            border: none;
+            color: var(--s);
+            padding: 13px 18px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+            opacity: 0.88;
+            transition: background 0.12s;
+        }
+
+        .counter-add-btn:active,
+        .counter-add-btn.active-touch,
+        .counter-add-btn.drag-hover {
+            background: rgba(255, 255, 255, 0.14);
+            opacity: 1;
+            transition: background 0.06s linear, opacity 0.06s linear;
         }
 
         .a2 {
@@ -153,13 +311,19 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            transition: background 0.1s;
+            transition: background 0.06s linear;
             white-space: nowrap;
         }
 
         .menu-item:active,
-        .menu-item.active-touch {
-            background: rgba(255, 255, 255, 0.15);
+        .menu-item.active-touch,
+        .menu-item.drag-hover {
+            background: rgba(255, 255, 255, 0.14);
+            transition: background 0.06s linear;
+        }
+
+        .menu-item.danger {
+            color: #ff6961;
         }
 
         .a3 {
@@ -222,13 +386,14 @@
             font-size: 18vw;
             line-height: 1;
             text-align: center;
-            padding: 0 10px;
+            padding: 0 16px;
             pointer-events: auto;
             outline: none;
-            word-break: break-all;
+            white-space: nowrap;
             max-width: 100%;
             z-index: 5;
             font-weight: 100;
+            transition: font-size 0.15s ease-out;
         }
 
         .b1 {
@@ -321,6 +486,87 @@
             white-space: nowrap
         }
 
+        .undo-toast {
+            position: fixed;
+            bottom: 108px;
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            background: #202124;
+            color: #e8eaed;
+            border: none;
+            border-radius: 6px;
+            padding: 13px 16px 14px 16px;
+            font-size: 0.875rem;
+            font-weight: 400;
+            letter-spacing: 0.014rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.4),
+                        0 6px 10px 0 rgba(0, 0, 0, 0.28),
+                        0 1px 18px 0 rgba(0, 0, 0, 0.24);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 3005;
+            overflow: hidden;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+                        bottom 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            min-width: 280px;
+            max-width: calc(100vw - 32px);
+        }
+
+        body.hide-hints .undo-toast {
+            bottom: 28px;
+        }
+
+        .undo-toast.active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .undo-toast-text {
+            color: #e8eaed;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+
+        .undo-toast-btn {
+            background: transparent;
+            border: none;
+            color: #8ab4f8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.02rem;
+            text-transform: none;
+            padding: 6px 8px;
+            margin: -6px -4px -6px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.15s ease, opacity 0.12s ease;
+        }
+
+        .undo-toast-btn:active {
+            background: rgba(138, 180, 248, 0.14);
+        }
+
+        .undo-toast-bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2.5px;
+            width: 100%;
+            background: #8ab4f8;
+            transform-origin: left center;
+            transform: scaleX(1);
+        }
+
         #lock-overlay,
         #goal-overlay {
             position: fixed;
@@ -401,7 +647,8 @@
         body.locked .a2,
         body.locked .b2,
         body.locked .a1,
-        body.locked .b1 {
+        body.locked .b1,
+        body.locked .counter-switcher {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -409,7 +656,8 @@
         body.f .b2,
         body.f .a2,
         body.f .b1,
-        body.f .a1 {
+        body.f .a1,
+        body.f .counter-switcher {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -420,7 +668,8 @@
         body.lockout-active #lock-overlay,
         body.lockout-active #x6,
         body.lockout-active .a7,
-        body.lockout-active #y1 {
+        body.lockout-active #y1,
+        body.lockout-active .counter-switcher {
             display: none !important;
             pointer-events: none !important;
         }
@@ -432,7 +681,13 @@
 </head>
 
 <body oncontextmenu="return !1">
-    <div class="a1" id="x1"><span>Counter</span></div>
+    <div class="a1" id="x1">
+        <span id="counter-title-text">Counter</span>
+        <svg id="counter-title-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.65;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </div>
+    <div class="counter-switcher" id="counter-switcher"></div>
     <div class="a2">
         <button id="menu-btn" aria-label="Menu">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -442,6 +697,9 @@
             </svg>
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
+            <button class="menu-item" id="new-counter-menu"><span>New Counter</span></button>
+            <button class="menu-item" id="rename-counter-menu" style="display:none;"><span>Rename Counter</span></button>
+            <button class="menu-item danger" id="delete-counter-menu" style="display:none;"><span>Delete Counter</span></button>
             <button class="menu-item" id="fs-btn-menu"><span>Fullscreen</span></button>
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
@@ -451,6 +709,11 @@
     </div>
     <div id="x3" class="b3">
         <span id="x4"></span>
+    </div>
+    <div id="undo-toast" class="undo-toast" role="status" aria-live="polite">
+        <span id="undo-toast-text" class="undo-toast-text"></span>
+        <button type="button" id="undo-toast-btn" class="undo-toast-btn">Undo</button>
+        <div id="undo-toast-bar" class="undo-toast-bar"></div>
     </div>
     <div class="a3">
         <div id="x6" class="a4">
@@ -496,32 +759,105 @@
     </div>
     <script>
         (function () {
-            const d = document, w = window, 
-                k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal', h: '_n_hide_hints' },
+            const d = document, w = window,
+                k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal', h: '_n_hide_hints', list: '_n_counters', active: '_n_active_counter' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
-                pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
+                undoToast = d.getElementById('undo-toast'), undoToastText = d.getElementById('undo-toast-text'),
+                undoToastBtn = d.getElementById('undo-toast-btn'), undoToastBar = d.getElementById('undo-toast-bar'),
+                pc = d.getElementById('x6'), rg = d.querySelector('.a6'),
+                titleBtn = d.getElementById('x1'), titleText = d.getElementById('counter-title-text'),
+                switcher = d.getElementById('counter-switcher'), newCounterMenu = d.getElementById('new-counter-menu'),
+                renameCounterMenu = d.getElementById('rename-counter-menu'), deleteCounterMenu = d.getElementById('delete-counter-menu'),
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
-                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), 
+                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'),
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
                 installMenu = d.getElementById('install-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
-            let v = parseInt(localStorage.getItem(k.c)) || 0,
-                st = parseInt(localStorage.getItem(k.t)) || 1,
-                gl = parseInt(localStorage.getItem(k.g)) || 0,
+            const PERMANENT_ID = 'default';
+
+            f.contentEditable = 'false';
+
+            function _loadCounters() {
+                const fallbackDefault = {
+                    id: PERMANENT_ID,
+                    name: 'Counter',
+                    permanent: true,
+                    v: parseInt(localStorage.getItem(k.c)) || 0,
+                    st: parseInt(localStorage.getItem(k.t)) || 1,
+                    gl: parseInt(localStorage.getItem(k.g)) || 0
+                };
+
+                try {
+                    const raw = localStorage.getItem(k.list);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            const mapped = parsed.map((item, idx) => {
+                                const isDefault = item.id === PERMANENT_ID || item.permanent === true;
+                                return {
+                                    id: isDefault ? PERMANENT_ID : (item.id || ('c_' + idx + '_' + Date.now())),
+                                    name: isDefault ? 'Counter' : ((item.name && String(item.name).trim()) || ('Counter ' + (idx + 1))),
+                                    permanent: isDefault,
+                                    v: parseInt(item.v) || 0,
+                                    st: parseInt(item.st) || 1,
+                                    gl: parseInt(item.gl) || 0
+                                };
+                            });
+                            if (!mapped.some(c => c.id === PERMANENT_ID)) {
+                                mapped.unshift(fallbackDefault);
+                            }
+                            return mapped;
+                        }
+                    }
+                } catch (err) {}
+
+                return [fallbackDefault];
+            }
+
+            let counters = _loadCounters();
+            let activeId = localStorage.getItem(k.active);
+            if (!counters.some(c => c.id === activeId)) {
+                activeId = counters[0].id;
+            }
+
+            function _getActiveCounter() {
+                return counters.find(c => c.id === activeId) || counters[0];
+            }
+
+            let currentCounter = _getActiveCounter(),
+                v = currentCounter.v,
+                st = currentCounter.st,
+                gl = currentCounter.gl,
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
                 wakeLock = null, deferredInstallPrompt = null,
-                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
+                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false,
+                suppressBodyTapUntil = 0, undoTimer = null, pendingUndoAction = null;
+
+            // Chrome-like press-and-drag-down state for the top-left counter button
+            let titleTouchTracking = false,
+                titleTouchStartY = 0,
+                titleDraggedDown = false,
+                hoveredDragTarget = null,
+                dragHoverRaf = null,
+                pendingDragPoint = null,
+                suppressTitleClickUntil = 0;
+
+            // Chrome-like press-and-drag-down state for the top-right 3-dot menu button
+            let menuTouchTracking = false,
+                menuTouchStartY = 0,
+                menuDraggedDown = false,
+                menuWasOpenOnTouchStart = false,
+                suppressMenuClickUntil = 0;
 
             const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
-            // Force mobile WebView/browser IME keyboard to close after native prompt()
             function _dismissMobileKeyboard() {
                 try {
                     if (d.activeElement && typeof d.activeElement.blur === 'function') {
@@ -541,7 +877,6 @@
                 } catch (err) {}
             }
 
-            // Automatic Keep Screen Awake (Wake Lock API)
             async function _requestWakeLock() {
                 if (!('wakeLock' in navigator)) return;
                 try {
@@ -562,7 +897,6 @@
 
             _requestWakeLock();
 
-            // Dynamic inline manifest setup for one-file installation
             try {
                 const manifest = {
                     name: 'Counter',
@@ -624,17 +958,16 @@
                 stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
-            // Speech synthesis helper (sn = true means muted/sound off, sn = false means sound on)
             function _p(textToSpeak) {
                 if (sn) return;
                 if ('speechSynthesis' in w) {
                     w.speechSynthesis.cancel();
-                    
+
                     const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
                     utterance.rate = 1.15;
                     utterance.pitch = 1.0;
                     utterance.volume = 1.0;
-                    
+
                     w.speechSynthesis.speak(utterance);
                 }
             }
@@ -649,8 +982,34 @@
                 } else pc.classList.remove('active')
             }
 
+            function _updateNumberSize(formattedText) {
+                const len = formattedText.length;
+                if (len <= 4) {
+                    f.style.fontSize = '18vw';
+                } else if (len <= 6) {
+                    f.style.fontSize = '14vw';
+                } else if (len <= 9) {
+                    f.style.fontSize = '10vw';
+                } else {
+                    f.style.fontSize = '7.5vw';
+                }
+            }
+
             function _w() {
-                f.textContent = v.toLocaleString('en-US');
+                currentCounter = _getActiveCounter();
+                currentCounter.v = v;
+                currentCounter.st = st;
+                currentCounter.gl = gl;
+
+                const isCustomCounter = !(currentCounter.permanent || currentCounter.id === PERMANENT_ID);
+                renameCounterMenu.style.display = isCustomCounter ? 'flex' : 'none';
+                deleteCounterMenu.style.display = isCustomCounter ? 'flex' : 'none';
+
+                titleText.textContent = currentCounter.name;
+                const formatted = v.toLocaleString('en-US');
+                f.textContent = formatted;
+                _updateNumberSize(formatted);
+
                 if (st > 1) {
                     sd.textContent = 'Increment: ' + st;
                     sd.classList.add('v')
@@ -660,10 +1019,20 @@
                     gd.textContent = 'Goal: ' + gl.toLocaleString('en-US');
                     gd.classList.add('v')
                 } else gd.classList.remove('v');
-                _up()
+                _up();
+                if (switcher.classList.contains('active') && !titleTouchTracking) {
+                    _renderCounterSwitcher();
+                }
             }
 
             function _x() {
+                currentCounter = _getActiveCounter();
+                currentCounter.v = v;
+                currentCounter.st = st;
+                currentCounter.gl = gl;
+
+                localStorage.setItem(k.list, JSON.stringify(counters));
+                localStorage.setItem(k.active, activeId);
                 localStorage.setItem(k.c, v);
                 localStorage.setItem(k.s, sn);
                 localStorage.setItem(k.t, st);
@@ -681,6 +1050,53 @@
                 }, du)
             }
 
+            function _hideUndoToast() {
+                if (undoTimer) {
+                    clearTimeout(undoTimer);
+                    undoTimer = null;
+                }
+                pendingUndoAction = null;
+                undoToast.classList.remove('active');
+            }
+
+            function _showUndoToast(message, onUndo, durationMs = 5500) {
+                if (undoTimer) {
+                    clearTimeout(undoTimer);
+                    undoTimer = null;
+                }
+                pendingUndoAction = onUndo;
+                undoToastText.textContent = message;
+                undoToastBar.style.transition = 'none';
+                undoToastBar.style.transform = 'scaleX(1)';
+                undoToast.classList.add('active');
+                void undoToastBar.offsetWidth;
+                undoToastBar.style.transition = `transform ${durationMs}ms linear`;
+                undoToastBar.style.transform = 'scaleX(0)';
+                undoTimer = setTimeout(() => {
+                    _hideUndoToast();
+                }, durationMs);
+            }
+
+            undoToastBtn.addEventListener('touchstart', e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+            }, { passive: true });
+
+            undoToastBtn.addEventListener('touchend', e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+            }, { passive: true });
+
+            undoToastBtn.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                const fn = pendingUndoAction;
+                _hideUndoToast();
+                if (typeof fn === 'function') {
+                    fn();
+                }
+            };
+
             function _triggerGoalLockout() {
                 if (rt) {
                     clearTimeout(rt);
@@ -694,8 +1110,595 @@
                 go.classList.add('active');
             }
 
+            function _incrementCounter() {
+                const p = v;
+                v += st;
+                if (gl > 0 && p < gl && v >= gl) {
+                    _p(`${v}. Goal reached`);
+                    if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+                    _triggerGoalLockout();
+                } else {
+                    _p(v);
+                }
+                _w();
+                _x();
+            }
+
+            // Syncs the title button's visual open state with #counter-switcher visibility
+            function _syncSwitcherOpenState() {
+                const isOpen = switcher.classList.contains('active');
+                titleBtn.classList.toggle('open', isOpen);
+            }
+
+            // Clears active drag-hover highlight across counter switcher and menu items
+            function _clearDragHover() {
+                if (dragHoverRaf) {
+                    cancelAnimationFrame(dragHoverRaf);
+                    dragHoverRaf = null;
+                }
+                pendingDragPoint = null;
+                if (hoveredDragTarget) {
+                    hoveredDragTarget.classList.remove('drag-hover');
+                    hoveredDragTarget = null;
+                }
+                d.querySelectorAll('.drag-hover').forEach(el => el.classList.remove('drag-hover'));
+            }
+
+            // Resolves the menu or counter item under (clientX, clientY) with generous horizontal bounds
+            function _findDragTargetAtPoint(clientX, clientY) {
+                const isSwitcherOpen = switcher.classList.contains('active');
+                const isMenuOpen = md.classList.contains('active');
+                const candidates = [];
+
+                if (isSwitcherOpen) {
+                    switcher.querySelectorAll('.counter-row-content, .counter-add-btn').forEach(el => candidates.push(el));
+                }
+                if (isMenuOpen) {
+                    md.querySelectorAll('.menu-item').forEach(el => candidates.push(el));
+                }
+
+                for (let idx = 0; idx < candidates.length; idx++) {
+                    const el = candidates[idx];
+                    const rect = el.getBoundingClientRect();
+                    if (clientY >= rect.top - 2 && clientY <= rect.bottom + 2 &&
+                        clientX >= rect.left - 36 && clientX <= rect.right + 36) {
+                        return el;
+                    }
+                }
+                return null;
+            }
+
+            function _applyDragHoverNow(clientX, clientY) {
+                const nextTarget = _findDragTargetAtPoint(clientX, clientY);
+                if (nextTarget !== hoveredDragTarget) {
+                    if (hoveredDragTarget) {
+                        hoveredDragTarget.classList.remove('drag-hover');
+                    }
+                    hoveredDragTarget = nextTarget;
+                    if (hoveredDragTarget) {
+                        hoveredDragTarget.classList.add('drag-hover');
+                    }
+                }
+            }
+
+            function _updateDragHoverAtPoint(clientX, clientY) {
+                pendingDragPoint = { x: clientX, y: clientY };
+                if (dragHoverRaf) return;
+                dragHoverRaf = requestAnimationFrame(() => {
+                    dragHoverRaf = null;
+                    if (pendingDragPoint) {
+                        _applyDragHoverNow(pendingDragPoint.x, pendingDragPoint.y);
+                    }
+                });
+            }
+
+            // Collapses any transient state when closing/reopening switcher
+            function _closeOpenSwipeRows() {}
+
+            function _switchToCounter(id) {
+                const found = counters.find(c => c.id === id);
+                if (!found) return;
+                activeId = found.id;
+                currentCounter = found;
+                v = parseInt(found.v) || 0;
+                st = parseInt(found.st) || 1;
+                gl = parseInt(found.gl) || 0;
+                _w();
+                _x();
+            }
+
+            function _createCounter() {
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
+                }
+                setTimeout(() => {
+                    const rawName = prompt('New counter name:', `Counter ${counters.length + 1}`);
+                    _dismissMobileKeyboard();
+                    setTimeout(_dismissMobileKeyboard, 150);
+                    setTimeout(_dismissMobileKeyboard, 350);
+                    if (rawName === null) return;
+                    const cleanName = String(rawName).trim() || `Counter ${counters.length + 1}`;
+                    const newItem = {
+                        id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                        name: cleanName,
+                        permanent: false,
+                        v: 0,
+                        st: 1,
+                        gl: 0
+                    };
+                    counters.push(newItem);
+                    _switchToCounter(newItem.id);
+                    switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
+                    _z(`switched to ${cleanName}`, 2000);
+                }, 60);
+            }
+
+            function _renameCounter(id) {
+                const target = counters.find(c => c.id === id);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
+                }
+                setTimeout(() => {
+                    const rawName = prompt('Rename counter:', target.name);
+                    _dismissMobileKeyboard();
+                    setTimeout(_dismissMobileKeyboard, 150);
+                    setTimeout(_dismissMobileKeyboard, 350);
+                    if (rawName === null) return;
+                    const cleanName = String(rawName).trim();
+                    if (!cleanName) return;
+                    target.name = cleanName;
+                    _w();
+                    _x();
+                    _z(`renamed to ${cleanName}`, 2000);
+                }, 60);
+            }
+
+            function _deleteCounter(id) {
+                const targetIndex = counters.findIndex(c => c.id === id);
+                if (targetIndex === -1) return;
+                const target = counters[targetIndex];
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
+                }
+
+                setTimeout(() => {
+                    const confirmed = w.confirm(`Delete "${target.name}"?`);
+                    if (!confirmed) return;
+
+                    const deletedSnapshot = { ...target };
+                    const deletedIndex = targetIndex;
+                    const previousActiveId = activeId;
+
+                    counters = counters.filter(c => c.id !== id);
+                    if (activeId === id) {
+                        _switchToCounter(PERMANENT_ID);
+                    } else {
+                        _x();
+                    }
+                    if (switcher.classList.contains('active')) {
+                        _renderCounterSwitcher();
+                    }
+
+                    _showUndoToast(`Deleted "${deletedSnapshot.name}"`, () => {
+                        if (!counters.some(c => c.id === deletedSnapshot.id)) {
+                            const insertAt = Math.min(Math.max(1, deletedIndex), counters.length);
+                            counters.splice(insertAt, 0, deletedSnapshot);
+                        }
+                        _switchToCounter(previousActiveId === deletedSnapshot.id ? deletedSnapshot.id : activeId);
+                        if (switcher.classList.contains('active')) {
+                            _renderCounterSwitcher();
+                        }
+                        _z(`restored ${deletedSnapshot.name}`, 2000);
+                    }, 5500);
+                }, 40);
+            }
+
+            // Enables touch/pointer drag-to-reorder on the counter list in Edit Counter List mode
+            function _attachReorderGesture(wrap, handleEl, counterId) {
+                let dragging = false;
+                let longPressTimer = null;
+                let startY = 0;
+                let lastY = 0;
+
+                const _startReorderDrag = (clientY) => {
+                    dragging = true;
+                    startY = clientY;
+                    lastY = clientY;
+                    wrap.classList.add('is-dragging');
+                    if (navigator.vibrate) navigator.vibrate(25);
+                };
+
+                const _moveReorderDrag = (clientY) => {
+                    if (!dragging) return;
+                    const dy = clientY - lastY;
+                    wrap.style.transform = `translateY(${clientY - startY}px)`;
+
+                    const wraps = Array.from(switcher.querySelectorAll('.counter-swipe-wrap'));
+                    const currentIdx = wraps.indexOf(wrap);
+                    if (currentIdx === -1) return;
+
+                    const rect = wrap.getBoundingClientRect();
+                    const midY = rect.top + rect.height / 2;
+
+                    if (dy > 0 && currentIdx < wraps.length - 1) {
+                        const nextWrap = wraps[currentIdx + 1];
+                        const nextRect = nextWrap.getBoundingClientRect();
+                        if (midY > nextRect.top + nextRect.height / 2) {
+                            switcher.insertBefore(nextWrap, wrap);
+                            startY += nextRect.height;
+                            wrap.style.transform = `translateY(${clientY - startY}px)`;
+                        }
+                    } else if (dy < 0 && currentIdx > 0) {
+                        const prevWrap = wraps[currentIdx - 1];
+                        const prevRect = prevWrap.getBoundingClientRect();
+                        if (midY < prevRect.top + prevRect.height / 2) {
+                            switcher.insertBefore(wrap, prevWrap);
+                            startY -= prevRect.height;
+                            wrap.style.transform = `translateY(${clientY - startY}px)`;
+                        }
+                    }
+                    lastY = clientY;
+                };
+
+                const _endReorderDrag = () => {
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                    }
+                    if (!dragging) return;
+                    dragging = false;
+                    wrap.classList.remove('is-dragging');
+                    wrap.style.transform = '';
+
+                    const orderedIds = Array.from(switcher.querySelectorAll('.counter-swipe-wrap'))
+                        .map(el => el.dataset.counterId)
+                        .filter(Boolean);
+
+                    if (orderedIds.length === counters.length) {
+                        counters.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
+                        _x();
+                    }
+                    _renderCounterSwitcher();
+                };
+
+                handleEl.addEventListener('touchstart', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 600;
+                    const t = e.touches[0];
+                    startY = t.clientY;
+                    lastY = t.clientY;
+                    longPressTimer = setTimeout(() => {
+                        longPressTimer = null;
+                        _startReorderDrag(lastY);
+                    }, 180);
+                }, { passive: true });
+
+                handleEl.addEventListener('touchmove', e => {
+                    e.stopPropagation();
+                    const t = e.touches[0];
+                    if (longPressTimer && Math.abs(t.clientY - startY) > 6) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                        _startReorderDrag(t.clientY);
+                    }
+                    if (dragging) {
+                        e.preventDefault();
+                        _moveReorderDrag(t.clientY);
+                    }
+                }, { passive: false });
+
+                handleEl.addEventListener('touchend', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 500;
+                    _endReorderDrag();
+                });
+
+                handleEl.addEventListener('touchcancel', () => {
+                    _endReorderDrag();
+                }, { passive: true });
+
+                handleEl.addEventListener('mousedown', e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    _startReorderDrag(e.clientY);
+
+                    const onMouseMove = ev => _moveReorderDrag(ev.clientY);
+                    const onMouseUp = () => {
+                        w.removeEventListener('mousemove', onMouseMove);
+                        w.removeEventListener('mouseup', onMouseUp);
+                        _endReorderDrag();
+                    };
+                    w.addEventListener('mousemove', onMouseMove);
+                    w.addEventListener('mouseup', onMouseUp);
+                });
+            }
+
+            function _renderCounterSwitcher() {
+                switcher.innerHTML = '';
+                counters.forEach(item => {
+                    const wrap = d.createElement('div');
+                    wrap.className = 'counter-swipe-wrap';
+                    wrap.dataset.counterId = item.id;
+
+                    const row = d.createElement('div');
+                    row.className = 'counter-row-content' + (item.id === activeId ? ' is-current' : '');
+                    row.dataset.counterId = item.id;
+
+                    const nameSpan = d.createElement('span');
+                    nameSpan.className = 'counter-row-name';
+                    nameSpan.textContent = item.name;
+                    row.appendChild(nameSpan);
+
+                    const metaSpan = d.createElement('span');
+                    metaSpan.className = 'counter-row-meta';
+
+                    const valSpan = d.createElement('span');
+                    valSpan.className = 'counter-row-val';
+                    valSpan.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
+                    metaSpan.appendChild(valSpan);
+
+                    row.appendChild(metaSpan);
+
+                    row.addEventListener('touchstart', e => {
+                        e.stopPropagation();
+                        row.classList.add('active-touch');
+                    }, { passive: true });
+
+                    row.addEventListener('touchend', () => {
+                        suppressBodyTapUntil = Date.now() + 300;
+                        row.classList.remove('active-touch');
+                    }, { passive: true });
+
+                    row.addEventListener('touchcancel', () => {
+                        row.classList.remove('active-touch');
+                    }, { passive: true });
+
+                    row.onclick = e => {
+                        e.stopPropagation();
+                        suppressBodyTapUntil = Date.now() + 300;
+                        _switchToCounter(item.id);
+                        switcher.classList.remove('active');
+                        _syncSwitcherOpenState();
+                        _z(`switched to ${item.name}`, 1600);
+                    };
+
+                    wrap.appendChild(row);
+                    switcher.appendChild(wrap);
+                });
+
+                const footer = d.createElement('div');
+                footer.className = 'counter-footer-actions';
+
+                const addBtn = d.createElement('button');
+                addBtn.type = 'button';
+                addBtn.className = 'counter-add-btn';
+                addBtn.dataset.action = 'new-counter';
+                addBtn.textContent = '+ New Counter';
+                addBtn.addEventListener('touchstart', () => addBtn.classList.add('active-touch'), { passive: true });
+                addBtn.addEventListener('touchend', () => {
+                    suppressBodyTapUntil = Date.now() + 300;
+                    addBtn.classList.remove('active-touch');
+                }, { passive: true });
+                addBtn.addEventListener('touchcancel', () => addBtn.classList.remove('active-touch'), { passive: true });
+                addBtn.onclick = e => {
+                    e.stopPropagation();
+                    _createCounter();
+                };
+                footer.appendChild(addBtn);
+
+                switcher.appendChild(footer);
+            }
+
+            // Chrome-like press & swipe-down selection on top-left counter button
+            let switcherWasOpenOnTouchStart = false;
+
+            titleBtn.addEventListener('touchstart', e => {
+                if (lk || isLockout) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                md.classList.remove('active');
+                _closeOpenSwipeRows(null);
+
+                titleTouchTracking = true;
+                titleTouchStartY = e.touches[0].clientY;
+                titleDraggedDown = false;
+                switcherWasOpenOnTouchStart = switcher.classList.contains('active');
+                _clearDragHover();
+
+                if (!switcherWasOpenOnTouchStart) {
+                    _renderCounterSwitcher();
+                    switcher.classList.add('active');
+                    _syncSwitcherOpenState();
+                }
+            }, { passive: true });
+
+            titleBtn.addEventListener('touchmove', e => {
+                if (!titleTouchTracking) return;
+                e.stopPropagation();
+                const touch = e.touches[0];
+                if (touch.clientY - titleTouchStartY > 12) {
+                    titleDraggedDown = true;
+                }
+                if (titleDraggedDown && switcher.classList.contains('active')) {
+                    _updateDragHoverAtPoint(touch.clientX, touch.clientY);
+                }
+            }, { passive: true });
+
+            titleBtn.addEventListener('touchend', e => {
+                if (!titleTouchTracking) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                suppressTitleClickUntil = Date.now() + 400;
+
+                const changedTouch = e.changedTouches && e.changedTouches[0];
+                if (changedTouch && titleDraggedDown && switcher.classList.contains('active')) {
+                    _applyDragHoverNow(changedTouch.clientX, changedTouch.clientY);
+                    const chosen = hoveredDragTarget;
+                    _clearDragHover();
+                    titleTouchTracking = false;
+                    titleDraggedDown = false;
+                    switcherWasOpenOnTouchStart = false;
+
+                    if (chosen) {
+                        if (chosen.dataset.action === 'new-counter') {
+                            switcher.classList.remove('active');
+                            _syncSwitcherOpenState();
+                            _createCounter();
+                        } else if (chosen.dataset.counterId) {
+                            const target = counters.find(c => c.id === chosen.dataset.counterId);
+                            _switchToCounter(chosen.dataset.counterId);
+                            switcher.classList.remove('active');
+                            _syncSwitcherOpenState();
+                            if (target) _z(`switched to ${target.name}`, 1600);
+                        }
+                        return;
+                    }
+                }
+
+                // Simple tap (no downward drag): if menu was already open on touchstart, close it
+                if (!titleDraggedDown && switcherWasOpenOnTouchStart) {
+                    switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
+                }
+
+                _clearDragHover();
+                titleTouchTracking = false;
+                titleDraggedDown = false;
+                switcherWasOpenOnTouchStart = false;
+            });
+
+            titleBtn.addEventListener('touchcancel', () => {
+                _clearDragHover();
+                titleTouchTracking = false;
+                titleDraggedDown = false;
+                switcherWasOpenOnTouchStart = false;
+                _syncSwitcherOpenState();
+            }, { passive: true });
+
+            titleBtn.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
+                if (Date.now() < suppressTitleClickUntil) return;
+                md.classList.remove('active');
+                _closeOpenSwipeRows(null);
+                if (switcher.classList.contains('active')) {
+                    switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
+                    return;
+                }
+                _renderCounterSwitcher();
+                switcher.classList.add('active');
+                _syncSwitcherOpenState();
+            };
+
+            // Chrome-like press & swipe-down selection on top-right 3-dot menu button
+            mb.addEventListener('touchstart', e => {
+                if (lk || isLockout) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
+                _closeOpenSwipeRows(null);
+
+                menuTouchTracking = true;
+                menuTouchStartY = e.touches[0].clientY;
+                menuDraggedDown = false;
+                menuWasOpenOnTouchStart = md.classList.contains('active');
+                _clearDragHover();
+
+                if (!menuWasOpenOnTouchStart) {
+                    md.classList.add('active');
+                }
+            }, { passive: true });
+
+            mb.addEventListener('touchmove', e => {
+                if (!menuTouchTracking) return;
+                e.stopPropagation();
+                const touch = e.touches[0];
+                if (touch.clientY - menuTouchStartY > 12) {
+                    menuDraggedDown = true;
+                }
+                if (menuDraggedDown && md.classList.contains('active')) {
+                    _updateDragHoverAtPoint(touch.clientX, touch.clientY);
+                }
+            }, { passive: true });
+
+            mb.addEventListener('touchend', e => {
+                if (!menuTouchTracking) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                suppressMenuClickUntil = Date.now() + 400;
+
+                const changedTouch = e.changedTouches && e.changedTouches[0];
+                if (changedTouch && menuDraggedDown && md.classList.contains('active')) {
+                    _applyDragHoverNow(changedTouch.clientX, changedTouch.clientY);
+                    const chosen = hoveredDragTarget;
+                    _clearDragHover();
+                    menuTouchTracking = false;
+                    menuDraggedDown = false;
+                    menuWasOpenOnTouchStart = false;
+
+                    if (chosen && md.contains(chosen)) {
+                        chosen.click();
+                        return;
+                    }
+                }
+
+                if (!menuDraggedDown && menuWasOpenOnTouchStart) {
+                    md.classList.remove('active');
+                }
+
+                _clearDragHover();
+                menuTouchTracking = false;
+                menuDraggedDown = false;
+                menuWasOpenOnTouchStart = false;
+            });
+
+            mb.addEventListener('touchcancel', () => {
+                _clearDragHover();
+                menuTouchTracking = false;
+                menuDraggedDown = false;
+                menuWasOpenOnTouchStart = false;
+            }, { passive: true });
+
+            newCounterMenu.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
+                md.classList.remove('active');
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
+                _createCounter();
+            };
+
+            renameCounterMenu.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
+                md.classList.remove('active');
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
+                _renameCounter(activeId);
+            };
+
+            deleteCounterMenu.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
+                md.classList.remove('active');
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
+                _deleteCounter(activeId);
+            };
+
             mb.onclick = e => {
                 e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
+                if (Date.now() < suppressMenuClickUntil) return;
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
+                _closeOpenSwipeRows(null);
                 md.classList.toggle('active');
             };
 
@@ -703,6 +1706,16 @@
                 if (!e.target.closest('.a2')) {
                     md.classList.remove('active');
                 }
+                if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
+                    switcher.classList.remove('active');
+                    _syncSwitcherOpenState();
+                }
+                if (Date.now() < suppressBodyTapUntil) return;
+                if (lk || isLockout) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#undo-toast') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (f.contentEditable === 'true') return;
+                _u();
+                _incrementCounter();
             });
 
             d.querySelectorAll('.menu-item').forEach(btn => {
@@ -719,6 +1732,7 @@
 
             hintMenu.onclick = e => {
                 e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 hh = !hh;
                 _applyHintState();
@@ -728,7 +1742,10 @@
 
             lbMenu.onclick = e => {
                 e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
+                switcher.classList.remove('active');
+                _syncSwitcherOpenState();
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
@@ -737,6 +1754,7 @@
 
             fsMenu.onclick = e => {
                 e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => { });
                 else d.exitFullscreen().catch(() => { })
@@ -770,6 +1788,7 @@
 
             goalMenu.onclick = e => {
                 e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 triggerSetGoal();
             };
@@ -882,7 +1901,7 @@
                 if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#undo-toast') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -896,7 +1915,7 @@
 
             d.body.addEventListener('touchend', e => {
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#undo-toast') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
@@ -905,24 +1924,41 @@
                     dy = ny - e.changedTouches[0].clientY;
 
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    const p = v;
-                    v += st;
-                    // Check if target goal has just been reached
-                    if (gl > 0 && p < gl && v >= gl) {
-                        _p(`${v}. Goal reached`);
-                        if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
-                        _triggerGoalLockout();
-                    } else {
-                        _p(v);
-                    }
-                    _w();
-                    _x();
+                    suppressBodyTapUntil = Date.now() + 350;
+                    _incrementCounter();
                 } else if (Math.abs(dx) > Math.abs(dy)) {
+                    suppressBodyTapUntil = Date.now() + 350;
                     if (dx > 50) {
-                        if (confirm('Reset counter to 0?')) {
-                            if (navigator.vibrate) navigator.vibrate(40);
-                            v = 0; _w(); _x(); _z('counter reset', 2000)
+                        if (v === 0) {
+                            _z('counter already 0', 1800);
+                            return;
                         }
+                        const prevValue = v;
+                        const targetCounterId = activeId;
+                        const targetCounterName = currentCounter.name;
+                        setTimeout(() => {
+                            const confirmed = w.confirm(`Reset "${targetCounterName}" (${prevValue.toLocaleString('en-US')}) to 0?`);
+                            if (!confirmed) return;
+                            if (navigator.vibrate) navigator.vibrate(40);
+                            const targetObj = counters.find(c => c.id === targetCounterId);
+                            if (targetObj) targetObj.v = 0;
+                            if (activeId === targetCounterId) {
+                                v = 0;
+                                _w();
+                            }
+                            _x();
+                            _showUndoToast(`Reset to 0 (was ${prevValue.toLocaleString('en-US')})`, () => {
+                                const restoreObj = counters.find(c => c.id === targetCounterId);
+                                if (!restoreObj) return;
+                                restoreObj.v = prevValue;
+                                if (activeId === targetCounterId) {
+                                    v = prevValue;
+                                    _w();
+                                }
+                                _x();
+                                _z('reset undone', 2000);
+                            }, 5500);
+                        }, 30);
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
                         _dismissMobileKeyboard();
@@ -936,6 +1972,7 @@
                         }
                     }
                 } else {
+                    suppressBodyTapUntil = Date.now() + 350;
                     if (dy > 50) {
                         f.contentEditable = 'true';
                         f.focus();
@@ -944,12 +1981,23 @@
                         s.removeAllRanges(); s.addRange(r)
                     } else if (dy < -50) {
                         if (v > 0) {
-                            if (confirm('Subtract 1 from counter?')) {
+                            const targetCounterId = activeId;
+                            const targetCounterName = currentCounter.name;
+                            const currentVal = v;
+                            setTimeout(() => {
+                                const confirmed = w.confirm(`Subtract 1 from "${targetCounterName}" (${currentVal.toLocaleString('en-US')} → ${(currentVal - 1).toLocaleString('en-US')})?`);
+                                if (!confirmed) return;
                                 if (navigator.vibrate) navigator.vibrate(40);
-                                v = v - 1;
-                                _p(v);
-                                _w(); _x(); _z('number subtracted', 2000)
-                            }
+                                const targetObj = counters.find(c => c.id === targetCounterId);
+                                if (targetObj && targetObj.v > 0) targetObj.v -= 1;
+                                if (activeId === targetCounterId && v > 0) {
+                                    v = v - 1;
+                                    _p(v);
+                                    _w();
+                                }
+                                _x();
+                                _z('number subtracted', 2000);
+                            }, 30);
                         }
                     }
                 }
@@ -967,6 +2015,7 @@
             };
 
             _w();
+            _x();
             stt = setTimeout(() => { i.classList.add('v') }, 0)
         })()
     </script>
