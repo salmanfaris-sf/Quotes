@@ -91,7 +91,7 @@
             padding: 6px 0;
             display: flex;
             flex-direction: column;
-            min-width: 230px;
+            min-width: 220px;
             max-width: calc(100vw - 50px);
             max-height: 62vh;
             overflow-y: auto;
@@ -123,7 +123,7 @@
 
         .counter-row-content {
             width: 100%;
-            min-height: 50px;
+            min-height: 48px;
             padding: 12px 18px;
             background: transparent;
             display: flex;
@@ -131,18 +131,12 @@
             justify-content: space-between;
             gap: 12px;
             cursor: pointer;
-            touch-action: pan-y;
-            transition: background 0.14s ease, transform 0.14s ease;
+            transition: background 0.12s ease;
         }
 
         .counter-row-content:active,
         .counter-row-content.active-touch {
             background: rgba(255, 255, 255, 0.12);
-        }
-
-        .counter-row-content.pressing {
-            background: rgba(255, 255, 255, 0.18);
-            transform: scale(0.985);
         }
 
         .counter-row-content.is-current .counter-row-name {
@@ -187,96 +181,6 @@
             opacity: 1;
         }
 
-        .counter-action-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 20px;
-            z-index: 400;
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
-            transition: opacity 0.22s ease, visibility 0s linear 0.22s;
-        }
-
-        .counter-action-backdrop.active {
-            opacity: 1;
-            pointer-events: auto;
-            visibility: visible;
-            transition: opacity 0.24s ease, visibility 0s linear 0s;
-        }
-
-        .counter-action-sheet {
-            width: 100%;
-            max-width: 380px;
-            background: var(--m);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75);
-            transform: translateY(18px) scale(0.98);
-            transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
-            cursor: default;
-        }
-
-        .counter-action-backdrop.active .counter-action-sheet {
-            transform: translateY(0) scale(1);
-        }
-
-        .counter-action-header {
-            padding: 15px 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.08rem;
-            text-transform: uppercase;
-            opacity: 0.65;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .counter-action-btn {
-            width: 100%;
-            background: none;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--s);
-            padding: 16px 20px;
-            font-size: 0.94rem;
-            font-weight: 500;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: background 0.12s ease, transform 0.1s ease;
-        }
-
-        .counter-action-btn:last-child {
-            border-bottom: none;
-        }
-
-        .counter-action-btn:active,
-        .counter-action-btn.active-touch {
-            background: rgba(255, 255, 255, 0.14);
-            transform: scale(0.99);
-        }
-
-        .counter-action-btn.danger {
-            color: #ff453a;
-        }
-
-        .counter-action-btn.cancel {
-            opacity: 0.72;
-        }
-
         .a2 {
             position: fixed;
             top: 20px;
@@ -316,7 +220,7 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            min-width: 185px;
+            min-width: 195px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.6);
             z-index: 200;
             overflow: hidden;
@@ -366,6 +270,10 @@
         .menu-item:active,
         .menu-item.active-touch {
             background: rgba(255, 255, 255, 0.15);
+        }
+
+        .menu-item.danger {
+            color: #ff453a;
         }
 
         .a3 {
@@ -609,8 +517,7 @@
         body.locked .b2,
         body.locked .a1,
         body.locked .b1,
-        body.locked .counter-switcher,
-        body.locked .counter-action-backdrop {
+        body.locked .counter-switcher {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -619,8 +526,7 @@
         body.f .a2,
         body.f .b1,
         body.f .a1,
-        body.f .counter-switcher,
-        body.f .counter-action-backdrop {
+        body.f .counter-switcher {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -632,8 +538,7 @@
         body.lockout-active #x6,
         body.lockout-active .a7,
         body.lockout-active #y1,
-        body.lockout-active .counter-switcher,
-        body.lockout-active .counter-action-backdrop {
+        body.lockout-active .counter-switcher {
             display: none !important;
             pointer-events: none !important;
         }
@@ -652,14 +557,6 @@
         </svg>
     </div>
     <div class="counter-switcher" id="counter-switcher"></div>
-    <div class="counter-action-backdrop" id="counter-action-backdrop">
-        <div class="counter-action-sheet" id="counter-action-sheet">
-            <div class="counter-action-header" id="counter-action-header">Counter</div>
-            <button type="button" class="counter-action-btn" id="action-rename-btn"><span>Rename Counter</span></button>
-            <button type="button" class="counter-action-btn danger" id="action-delete-btn"><span>Delete Counter</span></button>
-            <button type="button" class="counter-action-btn cancel" id="action-cancel-btn"><span>Cancel</span></button>
-        </div>
-    </div>
     <div class="a2">
         <button id="menu-btn" aria-label="Menu">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -670,6 +567,8 @@
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
             <button class="menu-item" id="new-counter-menu"><span>New Counter</span></button>
+            <button class="menu-item" id="rename-counter-menu"><span>Rename Counter</span></button>
+            <button class="menu-item danger" id="delete-counter-menu"><span>Delete Counter</span></button>
             <button class="menu-item" id="fs-btn-menu"><span>Fullscreen</span></button>
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
@@ -731,12 +630,8 @@
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'),
                 titleBtn = d.getElementById('x1'), titleText = d.getElementById('counter-title-text'),
                 switcher = d.getElementById('counter-switcher'), newCounterMenu = d.getElementById('new-counter-menu'),
-                actionBackdrop = d.getElementById('counter-action-backdrop'),
-                actionSheet = d.getElementById('counter-action-sheet'),
-                actionHeader = d.getElementById('counter-action-header'),
-                actionRenameBtn = d.getElementById('action-rename-btn'),
-                actionDeleteBtn = d.getElementById('action-delete-btn'),
-                actionCancelBtn = d.getElementById('action-cancel-btn'),
+                renameCounterMenu = d.getElementById('rename-counter-menu'),
+                deleteCounterMenu = d.getElementById('delete-counter-menu'),
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'),
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
@@ -789,7 +684,6 @@
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
                 wakeLock = null, deferredInstallPrompt = null,
-                longPressedCounterId = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
             const rd = rg.r.baseVal.value,
@@ -998,21 +892,6 @@
                 go.classList.add('active');
             }
 
-            function _openCounterActionSheet(id) {
-                const target = counters.find(c => c.id === id);
-                if (!target) return;
-                longPressedCounterId = target.id;
-                actionHeader.textContent = target.name;
-                switcher.classList.remove('active');
-                actionBackdrop.classList.add('active');
-                if (navigator.vibrate) navigator.vibrate(45);
-            }
-
-            function _closeCounterActionSheet() {
-                actionBackdrop.classList.remove('active');
-                longPressedCounterId = null;
-            }
-
             function _createCounter() {
                 setTimeout(() => {
                     const nameInput = prompt('New Counter Name:', 'Counter ' + (counters.length + 1));
@@ -1049,8 +928,8 @@
                 _x();
             }
 
-            function _renameCounter(id) {
-                const target = counters.find(c => c.id === id);
+            function _renameActiveCounter() {
+                const target = _getActiveCounter();
                 if (!target) return;
                 setTimeout(() => {
                     const nextName = prompt('Rename Counter:', target.name);
@@ -1063,28 +942,22 @@
                         target.name = cleanName;
                         _w();
                         _x();
-                        _renderCounterSwitcher();
                         _z(`renamed to ${cleanName}`, 2000);
                     }
                 }, 60);
             }
 
-            function _deleteCounter(id) {
+            function _deleteActiveCounter() {
                 if (counters.length <= 1) {
                     _z('at least one counter required', 2000);
                     return;
                 }
-                const target = counters.find(c => c.id === id);
+                const target = _getActiveCounter();
                 if (!target) return;
                 if (!confirm(`Delete "${target.name}"?`)) return;
 
-                counters = counters.filter(c => c.id !== id);
-                if (activeId === id) {
-                    _switchToCounter(counters[0].id);
-                } else {
-                    _x();
-                    _renderCounterSwitcher();
-                }
+                counters = counters.filter(c => c.id !== target.id);
+                _switchToCounter(counters[0].id);
                 _z(`deleted ${target.name}`, 2000);
             }
 
@@ -1105,94 +978,12 @@
                     row.appendChild(nameSpan);
                     row.appendChild(valSpan);
 
-                    let holdTimer = null, holdTriggered = false, startX = 0, startY = 0, suppressNextClick = false;
-
-                    const clearHoldTimer = () => {
-                        if (holdTimer) {
-                            clearTimeout(holdTimer);
-                            holdTimer = null;
-                        }
-                        row.classList.remove('pressing');
-                    };
-
-                    row.addEventListener('touchstart', e => {
-                        e.stopPropagation();
-                        holdTriggered = false;
-                        suppressNextClick = false;
-                        startX = e.touches[0].clientX;
-                        startY = e.touches[0].clientY;
-                        row.classList.add('active-touch');
-                        row.classList.add('pressing');
-
-                        holdTimer = setTimeout(() => {
-                            holdTriggered = true;
-                            suppressNextClick = true;
-                            row.classList.remove('active-touch');
-                            row.classList.remove('pressing');
-                            _openCounterActionSheet(item.id);
-                        }, 480);
-                    }, { passive: true });
-
-                    row.addEventListener('touchmove', e => {
-                        if (!holdTimer) return;
-                        const dx = Math.abs(e.touches[0].clientX - startX);
-                        const dy = Math.abs(e.touches[0].clientY - startY);
-                        if (dx > 10 || dy > 10) {
-                            clearHoldTimer();
-                            row.classList.remove('active-touch');
-                        }
-                    }, { passive: true });
-
-                    const handleTouchEnd = e => {
-                        const wasTriggered = holdTriggered;
-                        clearHoldTimer();
-                        row.classList.remove('active-touch');
-
-                        if (wasTriggered) {
-                            if (e && e.cancelable) e.preventDefault();
-                            return;
-                        }
-
-                        suppressNextClick = true;
-                        setTimeout(() => { suppressNextClick = false; }, 350);
-                        _switchToCounter(item.id);
-                        switcher.classList.remove('active');
-                        _z(`switched to ${item.name}`, 1600);
-                    };
-
-                    row.addEventListener('touchend', handleTouchEnd);
-                    row.addEventListener('touchcancel', () => {
-                        clearHoldTimer();
-                        row.classList.remove('active-touch');
-                    });
-
-                    row.addEventListener('mousedown', e => {
-                        if (e.button !== 0) return;
-                        e.stopPropagation();
-                        holdTriggered = false;
-                        row.classList.add('pressing');
-                        holdTimer = setTimeout(() => {
-                            holdTriggered = true;
-                            suppressNextClick = true;
-                            row.classList.remove('pressing');
-                            _openCounterActionSheet(item.id);
-                        }, 480);
-                    });
-
-                    row.addEventListener('mouseup', () => {
-                        clearHoldTimer();
-                    });
-
-                    row.addEventListener('mouseleave', () => {
-                        clearHoldTimer();
-                    });
+                    row.addEventListener('touchstart', () => row.classList.add('active-touch'), { passive: true });
+                    row.addEventListener('touchend', () => row.classList.remove('active-touch'), { passive: true });
+                    row.addEventListener('touchcancel', () => row.classList.remove('active-touch'), { passive: true });
 
                     row.onclick = e => {
                         e.stopPropagation();
-                        if (suppressNextClick) {
-                            suppressNextClick = false;
-                            return;
-                        }
                         _switchToCounter(item.id);
                         switcher.classList.remove('active');
                         _z(`switched to ${item.name}`, 1600);
@@ -1215,41 +1006,9 @@
                 switcher.appendChild(addBtn);
             }
 
-            actionRenameBtn.onclick = e => {
-                e.stopPropagation();
-                const id = longPressedCounterId;
-                _closeCounterActionSheet();
-                if (id) _renameCounter(id);
-            };
-
-            actionDeleteBtn.onclick = e => {
-                e.stopPropagation();
-                const id = longPressedCounterId;
-                _closeCounterActionSheet();
-                if (id) _deleteCounter(id);
-            };
-
-            actionCancelBtn.onclick = e => {
-                e.stopPropagation();
-                _closeCounterActionSheet();
-            };
-
-            actionBackdrop.onclick = e => {
-                if (!e.target.closest('#counter-action-sheet')) {
-                    _closeCounterActionSheet();
-                }
-            };
-
-            d.querySelectorAll('.counter-action-btn').forEach(btn => {
-                btn.addEventListener('touchstart', () => btn.classList.add('active-touch'), { passive: true });
-                btn.addEventListener('touchend', () => btn.classList.remove('active-touch'), { passive: true });
-                btn.addEventListener('touchcancel', () => btn.classList.remove('active-touch'), { passive: true });
-            });
-
             titleBtn.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
-                _closeCounterActionSheet();
                 _renderCounterSwitcher();
                 switcher.classList.toggle('active');
             };
@@ -1258,14 +1017,26 @@
                 e.stopPropagation();
                 md.classList.remove('active');
                 switcher.classList.remove('active');
-                _closeCounterActionSheet();
                 _createCounter();
+            };
+
+            renameCounterMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                switcher.classList.remove('active');
+                _renameActiveCounter();
+            };
+
+            deleteCounterMenu.onclick = e => {
+                e.stopPropagation();
+                md.classList.remove('active');
+                switcher.classList.remove('active');
+                _deleteActiveCounter();
             };
 
             mb.onclick = e => {
                 e.stopPropagation();
                 switcher.classList.remove('active');
-                _closeCounterActionSheet();
                 md.classList.toggle('active');
             };
 
@@ -1303,7 +1074,6 @@
                 e.stopPropagation();
                 md.classList.remove('active');
                 switcher.classList.remove('active');
-                _closeCounterActionSheet();
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
@@ -1457,7 +1227,7 @@
                 if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-action-backdrop') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -1471,7 +1241,7 @@
 
             d.body.addEventListener('touchend', e => {
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-action-backdrop') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
