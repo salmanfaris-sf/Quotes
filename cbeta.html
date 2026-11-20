@@ -174,7 +174,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #64d2ff;
+            background: #ffffff;
             flex-shrink: 0;
         }
 
@@ -486,6 +486,55 @@
             white-space: nowrap
         }
 
+        .undo-toast {
+            position: fixed;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            background: var(--m);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            color: var(--s);
+            border-radius: 999px;
+            padding: 7px 8px 7px 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 3005;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+            max-width: 90vw;
+        }
+
+        .undo-toast.active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .undo-toast-btn {
+            background: rgba(255, 255, 255, 0.14);
+            border: none;
+            color: var(--s);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.03rem;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.12s ease;
+        }
+
+        .undo-toast-btn:active {
+            background: rgba(255, 255, 255, 0.26);
+        }
+
         #lock-overlay,
         #goal-overlay {
             position: fixed;
@@ -629,6 +678,10 @@
     <div id="x3" class="b3">
         <span id="x4"></span>
     </div>
+    <div id="undo-toast" class="undo-toast" role="status" aria-live="polite">
+        <span id="undo-toast-text"></span>
+        <button type="button" id="undo-toast-btn" class="undo-toast-btn">Undo</button>
+    </div>
     <div class="a3">
         <div id="x6" class="a4">
             <svg class="a5" width="100%" height="100%" viewBox="0 0 100 100">
@@ -677,6 +730,8 @@
                 k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal', h: '_n_hide_hints', list: '_n_counters', active: '_n_active_counter' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
+                undoToast = d.getElementById('undo-toast'), undoToastText = d.getElementById('undo-toast-text'),
+                undoToastBtn = d.getElementById('undo-toast-btn'),
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'),
                 titleBtn = d.getElementById('x1'), titleText = d.getElementById('counter-title-text'),
                 switcher = d.getElementById('counter-switcher'), newCounterMenu = d.getElementById('new-counter-menu'),
@@ -747,7 +802,7 @@
                 hh = localStorage.getItem(k.h) === 'true',
                 wakeLock = null, deferredInstallPrompt = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false,
-                suppressBodyTapUntil = 0;
+                suppressBodyTapUntil = 0, undoTimer = null, pendingUndoAction = null;
 
             // Chrome-like press-and-drag-down state for the top-left counter button
             let titleTouchTracking = false,
@@ -962,6 +1017,48 @@
                 }, du)
             }
 
+            function _hideUndoToast() {
+                if (undoTimer) {
+                    clearTimeout(undoTimer);
+                    undoTimer = null;
+                }
+                pendingUndoAction = null;
+                undoToast.classList.remove('active');
+            }
+
+            function _showUndoToast(message, onUndo, durationMs = 5000) {
+                if (undoTimer) {
+                    clearTimeout(undoTimer);
+                    undoTimer = null;
+                }
+                pendingUndoAction = onUndo;
+                undoToastText.textContent = message;
+                undoToast.classList.add('active');
+                undoTimer = setTimeout(() => {
+                    _hideUndoToast();
+                }, durationMs);
+            }
+
+            undoToastBtn.addEventListener('touchstart', e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+            }, { passive: true });
+
+            undoToastBtn.addEventListener('touchend', e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+            }, { passive: true });
+
+            undoToastBtn.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                const fn = pendingUndoAction;
+                _hideUndoToast();
+                if (typeof fn === 'function') {
+                    fn();
+                }
+            };
+
             function _triggerGoalLockout() {
                 if (rt) {
                     clearTimeout(rt);
@@ -1121,19 +1218,45 @@
             }
 
             function _deleteCounter(id) {
-                const target = counters.find(c => c.id === id);
+                const targetIndex = counters.findIndex(c => c.id === id);
+                if (targetIndex === -1) return;
+                const target = counters[targetIndex];
                 if (!target || target.permanent || target.id === PERMANENT_ID) return;
 
-                counters = counters.filter(c => c.id !== id);
-                if (activeId === id) {
-                    _switchToCounter(PERMANENT_ID);
-                } else {
-                    _x();
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
                 }
-                if (switcher.classList.contains('active')) {
-                    _renderCounterSwitcher();
-                }
-                _z(`deleted ${target.name}`, 2000);
+
+                setTimeout(() => {
+                    const confirmed = w.confirm(`Delete "${target.name}"?`);
+                    if (!confirmed) return;
+
+                    const deletedSnapshot = { ...target };
+                    const deletedIndex = targetIndex;
+                    const previousActiveId = activeId;
+
+                    counters = counters.filter(c => c.id !== id);
+                    if (activeId === id) {
+                        _switchToCounter(PERMANENT_ID);
+                    } else {
+                        _x();
+                    }
+                    if (switcher.classList.contains('active')) {
+                        _renderCounterSwitcher();
+                    }
+
+                    _showUndoToast(`Deleted "${deletedSnapshot.name}"`, () => {
+                        if (!counters.some(c => c.id === deletedSnapshot.id)) {
+                            const insertAt = Math.min(Math.max(1, deletedIndex), counters.length);
+                            counters.splice(insertAt, 0, deletedSnapshot);
+                        }
+                        _switchToCounter(previousActiveId === deletedSnapshot.id ? deletedSnapshot.id : activeId);
+                        if (switcher.classList.contains('active')) {
+                            _renderCounterSwitcher();
+                        }
+                        _z(`restored ${deletedSnapshot.name}`, 2000);
+                    }, 5500);
+                }, 40);
             }
 
             // Enables touch/pointer drag-to-reorder on the counter list in Edit Counter List mode
@@ -1551,7 +1674,7 @@
                 }
                 if (Date.now() < suppressBodyTapUntil) return;
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#undo-toast') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (f.contentEditable === 'true') return;
                 _u();
                 _incrementCounter();
@@ -1740,7 +1863,7 @@
                 if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#undo-toast') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -1754,7 +1877,7 @@
 
             d.body.addEventListener('touchend', e => {
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#undo-toast') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
@@ -1769,7 +1892,24 @@
                     suppressBodyTapUntil = Date.now() + 350;
                     if (dx > 50) {
                         if (navigator.vibrate) navigator.vibrate(40);
-                        v = 0; _w(); _x(); _z('counter reset', 2000);
+                        const prevValue = v;
+                        const targetCounterId = activeId;
+                        v = 0; _w(); _x();
+                        if (prevValue !== 0) {
+                            _showUndoToast(`Counter reset (${prevValue.toLocaleString('en-US')})`, () => {
+                                const target = counters.find(c => c.id === targetCounterId);
+                                if (!target) return;
+                                target.v = prevValue;
+                                if (activeId === targetCounterId) {
+                                    v = prevValue;
+                                    _w();
+                                }
+                                _x();
+                                _z('reset undone', 2000);
+                            }, 5500);
+                        } else {
+                            _z('counter reset', 2000);
+                        }
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
                         _dismissMobileKeyboard();
