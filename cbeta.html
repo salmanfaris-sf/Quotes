@@ -201,56 +201,35 @@
             flex-shrink: 0;
         }
 
-        .counter-row-more-btn {
-            background: none;
-            border: none;
-            color: var(--s);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0.65;
-            transition: background 0.12s ease, opacity 0.12s ease;
-            flex-shrink: 0;
-        }
-
-        .counter-row-more-btn:hover,
-        .counter-row-more-btn:active,
-        .counter-row-more-btn.active {
-            background: rgba(255, 255, 255, 0.14);
-            opacity: 1;
-        }
-
         .counter-item-menu {
             position: fixed;
-            background: var(--m);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: rgba(34, 34, 37, 0.96);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
-            min-width: 148px;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+            min-width: 146px;
+            padding: 4px 0;
+            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.72);
             z-index: 320;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             opacity: 0;
-            transform: scale(0.28);
+            transform: scale(0.92) translateY(-4px);
             pointer-events: none;
             visibility: hidden;
-            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+            transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
                         opacity 0.16s ease,
-                        visibility 0s linear 0.24s;
+                        visibility 0s linear 0.2s;
         }
 
         .counter-item-menu.active {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             pointer-events: auto;
             visibility: visible;
-            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
                         opacity 0.18s ease,
                         visibility 0s linear 0s;
         }
@@ -259,13 +238,17 @@
             background: none;
             border: none;
             color: var(--s);
-            padding: 13px 18px;
+            padding: 12px 18px;
             font-size: 0.86rem;
             font-weight: 400;
             text-align: left;
             width: 100%;
             cursor: pointer;
             transition: background 0.08s linear;
+        }
+
+        .counter-item-menu-btn + .counter-item-menu-btn {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .counter-item-menu-btn:active,
@@ -751,6 +734,7 @@
             const PERMANENT_ID = 'default';
             let counterItemMenu = null;
             let openItemMenuCounterId = null;
+            let suppressRowClickUntil = 0;
 
             f.contentEditable = 'false';
 
@@ -1106,47 +1090,41 @@
                 if (counterItemMenu) {
                     counterItemMenu.classList.remove('active');
                 }
-                switcher.querySelectorAll('.counter-row-more-btn.active').forEach(btn => {
-                    btn.classList.remove('active');
-                });
             }
 
-            // Opens a separate floating menu next to the clicked 3-dot button (not inline under the row)
-            function _toggleCounterItemMenu(counterId, anchorBtn) {
+            // Opens a minimal floating menu anchored cleanly near the long-pressed counter row
+            function _openCounterItemMenu(counterId, anchorEl, touchPoint) {
+                const target = counters.find(c => c.id === counterId);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+                if (titleTouchTracking || titleDraggedDown) return;
+
                 const menu = _ensureCounterItemMenu();
-                if (openItemMenuCounterId === counterId && menu.classList.contains('active')) {
-                    _closeCounterItemMenu();
-                    return;
-                }
                 _closeCounterItemMenu();
                 openItemMenuCounterId = counterId;
-                anchorBtn.classList.add('active');
 
-                const rect = anchorBtn.getBoundingClientRect();
-                const anchorCenterX = rect.left + rect.width / 2;
-                const anchorCenterY = rect.top + rect.height / 2;
+                const rect = anchorEl.getBoundingClientRect();
+                const refX = touchPoint ? touchPoint.x : (rect.left + rect.width * 0.7);
+                const refY = touchPoint ? touchPoint.y : (rect.top + rect.height / 2);
 
                 menu.style.left = '0px';
                 menu.style.top = '0px';
-                menu.style.transformOrigin = 'center center';
+                menu.style.transformOrigin = 'top left';
                 menu.classList.add('active');
 
                 const menuRect = menu.getBoundingClientRect();
-                let left = rect.right + 8;
-                if (left + menuRect.width > w.innerWidth - 12) {
-                    left = Math.max(12, rect.left - menuRect.width - 8);
-                }
-                let top = rect.top;
-                if (top + menuRect.height > w.innerHeight - 12) {
-                    top = Math.max(12, w.innerHeight - menuRect.height - 12);
+                let left = Math.min(Math.max(14, refX - menuRect.width * 0.5), w.innerWidth - menuRect.width - 14);
+                let top = rect.bottom + 6;
+                if (top + menuRect.height > w.innerHeight - 14) {
+                    top = Math.max(14, rect.top - menuRect.height - 6);
                 }
 
-                const originX = Math.max(0, Math.min(menuRect.width, anchorCenterX - left));
-                const originY = Math.max(0, Math.min(menuRect.height, anchorCenterY - top));
+                const originX = Math.max(0, Math.min(menuRect.width, refX - left));
+                const originY = Math.max(0, Math.min(menuRect.height, refY - top));
 
                 menu.style.left = `${Math.round(left)}px`;
                 menu.style.top = `${Math.round(top)}px`;
                 menu.style.transformOrigin = `${Math.round(originX)}px ${Math.round(originY)}px`;
+                if (navigator.vibrate) navigator.vibrate(35);
             }
 
             // Clears active drag-hover highlight across counter switcher and menu items
@@ -1317,45 +1295,75 @@
                     row.appendChild(nameSpan);
                     row.appendChild(metaSpan);
 
-                    if (!isPermanent) {
-                        const moreBtn = d.createElement('button');
-                        moreBtn.type = 'button';
-                        moreBtn.className = 'counter-row-more-btn';
-                        moreBtn.setAttribute('aria-label', `Options for ${item.name}`);
-                        moreBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>';
+                    let rowLongPressTimer = null;
+                    let rowStartX = 0;
+                    let rowStartY = 0;
+                    let rowLongPressed = false;
 
-                        moreBtn.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            suppressBodyTapUntil = Date.now() + 350;
-                        }, { passive: true });
-
-                        moreBtn.onclick = e => {
-                            e.stopPropagation();
-                            suppressBodyTapUntil = Date.now() + 350;
-                            _toggleCounterItemMenu(item.id, moreBtn);
-                        };
-
-                        metaSpan.appendChild(moreBtn);
-                    }
+                    const _clearRowLongPress = () => {
+                        if (rowLongPressTimer) {
+                            clearTimeout(rowLongPressTimer);
+                            rowLongPressTimer = null;
+                        }
+                    };
 
                     row.addEventListener('touchstart', e => {
-                        if (e.target.closest('.counter-row-more-btn')) return;
                         e.stopPropagation();
                         _closeCounterItemMenu();
+                        rowLongPressed = false;
                         row.classList.add('active-touch');
+
+                        // Never trigger row long-press while user is tap-and-dragging from the counter title
+                        if (isPermanent || titleTouchTracking || titleDraggedDown) return;
+
+                        const t = e.touches[0];
+                        rowStartX = t.clientX;
+                        rowStartY = t.clientY;
+                        rowLongPressTimer = setTimeout(() => {
+                            rowLongPressTimer = null;
+                            if (titleTouchTracking || titleDraggedDown) return;
+                            rowLongPressed = true;
+                            suppressRowClickUntil = Date.now() + 450;
+                            suppressBodyTapUntil = Date.now() + 450;
+                            row.classList.remove('active-touch');
+                            _openCounterItemMenu(item.id, row, { x: rowStartX, y: rowStartY });
+                        }, 520);
+                    }, { passive: true });
+
+                    row.addEventListener('touchmove', e => {
+                        if (!rowLongPressTimer) return;
+                        const t = e.touches[0];
+                        if (Math.abs(t.clientX - rowStartX) > 10 || Math.abs(t.clientY - rowStartY) > 10) {
+                            _clearRowLongPress();
+                        }
                     }, { passive: true });
 
                     row.addEventListener('touchend', e => {
-                        if (e.target.closest('.counter-row-more-btn')) return;
+                        _clearRowLongPress();
+                        if (rowLongPressed) {
+                            e.preventDefault();
+                            suppressBodyTapUntil = Date.now() + 400;
+                            suppressRowClickUntil = Date.now() + 450;
+                            rowLongPressed = false;
+                            row.classList.remove('active-touch');
+                            return;
+                        }
                         suppressBodyTapUntil = Date.now() + 300;
+                        row.classList.remove('active-touch');
+                    });
+
+                    row.addEventListener('touchcancel', () => {
+                        _clearRowLongPress();
+                        rowLongPressed = false;
                         row.classList.remove('active-touch');
                     }, { passive: true });
 
-                    row.addEventListener('touchcancel', () => row.classList.remove('active-touch'), { passive: true });
-
                     row.onclick = e => {
-                        if (e.target.closest('.counter-row-more-btn')) return;
                         e.stopPropagation();
+                        if (Date.now() < suppressRowClickUntil || rowLongPressed) {
+                            rowLongPressed = false;
+                            return;
+                        }
                         suppressBodyTapUntil = Date.now() + 300;
                         _closeCounterItemMenu();
                         _switchToCounter(item.id);
@@ -1582,7 +1590,7 @@
                 if (!e.target.closest('.a2')) {
                     md.classList.remove('active');
                 }
-                if (!e.target.closest('#counter-item-menu') && !e.target.closest('.counter-row-more-btn')) {
+                if (!e.target.closest('#counter-item-menu') && !e.target.closest('.counter-row-content')) {
                     _closeCounterItemMenu();
                 }
                 if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1') && !e.target.closest('#counter-item-menu')) {
