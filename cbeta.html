@@ -201,110 +201,71 @@
             flex-shrink: 0;
         }
 
-        .counter-item-menu {
-            position: fixed;
-            top: 72px;
-            left: 273px;
-            background: rgba(34, 34, 37, 0.96);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            min-width: 156px;
-            max-width: calc(100vw - 293px);
-            padding: 4px 0;
-            box-shadow: none;
-            z-index: 320;
-            overflow: hidden;
+        .counter-row-drag-handle {
             display: flex;
-            flex-direction: column;
-            transform-origin: top left;
-            opacity: 0;
-            transform: scale(0.94) translateY(-4px);
-            pointer-events: none;
-            visibility: hidden;
-            transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
-                        opacity 0.16s ease,
-                        visibility 0s linear 0.2s;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.45);
+            padding: 4px 6px 4px 0;
+            cursor: grab;
+            touch-action: none;
+            flex-shrink: 0;
         }
 
-        .counter-item-menu.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
-            visibility: visible;
-            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-                        opacity 0.18s ease,
-                        visibility 0s linear 0s;
+        .counter-row-drag-handle:active {
+            cursor: grabbing;
+            color: rgba(255, 255, 255, 0.85);
         }
 
-        @media (max-width: 460px) {
-            .counter-item-menu {
-                top: auto;
-                bottom: 28px;
-                left: 50%;
-                right: auto;
-                min-width: 210px;
-                max-width: calc(100vw - 40px);
-                transform-origin: bottom center;
-                transform: translateX(-50%) scale(0.94) translateY(6px);
-            }
-
-            .counter-item-menu.active {
-                transform: translateX(-50%) scale(1) translateY(0);
-            }
+        .counter-row-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
-        .counter-item-menu.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
-            visibility: visible;
-            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-                        opacity 0.18s ease,
-                        visibility 0s linear 0s;
-        }
-
-        .counter-item-menu-heading {
-            padding: 9px 18px 8px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.52);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            pointer-events: none;
-        }
-
-        .counter-item-menu-btn {
-            background: none;
+        .counter-row-icon-btn {
+            background: rgba(255, 255, 255, 0.08);
             border: none;
             color: var(--s);
-            padding: 12px 18px;
-            font-size: 0.86rem;
-            font-weight: 400;
-            text-align: left;
-            width: 100%;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: background 0.08s linear;
+            transition: background 0.1s ease, opacity 0.1s ease;
         }
 
-        .counter-item-menu-btn + .counter-item-menu-btn {
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        .counter-row-icon-btn:active,
+        .counter-row-icon-btn.active-touch {
+            background: rgba(255, 255, 255, 0.22);
         }
 
-        .counter-item-menu-btn:active,
-        .counter-item-menu-btn.active-touch {
-            background: rgba(255, 255, 255, 0.14);
+        .counter-row-icon-btn.delete-btn {
+            color: #ff6961;
+        }
+
+        .counter-swipe-wrap.is-dragging {
+            opacity: 0.92;
+            z-index: 10;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+        }
+
+        .counter-swipe-wrap.is-dragging .counter-row-content {
+            background: rgba(48, 48, 52, 0.98);
+        }
+
+        .counter-footer-actions {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .counter-add-btn {
             background: none;
             border: none;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
             color: var(--s);
             padding: 13px 18px;
             font-size: 0.85rem;
@@ -314,6 +275,16 @@
             cursor: pointer;
             opacity: 0.88;
             transition: background 0.12s;
+        }
+
+        .counter-add-btn + .counter-add-btn {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .counter-add-btn.done-edit-btn {
+            color: #64d2ff;
+            font-weight: 600;
+            text-align: center;
         }
 
         .counter-add-btn:active,
@@ -777,9 +748,7 @@
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
             const PERMANENT_ID = 'default';
-            let counterItemMenu = null;
-            let openItemMenuCounterId = null;
-            let suppressRowClickUntil = 0;
+            let isEditingCounterList = false;
 
             f.contentEditable = 'false';
 
@@ -799,7 +768,7 @@
                         const parsed = JSON.parse(raw);
                         if (Array.isArray(parsed) && parsed.length > 0) {
                             const mapped = parsed.map((item, idx) => {
-                                const isDefault = item.id === PERMANENT_ID || item.permanent === true || (idx === 0 && !item.id);
+                                const isDefault = item.id === PERMANENT_ID || item.permanent === true;
                                 return {
                                     id: isDefault ? PERMANENT_ID : (item.id || ('c_' + idx + '_' + Date.now())),
                                     name: isDefault ? 'Counter' : ((item.name && String(item.name).trim()) || ('Counter ' + (idx + 1))),
@@ -1078,137 +1047,11 @@
 
             // Syncs the title button's visual open state with #counter-switcher visibility
             function _syncSwitcherOpenState() {
-                titleBtn.classList.toggle('open', switcher.classList.contains('active'));
-                if (!switcher.classList.contains('active')) {
-                    _closeCounterItemMenu();
+                const isOpen = switcher.classList.contains('active');
+                titleBtn.classList.toggle('open', isOpen);
+                if (!isOpen && isEditingCounterList) {
+                    isEditingCounterList = false;
                 }
-            }
-
-            // Ensures the separate floating menu for custom counter Edit/Delete exists
-            function _ensureCounterItemMenu() {
-                if (counterItemMenu) return counterItemMenu;
-                counterItemMenu = d.createElement('div');
-                counterItemMenu.className = 'counter-item-menu';
-                counterItemMenu.id = 'counter-item-menu';
-                counterItemMenu.addEventListener('touchstart', e => {
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 500;
-                }, { passive: true });
-                counterItemMenu.addEventListener('touchend', e => {
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 500;
-                });
-
-                const headingEl = d.createElement('div');
-                headingEl.className = 'counter-item-menu-heading';
-                headingEl.id = 'counter-item-menu-heading';
-
-                const renameBtn = d.createElement('button');
-                renameBtn.type = 'button';
-                renameBtn.className = 'counter-item-menu-btn';
-                renameBtn.textContent = 'Rename';
-                renameBtn.addEventListener('touchstart', e => {
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 500;
-                    renameBtn.classList.add('active-touch');
-                }, { passive: true });
-                renameBtn.addEventListener('touchend', e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 600;
-                    renameBtn.classList.remove('active-touch');
-                    const targetId = openItemMenuCounterId;
-                    _closeCounterItemMenu();
-                    if (targetId) {
-                        switcher.classList.remove('active');
-                        _syncSwitcherOpenState();
-                        _renameCounter(targetId);
-                    }
-                });
-                renameBtn.addEventListener('touchcancel', () => {
-                    renameBtn.classList.remove('active-touch');
-                }, { passive: true });
-                renameBtn.onclick = e => {
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 600;
-                    const targetId = openItemMenuCounterId;
-                    _closeCounterItemMenu();
-                    if (targetId) {
-                        switcher.classList.remove('active');
-                        _syncSwitcherOpenState();
-                        _renameCounter(targetId);
-                    }
-                };
-
-                const deleteBtn = d.createElement('button');
-                deleteBtn.type = 'button';
-                deleteBtn.className = 'counter-item-menu-btn';
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('touchstart', e => {
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 500;
-                    deleteBtn.classList.add('active-touch');
-                }, { passive: true });
-                deleteBtn.addEventListener('touchend', e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 600;
-                    deleteBtn.classList.remove('active-touch');
-                    const targetId = openItemMenuCounterId;
-                    _closeCounterItemMenu();
-                    if (targetId) {
-                        switcher.classList.remove('active');
-                        _syncSwitcherOpenState();
-                        _deleteCounter(targetId);
-                    }
-                });
-                deleteBtn.addEventListener('touchcancel', () => {
-                    deleteBtn.classList.remove('active-touch');
-                }, { passive: true });
-                deleteBtn.onclick = e => {
-                    e.stopPropagation();
-                    suppressBodyTapUntil = Date.now() + 600;
-                    const targetId = openItemMenuCounterId;
-                    _closeCounterItemMenu();
-                    if (targetId) {
-                        switcher.classList.remove('active');
-                        _syncSwitcherOpenState();
-                        _deleteCounter(targetId);
-                    }
-                };
-
-                counterItemMenu.appendChild(headingEl);
-                counterItemMenu.appendChild(renameBtn);
-                counterItemMenu.appendChild(deleteBtn);
-                d.body.appendChild(counterItemMenu);
-                return counterItemMenu;
-            }
-
-            // Closes the separate counter Edit/Delete menu
-            function _closeCounterItemMenu() {
-                openItemMenuCounterId = null;
-                if (counterItemMenu) {
-                    counterItemMenu.classList.remove('active');
-                }
-            }
-
-            // Opens a fixed-position menu in a clean, predictable spot for Edit/Delete
-            function _openCounterItemMenu(counterId) {
-                const target = counters.find(c => c.id === counterId);
-                if (!target || target.permanent || target.id === PERMANENT_ID) return;
-                if (titleTouchTracking || titleDraggedDown) return;
-
-                const menu = _ensureCounterItemMenu();
-                _closeCounterItemMenu();
-                openItemMenuCounterId = counterId;
-
-                const headingEl = menu.querySelector('#counter-item-menu-heading');
-                if (headingEl) {
-                    headingEl.textContent = target.name;
-                }
-
-                menu.classList.add('active');
-                if (navigator.vibrate) navigator.vibrate(35);
             }
 
             // Clears active drag-hover highlight across counter switcher and menu items
@@ -1273,10 +1116,8 @@
                 });
             }
 
-            // Collapses any swiped-open counter rows except `exceptRow`
-            function _closeOpenSwipeRows() {
-                _closeCounterItemMenu();
-            }
+            // Collapses any transient state when closing/reopening switcher
+            function _closeOpenSwipeRows() {}
 
             function _switchToCounter(id) {
                 const found = counters.find(c => c.id === id);
@@ -1347,109 +1188,242 @@
                     _switchToCounter(PERMANENT_ID);
                 } else {
                     _x();
+                }
+                if (switcher.classList.contains('active')) {
                     _renderCounterSwitcher();
                 }
                 _z(`deleted ${target.name}`, 2000);
             }
 
+            // Enables touch/pointer drag-to-reorder on the counter list in Edit Counter List mode
+            function _attachReorderGesture(wrap, handleEl, counterId) {
+                let dragging = false;
+                let longPressTimer = null;
+                let startY = 0;
+                let lastY = 0;
+
+                const _startReorderDrag = (clientY) => {
+                    dragging = true;
+                    startY = clientY;
+                    lastY = clientY;
+                    wrap.classList.add('is-dragging');
+                    if (navigator.vibrate) navigator.vibrate(25);
+                };
+
+                const _moveReorderDrag = (clientY) => {
+                    if (!dragging) return;
+                    const dy = clientY - lastY;
+                    wrap.style.transform = `translateY(${clientY - startY}px)`;
+
+                    const wraps = Array.from(switcher.querySelectorAll('.counter-swipe-wrap'));
+                    const currentIdx = wraps.indexOf(wrap);
+                    if (currentIdx === -1) return;
+
+                    const rect = wrap.getBoundingClientRect();
+                    const midY = rect.top + rect.height / 2;
+
+                    if (dy > 0 && currentIdx < wraps.length - 1) {
+                        const nextWrap = wraps[currentIdx + 1];
+                        const nextRect = nextWrap.getBoundingClientRect();
+                        if (midY > nextRect.top + nextRect.height / 2) {
+                            switcher.insertBefore(nextWrap, wrap);
+                            startY += nextRect.height;
+                            wrap.style.transform = `translateY(${clientY - startY}px)`;
+                        }
+                    } else if (dy < 0 && currentIdx > 0) {
+                        const prevWrap = wraps[currentIdx - 1];
+                        const prevRect = prevWrap.getBoundingClientRect();
+                        if (midY < prevRect.top + prevRect.height / 2) {
+                            switcher.insertBefore(wrap, prevWrap);
+                            startY -= prevRect.height;
+                            wrap.style.transform = `translateY(${clientY - startY}px)`;
+                        }
+                    }
+                    lastY = clientY;
+                };
+
+                const _endReorderDrag = () => {
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                    }
+                    if (!dragging) return;
+                    dragging = false;
+                    wrap.classList.remove('is-dragging');
+                    wrap.style.transform = '';
+
+                    const orderedIds = Array.from(switcher.querySelectorAll('.counter-swipe-wrap'))
+                        .map(el => el.dataset.counterId)
+                        .filter(Boolean);
+
+                    if (orderedIds.length === counters.length) {
+                        counters.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
+                        _x();
+                    }
+                    _renderCounterSwitcher();
+                };
+
+                handleEl.addEventListener('touchstart', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 600;
+                    const t = e.touches[0];
+                    startY = t.clientY;
+                    lastY = t.clientY;
+                    longPressTimer = setTimeout(() => {
+                        longPressTimer = null;
+                        _startReorderDrag(lastY);
+                    }, 180);
+                }, { passive: true });
+
+                handleEl.addEventListener('touchmove', e => {
+                    e.stopPropagation();
+                    const t = e.touches[0];
+                    if (longPressTimer && Math.abs(t.clientY - startY) > 6) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                        _startReorderDrag(t.clientY);
+                    }
+                    if (dragging) {
+                        e.preventDefault();
+                        _moveReorderDrag(t.clientY);
+                    }
+                }, { passive: false });
+
+                handleEl.addEventListener('touchend', e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 500;
+                    _endReorderDrag();
+                });
+
+                handleEl.addEventListener('touchcancel', () => {
+                    _endReorderDrag();
+                }, { passive: true });
+
+                handleEl.addEventListener('mousedown', e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    _startReorderDrag(e.clientY);
+
+                    const onMouseMove = ev => _moveReorderDrag(ev.clientY);
+                    const onMouseUp = () => {
+                        w.removeEventListener('mousemove', onMouseMove);
+                        w.removeEventListener('mouseup', onMouseUp);
+                        _endReorderDrag();
+                    };
+                    w.addEventListener('mousemove', onMouseMove);
+                    w.addEventListener('mouseup', onMouseUp);
+                });
+            }
+
             function _renderCounterSwitcher() {
-                _closeCounterItemMenu();
                 switcher.innerHTML = '';
                 counters.forEach(item => {
                     const isPermanent = Boolean(item.permanent || item.id === PERMANENT_ID);
                     const wrap = d.createElement('div');
                     wrap.className = 'counter-swipe-wrap';
+                    wrap.dataset.counterId = item.id;
 
                     const row = d.createElement('div');
                     row.className = 'counter-row-content' + (item.id === activeId ? ' is-current' : '');
                     row.dataset.counterId = item.id;
 
+                    if (isEditingCounterList) {
+                        const dragHandle = d.createElement('span');
+                        dragHandle.className = 'counter-row-drag-handle';
+                        dragHandle.title = 'Hold and drag to reorder';
+                        dragHandle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="8" x2="20" y2="8"></line><line x1="4" y1="16" x2="20" y2="16"></line></svg>';
+                        row.appendChild(dragHandle);
+                        _attachReorderGesture(wrap, dragHandle, item.id);
+                    }
+
                     const nameSpan = d.createElement('span');
                     nameSpan.className = 'counter-row-name';
                     nameSpan.textContent = item.name;
+                    row.appendChild(nameSpan);
 
                     const metaSpan = d.createElement('span');
                     metaSpan.className = 'counter-row-meta';
 
-                    const valSpan = d.createElement('span');
-                    valSpan.className = 'counter-row-val';
-                    valSpan.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
+                    if (isEditingCounterList) {
+                        if (!isPermanent) {
+                            const actionsSpan = d.createElement('span');
+                            actionsSpan.className = 'counter-row-actions';
 
-                    metaSpan.appendChild(valSpan);
-                    row.appendChild(nameSpan);
-                    row.appendChild(metaSpan);
+                            const editBtn = d.createElement('button');
+                            editBtn.type = 'button';
+                            editBtn.className = 'counter-row-icon-btn';
+                            editBtn.title = 'Rename counter';
+                            editBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>';
+                            editBtn.addEventListener('touchstart', e => {
+                                e.stopPropagation();
+                                suppressBodyTapUntil = Date.now() + 400;
+                                editBtn.classList.add('active-touch');
+                            }, { passive: true });
+                            editBtn.addEventListener('touchend', e => {
+                                e.stopPropagation();
+                                suppressBodyTapUntil = Date.now() + 400;
+                                editBtn.classList.remove('active-touch');
+                            }, { passive: true });
+                            editBtn.onclick = e => {
+                                e.stopPropagation();
+                                suppressBodyTapUntil = Date.now() + 400;
+                                _renameCounter(item.id);
+                            };
 
-                    let rowLongPressTimer = null;
-                    let rowStartX = 0;
-                    let rowStartY = 0;
-                    let rowLongPressed = false;
+                            const delBtn = d.createElement('button');
+                            delBtn.type = 'button';
+                            delBtn.className = 'counter-row-icon-btn delete-btn';
+                            delBtn.title = 'Delete counter';
+                            delBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>';
+                            delBtn.addEventListener('touchstart', e => {
+                                e.stopPropagation();
+                                suppressBodyTapUntil = Date.now() + 400;
+                                delBtn.classList.add('active-touch');
+                            }, { passive: true });
+                            delBtn.addEventListener('touchend', e => {
+                                e.stopPropagation();
+                                suppressBodyTapUntil = Date.now() + 400;
+                                delBtn.classList.remove('active-touch');
+                            }, { passive: true });
+                            delBtn.onclick = e => {
+                                e.stopPropagation();
+                                suppressBodyTapUntil = Date.now() + 400;
+                                _deleteCounter(item.id);
+                            };
 
-                    const _clearRowLongPress = () => {
-                        if (rowLongPressTimer) {
-                            clearTimeout(rowLongPressTimer);
-                            rowLongPressTimer = null;
+                            actionsSpan.appendChild(editBtn);
+                            actionsSpan.appendChild(delBtn);
+                            metaSpan.appendChild(actionsSpan);
                         }
-                    };
+                    } else {
+                        const valSpan = d.createElement('span');
+                        valSpan.className = 'counter-row-val';
+                        valSpan.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
+                        metaSpan.appendChild(valSpan);
+                    }
+
+                    row.appendChild(metaSpan);
 
                     row.addEventListener('touchstart', e => {
                         e.stopPropagation();
-                        _closeCounterItemMenu();
-                        rowLongPressed = false;
-                        row.classList.add('active-touch');
-
-                        // Never trigger row long-press while user is tap-and-dragging from the counter title
-                        if (isPermanent || titleTouchTracking || titleDraggedDown) return;
-
-                        const t = e.touches[0];
-                        rowStartX = t.clientX;
-                        rowStartY = t.clientY;
-                        rowLongPressTimer = setTimeout(() => {
-                            rowLongPressTimer = null;
-                            if (titleTouchTracking || titleDraggedDown) return;
-                            rowLongPressed = true;
-                            suppressRowClickUntil = Date.now() + 450;
-                            suppressBodyTapUntil = Date.now() + 450;
-                            row.classList.remove('active-touch');
-                            _openCounterItemMenu(item.id);
-                        }, 520);
-                    }, { passive: true });
-
-                    row.addEventListener('touchmove', e => {
-                        if (!rowLongPressTimer) return;
-                        const t = e.touches[0];
-                        if (Math.abs(t.clientX - rowStartX) > 10 || Math.abs(t.clientY - rowStartY) > 10) {
-                            _clearRowLongPress();
+                        if (!isEditingCounterList) {
+                            row.classList.add('active-touch');
                         }
                     }, { passive: true });
 
-                    row.addEventListener('touchend', e => {
-                        _clearRowLongPress();
-                        if (rowLongPressed) {
-                            e.preventDefault();
-                            suppressBodyTapUntil = Date.now() + 400;
-                            suppressRowClickUntil = Date.now() + 450;
-                            rowLongPressed = false;
-                            row.classList.remove('active-touch');
-                            return;
-                        }
+                    row.addEventListener('touchend', () => {
                         suppressBodyTapUntil = Date.now() + 300;
                         row.classList.remove('active-touch');
-                    });
+                    }, { passive: true });
 
                     row.addEventListener('touchcancel', () => {
-                        _clearRowLongPress();
-                        rowLongPressed = false;
                         row.classList.remove('active-touch');
                     }, { passive: true });
 
                     row.onclick = e => {
                         e.stopPropagation();
-                        if (Date.now() < suppressRowClickUntil || rowLongPressed) {
-                            rowLongPressed = false;
-                            return;
-                        }
                         suppressBodyTapUntil = Date.now() + 300;
-                        _closeCounterItemMenu();
+                        if (isEditingCounterList) return;
                         _switchToCounter(item.id);
                         switcher.classList.remove('active');
                         _syncSwitcherOpenState();
@@ -1460,23 +1434,66 @@
                     switcher.appendChild(wrap);
                 });
 
-                const addBtn = d.createElement('button');
-                addBtn.type = 'button';
-                addBtn.className = 'counter-add-btn';
-                addBtn.dataset.action = 'new-counter';
-                addBtn.textContent = '+ New Counter';
-                addBtn.addEventListener('touchstart', () => addBtn.classList.add('active-touch'), { passive: true });
-                addBtn.addEventListener('touchend', () => {
-                    suppressBodyTapUntil = Date.now() + 300;
-                    addBtn.classList.remove('active-touch');
-                }, { passive: true });
-                addBtn.addEventListener('touchcancel', () => addBtn.classList.remove('active-touch'), { passive: true });
-                addBtn.onclick = e => {
-                    e.stopPropagation();
-                    _closeOpenSwipeRows(null);
-                    _createCounter();
-                };
-                switcher.appendChild(addBtn);
+                const footer = d.createElement('div');
+                footer.className = 'counter-footer-actions';
+
+                if (isEditingCounterList) {
+                    const doneBtn = d.createElement('button');
+                    doneBtn.type = 'button';
+                    doneBtn.className = 'counter-add-btn done-edit-btn';
+                    doneBtn.textContent = 'Done';
+                    doneBtn.addEventListener('touchstart', () => doneBtn.classList.add('active-touch'), { passive: true });
+                    doneBtn.addEventListener('touchend', () => {
+                        suppressBodyTapUntil = Date.now() + 300;
+                        doneBtn.classList.remove('active-touch');
+                    }, { passive: true });
+                    doneBtn.addEventListener('touchcancel', () => doneBtn.classList.remove('active-touch'), { passive: true });
+                    doneBtn.onclick = e => {
+                        e.stopPropagation();
+                        suppressBodyTapUntil = Date.now() + 300;
+                        isEditingCounterList = false;
+                        _renderCounterSwitcher();
+                    };
+                    footer.appendChild(doneBtn);
+                } else {
+                    const addBtn = d.createElement('button');
+                    addBtn.type = 'button';
+                    addBtn.className = 'counter-add-btn';
+                    addBtn.dataset.action = 'new-counter';
+                    addBtn.textContent = '+ New Counter';
+                    addBtn.addEventListener('touchstart', () => addBtn.classList.add('active-touch'), { passive: true });
+                    addBtn.addEventListener('touchend', () => {
+                        suppressBodyTapUntil = Date.now() + 300;
+                        addBtn.classList.remove('active-touch');
+                    }, { passive: true });
+                    addBtn.addEventListener('touchcancel', () => addBtn.classList.remove('active-touch'), { passive: true });
+                    addBtn.onclick = e => {
+                        e.stopPropagation();
+                        _createCounter();
+                    };
+                    footer.appendChild(addBtn);
+
+                    const editListBtn = d.createElement('button');
+                    editListBtn.type = 'button';
+                    editListBtn.className = 'counter-add-btn';
+                    editListBtn.dataset.action = 'edit-counter-list';
+                    editListBtn.textContent = 'Edit Counter List';
+                    editListBtn.addEventListener('touchstart', () => editListBtn.classList.add('active-touch'), { passive: true });
+                    editListBtn.addEventListener('touchend', () => {
+                        suppressBodyTapUntil = Date.now() + 300;
+                        editListBtn.classList.remove('active-touch');
+                    }, { passive: true });
+                    editListBtn.addEventListener('touchcancel', () => editListBtn.classList.remove('active-touch'), { passive: true });
+                    editListBtn.onclick = e => {
+                        e.stopPropagation();
+                        suppressBodyTapUntil = Date.now() + 300;
+                        isEditingCounterList = true;
+                        _renderCounterSwitcher();
+                    };
+                    footer.appendChild(editListBtn);
+                }
+
+                switcher.appendChild(footer);
             }
 
             // Chrome-like press & swipe-down selection on top-left counter button
@@ -1534,6 +1551,9 @@
                             switcher.classList.remove('active');
                             _syncSwitcherOpenState();
                             _createCounter();
+                        } else if (chosen.dataset.action === 'edit-counter-list') {
+                            isEditingCounterList = true;
+                            _renderCounterSwitcher();
                         } else if (chosen.dataset.counterId) {
                             const target = counters.find(c => c.id === chosen.dataset.counterId);
                             _switchToCounter(chosen.dataset.counterId);
@@ -1674,16 +1694,13 @@
                 if (!e.target.closest('.a2')) {
                     md.classList.remove('active');
                 }
-                if (!e.target.closest('#counter-item-menu') && !e.target.closest('.counter-row-content')) {
-                    _closeCounterItemMenu();
-                }
-                if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1') && !e.target.closest('#counter-item-menu')) {
+                if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
                     switcher.classList.remove('active');
                     _syncSwitcherOpenState();
                 }
                 if (Date.now() < suppressBodyTapUntil) return;
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-item-menu') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (f.contentEditable === 'true') return;
                 _u();
                 _incrementCounter();
@@ -1872,7 +1889,7 @@
                 if (lk || isLockout) return;
                 _u();
                 if (!wakeLock) _requestWakeLock();
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-item-menu') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 nx = e.touches[0].clientX;
                 ny = e.touches[0].clientY;
                 pt = setTimeout(() => {
@@ -1886,7 +1903,7 @@
 
             d.body.addEventListener('touchend', e => {
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-item-menu') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (pt) { clearTimeout(pt); pt = null }
                 if (qf) { qf = 0; return }
                 if (f.contentEditable === 'true') { f.blur(); return }
