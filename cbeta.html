@@ -157,6 +157,54 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        .counter-row-actions-swap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            min-height: 24px;
+        }
+
+        .counter-swap-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.14);
+            border: none;
+            border-radius: 8px;
+            color: var(--s);
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.12s ease, transform 0.1s ease;
+        }
+
+        .counter-swap-btn:active,
+        .counter-swap-btn.active-touch {
+            background: rgba(255, 255, 255, 0.28);
+            transform: scale(0.98);
+        }
+
+        .counter-swap-cancel {
+            background: none;
+            border: none;
+            color: var(--s);
+            opacity: 0.6;
+            padding: 6px 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            flex-shrink: 0;
+            transition: background 0.12s ease, opacity 0.12s ease;
+        }
+
+        .counter-swap-cancel:active,
+        .counter-swap-cancel.active-touch {
+            background: rgba(255, 255, 255, 0.14);
+            opacity: 1;
+        }
+
         .counter-row-info {
             display: flex;
             align-items: center;
@@ -192,40 +240,6 @@
             opacity: 0.5;
             font-variant-numeric: tabular-nums;
             flex-shrink: 0;
-        }
-
-        .counter-inline-actions {
-            display: none;
-            align-items: stretch;
-            background: rgba(255, 255, 255, 0.05);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .counter-inline-actions.open {
-            display: flex;
-        }
-
-        .counter-inline-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--s);
-            padding: 11px 14px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-            transition: background 0.12s ease;
-        }
-
-        .counter-inline-btn + .counter-inline-btn {
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .counter-inline-btn:active,
-        .counter-inline-btn.active-touch {
-            background: rgba(255, 255, 255, 0.16);
         }
 
         .counter-divider {
@@ -975,36 +989,7 @@
                     _dismissMobileKeyboard();
                     setTimeout(_dismissMobileKeyboard, 150);
                     setTimeout(_dismissMobileKeyboard, 350);
-                    if (rawName === null) return;
-                    const trimmed = rawName.trim();
-                    if (!trimmed) return;
-                    target.name = trimmed;
-                    _w();
-                    _x();
-                    _z(`renamed to "${trimmed}"`, 2000);
-                }, 60);
-            }
-
-            // Delete a non-permanent counter and fall back to the permanent counter if needed
-            function _deleteCounter(targetId) {
-                const target = counters.find(item => item.id === targetId);
-                if (!target || target.permanent || target.id === PERMANENT_ID) return;
-                if (!confirm(`Delete "${target.name}"?`)) return;
-                expandedCounterId = null;
-                counters = counters.filter(item => item.id !== targetId);
-                if (activeId === targetId) {
-                    const fallback = counters.find(item => item.id === PERMANENT_ID) || counters[0];
-                    activeId = fallback.id;
-                    v = fallback.v || 0;
-                    st = fallback.st || 1;
-                    gl = fallback.gl || 0;
-                }
-                _w();
-                _x();
-                _z(`deleted "${target.name}"`, 2000);
-            }
-
-            // Render counter switcher list with long-press inline actions inside the menu
+            // Render counter switcher list with in-place long-press action swap
             function _renderSwitcher() {
                 cs.innerHTML = '';
                 counters.forEach(item => {
@@ -1018,6 +1003,74 @@
 
                     const row = d.createElement('div');
                     row.className = 'counter-row' + (isSelected ? ' selected' : '') + (isExpanded ? ' actions-open' : '');
+
+                    if (isExpanded) {
+                        const swapBar = d.createElement('div');
+                        swapBar.className = 'counter-row-actions-swap';
+
+                        const renameBtn = d.createElement('button');
+                        renameBtn.type = 'button';
+                        renameBtn.className = 'counter-swap-btn';
+                        renameBtn.textContent = 'Rename';
+                        renameBtn.addEventListener('touchstart', e => {
+                            e.stopPropagation();
+                            renameBtn.classList.add('active-touch');
+                        }, { passive: true });
+                        renameBtn.addEventListener('touchend', e => {
+                            e.stopPropagation();
+                            renameBtn.classList.remove('active-touch');
+                        }, { passive: true });
+                        renameBtn.addEventListener('touchcancel', () => renameBtn.classList.remove('active-touch'), { passive: true });
+                        renameBtn.onclick = e => {
+                            e.stopPropagation();
+                            _renameCounter(item.id);
+                        };
+
+                        const delBtn = d.createElement('button');
+                        delBtn.type = 'button';
+                        delBtn.className = 'counter-swap-btn';
+                        delBtn.textContent = 'Delete';
+                        delBtn.addEventListener('touchstart', e => {
+                            e.stopPropagation();
+                            delBtn.classList.add('active-touch');
+                        }, { passive: true });
+                        delBtn.addEventListener('touchend', e => {
+                            e.stopPropagation();
+                            delBtn.classList.remove('active-touch');
+                        }, { passive: true });
+                        delBtn.addEventListener('touchcancel', () => delBtn.classList.remove('active-touch'), { passive: true });
+                        delBtn.onclick = e => {
+                            e.stopPropagation();
+                            _deleteCounter(item.id);
+                        };
+
+                        const cancelBtn = d.createElement('button');
+                        cancelBtn.type = 'button';
+                        cancelBtn.className = 'counter-swap-cancel';
+                        cancelBtn.textContent = 'Done';
+                        cancelBtn.addEventListener('touchstart', e => {
+                            e.stopPropagation();
+                            cancelBtn.classList.add('active-touch');
+                        }, { passive: true });
+                        cancelBtn.addEventListener('touchend', e => {
+                            e.stopPropagation();
+                            cancelBtn.classList.remove('active-touch');
+                        }, { passive: true });
+                        cancelBtn.addEventListener('touchcancel', () => cancelBtn.classList.remove('active-touch'), { passive: true });
+                        cancelBtn.onclick = e => {
+                            e.stopPropagation();
+                            expandedCounterId = null;
+                            _renderSwitcher();
+                        };
+
+                        swapBar.appendChild(renameBtn);
+                        swapBar.appendChild(delBtn);
+                        swapBar.appendChild(cancelBtn);
+                        row.appendChild(swapBar);
+                        group.appendChild(row);
+                        cs.appendChild(group);
+                        return;
+                    }
 
                     const info = d.createElement('div');
                     info.className = 'counter-row-info';
@@ -1040,37 +1093,6 @@
                     group.appendChild(row);
 
                     if (!isPermanent) {
-                        const inlineActions = d.createElement('div');
-                        inlineActions.className = 'counter-inline-actions' + (isExpanded ? ' open' : '');
-
-                        const renameBtn = d.createElement('button');
-                        renameBtn.type = 'button';
-                        renameBtn.className = 'counter-inline-btn';
-                        renameBtn.textContent = 'Rename';
-                        renameBtn.addEventListener('touchstart', () => renameBtn.classList.add('active-touch'), { passive: true });
-                        renameBtn.addEventListener('touchend', () => renameBtn.classList.remove('active-touch'), { passive: true });
-                        renameBtn.addEventListener('touchcancel', () => renameBtn.classList.remove('active-touch'), { passive: true });
-                        renameBtn.onclick = e => {
-                            e.stopPropagation();
-                            _renameCounter(item.id);
-                        };
-
-                        const delBtn = d.createElement('button');
-                        delBtn.type = 'button';
-                        delBtn.className = 'counter-inline-btn';
-                        delBtn.textContent = 'Delete';
-                        delBtn.addEventListener('touchstart', () => delBtn.classList.add('active-touch'), { passive: true });
-                        delBtn.addEventListener('touchend', () => delBtn.classList.remove('active-touch'), { passive: true });
-                        delBtn.addEventListener('touchcancel', () => delBtn.classList.remove('active-touch'), { passive: true });
-                        delBtn.onclick = e => {
-                            e.stopPropagation();
-                            _deleteCounter(item.id);
-                        };
-
-                        inlineActions.appendChild(renameBtn);
-                        inlineActions.appendChild(delBtn);
-                        group.appendChild(inlineActions);
-
                         let holdTimer = null, holdTriggered = false, startX = 0, startY = 0, suppressClick = false;
 
                         const clearHold = () => {
@@ -1095,7 +1117,7 @@
                                 suppressClick = true;
                                 clearHold();
                                 row.classList.remove('active-touch');
-                                expandedCounterId = expandedCounterId === item.id ? null : item.id;
+                                expandedCounterId = item.id;
                                 if (navigator.vibrate) navigator.vibrate(40);
                                 _renderSwitcher();
                             }, 480);
@@ -1124,11 +1146,7 @@
                             suppressClick = true;
                             setTimeout(() => { suppressClick = false; }, 350);
 
-                            if (expandedCounterId === item.id) {
-                                expandedCounterId = null;
-                                _renderSwitcher();
-                            } else if (isSelected) {
-                                expandedCounterId = null;
+                            if (isSelected) {
                                 cs.classList.remove('active');
                             } else {
                                 _switchCounter(item.id);
@@ -1150,7 +1168,7 @@
                                 holdTriggered = true;
                                 suppressClick = true;
                                 clearHold();
-                                expandedCounterId = expandedCounterId === item.id ? null : item.id;
+                                expandedCounterId = item.id;
                                 _renderSwitcher();
                             }, 480);
                         });
@@ -1164,11 +1182,7 @@
                                 suppressClick = false;
                                 return;
                             }
-                            if (expandedCounterId === item.id) {
-                                expandedCounterId = null;
-                                _renderSwitcher();
-                            } else if (isSelected) {
-                                expandedCounterId = null;
+                            if (isSelected) {
                                 cs.classList.remove('active');
                             } else {
                                 _switchCounter(item.id);
