@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html><head>
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
+<html>
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P37159WTH1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -63,7 +64,7 @@
             text-transform: uppercase;
             font-weight: 700;
             color: var(--s);
-            z-index: 15;
+            z-index: 101;
             transition: opacity .4s;
             padding: 10px;
             margin: -10px;
@@ -75,30 +76,26 @@
         }
 
         .a1:active {
-            opacity: 0.6;
-        }
-
-        .a1-chevron {
-            opacity: 0.55;
-            transition: transform 0.25s ease;
+            opacity: 0.65;
         }
 
         .counter-switcher {
             position: fixed;
-            top: 68px;
+            top: 72px;
             left: 25px;
             background: var(--m);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
+            border: none;
             border-radius: 14px;
             padding: 6px 0;
             display: flex;
             flex-direction: column;
-            min-width: 235px;
-            max-width: 82vw;
+            min-width: 240px;
+            max-width: calc(100vw - 50px);
             max-height: 62vh;
             overflow-y: auto;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.65);
             z-index: 200;
             transform-origin: top left;
             clip-path: inset(0 0 100% 0 round 14px);
@@ -124,143 +121,119 @@
                         visibility 0s linear 0s;
         }
 
-        .counter-item-group {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .counter-row {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 11px 16px;
-            gap: 10px;
-            background: transparent;
-            cursor: pointer;
-            touch-action: pan-y;
-            transition: background 0.12s ease, transform 0.12s ease;
-        }
-
-        .counter-row:active,
-        .counter-row.active-touch {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .counter-row.pressing {
-            background: rgba(255, 255, 255, 0.18);
-            transform: scale(0.985);
-        }
-
-        .counter-row.actions-open {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .counter-round-actions-wrap {
+        .counter-swipe-wrap {
+            position: relative;
             overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            transform: translateY(-4px);
+            width: 100%;
+            min-height: 50px;
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0 16px;
-            pointer-events: none;
-            transition: max-height 0.26s cubic-bezier(0.22, 1, 0.36, 1),
-                        opacity 0.2s ease,
-                        transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
-                        padding 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+            align-items: stretch;
         }
 
-        .counter-round-actions-wrap.open {
-            max-height: 52px;
-            opacity: 1;
-            transform: translateY(0);
-            padding: 4px 16px 10px;
-            pointer-events: auto;
+        .counter-swipe-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: stretch;
+            z-index: 1;
         }
 
-        .counter-round-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            background: rgba(255, 255, 255, 0.12);
+        .counter-swipe-btn {
+            border: none;
             color: var(--s);
-            display: inline-flex;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.02rem;
+            padding: 0 16px;
+            min-width: 74px;
+            display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            flex-shrink: 0;
-            transition: background 0.14s ease, transform 0.12s ease, border-color 0.14s ease;
+            transition: background 0.12s ease, opacity 0.12s ease;
         }
 
-        .counter-round-btn:active,
-        .counter-round-btn.active-touch {
-            background: rgba(255, 255, 255, 0.26);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: scale(0.92);
+        .counter-swipe-btn.rename {
+            background: rgba(255, 255, 255, 0.14);
         }
 
-        .counter-round-label {
-            font-size: 0.72rem;
-            opacity: 0.55;
-            letter-spacing: 0.04rem;
-            text-transform: lowercase;
-            margin-left: auto;
-            cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 6px;
+        .counter-swipe-btn.delete {
+            background: rgba(255, 255, 255, 0.22);
         }
 
-        .counter-round-label:active,
-        .counter-round-label.active-touch {
-            background: rgba(255, 255, 255, 0.12);
-            opacity: 0.9;
+        .counter-swipe-btn:active {
+            background: rgba(255, 255, 255, 0.32);
         }
 
-        .counter-row-info {
+        .counter-row-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 50px;
+            padding: 12px 18px;
+            background: rgb(28, 28, 30);
             display: flex;
             align-items: center;
-            gap: 8px;
-            min-width: 0;
-            flex: 1;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            touch-action: pan-y;
+            transform: translateX(0);
+            transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), background 0.12s ease;
         }
 
-        .counter-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            flex-shrink: 0;
-            opacity: 0;
+        .counter-row-content.swiping {
+            transition: background 0.12s ease;
         }
 
-        .counter-row.selected .counter-dot {
-            opacity: 1;
+        .counter-row-content:active,
+        .counter-row-content.active-touch,
+        .counter-row-content.drag-hover {
+            background: rgb(46, 46, 50);
+        }
+
+        .counter-row-content.is-current .counter-row-name {
+            font-weight: 600;
         }
 
         .counter-row-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--s);
-            white-space: nowrap;
+            flex: 1;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.88rem;
+            color: var(--s);
         }
 
-        .counter-row-count {
-            font-size: 0.75rem;
-            opacity: 0.5;
+        .counter-row-val {
+            font-size: 0.82rem;
+            opacity: 0.65;
             font-variant-numeric: tabular-nums;
             flex-shrink: 0;
         }
 
-        .counter-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 4px 0;
+        .counter-add-btn {
+            background: none;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--s);
+            padding: 13px 18px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+            opacity: 0.88;
+            transition: background 0.12s;
+        }
+
+        .counter-add-btn:active,
+        .counter-add-btn.active-touch,
+        .counter-add-btn.drag-hover {
+            background: rgba(255, 255, 255, 0.15);
+            opacity: 1;
         }
 
         .a2 {
@@ -345,14 +318,8 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            transition: background 0.1s, opacity 0.2s;
+            transition: background 0.1s;
             white-space: nowrap;
-        }
-
-        .menu-item:disabled {
-            opacity: 0.35;
-            cursor: default;
-            pointer-events: none;
         }
 
         .menu-item:active,
@@ -420,14 +387,13 @@
             font-size: 18vw;
             line-height: 1;
             text-align: center;
-            padding: 0 10px;
+            padding: 0 16px;
             pointer-events: auto;
             outline: none;
-            word-break: break-all;
+            white-space: nowrap;
             max-width: 100%;
             z-index: 5;
             font-weight: 100;
-            white-space: nowrap;
             transition: font-size 0.15s ease-out;
         }
 
@@ -601,7 +567,8 @@
         body.locked .a2,
         body.locked .b2,
         body.locked .a1,
-        body.locked .b1 {
+        body.locked .b1,
+        body.locked .counter-switcher {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -609,7 +576,8 @@
         body.f .b2,
         body.f .a2,
         body.f .b1,
-        body.f .a1 {
+        body.f .a1,
+        body.f .counter-switcher {
             opacity: 0 !important;
             pointer-events: none !important
         }
@@ -620,7 +588,8 @@
         body.lockout-active #lock-overlay,
         body.lockout-active #x6,
         body.lockout-active .a7,
-        body.lockout-active #y1 {
+        body.lockout-active #y1,
+        body.lockout-active .counter-switcher {
             display: none !important;
             pointer-events: none !important;
         }
@@ -632,9 +601,9 @@
 </head>
 
 <body oncontextmenu="return !1">
-    <div class="a1" id="x1" role="button" aria-label="Switch Counter">
-        <span id="x1-label">Counter</span>
-        <svg class="a1-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <div class="a1" id="x1">
+        <span id="counter-title-text">Counter</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.65;">
             <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
     </div>
@@ -648,7 +617,7 @@
             </svg>
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
-            <button class="menu-item" id="new-counter-btn-menu"><span>New Counter</span></button>
+            <button class="menu-item" id="new-counter-menu"><span>New Counter</span></button>
             <button class="menu-item" id="fs-btn-menu"><span>Fullscreen</span></button>
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
@@ -657,12 +626,12 @@
         </div>
     </div>
     <div id="x3" class="b3">
-        <span id="x4">action undone</span>
+        <span id="x4"></span>
     </div>
     <div class="a3">
         <div id="x6" class="a4">
             <svg class="a5" width="100%" height="100%" viewBox="0 0 100 100">
-                <circle class="a6" stroke-width="2" fill="transparent" r="48" cx="50" cy="50" style="stroke-dasharray: 301.593, 301.593;"></circle>
+                <circle class="a6" stroke-width="2" fill="transparent" r="48" cx="50" cy="50" />
             </svg>
         </div>
         <div class="a7">
@@ -670,7 +639,7 @@
             <span id="x8" class="a8"></span>
         </div>
         <div id="x9" class="a9" contenteditable="false" inputmode="numeric">0</div>
-        <div id="y1" class="b1">Tap anywhere to count</div>
+        <div id="y1" class="b1 v">Tap anywhere to count</div>
     </div>
     <div class="b2">
         <span>swipe up: edit</span>
@@ -683,8 +652,9 @@
         <div class="slider-track">
             <span class="slider-text">Swipe to unlock</span>
             <div class="slider-handle" id="slider-handle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6"></path>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
                 </svg>
             </div>
         </div>
@@ -693,75 +663,79 @@
         <div class="slider-track">
             <span class="slider-text">Goal reached • Slide off</span>
             <div class="slider-handle" id="goal-slider-handle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6"></path>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
                 </svg>
             </div>
         </div>
     </div>
     <script>
         (function () {
-            const d = document, w = window, 
-                k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal', h: '_n_hide_hints', list: '_n_counters', active: '_n_active_id' },
-                x1 = d.getElementById('x1'), x1Label = d.getElementById('x1-label'), cs = d.getElementById('counter-switcher'),
+            const d = document, w = window,
+                k = { c: '_n_c', s: '_m_s', t: '_n_step', g: '_n_goal', h: '_n_hide_hints', list: '_n_counters', active: '_n_active_counter' },
                 f = d.getElementById('x9'), h = d.getElementById('x3'), i = d.getElementById('y1'),
                 ht = d.getElementById('x4'), sd = d.getElementById('x7'), gd = d.getElementById('x8'),
-                pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
+                pc = d.getElementById('x6'), rg = d.querySelector('.a6'),
+                titleBtn = d.getElementById('x1'), titleText = d.getElementById('counter-title-text'),
+                switcher = d.getElementById('counter-switcher'), newCounterMenu = d.getElementById('new-counter-menu'),
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
-                newCounterMenu = d.getElementById('new-counter-btn-menu'),
-                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), 
+                lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'),
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
                 installMenu = d.getElementById('install-btn-menu'),
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
-            const PERMANENT_ID = 'c_default';
+            const ACTION_WIDTH = 148;
+            const PERMANENT_ID = 'default';
 
-            // Load or migrate existing single-counter data into a multi-counter list
-            let counters = [];
-            try {
-                const raw = JSON.parse(localStorage.getItem(k.list));
-                if (Array.isArray(raw) && raw.length > 0) counters = raw;
-            } catch (e) {}
+            f.contentEditable = 'false';
 
-            if (counters.length === 0) {
-                counters = [{
+            function _loadCounters() {
+                const fallbackDefault = {
                     id: PERMANENT_ID,
                     name: 'Counter',
                     permanent: true,
                     v: parseInt(localStorage.getItem(k.c)) || 0,
                     st: parseInt(localStorage.getItem(k.t)) || 1,
                     gl: parseInt(localStorage.getItem(k.g)) || 0
-                }];
-            } else {
-                counters = counters.map((item, idx) => {
-                    const isPerm = item.id === PERMANENT_ID || item.permanent === true || idx === 0;
-                    return {
-                        id: isPerm ? PERMANENT_ID : (item.id || ('c_' + idx + '_' + Date.now())),
-                        name: isPerm ? 'Counter' : (item.name || ('Counter ' + (idx + 1))),
-                        permanent: isPerm,
-                        v: parseInt(item.v) || 0,
-                        st: parseInt(item.st) || 1,
-                        gl: parseInt(item.gl) || 0
-                    };
-                });
-                if (!counters.some(item => item.id === PERMANENT_ID)) {
-                    counters.unshift({
-                        id: PERMANENT_ID,
-                        name: 'Counter',
-                        permanent: true,
-                        v: parseInt(localStorage.getItem(k.c)) || 0,
-                        st: parseInt(localStorage.getItem(k.t)) || 1,
-                        gl: parseInt(localStorage.getItem(k.g)) || 0
-                    });
-                }
+                };
+
+                try {
+                    const raw = localStorage.getItem(k.list);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            const mapped = parsed.map((item, idx) => {
+                                const isDefault = item.id === PERMANENT_ID || item.permanent === true || (idx === 0 && !item.id);
+                                return {
+                                    id: isDefault ? PERMANENT_ID : (item.id || ('c_' + idx + '_' + Date.now())),
+                                    name: isDefault ? 'Counter' : ((item.name && String(item.name).trim()) || ('Counter ' + (idx + 1))),
+                                    permanent: isDefault,
+                                    v: parseInt(item.v) || 0,
+                                    st: parseInt(item.st) || 1,
+                                    gl: parseInt(item.gl) || 0
+                                };
+                            });
+                            if (!mapped.some(c => c.id === PERMANENT_ID)) {
+                                mapped.unshift(fallbackDefault);
+                            }
+                            return mapped;
+                        }
+                    }
+                } catch (err) {}
+
+                return [fallbackDefault];
             }
 
-            let activeId = localStorage.getItem(k.active) || counters[0].id;
-            if (!counters.some(item => item.id === activeId)) activeId = counters[0].id;
+            let counters = _loadCounters();
+            let activeId = localStorage.getItem(k.active);
+            if (!counters.some(c => c.id === activeId)) {
+                activeId = counters[0].id;
+            }
 
             function _getActiveCounter() {
-                return counters.find(item => item.id === activeId) || counters[0];
+                return counters.find(c => c.id === activeId) || counters[0];
             }
 
             let currentCounter = _getActiveCounter(),
@@ -770,17 +744,22 @@
                 gl = currentCounter.gl,
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
-                expandedCounterId = null,
                 wakeLock = null, deferredInstallPrompt = null,
-                nx = 0, ny = 0, pt = null, qf = 0, ignoreNextMouseClick = false,
-                rt = null, stt = null, lk = false, isLockout = false;
+                nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false,
+                suppressBodyTapUntil = 0;
+
+            // Chrome-like press-and-drag-down state for the top-left counter button
+            let titleTouchTracking = false,
+                titleTouchStartY = 0,
+                titleDraggedDown = false,
+                hoveredDragTarget = null,
+                suppressTitleClickUntil = 0;
 
             const rd = rg.r.baseVal.value,
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
-            // Dismiss mobile keyboard cleanly after prompt dialogs
             function _dismissMobileKeyboard() {
                 try {
                     if (d.activeElement && typeof d.activeElement.blur === 'function') {
@@ -800,7 +779,6 @@
                 } catch (err) {}
             }
 
-            // Request screen wake lock so the counter display stays awake
             async function _requestWakeLock() {
                 if (!('wakeLock' in navigator)) return;
                 try {
@@ -821,7 +799,6 @@
 
             _requestWakeLock();
 
-            // Configure dynamic web app manifest for standalone installation
             try {
                 const manifest = {
                     name: 'Counter',
@@ -866,7 +843,6 @@
                 }
             };
 
-            // Apply bottom gesture hint visibility state
             function _applyHintState() {
                 if (hh) {
                     d.body.classList.add('hide-hints');
@@ -878,42 +854,36 @@
             }
             _applyHintState();
 
-            // Temporarily hide prompt label while interacting
             function _u() {
                 if (stt) clearTimeout(stt);
                 i.classList.remove('v');
-                stt = setTimeout(() => { if (!isLockout) i.classList.add('v') }, 5e3);
+                stt = setTimeout(() => { if(!isLockout) i.classList.add('v') }, 5e3)
             }
 
-            // Speak count aloud using SpeechSynthesis when sound mode is enabled
             function _p(textToSpeak) {
                 if (sn) return;
-                try {
-                    if ('speechSynthesis' in w) {
-                        w.speechSynthesis.cancel();
-                        const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
-                        utterance.rate = 1.15;
-                        utterance.pitch = 1.0;
-                        utterance.volume = 1.0;
-                        w.speechSynthesis.speak(utterance);
-                    }
-                } catch (err) {}
+                if ('speechSynthesis' in w) {
+                    w.speechSynthesis.cancel();
+
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak.toString());
+                    utterance.rate = 1.15;
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+
+                    w.speechSynthesis.speak(utterance);
+                }
             }
 
-            // Update circular goal progress ring
             function _up() {
                 if (gl > 0) {
                     pc.classList.add('active');
                     const o = cr - (Math.min(v, gl) / gl) * cr;
                     rg.style.strokeDashoffset = o;
                     rg.style.opacity = v >= gl ? 1 : .3;
-                    rg.style.stroke = v >= gl ? 'var(--accent)' : '#fff';
-                } else {
-                    pc.classList.remove('active');
-                }
+                    rg.style.stroke = v >= gl ? 'var(--accent)' : '#fff'
+                } else pc.classList.remove('active')
             }
 
-            // Scale counter number font size smoothly for longer numbers
             function _updateNumberSize(formattedText) {
                 const len = formattedText.length;
                 if (len <= 4) {
@@ -927,65 +897,55 @@
                 }
             }
 
-            // Refresh UI display for active counter
             function _w() {
                 currentCounter = _getActiveCounter();
                 currentCounter.v = v;
                 currentCounter.st = st;
                 currentCounter.gl = gl;
 
-                x1Label.textContent = currentCounter.name;
+                titleText.textContent = currentCounter.name;
                 const formatted = v.toLocaleString('en-US');
                 f.textContent = formatted;
                 _updateNumberSize(formatted);
 
                 if (st > 1) {
                     sd.textContent = 'Increment: ' + st;
-                    sd.classList.add('v');
-                } else {
-                    sd.classList.remove('v');
-                }
+                    sd.classList.add('v')
+                } else sd.classList.remove('v');
 
                 if (gl > 0) {
                     gd.textContent = 'Goal: ' + gl.toLocaleString('en-US');
-                    gd.classList.add('v');
-                } else {
-                    gd.classList.remove('v');
-                }
-
+                    gd.classList.add('v')
+                } else gd.classList.remove('v');
                 _up();
-                if (cs.classList.contains('active')) {
+                if (switcher.classList.contains('active') && !titleTouchTracking) {
                     _renderCounterSwitcher();
                 }
             }
 
-            // Persist all counters and settings to localStorage
             function _x() {
-                try {
-                    currentCounter = _getActiveCounter();
-                    currentCounter.v = v;
-                    currentCounter.st = st;
-                    currentCounter.gl = gl;
+                currentCounter = _getActiveCounter();
+                currentCounter.v = v;
+                currentCounter.st = st;
+                currentCounter.gl = gl;
 
-                    localStorage.setItem(k.list, JSON.stringify(counters));
-                    localStorage.setItem(k.active, activeId);
-                    localStorage.setItem(k.c, v);
-                    localStorage.setItem(k.s, sn);
-                    localStorage.setItem(k.t, st);
-                    localStorage.setItem(k.g, gl);
-                    localStorage.setItem(k.h, hh);
-                } catch (err) {}
+                localStorage.setItem(k.list, JSON.stringify(counters));
+                localStorage.setItem(k.active, activeId);
+                localStorage.setItem(k.c, v);
+                localStorage.setItem(k.s, sn);
+                localStorage.setItem(k.t, st);
+                localStorage.setItem(k.g, gl);
+                localStorage.setItem(k.h, hh);
             }
 
-            // Show floating status pill message
             function _z(m, du) {
                 if (rt) clearTimeout(rt);
                 ht.textContent = m;
                 h.classList.add('active');
                 rt = setTimeout(() => {
                     h.classList.remove('active');
-                    rt = null;
-                }, du);
+                    rt = null
+                }, du)
             }
 
             function _triggerGoalLockout() {
@@ -1001,7 +961,6 @@
                 go.classList.add('active');
             }
 
-            // Increment active counter and handle goal completion
             function _incrementCounter() {
                 const p = v;
                 v += st;
@@ -1016,22 +975,37 @@
                 _x();
             }
 
-            // Switch to another counter by ID
-            function _switchCounter(targetId) {
-                const found = counters.find(item => item.id === targetId);
-                if (!found) return;
-                activeId = found.id;
-                currentCounter = found;
-                v = found.v;
-                st = found.st;
-                gl = found.gl;
-                expandedCounterId = null;
-                f.contentEditable = 'false';
-                _w();
-                _x();
+            function _closeOpenSwipeRows(exceptEl) {
+                switcher.querySelectorAll('.counter-row-content').forEach(row => {
+                    if (row !== exceptEl) {
+                        row.classList.remove('swiping');
+                        row.style.transform = 'translateX(0px)';
+                        row.dataset.swipeOpen = 'false';
+                    }
+                });
             }
 
-            // Create a new custom counter
+            function _clearDragHover() {
+                if (hoveredDragTarget) {
+                    hoveredDragTarget.classList.remove('drag-hover');
+                    hoveredDragTarget = null;
+                }
+            }
+
+            function _updateDragHoverAtPoint(clientX, clientY) {
+                const elAtPoint = d.elementFromPoint(clientX, clientY);
+                const candidate = elAtPoint ? elAtPoint.closest('.counter-row-content, .counter-add-btn') : null;
+                if (candidate && switcher.contains(candidate)) {
+                    if (hoveredDragTarget && hoveredDragTarget !== candidate) {
+                        hoveredDragTarget.classList.remove('drag-hover');
+                    }
+                    hoveredDragTarget = candidate;
+                    hoveredDragTarget.classList.add('drag-hover');
+                } else {
+                    _clearDragHover();
+                }
+            }
+
             function _createCounter() {
                 setTimeout(() => {
                     const nameInput = prompt('New Counter Name:', 'Counter ' + (counters.length + 1));
@@ -1041,7 +1015,7 @@
                     if (nameInput === null) return;
 
                     const cleanName = nameInput.trim() || ('Counter ' + (counters.length + 1));
-                    const newCounter = {
+                    const newItem = {
                         id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
                         name: cleanName,
                         permanent: false,
@@ -1049,274 +1023,319 @@
                         st: 1,
                         gl: 0
                     };
-                    counters.push(newCounter);
-                    _switchCounter(newCounter.id);
-                    cs.classList.remove('active');
+                    counters.push(newItem);
+                    _switchToCounter(newItem.id);
+                    switcher.classList.remove('active');
                     _z(`switched to ${cleanName}`, 2000);
                 }, 60);
             }
 
-            // Rename a non-permanent custom counter
-            function _renameCounter(targetId) {
-                const target = counters.find(item => item.id === targetId);
-                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+            function _switchToCounter(id) {
+                const target = counters.find(c => c.id === id);
+                if (!target) return;
+                activeId = target.id;
+                currentCounter = target;
+                v = target.v;
+                st = target.st;
+                gl = target.gl;
+                f.contentEditable = 'false';
+                _w();
+                _x();
+            }
 
+            function _renameCounter(id) {
+                const target = counters.find(c => c.id === id);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
                 setTimeout(() => {
                     const nextName = prompt('Rename Counter:', target.name);
                     _dismissMobileKeyboard();
                     setTimeout(_dismissMobileKeyboard, 150);
                     setTimeout(_dismissMobileKeyboard, 350);
                     if (nextName === null) return;
-
                     const cleanName = nextName.trim();
                     if (cleanName) {
                         target.name = cleanName;
-                        expandedCounterId = null;
                         _w();
                         _x();
+                        _renderCounterSwitcher();
                         _z(`renamed to ${cleanName}`, 2000);
                     }
                 }, 60);
             }
 
-            // Delete a non-permanent custom counter
-            function _deleteCounter(targetId) {
-                const target = counters.find(item => item.id === targetId);
+            function _deleteCounter(id) {
+                const target = counters.find(c => c.id === id);
                 if (!target || target.permanent || target.id === PERMANENT_ID) return;
                 if (!confirm(`Delete "${target.name}"?`)) return;
 
-                counters = counters.filter(item => item.id !== targetId);
-                if (expandedCounterId === targetId) {
-                    expandedCounterId = null;
-                }
-                if (activeId === targetId) {
-                    _switchCounter(PERMANENT_ID);
+                counters = counters.filter(c => c.id !== id);
+                if (activeId === id) {
+                    _switchToCounter(PERMANENT_ID);
                 } else {
-                    _w();
                     _x();
+                    _renderCounterSwitcher();
                 }
                 _z(`deleted ${target.name}`, 2000);
             }
 
-            // Render counter switcher rows and smooth long-press round Edit/Delete buttons
             function _renderCounterSwitcher() {
-                cs.innerHTML = '';
-
+                switcher.innerHTML = '';
                 counters.forEach(item => {
                     const isPermanent = Boolean(item.permanent || item.id === PERMANENT_ID);
-                    const isExpanded = !isPermanent && expandedCounterId === item.id;
-
-                    const group = d.createElement('div');
-                    group.className = 'counter-item-group';
+                    const wrap = d.createElement('div');
+                    wrap.className = 'counter-swipe-wrap';
 
                     const row = d.createElement('div');
-                    row.className = 'counter-row' +
-                        (item.id === activeId ? ' selected' : '') +
-                        (isExpanded ? ' actions-open' : '');
+                    row.className = 'counter-row-content' + (item.id === activeId ? ' is-current' : '');
+                    row.dataset.swipeOpen = 'false';
+                    row.dataset.counterId = item.id;
 
-                    const info = d.createElement('div');
-                    info.className = 'counter-row-info';
+                    const nameSpan = d.createElement('span');
+                    nameSpan.className = 'counter-row-name';
+                    nameSpan.textContent = item.name;
 
-                    const dot = d.createElement('span');
-                    dot.className = 'counter-dot';
+                    const valSpan = d.createElement('span');
+                    valSpan.className = 'counter-row-val';
+                    valSpan.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
 
-                    const nameEl = d.createElement('span');
-                    nameEl.className = 'counter-row-name';
-                    nameEl.textContent = item.name;
-
-                    info.appendChild(dot);
-                    info.appendChild(nameEl);
-
-                    const countEl = d.createElement('span');
-                    countEl.className = 'counter-row-count';
-                    countEl.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
-
-                    row.appendChild(info);
-                    row.appendChild(countEl);
-
-                    let holdTimer = null, holdTriggered = false, startX = 0, startY = 0;
-
-                    const clearHold = () => {
-                        if (holdTimer) {
-                            clearTimeout(holdTimer);
-                            holdTimer = null;
-                        }
-                        row.classList.remove('pressing');
-                    };
-
-                    row.addEventListener('touchstart', e => {
-                        e.stopPropagation();
-                        holdTriggered = false;
-                        startX = e.touches[0].clientX;
-                        startY = e.touches[0].clientY;
-                        row.classList.add('active-touch');
-
-                        if (!isPermanent) {
-                            row.classList.add('pressing');
-                            holdTimer = setTimeout(() => {
-                                holdTriggered = true;
-                                row.classList.remove('active-touch');
-                                row.classList.remove('pressing');
-                                expandedCounterId = expandedCounterId === item.id ? null : item.id;
-                                if (navigator.vibrate) navigator.vibrate(40);
-                                _renderCounterSwitcher();
-                            }, 460);
-                        }
-                    }, { passive: true });
-
-                    row.addEventListener('touchmove', e => {
-                        if (!holdTimer) return;
-                        const dx = Math.abs(e.touches[0].clientX - startX);
-                        const dy = Math.abs(e.touches[0].clientY - startY);
-                        if (dx > 10 || dy > 10) {
-                            clearHold();
-                            row.classList.remove('active-touch');
-                        }
-                    }, { passive: true });
-
-                    row.addEventListener('touchend', e => {
-                        const didHold = holdTriggered;
-                        clearHold();
-                        row.classList.remove('active-touch');
-
-                        if (didHold) {
-                            ignoreNextMouseClick = true;
-                            if (e && e.cancelable) e.preventDefault();
-                            return;
-                        }
-
-                        ignoreNextMouseClick = true;
-                        _switchCounter(item.id);
-                        cs.classList.remove('active');
-                        _z(`switched to ${item.name}`, 1600);
-                    });
-
-                    row.addEventListener('touchcancel', () => {
-                        clearHold();
-                        row.classList.remove('active-touch');
-                    });
-
-                    row.addEventListener('mousedown', e => {
-                        if (e.button !== 0 || isPermanent) return;
-                        e.stopPropagation();
-                        holdTriggered = false;
-                        row.classList.add('pressing');
-                        holdTimer = setTimeout(() => {
-                            holdTriggered = true;
-                            row.classList.remove('pressing');
-                            expandedCounterId = expandedCounterId === item.id ? null : item.id;
-                            _renderCounterSwitcher();
-                        }, 460);
-                    });
-
-                    row.addEventListener('mouseup', clearHold);
-                    row.addEventListener('mouseleave', clearHold);
-
-                    row.onclick = e => {
-                        e.stopPropagation();
-                        if (ignoreNextMouseClick) {
-                            ignoreNextMouseClick = false;
-                            return;
-                        }
-                        if (holdTriggered) {
-                            holdTriggered = false;
-                            return;
-                        }
-                        _switchCounter(item.id);
-                        cs.classList.remove('active');
-                        _z(`switched to ${item.name}`, 1600);
-                    };
-
-                    group.appendChild(row);
+                    row.appendChild(nameSpan);
+                    row.appendChild(valSpan);
 
                     if (!isPermanent) {
-                        const actionsWrap = d.createElement('div');
-                        actionsWrap.className = 'counter-round-actions-wrap' + (isExpanded ? ' open' : '');
+                        const actions = d.createElement('div');
+                        actions.className = 'counter-swipe-actions';
 
-                        const editBtn = d.createElement('button');
-                        editBtn.type = 'button';
-                        editBtn.className = 'counter-round-btn';
-                        editBtn.setAttribute('aria-label', 'Rename counter');
-                        editBtn.title = 'Rename';
-                        editBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
-                        editBtn.onclick = e => {
+                        const renameBtn = d.createElement('button');
+                        renameBtn.type = 'button';
+                        renameBtn.className = 'counter-swipe-btn rename';
+                        renameBtn.textContent = 'Rename';
+                        renameBtn.onclick = e => {
                             e.stopPropagation();
-                            ignoreNextMouseClick = true;
-                            cs.classList.remove('active');
+                            _closeOpenSwipeRows(null);
+                            switcher.classList.remove('active');
                             _renameCounter(item.id);
                         };
 
                         const delBtn = d.createElement('button');
                         delBtn.type = 'button';
-                        delBtn.className = 'counter-round-btn';
-                        delBtn.setAttribute('aria-label', 'Delete counter');
-                        delBtn.title = 'Delete';
-                        delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>`;
+                        delBtn.className = 'counter-swipe-btn delete';
+                        delBtn.textContent = 'Delete';
                         delBtn.onclick = e => {
                             e.stopPropagation();
-                            ignoreNextMouseClick = true;
-                            cs.classList.remove('active');
+                            _closeOpenSwipeRows(null);
+                            switcher.classList.remove('active');
                             _deleteCounter(item.id);
                         };
 
-                        const doneBtn = d.createElement('span');
-                        doneBtn.className = 'counter-round-label';
-                        doneBtn.textContent = 'done';
-                        doneBtn.onclick = e => {
+                        actions.appendChild(renameBtn);
+                        actions.appendChild(delBtn);
+                        wrap.appendChild(actions);
+
+                        let rowStartX = 0, rowStartY = 0, rowCurrentX = 0, rowDragging = false, rowMoved = false;
+
+                        row.addEventListener('touchstart', e => {
                             e.stopPropagation();
-                            ignoreNextMouseClick = true;
-                            expandedCounterId = null;
-                            _renderCounterSwitcher();
+                            _closeOpenSwipeRows(row);
+                            rowStartX = e.touches[0].clientX;
+                            rowStartY = e.touches[0].clientY;
+                            rowCurrentX = row.dataset.swipeOpen === 'true' ? -ACTION_WIDTH : 0;
+                            rowDragging = true;
+                            rowMoved = false;
+                            row.classList.add('swiping');
+                            row.classList.add('active-touch');
+                        }, { passive: true });
+
+                        row.addEventListener('touchmove', e => {
+                            if (!rowDragging) return;
+                            const dx = e.touches[0].clientX - rowStartX;
+                            const dy = e.touches[0].clientY - rowStartY;
+
+                            if (!rowMoved && Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+                            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dx) < 12) return;
+
+                            rowMoved = true;
+                            row.classList.remove('active-touch');
+                            const baseOffset = row.dataset.swipeOpen === 'true' ? -ACTION_WIDTH : 0;
+                            const nextX = Math.max(-ACTION_WIDTH, Math.min(0, baseOffset + dx));
+                            rowCurrentX = nextX;
+                            row.style.transform = `translateX(${nextX}px)`;
+                        }, { passive: true });
+
+                        const finishRowTouch = e => {
+                            if (!rowDragging) return;
+                            rowDragging = false;
+                            row.classList.remove('swiping');
+                            row.classList.remove('active-touch');
+
+                            if (rowMoved) {
+                                if (e && e.cancelable) e.preventDefault();
+                                suppressBodyTapUntil = Date.now() + 300;
+                                const shouldOpen = rowCurrentX <= -ACTION_WIDTH * 0.42;
+                                if (shouldOpen) {
+                                    row.dataset.swipeOpen = 'true';
+                                    row.style.transform = `translateX(${-ACTION_WIDTH}px)`;
+                                } else {
+                                    row.dataset.swipeOpen = 'false';
+                                    row.style.transform = 'translateX(0px)';
+                                }
+                            } else {
+                                suppressBodyTapUntil = Date.now() + 300;
+                                if (row.dataset.swipeOpen === 'true') {
+                                    row.dataset.swipeOpen = 'false';
+                                    row.style.transform = 'translateX(0px)';
+                                } else {
+                                    _switchToCounter(item.id);
+                                    switcher.classList.remove('active');
+                                    _z(`switched to ${item.name}`, 1600);
+                                }
+                            }
                         };
 
-                        actionsWrap.appendChild(editBtn);
-                        actionsWrap.appendChild(delBtn);
-                        actionsWrap.appendChild(doneBtn);
-                        group.appendChild(actionsWrap);
+                        row.addEventListener('touchend', finishRowTouch);
+                        row.addEventListener('touchcancel', finishRowTouch);
+                    } else {
+                        row.addEventListener('touchstart', e => {
+                            e.stopPropagation();
+                            _closeOpenSwipeRows(null);
+                            row.classList.add('active-touch');
+                        }, { passive: true });
+                        row.addEventListener('touchend', () => {
+                            suppressBodyTapUntil = Date.now() + 300;
+                            row.classList.remove('active-touch');
+                        }, { passive: true });
+                        row.addEventListener('touchcancel', () => row.classList.remove('active-touch'), { passive: true });
                     }
 
-                    cs.appendChild(group);
+                    row.onclick = e => {
+                        e.stopPropagation();
+                        suppressBodyTapUntil = Date.now() + 300;
+                        if (row.dataset.swipeOpen === 'true') {
+                            row.dataset.swipeOpen = 'false';
+                            row.style.transform = 'translateX(0px)';
+                            return;
+                        }
+                        _switchToCounter(item.id);
+                        switcher.classList.remove('active');
+                        _z(`switched to ${item.name}`, 1600);
+                    };
+
+                    wrap.appendChild(row);
+                    switcher.appendChild(wrap);
                 });
 
-                const divider = d.createElement('div');
-                divider.className = 'counter-divider';
-                cs.appendChild(divider);
-
-                const addRow = d.createElement('button');
-                addRow.type = 'button';
-                addRow.className = 'menu-item';
-                addRow.style.padding = '12px 16px';
-                addRow.style.fontSize = '0.85rem';
-                addRow.innerHTML = '<span>+ New Counter</span>';
-                addRow.onclick = e => {
+                const addBtn = d.createElement('button');
+                addBtn.type = 'button';
+                addBtn.className = 'counter-add-btn';
+                addBtn.dataset.action = 'new-counter';
+                addBtn.textContent = '+ New Counter';
+                addBtn.addEventListener('touchstart', () => addBtn.classList.add('active-touch'), { passive: true });
+                addBtn.addEventListener('touchend', () => {
+                    suppressBodyTapUntil = Date.now() + 300;
+                    addBtn.classList.remove('active-touch');
+                }, { passive: true });
+                addBtn.addEventListener('touchcancel', () => addBtn.classList.remove('active-touch'), { passive: true });
+                addBtn.onclick = e => {
                     e.stopPropagation();
-                    ignoreNextMouseClick = true;
+                    suppressBodyTapUntil = Date.now() + 300;
+                    _closeOpenSwipeRows(null);
                     _createCounter();
                 };
-                cs.appendChild(addRow);
+                switcher.appendChild(addBtn);
             }
 
-            x1.onclick = e => {
+            // Chrome-style press & swipe-down selection on top-left counter button
+            titleBtn.addEventListener('touchstart', e => {
+                if (lk || isLockout) return;
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
+                suppressBodyTapUntil = Date.now() + 400;
                 md.classList.remove('active');
+                _closeOpenSwipeRows(null);
+
+                titleTouchTracking = true;
+                titleTouchStartY = e.touches[0].clientY;
+                titleDraggedDown = false;
+                _clearDragHover();
+
+                if (!switcher.classList.contains('active')) {
+                    _renderCounterSwitcher();
+                    switcher.classList.add('active');
+                }
+            }, { passive: true });
+
+            titleBtn.addEventListener('touchmove', e => {
+                if (!titleTouchTracking) return;
+                e.stopPropagation();
+                const touch = e.touches[0];
+                if (touch.clientY - titleTouchStartY > 12) {
+                    titleDraggedDown = true;
+                }
+                if (titleDraggedDown && switcher.classList.contains('active')) {
+                    _updateDragHoverAtPoint(touch.clientX, touch.clientY);
+                }
+            }, { passive: true });
+
+            titleBtn.addEventListener('touchend', e => {
+                if (!titleTouchTracking) return;
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 400;
+                suppressTitleClickUntil = Date.now() + 400;
+
+                const changedTouch = e.changedTouches && e.changedTouches[0];
+                if (changedTouch && titleDraggedDown && switcher.classList.contains('active')) {
+                    _updateDragHoverAtPoint(changedTouch.clientX, changedTouch.clientY);
+                    const chosen = hoveredDragTarget;
+                    _clearDragHover();
+                    titleTouchTracking = false;
+                    titleDraggedDown = false;
+
+                    if (chosen) {
+                        if (chosen.dataset.action === 'new-counter') {
+                            switcher.classList.remove('active');
+                            _createCounter();
+                        } else if (chosen.dataset.counterId) {
+                            const target = counters.find(c => c.id === chosen.dataset.counterId);
+                            _switchToCounter(chosen.dataset.counterId);
+                            switcher.classList.remove('active');
+                            if (target) _z(`switched to ${target.name}`, 1600);
+                        }
+                        return;
+                    }
+                }
+
+                _clearDragHover();
+                titleTouchTracking = false;
+                titleDraggedDown = false;
+            });
+
+            titleBtn.addEventListener('touchcancel', () => {
+                _clearDragHover();
+                titleTouchTracking = false;
+                titleDraggedDown = false;
+            }, { passive: true });
+
+            titleBtn.onclick = e => {
+                e.stopPropagation();
+                suppressBodyTapUntil = Date.now() + 300;
+                if (Date.now() < suppressTitleClickUntil) return;
+                md.classList.remove('active');
+                _closeOpenSwipeRows(null);
                 _renderCounterSwitcher();
-                cs.classList.toggle('active');
+                switcher.classList.toggle('active');
             };
 
             newCounterMenu.onclick = e => {
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
-                cs.classList.remove('active');
+                switcher.classList.remove('active');
                 _createCounter();
             };
 
             mb.onclick = e => {
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
-                cs.classList.remove('active');
-                expandedCounterId = null;
+                suppressBodyTapUntil = Date.now() + 300;
+                switcher.classList.remove('active');
+                _closeOpenSwipeRows(null);
                 md.classList.toggle('active');
             };
 
@@ -1325,9 +1344,15 @@
                     md.classList.remove('active');
                 }
                 if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
-                    expandedCounterId = null;
-                    cs.classList.remove('active');
+                    _closeOpenSwipeRows(null);
+                    switcher.classList.remove('active');
                 }
+                if (Date.now() < suppressBodyTapUntil) return;
+                if (lk || isLockout) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (f.contentEditable === 'true') return;
+                _u();
+                _incrementCounter();
             });
 
             d.querySelectorAll('.menu-item').forEach(btn => {
@@ -1344,7 +1369,7 @@
 
             hintMenu.onclick = e => {
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 hh = !hh;
                 _applyHintState();
@@ -1354,22 +1379,21 @@
 
             lbMenu.onclick = e => {
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
-                cs.classList.remove('active');
-                expandedCounterId = null;
+                switcher.classList.remove('active');
                 lk = true;
                 d.body.classList.add('locked');
                 lo.classList.add('active');
-                if (navigator.vibrate) navigator.vibrate(50);
+                if (navigator.vibrate) navigator.vibrate(50)
             };
 
             fsMenu.onclick = e => {
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
-                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => {});
-                else d.exitFullscreen().catch(() => {});
+                if (!d.fullscreenElement) d.documentElement.requestFullscreen().catch(() => { });
+                else d.exitFullscreen().catch(() => { })
             };
 
             function triggerSetGoal() {
@@ -1400,7 +1424,7 @@
 
             goalMenu.onclick = e => {
                 e.stopPropagation();
-                ignoreNextMouseClick = true;
+                suppressBodyTapUntil = Date.now() + 300;
                 md.classList.remove('active');
                 triggerSetGoal();
             };
@@ -1408,8 +1432,8 @@
             let sx = 0, cx = 0;
             sh.addEventListener('touchstart', e => {
                 sx = e.touches[0].clientX;
-                sh.style.transition = '';
-            }, { passive: true });
+                sh.style.transition = ''
+            });
 
             sh.addEventListener('touchmove', e => {
                 const dx = e.touches[0].clientX - sx,
@@ -1421,14 +1445,14 @@
                     d.body.classList.remove('locked');
                     lo.classList.remove('active');
                     sh.style.transform = 'translateX(0)';
-                    if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+                    if (navigator.vibrate) navigator.vibrate([10, 30, 10])
                 }
-            }, { passive: true });
+            });
 
             sh.addEventListener('touchend', () => {
                 if (lk) {
                     sh.style.transition = 'transform .4s cubic-bezier(.175,.885,.32,1.275)';
-                    sh.style.transform = 'translateX(0)';
+                    sh.style.transform = 'translateX(0)'
                 }
             });
 
@@ -1505,21 +1529,77 @@
             f.addEventListener('keydown', e => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    f.blur();
+                    f.blur()
                 }
             });
 
-            // Support mouse/trackpad/preview taps so clicking anywhere also increments reliably
-            d.body.addEventListener('click', e => {
+            d.body.addEventListener('touchstart', e => {
                 if (lk || isLockout) return;
-                if (ignoreNextMouseClick) {
-                    ignoreNextMouseClick = false;
-                    return;
-                }
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('#counter-switcher') || e.target.closest('.b3') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
-                if (f.contentEditable === 'true') return;
                 _u();
-                _incrementCounter();
+                if (!wakeLock) _requestWakeLock();
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                nx = e.touches[0].clientX;
+                ny = e.touches[0].clientY;
+                pt = setTimeout(() => {
+                    sn = !sn;
+                    qf = 1;
+                    _x();
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    _z(sn ? 'Sound off' : 'Sound on', 2000)
+                }, 800)
+            });
+
+            d.body.addEventListener('touchend', e => {
+                if (lk || isLockout) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (pt) { clearTimeout(pt); pt = null }
+                if (qf) { qf = 0; return }
+                if (f.contentEditable === 'true') { f.blur(); return }
+
+                const dx = nx - e.changedTouches[0].clientX,
+                    dy = ny - e.changedTouches[0].clientY;
+
+                if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                    suppressBodyTapUntil = Date.now() + 350;
+                    _incrementCounter();
+                } else if (Math.abs(dx) > Math.abs(dy)) {
+                    suppressBodyTapUntil = Date.now() + 350;
+                    if (dx > 50) {
+                        if (confirm('Reset counter to 0?')) {
+                            if (navigator.vibrate) navigator.vibrate(40);
+                            v = 0; _w(); _x(); _z('counter reset', 2000)
+                        }
+                    } else if (dx < -50) {
+                        const r = prompt('Set Increment (current: ' + st + ')', st);
+                        _dismissMobileKeyboard();
+                        setTimeout(_dismissMobileKeyboard, 150);
+                        setTimeout(_dismissMobileKeyboard, 350);
+                        if (r !== null) {
+                            const n = parseInt(r);
+                            st = (!isNaN(n) && n > 0) ? n : 1;
+                            _z(`increment set to ${st}`, 2000);
+                            _w(); _x()
+                        }
+                    }
+                } else {
+                    suppressBodyTapUntil = Date.now() + 350;
+                    if (dy > 50) {
+                        f.contentEditable = 'true';
+                        f.focus();
+                        const r = d.createRange(), s = w.getSelection();
+                        r.selectNodeContents(f); r.collapse(!1);
+                        s.removeAllRanges(); s.addRange(r)
+                    } else if (dy < -50) {
+                        if (v > 0) {
+                            if (confirm('Subtract 1 from counter?')) {
+                                if (navigator.vibrate) navigator.vibrate(40);
+                                v = v - 1;
+                                _p(v);
+                                _w(); _x(); _z('number subtracted', 2000)
+                            }
+                        }
+                    }
+                }
             });
 
             d.addEventListener('fullscreenchange', () => {
@@ -1534,8 +1614,9 @@
             };
 
             _w();
+            _x();
             stt = setTimeout(() => { i.classList.add('v') }, 0)
         })()
     </script>
-
-</body></html>
+</body>
+</html>
