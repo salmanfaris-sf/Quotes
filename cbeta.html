@@ -371,6 +371,8 @@
             max-width: 100%;
             z-index: 5;
             font-weight: 100;
+            white-space: nowrap;
+            transition: font-size 0.15s ease-out;
         }
 
         .b1 {
@@ -612,7 +614,7 @@
             <span id="x7" class="a8"></span>
             <span id="x8" class="a8"></span>
         </div>
-        <div id="x9" class="a9" contenteditable="true" inputmode="numeric">3000</div>
+        <div id="x9" class="a9" contenteditable="false" inputmode="numeric">0</div>
         <div id="y1" class="b1">Tap anywhere to count</div>
     </div>
     <div class="b2">
@@ -835,7 +837,10 @@
             function _w() {
                 const activeObj = _getActiveCounter();
                 x1Label.textContent = activeObj ? activeObj.name : 'Counter';
-                f.textContent = v.toLocaleString('en-US');
+                const formatted = v.toLocaleString('en-US');
+                f.textContent = formatted;
+                const len = formatted.length;
+                f.style.fontSize = len <= 4 ? '18vw' : Math.max(7, Math.floor(82 / len)) + 'vw';
                 if (st > 1) {
                     sd.textContent = 'Increment: ' + st;
                     sd.classList.add('v')
@@ -1030,14 +1035,6 @@
                 cs.appendChild(addBtn);
             }
 
-            function _x() {
-                localStorage.setItem(k.c, v);
-                localStorage.setItem(k.s, sn);
-                localStorage.setItem(k.t, st);
-                localStorage.setItem(k.g, gl);
-                localStorage.setItem(k.h, hh);
-            }
-
             function _z(m, du) {
                 if (rt) clearTimeout(rt);
                 ht.textContent = m;
@@ -1051,6 +1048,16 @@
             function _triggerGoalLockout() {
                 if (rt) {
                     clearTimeout(rt);
+                    rt = null;
+                }
+                h.classList.remove('active');
+                isLockout = true;
+                d.body.classList.add('lockout-active');
+                gsh.style.transition = '';
+                gsh.style.transform = 'translateX(0)';
+                go.classList.add('active');
+            }
+
             x1.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
@@ -1363,5 +1370,4 @@
         })()
     </script>
 
-</body>
-</html>
+</body></html>
