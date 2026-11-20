@@ -509,6 +509,26 @@
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
 
+            // Force mobile WebView/browser IME keyboard to close after native prompt()
+            function _dismissMobileKeyboard() {
+                try {
+                    if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                        d.activeElement.blur();
+                    }
+                    const tmp = d.createElement('input');
+                    tmp.type = 'text';
+                    tmp.setAttribute('inputmode', 'none');
+                    tmp.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;border:0;padding:0;margin:0;';
+                    d.body.appendChild(tmp);
+                    tmp.focus({ preventScroll: true });
+                    setTimeout(() => {
+                        tmp.blur();
+                        if (tmp.parentNode) tmp.parentNode.removeChild(tmp);
+                        w.focus();
+                    }, 30);
+                } catch (err) {}
+            }
+
             // Automatic Keep Screen Awake (Wake Lock API)
             async function _requestWakeLock() {
                 if (!('wakeLock' in navigator)) return;
@@ -711,21 +731,29 @@
             };
 
             function triggerSetGoal() {
-                const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
-                if (r !== null) {
-                    const n = parseInt(r);
-                    if (!isNaN(n) && n >= 0) {
-                        gl = n;
-                        if (gl > 0) {
-                            v = 0;
-                            _z(`goal set to ${gl}`, 2000);
-                        } else {
-                            _z('goal removed', 2000);
-                        }
-                        _w();
-                        _x();
-                    }
+                if (d.activeElement && typeof d.activeElement.blur === 'function') {
+                    d.activeElement.blur();
                 }
+                setTimeout(() => {
+                    const r = prompt('Set Target Goal (current: ' + (gl || 'none') + '). Enter 0 to remove.', gl || '');
+                    _dismissMobileKeyboard();
+                    setTimeout(_dismissMobileKeyboard, 150);
+                    setTimeout(_dismissMobileKeyboard, 350);
+                    if (r !== null) {
+                        const n = parseInt(r);
+                        if (!isNaN(n) && n >= 0) {
+                            gl = n;
+                            if (gl > 0) {
+                                v = 0;
+                                _z(`goal set to ${gl}`, 2000);
+                            } else {
+                                _z('goal removed', 2000);
+                            }
+                            _w();
+                            _x();
+                        }
+                    }
+                }, 60);
             }
 
             goalMenu.onclick = e => {
@@ -885,6 +913,9 @@
                         }
                     } else if (dx < -50) {
                         const r = prompt('Set Increment (current: ' + st + ')', st);
+                        _dismissMobileKeyboard();
+                        setTimeout(_dismissMobileKeyboard, 150);
+                        setTimeout(_dismissMobileKeyboard, 350);
                         if (r !== null) {
                             const n = parseInt(r);
                             st = (!isNaN(n) && n > 0) ? n : 1;
