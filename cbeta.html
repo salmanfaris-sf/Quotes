@@ -989,6 +989,36 @@
                     _dismissMobileKeyboard();
                     setTimeout(_dismissMobileKeyboard, 150);
                     setTimeout(_dismissMobileKeyboard, 350);
+                    if (rawName === null) return;
+                    const trimmed = rawName.trim();
+                    if (!trimmed) return;
+                    target.name = trimmed;
+                    _w();
+                    _x();
+                    _z(`renamed to "${trimmed}"`, 2000);
+                }, 60);
+            }
+
+            // Delete a non-permanent counter and fall back to permanent counter if needed
+            function _deleteCounter(targetId) {
+                const target = counters.find(item => item.id === targetId);
+                if (!target || target.permanent || target.id === PERMANENT_ID) return;
+                expandedCounterId = null;
+                cs.classList.remove('active');
+                if (!confirm(`Delete "${target.name}"?`)) return;
+                counters = counters.filter(item => item.id !== targetId);
+                if (activeId === targetId) {
+                    const fallback = counters.find(item => item.id === PERMANENT_ID) || counters[0];
+                    activeId = fallback.id;
+                    v = fallback.v || 0;
+                    st = fallback.st || 1;
+                    gl = fallback.gl || 0;
+                }
+                _w();
+                _x();
+                _z(`deleted "${target.name}"`, 2000);
+            }
+
             // Render counter switcher list with in-place long-press action swap
             function _renderSwitcher() {
                 cs.innerHTML = '';
