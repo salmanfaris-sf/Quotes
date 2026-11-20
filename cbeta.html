@@ -593,7 +593,6 @@
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
             <button class="menu-item" id="new-counter-btn-menu"><span>New Counter</span></button>
-            <button class="menu-item" id="undo-btn-menu" disabled><span>Undo Last Action</span></button>
             <button class="menu-item" id="fs-btn-menu"><span>Fullscreen</span></button>
             <button class="menu-item" id="goal-btn-menu"><span>Set Goal</span></button>
             <button class="menu-item" id="hint-btn-menu"><span>Hide Bottom Hint</span></button>
@@ -654,7 +653,6 @@
                 pc = d.getElementById('x6'), rg = d.querySelector('.a6'), 
                 mb = d.getElementById('menu-btn'), md = d.getElementById('menu-dropdown'),
                 newCounterMenu = d.getElementById('new-counter-btn-menu'),
-                undoMenu = d.getElementById('undo-btn-menu'),
                 lbMenu = d.getElementById('lock-btn-menu'), fsMenu = d.getElementById('fs-btn-menu'), 
                 goalMenu = d.getElementById('goal-btn-menu'), hintMenu = d.getElementById('hint-btn-menu'),
                 installMenu = d.getElementById('install-btn-menu'),
@@ -691,7 +689,6 @@
                 gl = currentCounter.gl,
                 sn = localStorage.getItem(k.s) !== 'false',
                 hh = localStorage.getItem(k.h) === 'true',
-                lastState = null,
                 wakeLock = null, deferredInstallPrompt = null,
                 nx = 0, ny = 0, pt = null, qf = 0, rt = null, stt = null, lk = false, isLockout = false;
 
@@ -699,12 +696,6 @@
                 cr = rd * 2 * Math.PI;
 
             rg.style.strokeDasharray = `${cr} ${cr}`;
-
-            // Save a snapshot of the active counter's state prior to any mutation so Undo can restore it
-            function _saveUndoSnapshot() {
-                lastState = { id: activeId, v, st, gl };
-                undoMenu.disabled = false;
-            }
 
             // Force mobile WebView/browser IME keyboard to close after native prompt()
             function _dismissMobileKeyboard() {
@@ -878,8 +869,6 @@
                 v = target.v || 0;
                 st = target.st || 1;
                 gl = target.gl || 0;
-                lastState = null;
-                undoMenu.disabled = true;
                 cs.classList.remove('active');
                 _w();
                 _x();
@@ -908,8 +897,6 @@
                     v = 0;
                     st = 1;
                     gl = 0;
-                    lastState = null;
-                    undoMenu.disabled = true;
                     _w();
                     _x();
                     _z(`created "${trimmed}"`, 2000);
@@ -947,8 +934,6 @@
                     v = fallback.v || 0;
                     st = fallback.st || 1;
                     gl = fallback.gl || 0;
-                    lastState = null;
-                    undoMenu.disabled = true;
                 }
                 _w();
                 _x();
@@ -1085,26 +1070,16 @@
                 }, { passive: true });
                 btn.addEventListener('touchend', () => {
                     btn.classList.remove('active-touch');
+                }, { passive: true });
+                btn.addEventListener('touchcancel', () => {
+                    btn.classList.remove('active-touch');
+                }, { passive: true });
+            });
+
             newCounterMenu.onclick = e => {
                 e.stopPropagation();
                 md.classList.remove('active');
                 _createNewCounter();
-            };
-
-            // Restore the previous state and disable Undo until another action occurs
-            undoMenu.onclick = e => {
-                e.stopPropagation();
-                md.classList.remove('active');
-                if (!lastState || lastState.id !== activeId) return;
-                v = lastState.v;
-                st = lastState.st;
-                gl = lastState.gl;
-                lastState = null;
-                undoMenu.disabled = true;
-                if (navigator.vibrate) navigator.vibrate(40);
-                _w();
-                _x();
-                _z('action undone', 2000);
             };
 
             hintMenu.onclick = e => {
@@ -1144,7 +1119,6 @@
                     if (r !== null) {
                         const n = parseInt(r);
                         if (!isNaN(n) && n >= 0) {
-                            _saveUndoSnapshot();
                             gl = n;
                             if (gl > 0) {
                                 v = 0;
@@ -1196,7 +1170,6 @@
 
             function _completeGoalTurnOff() {
                 gDragging = false;
-                _saveUndoSnapshot();
                 gl = 0;
                 isLockout = false;
                 d.body.classList.remove('lockout-active');
@@ -1297,7 +1270,6 @@
                     dy = ny - e.changedTouches[0].clientY;
 
                 if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    _saveUndoSnapshot();
                     const p = v;
                     v += st;
                     // Check if target goal has just been reached
@@ -1313,7 +1285,6 @@
                 } else if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 50) {
                         if (confirm('Reset counter to 0?')) {
-                            _saveUndoSnapshot();
                             if (navigator.vibrate) navigator.vibrate(40);
                             v = 0; _w(); _x(); _z('counter reset', 2000)
                         }
@@ -1324,9 +1295,7 @@
                         setTimeout(_dismissMobileKeyboard, 350);
                         if (r !== null) {
                             const n = parseInt(r);
-                            const nextSt = (!isNaN(n) && n > 0) ? n : 1;
-                            if (nextSt !== st) _saveUndoSnapshot();
-                            st = nextSt;
+                            st = (!isNaN(n) && n > 0) ? n : 1;
                             _z(`increment set to ${st}`, 2000);
                             _w(); _x()
                         }
@@ -1341,7 +1310,6 @@
                     } else if (dy < -50) {
                         if (v > 0) {
                             if (confirm('Subtract 1 from counter?')) {
-                                _saveUndoSnapshot();
                                 if (navigator.vibrate) navigator.vibrate(40);
                                 v = v - 1;
                                 _p(v);
@@ -1359,9 +1327,7 @@
             f.onblur = () => {
                 f.contentEditable = 'false';
                 let r = f.textContent.replace(/[^\d]/g, '');
-                const nextV = r === '' ? 0 : parseInt(r);
-                if (nextV !== v) _saveUndoSnapshot();
-                v = nextV;
+                v = r === '' ? 0 : parseInt(r);
                 _w(); _x(); _u()
             };
 
