@@ -133,48 +133,11 @@
 
         .counter-swipe-wrap {
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             width: 100%;
             min-height: 50px;
             display: flex;
             align-items: stretch;
-        }
-
-        .counter-swipe-actions {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: stretch;
-            z-index: 1;
-        }
-
-        .counter-swipe-btn {
-            border: none;
-            color: var(--s);
-            font-size: 0.78rem;
-            font-weight: 500;
-            letter-spacing: 0.02rem;
-            padding: 0 16px;
-            min-width: 74px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.12s ease, opacity 0.12s ease;
-        }
-
-        .counter-swipe-btn.rename {
-            background: rgba(255, 255, 255, 0.14);
-        }
-
-        .counter-swipe-btn.delete {
-            background: rgba(255, 255, 255, 0.22);
-        }
-
-        .counter-swipe-btn:active {
-            background: rgba(255, 255, 255, 0.32);
         }
 
         .counter-row-content {
@@ -182,19 +145,13 @@
             z-index: 2;
             width: 100%;
             min-height: 50px;
-            padding: 12px 18px;
+            padding: 12px 14px 12px 18px;
             background: rgb(28, 28, 30);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
-            touch-action: pan-y;
-            transform: translateX(0);
-            transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), background 0.12s ease;
-        }
-
-        .counter-row-content.swiping {
             transition: background 0.12s ease;
         }
 
@@ -217,7 +174,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--accent);
+            background: #64d2ff;
             flex-shrink: 0;
         }
 
@@ -230,11 +187,77 @@
             color: var(--s);
         }
 
+        .counter-row-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
         .counter-row-val {
             font-size: 0.82rem;
             opacity: 0.65;
             font-variant-numeric: tabular-nums;
             flex-shrink: 0;
+        }
+
+        .counter-row-more-btn {
+            background: none;
+            border: none;
+            color: var(--s);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.65;
+            transition: background 0.12s ease, opacity 0.12s ease;
+            flex-shrink: 0;
+        }
+
+        .counter-row-more-btn:hover,
+        .counter-row-more-btn:active,
+        .counter-row-more-btn.active {
+            background: rgba(255, 255, 255, 0.14);
+            opacity: 1;
+        }
+
+        .counter-item-menu {
+            position: fixed;
+            background: var(--m);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 14px;
+            min-width: 148px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+            z-index: 320;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+        }
+
+        .counter-item-menu.active {
+            display: flex;
+        }
+
+        .counter-item-menu-btn {
+            background: none;
+            border: none;
+            color: var(--s);
+            padding: 13px 18px;
+            font-size: 0.86rem;
+            font-weight: 400;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.08s linear;
+        }
+
+        .counter-item-menu-btn:active,
+        .counter-item-menu-btn.active-touch {
+            background: rgba(255, 255, 255, 0.14);
         }
 
         .counter-add-btn {
@@ -712,8 +735,9 @@
                 lo = d.getElementById('lock-overlay'), sh = d.getElementById('slider-handle'),
                 go = d.getElementById('goal-overlay'), gsh = d.getElementById('goal-slider-handle');
 
-            const ACTION_WIDTH = 148;
             const PERMANENT_ID = 'default';
+            let counterItemMenu = null;
+            let openItemMenuCounterId = null;
 
             f.contentEditable = 'false';
 
@@ -1013,6 +1037,95 @@
             // Syncs the title button's visual open state with #counter-switcher visibility
             function _syncSwitcherOpenState() {
                 titleBtn.classList.toggle('open', switcher.classList.contains('active'));
+                if (!switcher.classList.contains('active')) {
+                    _closeCounterItemMenu();
+                }
+            }
+
+            // Ensures the separate floating menu for custom counter Edit/Delete exists
+            function _ensureCounterItemMenu() {
+                if (counterItemMenu) return counterItemMenu;
+                counterItemMenu = d.createElement('div');
+                counterItemMenu.className = 'counter-item-menu';
+                counterItemMenu.id = 'counter-item-menu';
+
+                const renameBtn = d.createElement('button');
+                renameBtn.type = 'button';
+                renameBtn.className = 'counter-item-menu-btn';
+                renameBtn.textContent = 'Rename';
+                renameBtn.onclick = e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 300;
+                    const targetId = openItemMenuCounterId;
+                    _closeCounterItemMenu();
+                    if (targetId) {
+                        switcher.classList.remove('active');
+                        _syncSwitcherOpenState();
+                        _renameCounter(targetId);
+                    }
+                };
+
+                const deleteBtn = d.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'counter-item-menu-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = e => {
+                    e.stopPropagation();
+                    suppressBodyTapUntil = Date.now() + 300;
+                    const targetId = openItemMenuCounterId;
+                    _closeCounterItemMenu();
+                    if (targetId) {
+                        switcher.classList.remove('active');
+                        _syncSwitcherOpenState();
+                        _deleteCounter(targetId);
+                    }
+                };
+
+                counterItemMenu.appendChild(renameBtn);
+                counterItemMenu.appendChild(deleteBtn);
+                d.body.appendChild(counterItemMenu);
+                return counterItemMenu;
+            }
+
+            // Closes the separate counter Edit/Delete menu
+            function _closeCounterItemMenu() {
+                openItemMenuCounterId = null;
+                if (counterItemMenu) {
+                    counterItemMenu.classList.remove('active');
+                }
+                switcher.querySelectorAll('.counter-row-more-btn.active').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
+
+            // Opens a separate floating menu next to the clicked 3-dot button (not inline under the row)
+            function _toggleCounterItemMenu(counterId, anchorBtn) {
+                const menu = _ensureCounterItemMenu();
+                if (openItemMenuCounterId === counterId && menu.classList.contains('active')) {
+                    _closeCounterItemMenu();
+                    return;
+                }
+                _closeCounterItemMenu();
+                openItemMenuCounterId = counterId;
+                anchorBtn.classList.add('active');
+
+                const rect = anchorBtn.getBoundingClientRect();
+                menu.classList.add('active');
+                menu.style.left = '0px';
+                menu.style.top = '0px';
+
+                const menuRect = menu.getBoundingClientRect();
+                let left = rect.right + 8;
+                if (left + menuRect.width > w.innerWidth - 12) {
+                    left = Math.max(12, rect.left - menuRect.width - 8);
+                }
+                let top = rect.top;
+                if (top + menuRect.height > w.innerHeight - 12) {
+                    top = Math.max(12, w.innerHeight - menuRect.height - 12);
+                }
+
+                menu.style.left = `${Math.round(left)}px`;
+                menu.style.top = `${Math.round(top)}px`;
             }
 
             // Clears active drag-hover highlight across counter switcher and menu items
@@ -1078,13 +1191,8 @@
             }
 
             // Collapses any swiped-open counter rows except `exceptRow`
-            function _closeOpenSwipeRows(exceptRow) {
-                switcher.querySelectorAll('.counter-row-content').forEach(row => {
-                    if (row !== exceptRow && row.dataset.swipeOpen === 'true') {
-                        row.dataset.swipeOpen = 'false';
-                        row.style.transform = 'translateX(0px)';
-                    }
-                });
+            function _closeOpenSwipeRows() {
+                _closeCounterItemMenu();
             }
 
             function _switchToCounter(id) {
@@ -1162,6 +1270,7 @@
             }
 
             function _renderCounterSwitcher() {
+                _closeCounterItemMenu();
                 switcher.innerHTML = '';
                 counters.forEach(item => {
                     const isPermanent = Boolean(item.permanent || item.id === PERMANENT_ID);
@@ -1170,136 +1279,64 @@
 
                     const row = d.createElement('div');
                     row.className = 'counter-row-content' + (item.id === activeId ? ' is-current' : '');
-                    row.dataset.swipeOpen = 'false';
                     row.dataset.counterId = item.id;
 
                     const nameSpan = d.createElement('span');
                     nameSpan.className = 'counter-row-name';
                     nameSpan.textContent = item.name;
 
+                    const metaSpan = d.createElement('span');
+                    metaSpan.className = 'counter-row-meta';
+
                     const valSpan = d.createElement('span');
                     valSpan.className = 'counter-row-val';
                     valSpan.textContent = (parseInt(item.v) || 0).toLocaleString('en-US');
 
+                    metaSpan.appendChild(valSpan);
                     row.appendChild(nameSpan);
-                    row.appendChild(valSpan);
+                    row.appendChild(metaSpan);
 
                     if (!isPermanent) {
-                        const actions = d.createElement('div');
-                        actions.className = 'counter-swipe-actions';
+                        const moreBtn = d.createElement('button');
+                        moreBtn.type = 'button';
+                        moreBtn.className = 'counter-row-more-btn';
+                        moreBtn.setAttribute('aria-label', `Options for ${item.name}`);
+                        moreBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>';
 
-                        const renameBtn = d.createElement('button');
-                        renameBtn.type = 'button';
-                        renameBtn.className = 'counter-swipe-btn rename';
-                        renameBtn.textContent = 'Rename';
-                        renameBtn.onclick = e => {
+                        moreBtn.addEventListener('touchstart', e => {
                             e.stopPropagation();
-                            _closeOpenSwipeRows(null);
-                            switcher.classList.remove('active');
-                            _syncSwitcherOpenState();
-                            _renameCounter(item.id);
+                            suppressBodyTapUntil = Date.now() + 350;
+                        }, { passive: true });
+
+                        moreBtn.onclick = e => {
+                            e.stopPropagation();
+                            suppressBodyTapUntil = Date.now() + 350;
+                            _toggleCounterItemMenu(item.id, moreBtn);
                         };
 
-                        const delBtn = d.createElement('button');
-                        delBtn.type = 'button';
-                        delBtn.className = 'counter-swipe-btn delete';
-                        delBtn.textContent = 'Delete';
-                        delBtn.onclick = e => {
-                            e.stopPropagation();
-                            _closeOpenSwipeRows(null);
-                            switcher.classList.remove('active');
-                            _syncSwitcherOpenState();
-                            _deleteCounter(item.id);
-                        };
-
-                        actions.appendChild(renameBtn);
-                        actions.appendChild(delBtn);
-                        wrap.appendChild(actions);
-
-                        let rowStartX = 0, rowStartY = 0, rowCurrentX = 0, rowDragging = false, rowMoved = false;
-
-                        row.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            _closeOpenSwipeRows(row);
-                            rowStartX = e.touches[0].clientX;
-                            rowStartY = e.touches[0].clientY;
-                            rowCurrentX = row.dataset.swipeOpen === 'true' ? -ACTION_WIDTH : 0;
-                            rowDragging = true;
-                            rowMoved = false;
-                            row.classList.add('swiping');
-                            row.classList.add('active-touch');
-                        }, { passive: true });
-
-                        row.addEventListener('touchmove', e => {
-                            if (!rowDragging) return;
-                            const dx = e.touches[0].clientX - rowStartX;
-                            const dy = e.touches[0].clientY - rowStartY;
-
-                            if (!rowMoved && Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-                            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dx) < 12) return;
-
-                            rowMoved = true;
-                            row.classList.remove('active-touch');
-                            const baseOffset = row.dataset.swipeOpen === 'true' ? -ACTION_WIDTH : 0;
-                            const nextX = Math.max(-ACTION_WIDTH, Math.min(0, baseOffset + dx));
-                            rowCurrentX = nextX;
-                            row.style.transform = `translateX(${nextX}px)`;
-                        }, { passive: true });
-
-                        const finishRowTouch = e => {
-                            if (!rowDragging) return;
-                            rowDragging = false;
-                            row.classList.remove('swiping');
-                            row.classList.remove('active-touch');
-
-                            if (rowMoved) {
-                                if (e && e.cancelable) e.preventDefault();
-                                suppressBodyTapUntil = Date.now() + 300;
-                                const shouldOpen = rowCurrentX <= -ACTION_WIDTH * 0.42;
-                                if (shouldOpen) {
-                                    row.dataset.swipeOpen = 'true';
-                                    row.style.transform = `translateX(${-ACTION_WIDTH}px)`;
-                                } else {
-                                    row.dataset.swipeOpen = 'false';
-                                    row.style.transform = 'translateX(0px)';
-                                }
-                            } else {
-                                suppressBodyTapUntil = Date.now() + 300;
-                                if (row.dataset.swipeOpen === 'true') {
-                                    row.dataset.swipeOpen = 'false';
-                                    row.style.transform = 'translateX(0px)';
-                                } else {
-                                    _switchToCounter(item.id);
-                                    switcher.classList.remove('active');
-                                    _syncSwitcherOpenState();
-                                    _z(`switched to ${item.name}`, 1600);
-                                }
-                            }
-                        };
-
-                        row.addEventListener('touchend', finishRowTouch);
-                        row.addEventListener('touchcancel', finishRowTouch);
-                    } else {
-                        row.addEventListener('touchstart', e => {
-                            e.stopPropagation();
-                            _closeOpenSwipeRows(null);
-                            row.classList.add('active-touch');
-                        }, { passive: true });
-                        row.addEventListener('touchend', () => {
-                            suppressBodyTapUntil = Date.now() + 300;
-                            row.classList.remove('active-touch');
-                        }, { passive: true });
-                        row.addEventListener('touchcancel', () => row.classList.remove('active-touch'), { passive: true });
+                        metaSpan.appendChild(moreBtn);
                     }
 
+                    row.addEventListener('touchstart', e => {
+                        if (e.target.closest('.counter-row-more-btn')) return;
+                        e.stopPropagation();
+                        _closeCounterItemMenu();
+                        row.classList.add('active-touch');
+                    }, { passive: true });
+
+                    row.addEventListener('touchend', e => {
+                        if (e.target.closest('.counter-row-more-btn')) return;
+                        suppressBodyTapUntil = Date.now() + 300;
+                        row.classList.remove('active-touch');
+                    }, { passive: true });
+
+                    row.addEventListener('touchcancel', () => row.classList.remove('active-touch'), { passive: true });
+
                     row.onclick = e => {
+                        if (e.target.closest('.counter-row-more-btn')) return;
                         e.stopPropagation();
                         suppressBodyTapUntil = Date.now() + 300;
-                        if (row.dataset.swipeOpen === 'true') {
-                            row.dataset.swipeOpen = 'false';
-                            row.style.transform = 'translateX(0px)';
-                            return;
-                        }
+                        _closeCounterItemMenu();
                         _switchToCounter(item.id);
                         switcher.classList.remove('active');
                         _syncSwitcherOpenState();
@@ -1524,14 +1561,16 @@
                 if (!e.target.closest('.a2')) {
                     md.classList.remove('active');
                 }
-                if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1')) {
-                    _closeOpenSwipeRows(null);
+                if (!e.target.closest('#counter-item-menu') && !e.target.closest('.counter-row-more-btn')) {
+                    _closeCounterItemMenu();
+                }
+                if (!e.target.closest('#counter-switcher') && !e.target.closest('#x1') && !e.target.closest('#counter-item-menu')) {
                     switcher.classList.remove('active');
                     _syncSwitcherOpenState();
                 }
                 if (Date.now() < suppressBodyTapUntil) return;
                 if (lk || isLockout) return;
-                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
+                if (e.target.closest('.a2') || e.target.closest('.a1') || e.target.closest('.b3') || e.target.closest('#counter-switcher') || e.target.closest('#counter-item-menu') || e.target.closest('#lock-overlay') || e.target.closest('#goal-overlay')) return;
                 if (f.contentEditable === 'true') return;
                 _u();
                 _incrementCounter();
